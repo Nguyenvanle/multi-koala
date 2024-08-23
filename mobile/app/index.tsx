@@ -1,13 +1,9 @@
 import { View, Text } from "react-native";
 import React from "react";
-import Styles from "@/constants/Styles";
+import { Redirect } from "expo-router";
 
 const Index = () => {
-  return (
-    <View>
-      <Text></Text>
-    </View>
-  );
+  return <Redirect href={"/(intro)/logo-screen"} />;
 };
 
 export default Index;
