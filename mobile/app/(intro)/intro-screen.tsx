@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { router } from "expo-router";
-import Styles from "@/constants/Styles";
+import { Styles } from "@/constants/Styles";
 
 const IntroScreen = () => {
   return (

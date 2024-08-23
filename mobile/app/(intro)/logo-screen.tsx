@@ -1,16 +1,52 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
-import Styles from "@/constants/Styles";
-import { Link, router } from "expo-router";
+import { View, Text, Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import { text } from "@/constants/Styles";
+import IntroScreen from "./intro-screen";
+import { StyleSheet } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 const LogoScreen = () => {
-  return (
-    <View style={Styles.container}>
-      <TouchableOpacity onPress={() => router.replace("/intro-screen")}>
-        <Text>Logo</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={logoscreen.containerlogo}>
+        <View style={logoscreen.Logo}>
+          <Image source={require("@/assets/images/Logo.png")} />
+          <Text style={text.h2}>Small steps, big progress</Text>
+        </View>
+        <View style={logoscreen.myteam}>
+          <Text style={text.large}>© 2024 Koala Team</Text>
+        </View>
+      </View>
+    );
+  } else {
+    return <IntroScreen />;
+  }
 };
 
 export default LogoScreen;
+export const logoscreen = StyleSheet.create({
+  containerlogo: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.teal_light,
+    paddingBottom: 15,
+  },
+  Logo: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  myteam: {
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+});
