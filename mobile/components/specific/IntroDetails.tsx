@@ -48,9 +48,14 @@ const IntroDetails = () => {
 
   return (
     <View style={Styles.container}>
-      <Text style={text.h3}>{topics[selectedIndex].title}</Text>
-      <Image source={{ uri: topics[selectedIndex].image }} />
-      <View style={{ paddingHorizontal: 5, paddingBottom: 20 }}>
+      <Text style={{ ...text.h3, marginBottom: 20 }}>
+        {topics[selectedIndex].title}
+      </Text>
+      <Image
+        source={topics[selectedIndex].image}
+        style={{ height: 550, marginVertical: 20, width: 450 }}
+      />
+      <View style={{ marginHorizontal: 25, paddingBottom: 20 }}>
         <Text style={text.blackquote}>{topics[selectedIndex].description}</Text>
       </View>
       <View style={{ ...styles.checkboxContainer, flexDirection: "row" }}>
