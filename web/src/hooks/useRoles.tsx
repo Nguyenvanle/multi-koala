@@ -4,7 +4,7 @@ export const useRoles = () => {
   // const { roles } = useContext(RoleContext);
 
   // Vai trò tạm thời (thay thế bằng vai trò thực tế từ context)
-  const roles: Role[] = ["admin", "teacher"];
+  const roles: Role[] = ["admin"];
 
   const hasRole = (role: Role) => roles.includes(role);
 
