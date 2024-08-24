@@ -8,70 +8,59 @@ import {
 } from "react-native";
 import React from "react";
 import { Styles, text } from "@/constants/Styles";
-import HighlightCircle from "@/components/common/HighlightCircle";
 import { Colors } from "@/constants/Colors";
 import { blue } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 const Home = () => {
   return (
     <SafeAreaView style={Styles.container}>
-      <View style={Progress.progressing}>
-        <View style={Progress.User}>
-          <Text style={{ ...text.h4, justifyContent: "flex-start" }}>
-            Welcome
-          </Text>
-          <View style={Progress.Authen}>
-            <TouchableOpacity
-              style={{ ...Progress.ButtonAuth, backgroundColor: Colors.dark }}
-            >
-              <Text style={{ ...text.p, color: Colors.white }}>Log In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ ...Progress.ButtonAuth, backgroundColor: Colors.white }}
-            >
-              <Text style={{ ...text.p, color: Colors.black }}>Sign Up</Text>
-            </TouchableOpacity>
+      <StatusBar barStyle="dark-content" />
+      <View style={home.header}>
+        <View style={home.welcome}>
+          <View style={circle.tealCircle}>
+            <View style={circle.whiteCircle}>
+              <Text style={text.h4}>Welcome</Text>
+            </View>
           </View>
         </View>
       </View>
-      <View style={Course.Option_course}></View>
     </SafeAreaView>
   );
 };
 
 export default Home;
 
-export const Progress = StyleSheet.create({
-  progressing: {
-    backgroundColor: Colors.teal_light, // Màu teal-200
-    shadowColor: "#000", // Màu bóng
-    shadowOffset: { width: 0, height: 4 }, // Độ lệch của bóng
-    shadowOpacity: 0.3, // Độ mờ của bóng
-    shadowRadius: 6, // Bán kính của bóng
-    borderRadius: 20,
+export const home = StyleSheet.create({
+  header: {
+    flex: 0,
+    height: 50,
+    backgroundColor: Colors.teal_light,
+    borderBottomEndRadius: 30,
+    borderBottomStartRadius: 30,
   },
-  User: {
-    justifyContent: "center",
+  welcome: {
     flexDirection: "row",
-    paddingHorizontal: 50,
-  },
-  Authen: {
-    justifyContent: "flex-end",
-    flexDirection: "row",
-    paddingHorizontal: 5,
-  },
-  ButtonAuth: {
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderRadius: 20,
+    justifyContent: "space-between",
   },
 });
 
-export const Course = StyleSheet.create({
-  Option_course: {
-    flex: 1,
-    padding: 5,
-    paddingTop: 10,
-    backgroundColor: Colors.blue,
+export const circle = StyleSheet.create({
+  tealCircle: {
+    position: "absolute",
+    width: 300, // 96 * 4 (vì 1 đơn vị trong Tailwind = 4px)
+    height: 300, // 96 * 4
+    borderRadius: 192, // Để tạo hình tròn
+    backgroundColor: "#38B2A0", // Màu teal-400
+    // top: -530, // Để đưa hình tròn lên trên
+    // transform: [{ translateX: -200 }], // Dịch chuyển sang trái
+  },
+  whiteCircle: {
+    position: "absolute",
+    width: 300, // 72 * 4
+    height: 300, // 72 * 4
+    borderRadius: 192, // Để tạo hình tròn
+    backgroundColor: "#FFFFFF", // Màu trắng
+    // right: "50%", // Đặt vị trí ở giữa phải
+    // transform: [{ translateY: 110 }], // Dịch chuyển lên
   },
 });
