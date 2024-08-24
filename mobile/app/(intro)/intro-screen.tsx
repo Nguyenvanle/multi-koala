@@ -1,15 +1,23 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+  StatusBar,
+} from "react-native";
 import React from "react";
 import { router } from "expo-router";
-import { Styles } from "@/constants/Styles";
+import { Styles, text } from "@/constants/Styles";
+import IntroDetails from "@/components/specific/IntroDetails";
 
 const IntroScreen = () => {
+  const [selectedIndex, setIndex] = React.useState(0);
   return (
-    <View style={Styles.container}>
-      <TouchableOpacity onPress={() => router.replace("/home")}>
-        <Text>Intro</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={Styles.container}>
+      <StatusBar barStyle="dark-content"></StatusBar>
+      <IntroDetails />
+    </SafeAreaView>
   );
 };
 

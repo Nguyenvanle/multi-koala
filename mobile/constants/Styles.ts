@@ -15,9 +15,9 @@ export const text = StyleSheet.create({
     fontSize: 30,
     color: Colors.black,
   },
-  large: {
-    fontSize: 18,
-    color: Colors.dark,
+  h3: {
+    fontSize: 24,
+    color: Colors.black,
   },
   h4: {
     fontSize: 20,
@@ -26,5 +26,14 @@ export const text = StyleSheet.create({
   p: {
     fontSize: 16,
     color: Colors.dark,
+  },
+  large: {
+    fontSize: 18,
+    color: Colors.dark,
+  },
+  blackquote: {
+    fontSize: 16,
+    color: Colors.dark,
+    fontStyle: "italic",
   },
 });

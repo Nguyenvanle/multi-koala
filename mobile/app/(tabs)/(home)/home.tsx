@@ -1,12 +1,20 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
 import React from "react";
 import { Styles, text } from "@/constants/Styles";
 import HighlightCircle from "@/components/common/HighlightCircle";
 import { Colors } from "@/constants/Colors";
+import { blue } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 const Home = () => {
   return (
-    <View style={Styles.container}>
+    <SafeAreaView style={Styles.container}>
       <View style={Progress.progressing}>
         <View style={Progress.User}>
           <Text style={{ ...text.h4, justifyContent: "flex-start" }}>
@@ -27,7 +35,7 @@ const Home = () => {
         </View>
       </View>
       <View style={Course.Option_course}></View>
-    </View>
+    </SafeAreaView>
   );
 };
 

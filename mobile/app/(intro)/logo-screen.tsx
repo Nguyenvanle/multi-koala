@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, SafeAreaView, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { text } from "@/constants/Styles";
 import IntroScreen from "./intro-screen";
@@ -16,15 +16,16 @@ const LogoScreen = () => {
 
   if (loading) {
     return (
-      <View style={logoscreen.containerlogo}>
+      <SafeAreaView style={logoscreen.containerlogo}>
+        <StatusBar barStyle="dark-content"></StatusBar>
         <View style={logoscreen.Logo}>
           <Image source={require("@/assets/images/Logo.png")} />
           <Text style={text.h2}>Small steps, big progress</Text>
         </View>
         <View style={logoscreen.myteam}>
-          <Text style={text.large}>© 2024 Koala Team</Text>
+          <Text style={text.large}>©2024 Koala Team</Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
   } else {
     return <IntroScreen />;
