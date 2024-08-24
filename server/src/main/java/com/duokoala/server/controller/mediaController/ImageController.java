@@ -1,6 +1,6 @@
 package com.duokoala.server.controller.mediaController;
 
-import com.duokoala.server.dto.request.mediaRequest.ImageCreateRequest;
+import com.duokoala.server.dto.request.mediaRequest.ImageCreationRequest;
 import com.duokoala.server.dto.request.mediaRequest.ImageUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
@@ -22,7 +22,7 @@ public class ImageController {
     ImageService imageService;
 
     @PostMapping
-    ApiResponse<ImageResponse> createImage(@RequestBody ImageCreateRequest request) {
+    ApiResponse<ImageResponse> createImage(@RequestBody ImageCreationRequest request) {
         return ApiResponse.<ImageResponse>builder()
                 .result(imageService.createImage(request))
                 .build();

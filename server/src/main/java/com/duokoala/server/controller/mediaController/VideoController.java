@@ -1,6 +1,6 @@
 package com.duokoala.server.controller.mediaController;
 
-import com.duokoala.server.dto.request.mediaRequest.VideoCreateRequest;
+import com.duokoala.server.dto.request.mediaRequest.VideoCreationRequest;
 import com.duokoala.server.dto.request.mediaRequest.VideoUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.mediaResponse.VideoResponse;
@@ -20,7 +20,7 @@ public class VideoController {
     VideoService videoService;
 
     @PostMapping
-    ApiResponse<VideoResponse> createVideo(@RequestBody VideoCreateRequest request) {
+    ApiResponse<VideoResponse> createVideo(@RequestBody VideoCreationRequest request) {
         return ApiResponse.<VideoResponse>builder()
                 .result(videoService.createVideo(request))
                 .build();

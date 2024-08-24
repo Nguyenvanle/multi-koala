@@ -1,12 +1,12 @@
 package com.duokoala.server.service.mediaService;
 
-import com.duokoala.server.dto.request.mediaRequest.ImageCreateRequest;
+import com.duokoala.server.dto.request.mediaRequest.ImageCreationRequest;
 import com.duokoala.server.dto.request.mediaRequest.ImageUpdateRequest;
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
-import com.duokoala.server.mapper.ImageMapper;
+import com.duokoala.server.mapper.mediaMapper.ImageMapper;
 import com.duokoala.server.repository.mediaRepository.ImageRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class ImageService {
     ImageRepository imageRepository;
     ImageMapper imageMapper;
 
-    public ImageResponse createImage(ImageCreateRequest request) {
+    public ImageResponse createImage(ImageCreationRequest request) {
         Image image = imageMapper.toImage(request);
         image.setImageUrl(request.getImageUrl());
         return imageMapper.toImageResponse(imageRepository.save(image));

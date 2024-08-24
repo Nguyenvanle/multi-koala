@@ -1,12 +1,12 @@
 package com.duokoala.server.service.mediaService;
 
-import com.duokoala.server.dto.request.mediaRequest.VideoCreateRequest;
+import com.duokoala.server.dto.request.mediaRequest.VideoCreationRequest;
 import com.duokoala.server.dto.request.mediaRequest.VideoUpdateRequest;
 import com.duokoala.server.dto.response.mediaResponse.VideoResponse;
 import com.duokoala.server.entity.media.Video;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
-import com.duokoala.server.mapper.VideoMapper;
+import com.duokoala.server.mapper.mediaMapper.VideoMapper;
 import com.duokoala.server.repository.mediaRepository.VideoRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class VideoService {
     VideoRepository videoRepository;
     VideoMapper videoMapper;
 
-    public VideoResponse createVideo(VideoCreateRequest request) {
+    public VideoResponse createVideo(VideoCreationRequest request) {
         Video video = videoMapper.toVideo(request);
         return videoMapper.toVideoResponse(videoRepository.save(video));
     }

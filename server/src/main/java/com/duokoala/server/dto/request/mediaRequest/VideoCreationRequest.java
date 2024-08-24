@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VideoCreateRequest {
+public class VideoCreationRequest {
     String videoUrl;
     int videoDuration;
 }

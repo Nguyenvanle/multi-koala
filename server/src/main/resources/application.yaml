@@ -9,5 +9,5 @@ spring:
     password: root
   jpa:
     hibernate:
-#      ddl-auto: update
+      ddl-auto: update
     show-sql: true
