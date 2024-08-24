@@ -14,6 +14,6 @@ public class ApiResponse<T> {
     @Builder.Default
     int code = 200;
     @Builder.Default
-    String message = "Implement Success!";
+    String message = "Request processed successfully!";
     T result;
 }
