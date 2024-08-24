@@ -16,8 +16,8 @@ import java.util.Set;
 @Entity
 public class Role {
     @Id
-    String role_name;
-    String role_description;
+    String roleName;
+    String roleDescription;
 
     @ManyToMany
     Set<Permission> permissions;

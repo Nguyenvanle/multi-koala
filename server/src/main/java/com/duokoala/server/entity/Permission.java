@@ -13,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 @Entity
 public class Permission {
     @Id
-    String permission_name;
-    String permission_description;
+    String permissionName;
+    String permissionDescription;
 }
