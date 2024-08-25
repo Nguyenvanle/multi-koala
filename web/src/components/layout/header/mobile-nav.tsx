@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,12 +9,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useRoles } from "@/hooks/useRoles";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 const MobileNav: React.FC<MobileNavProps> = ({ menuItems }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { hasRole } = useRoles();
+
+  !hasRole("guest") &&
+    (menuItems = [...menuItems, { href: "/dashboard", label: "Dashboard" }]);
 
   return (
     <div className="md:hidden">
@@ -39,7 +45,12 @@ const MobileNav: React.FC<MobileNavProps> = ({ menuItems }) => {
             {menuItems.map((item) => (
               <SheetClose key={item.label} asChild>
                 <Link href={item.href}>
-                  <Button variant={item.variant || "link"}>{item.label}</Button>
+                  <Button
+                    variant={item.variant || "link"}
+                    className="w-full justify-start"
+                  >
+                    {item.label}
+                  </Button>
                 </Link>
               </SheetClose>
             ))}

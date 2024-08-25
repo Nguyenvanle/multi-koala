@@ -4,6 +4,13 @@ type MenuItem = {
   variant?: "outline" | "link";
 };
 
+type MenuItems = {
+  href: string;
+  label: string;
+  variant?: "outline" | "link";
+}[];
+
+
 type DesktopNavProps = {
   menuItems: MenuItem[];
 };
