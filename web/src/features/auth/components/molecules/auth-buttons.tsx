@@ -10,11 +10,11 @@ export default function AuthButtons() {
 
   return (
     hasRole("guest") && (
-      <div className="space-x-2">
+      <div className="flex flex-row space-x-2">
         <Link href={"/login"}>
           <Button>Login</Button>
         </Link>
-        <Link href={"/register"}>
+        <Link href={"/register"} className="hidden min-[400px]:flex">
           <Button>Sign up</Button>
         </Link>
       </div>
