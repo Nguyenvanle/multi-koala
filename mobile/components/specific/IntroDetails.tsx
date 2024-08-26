@@ -1,17 +1,15 @@
-import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  TouchableHighlight,
-} from "react-native"; // Hoặc các thành phần tương ứng với thư viện bạn đang sử dụng
 import { CheckBox } from "react-native-elements"; // Thư viện checkbox
-import { router, Stack } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
+import { router } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
 import { Styles, text } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
+import React from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from "react-native";
 
 const topics = [
   {
@@ -40,7 +38,7 @@ const topics = [
   },
 ];
 
-const IntroDetails = () => {
+export const IntroDetails = () => {
   const [selectedIndex, setIndex] = React.useState(0);
 
   const handlePress = (index: any) => {
@@ -50,18 +48,14 @@ const IntroDetails = () => {
   return (
     <View style={Styles.container}>
       <Text style={text.h3}>{topics[selectedIndex].title}</Text>
-<<<<<<< HEAD
       <Image
         source={topics[selectedIndex].image}
         style={{ height: 550, marginVertical: 20, width: 450 }}
       />
-      <View style={{ marginHorizontal: 20 }}>
-=======
-      <Image source={{ uri: topics[selectedIndex].image }} />
-      <View style={{ paddingHorizontal: 5, paddingBottom: 20 }}>
->>>>>>> parent of 2a689b7 (Setup: Intro screen)
+      <View style={{ marginHorizontal: 25 }}>
         <Text style={text.blackquote}>{topics[selectedIndex].description}</Text>
       </View>
+
       <View
         style={{
           ...styles.checkboxContainer,
@@ -74,7 +68,6 @@ const IntroDetails = () => {
             onPress={() => handlePress(index)}
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
-            containerStyle={styles.checkbox}
           />
         ))}
       </View>
@@ -84,7 +77,6 @@ const IntroDetails = () => {
       >
         <Text style={{ ...text.p, color: Colors.white }}>Get started</Text>
       </TouchableHighlight>
-
       {/* Hiển thị nội dung dựa trên lựa chọn */}
     </View>
   );
@@ -95,12 +87,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
-  },
-  checkbox: {
-    marginTop: 10,
   },
   start: {
+    marginTop: 10,
     backgroundColor: Colors.teal_dark,
     borderRadius: 25,
     width: 350,
@@ -109,5 +98,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-export default IntroDetails;

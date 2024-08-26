@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { router } from "expo-router";
 import { Styles, text } from "@/constants/Styles";
-import IntroDetails from "@/components/specific/IntroDetails";
+import { IntroDetails } from "@/components/specific/IntroDetails";
 
 const IntroScreen = () => {
   const [selectedIndex, setIndex] = React.useState(0);
