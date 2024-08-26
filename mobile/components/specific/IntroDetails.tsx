@@ -50,11 +50,16 @@ const IntroDetails = () => {
   return (
     <View style={Styles.container}>
       <Text style={text.h3}>{topics[selectedIndex].title}</Text>
+<<<<<<< HEAD
       <Image
         source={topics[selectedIndex].image}
         style={{ height: 550, marginVertical: 20, width: 450 }}
       />
       <View style={{ marginHorizontal: 20 }}>
+=======
+      <Image source={{ uri: topics[selectedIndex].image }} />
+      <View style={{ paddingHorizontal: 5, paddingBottom: 20 }}>
+>>>>>>> parent of 2a689b7 (Setup: Intro screen)
         <Text style={text.blackquote}>{topics[selectedIndex].description}</Text>
       </View>
       <View
