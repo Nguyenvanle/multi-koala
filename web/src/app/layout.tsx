@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header/header";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Roboto_Flex({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
