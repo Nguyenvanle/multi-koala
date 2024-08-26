@@ -26,4 +26,5 @@ public class UserResponse {
     String email;
     ImageResponse image;
     Set<RoleResponse> roles;
+    boolean isDeleted;
 }

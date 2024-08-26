@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum ErrorCode {
+
     UNCATEGORIZED_EXCEPTION(9999,"Uncategorized error!", HttpStatus.INTERNAL_SERVER_ERROR),
     USERNAME_EXISTED(1001,"Username existed!", HttpStatus.BAD_REQUEST),
 

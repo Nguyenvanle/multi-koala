@@ -24,7 +24,8 @@ import java.util.HashSet;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-    private final RoleRepository roleRepository;
+    UserRepository userRepository;
+    RoleRepository roleRepository;
     ImageRepository imageRepository;
     ImageMapper imageMapper;
 
@@ -50,5 +51,12 @@ public class UserService {
         roles.add(roleRepository.findById(role)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED)));
         return roles;
+    }
+
+    public void deleteUser(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 }

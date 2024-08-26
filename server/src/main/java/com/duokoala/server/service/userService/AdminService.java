@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class AdminService {
         Admin admin = adminMapper.toAdmin(request);
         admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
+        admin.setDeleted(false);
         return adminMapper.toAdminResponse(adminRepository.save(admin));
 //        var context = SecurityContextHolder.getContext(); //get current context
 //        String name = context.getAuthentication().getName();
@@ -47,4 +50,14 @@ public class AdminService {
         return adminMapper.toAdminResponse(adminRepository.save(admin));
     }
 
+    public AdminResponse getAdmin(String adminId) {
+        var admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return adminMapper.toAdminResponse(admin);
+    }
+
+    public List<AdminResponse> getAdmins() {
+        var admins = adminRepository.findAll();
+        return admins.stream().map(adminMapper::toAdminResponse).toList();
+    }
 }
