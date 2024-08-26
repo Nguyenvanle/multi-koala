@@ -1,18 +1,17 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import React from "react";
-import Styles from "@/constants/Styles";
 import { router } from "expo-router";
+import { Styles } from "@/constants/Styles";
 
 const AuthScreen = () => {
   return (
-    <View style={Styles.container}>
-      <TouchableOpacity onPress={() => router.replace("/(home)/home")}>
-        <Text>Sign In</Text>
-      </TouchableOpacity>
-      <Text>Sign Up</Text>
-      <Text>Confirm Email</Text>
-      <Text>Forgot Password?</Text>
-    </View>
+    <SafeAreaView style={Styles.container}>
+      {/* <View style={Styles.tealCircle}>
+        <View style={Styles.whiteCircle}> */}
+
+      {/* </View> */}
+      {/* </View> */}
+    </SafeAreaView>
   );
 };
 
