@@ -6,7 +6,6 @@ export default function Home() {
   return (
     <div className="flex flex-col space-y-4">
       <Banner />
-      <Separator />
       <About />
     </div>
   );

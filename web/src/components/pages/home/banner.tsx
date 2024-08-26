@@ -5,15 +5,15 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <>
-      <div className="flex flex-1 flex-col space-y-2">
+    <div className="flex flex-row">
+      <div className="flex flex-1 flex-col space-y-2 justify-between pt-8">
         <H1>Course sharing platform for English teachers</H1>
         <Lead>
           The ideal learning environment to connect students with teachers.
           Share English knowledge with free and paid courses. Be a part of us
           today.
         </Lead>
-        <div className="flex flex-1 space-x-2">
+        <div className="flex flex-0 space-x-2">
           <LinkButton label="Get Started" href="/login" />
           <LinkButton
             label="About Duokoala"
@@ -24,8 +24,8 @@ export default function Banner() {
       </div>
 
       <div className="hidden sm:flex flex-0 justify-center">
-        <div className="w-[300px]">
-          <AspectRatio ratio={9 / 16}>
+        <div className="w-[300px] h-auto">
+          <AspectRatio ratio={1 / 1}>
             <Image
               src="/images/koala-flip.png"
               alt="Duokoala Logo"
@@ -37,6 +37,6 @@ export default function Banner() {
           </AspectRatio>
         </div>
       </div>
-    </>
+    </div>
   );
 }
