@@ -9,9 +9,8 @@ import {
   TouchableHighlight,
 } from "react-native"; // Hoặc các thành phần tương ứng với thư viện bạn đang sử dụng
 import { CheckBox } from "react-native-elements"; // Thư viện checkbox
-import { router, Stack } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
+import { Stack } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
 import { Styles, text } from "@/constants/Styles";
-import { Colors } from "@/constants/Colors";
 
 const topics = [
   {
@@ -49,19 +48,17 @@ const IntroDetails = () => {
 
   return (
     <View style={Styles.container}>
-      <Text style={text.h3}>{topics[selectedIndex].title}</Text>
+      <Text style={{ ...text.h3, marginBottom: 20 }}>
+        {topics[selectedIndex].title}
+      </Text>
       <Image
         source={topics[selectedIndex].image}
         style={{ height: 550, marginVertical: 20, width: 450 }}
       />
-      <View style={{ marginHorizontal: 20 }}>
+      <View style={{ marginHorizontal: 25, paddingBottom: 20 }}>
         <Text style={text.blackquote}>{topics[selectedIndex].description}</Text>
       </View>
-      <View
-        style={{
-          ...styles.checkboxContainer,
-        }}
-      >
+      <View style={{ ...styles.checkboxContainer, flexDirection: "row" }}>
         {topics.map((topic, index) => (
           <CheckBox
             key={index}
@@ -73,12 +70,6 @@ const IntroDetails = () => {
           />
         ))}
       </View>
-      <TouchableHighlight
-        onPress={() => router.replace("/(home)/home")}
-        style={styles.start}
-      >
-        <Text style={{ ...text.p, color: Colors.white }}>Get started</Text>
-      </TouchableHighlight>
 
       {/* Hiển thị nội dung dựa trên lựa chọn */}
     </View>
@@ -90,18 +81,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
   },
   checkbox: {
-    marginTop: 10,
-  },
-  start: {
-    backgroundColor: Colors.teal_dark,
-    borderRadius: 25,
-    width: 350,
-    height: 55,
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: 20,
   },
 });
 
