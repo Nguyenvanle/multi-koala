@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import Styles from "@/constants/Styles";
 import { Link, router } from "expo-router";
+import { Styles } from "@/constants/Styles";
 
 const CourseList = () => {
   return (

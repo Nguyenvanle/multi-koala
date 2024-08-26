@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
-import Styles from "@/constants/Styles";
 import { Link } from "expo-router";
+import { Styles } from "@/constants/Styles";
 
 const Account = () => {
   return (
