@@ -4,6 +4,7 @@ import { text } from "@/constants/Styles";
 import IntroScreen from "./intro-screen";
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
+import AuthScreen from "../(auth)/auth-screen";
 
 const LogoScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ const LogoScreen = () => {
       </SafeAreaView>
     );
   } else {
-    return <IntroScreen />;
+    return <AuthScreen />;
   }
 };
 
