@@ -1,66 +1,35 @@
 "use client";
 
-import { z } from "zod";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
+import { Checkbox } from "@/components/ui/checkbox";
+import useRegisterForm from "@/features/auth/hooks/useRegister";
+import UsernameField from "@/features/auth/components/molecules/username-field";
+import NameFields from "@/features/auth/components/molecules/name-fields";
+import EmailField from "@/features/auth/components/molecules/email-field";
+import { Form } from "@/components/ui/form";
+import PasswordFields from "@/features/auth/components/molecules/password-field";
+import TermField from "@/features/auth/components/molecules/term-field";
 
 export default function RegisterForm() {
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-    },
-  });
-
-  // 2. Define a submit handler.
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    toast({
-      title: "Registration Successful!",
-      description: "Your account has been created successfully.",
-    });
-  };
+  const { form, onSubmit } = useRegisterForm();
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 flex-1 md:max-w-md border rounded shadow-md p-4"
+      >
+        <UsernameField control={form.control} />
+        <NameFields control={form.control} />
+        <EmailField control={form.control} />
+        <PasswordFields control={form.control} />
+        <TermField control={form.control} />
+
+        <div className="flex flex-1">
+          <Button type="submit" className="flex flex-1">
+            Sign Up
+          </Button>
+        </div>
       </form>
     </Form>
   );

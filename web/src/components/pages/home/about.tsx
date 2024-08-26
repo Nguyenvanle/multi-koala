@@ -27,10 +27,10 @@ export default function About() {
   ];
 
   return (
-    <div id="about" className="pt-20 mt-[-80px]">
+    <div id="about" className="flex flex-col pt-20 mt-[-80px] gap-8">
       <H1>What&apos;s in Duokoala?</H1>
       <Lead>Everything you need to build great courses on the web.</Lead>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 my-4">
         {ABOUT_MENUS.map((menu) => (
           <AboutCard
             key={menu.title}
