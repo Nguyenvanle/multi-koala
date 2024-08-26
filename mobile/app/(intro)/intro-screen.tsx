@@ -1,15 +1,7 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  Image,
-  StatusBar,
-} from "react-native";
+import { SafeAreaView, StatusBar } from "react-native";
 import React from "react";
-import { router } from "expo-router";
-import { Styles, text } from "@/constants/Styles";
-import { IntroDetails } from "@/components/specific/IntroDetails";
+import { Styles } from "@/constants/Styles";
+import IntroDetails from "@/components/specific/IntroDetails";
 
 const IntroScreen = () => {
   const [selectedIndex, setIndex] = React.useState(0);
