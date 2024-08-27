@@ -34,4 +34,5 @@ public class User {
     Image image;
     @ManyToMany
     Set<Role> roles;
+    boolean isDeleted;
 }

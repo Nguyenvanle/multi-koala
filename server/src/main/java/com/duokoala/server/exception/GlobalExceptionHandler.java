@@ -3,6 +3,7 @@ package com.duokoala.server.exception;
 import com.duokoala.server.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,4 +53,14 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+//    @ExceptionHandler(value = AuthorizationDeniedException.class)
+//    ResponseEntity<ApiResponse> handlingAuthorizationDeniedException(AuthorizationDeniedException exception) {
+//        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
+//        return ResponseEntity.status(errorCode.getStatusCode()).body(
+//                ApiResponse.builder()
+//                        .code(errorCode.getCode())
+//                        .message(errorCode.getMessage())
+//                        .build()
+//        );
+//    }
 }
