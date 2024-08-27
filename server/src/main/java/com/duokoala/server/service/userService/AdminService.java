@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class AdminService {
     AdminRepository adminRepository;
     AdminMapper adminMapper;
     UserService userService;
+    PasswordEncoder passwordEncoder;
 
     public AdminResponse createAdmin(AdminCreationRequest request) {
         Admin admin = adminMapper.toAdmin(request);
         admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
         admin.setDeleted(false);
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
         return adminMapper.toAdminResponse(adminRepository.save(admin));
 //        var context = SecurityContextHolder.getContext(); //get current context
 //        String name = context.getAuthentication().getName();
@@ -42,6 +45,7 @@ public class AdminService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         adminMapper.updateAdmin(admin,request);
         userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
         return adminMapper.toAdminResponse(adminRepository.save(admin));
     }
 
