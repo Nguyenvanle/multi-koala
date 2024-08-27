@@ -1,10 +1,8 @@
 package com.duokoala.server.service.userService;
 
-import com.duokoala.server.dto.request.mediaRequest.ImageUpdateRequest;
 import com.duokoala.server.dto.request.userRequest.AdminCreationRequest;
 import com.duokoala.server.dto.request.userRequest.AdminUpdateRequest;
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
-import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.enums.Role;
 import com.duokoala.server.exception.AppException;
@@ -15,12 +13,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
