@@ -2,14 +2,14 @@ import Image from "next/image";
 
 export default function Logo() {
   return (
-    <div className="w-[100px] mr-2">
+    <div className="flex flex-col h-full w-28 mr-2 relative">
       <Image
         src="/images/Duokoala-Logo-512h.png"
         alt="Image"
-        className="rounded-md object-cover h-full"
-        width={100}
-        height={30}
-        priority={true}
+        className="rounded-md object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority
+        fill
       />
     </div>
   );

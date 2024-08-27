@@ -23,16 +23,16 @@ export default function Banner() {
         </div>
       </div>
 
-      <div className="hidden sm:flex flex-0 justify-center">
-        <div className="w-[300px] h-auto">
+      <div className="hidden sm:flex flex-0 justify-center ">
+        <div className="flex h-full w-80 relative mt-4">
           <AspectRatio ratio={1 / 1}>
             <Image
               src="/images/koala-flip.png"
               alt="Duokoala Logo"
               className="rounded-md object-cover"
-              width={300}
-              height={300}
-              priority={true}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority
+              fill
             />
           </AspectRatio>
         </div>

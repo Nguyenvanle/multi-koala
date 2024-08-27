@@ -30,7 +30,7 @@ export default function AboutCard({
             <Image
               src={image}
               alt={title}
-              className="object-cover w-full h-auto "
+              className="object-cover w-full h-auto transition-all hover:scale-105"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority
