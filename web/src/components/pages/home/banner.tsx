@@ -5,8 +5,8 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <div className="flex flex-row">
-      <div className="flex flex-1 flex-col space-y-2 justify-between pt-8">
+    <div className="flex flex-row  space-x-4">
+      <div className="flex flex-1 flex-col space-y-2 justify-between">
         <H1>Course sharing platform for English teachers</H1>
         <Lead>
           The ideal learning environment to connect students with teachers.

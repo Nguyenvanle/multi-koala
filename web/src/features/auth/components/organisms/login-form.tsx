@@ -5,7 +5,6 @@ import UsernameField from "@/features/auth/components/molecules/username-field";
 import { Form } from "@/components/ui/form";
 import useLoginForm from "@/features/auth/hooks/useLoginForm";
 import PasswordField from "@/features/auth/components/molecules/password-field";
-import { Separator } from "@/components/ui/separator";
 import { Icons } from "@/components/ui/icons";
 import { H1 } from "@/components/ui/typography";
 
@@ -16,9 +15,9 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex-1 md:max-w-md border rounded shadow-md py-8 px-4"
+        className="flex flex-col w-full max-w-md space-y-8 flex-1 border rounded shadow-md py-8 px-4"
       >
-        <div className="flex justify-center">
+        <div className="flex flex-1 justify-center">
           <H1>Login</H1>
         </div>
         <UsernameField control={form.control} />
@@ -37,8 +36,8 @@ export default function LoginForm() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <Button variant="outline">
-              <Icons.gitHub className="mr-2 h-4 w-4" />
-              Github
+              <Icons.facebook className="mr-2 h-5 w-5" />
+              Facebook
             </Button>
             <Button variant="outline">
               <Icons.google className="mr-2 h-4 w-4" />

@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RegisterBodyType } from "@/types/auth/schema/register";
+import Link from "next/link";
 import { Control } from "react-hook-form";
 
 export default function TermField({
@@ -28,7 +29,14 @@ export default function TermField({
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              I agree to the Terms of Service and Privacy Policy
+              I agree to the{" "}
+              <Link className="font-bold" href={"/register"}>
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link className="font-bold" href={"/register"}>
+                Privacy Policy
+              </Link>
             </label>
             <FormMessage />
           </div>

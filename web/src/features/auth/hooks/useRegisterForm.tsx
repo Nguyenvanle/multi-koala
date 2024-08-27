@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { RegisterBody, RegisterBodyType } from "@/types/auth/schema/register";
+import { DURATION } from "@/types/layout/toast";
 
 export default function useRegisterForm() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function useRegisterForm() {
         title: "Error",
         description: "You must agree to the terms and conditions",
         variant: "destructive",
+        duration: DURATION,
       });
       return;
     }
@@ -37,6 +39,7 @@ export default function useRegisterForm() {
     toast({
       title: "Registration Successful!",
       description: "Your account has been created successfully.",
+      duration: DURATION,
     });
 
     router.push("/verify");
