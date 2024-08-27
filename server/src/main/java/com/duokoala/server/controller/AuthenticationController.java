@@ -2,6 +2,7 @@ package com.duokoala.server.controller;
 
 import com.duokoala.server.dto.request.authRequest.IntrospectRequest;
 import com.duokoala.server.dto.request.authRequest.LoginRequest;
+import com.duokoala.server.dto.request.authRequest.LogoutRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
@@ -35,5 +36,10 @@ public class AuthenticationController {
         return ApiResponse.<IntrospectResponse>builder()
                 .result(authenticationService.introspect(request))
                 .build();
+    }
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder().build();
     }
 }

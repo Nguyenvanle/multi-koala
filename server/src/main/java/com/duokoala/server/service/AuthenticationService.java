@@ -2,8 +2,10 @@ package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.authRequest.IntrospectRequest;
 import com.duokoala.server.dto.request.authRequest.LoginRequest;
+import com.duokoala.server.dto.request.authRequest.LogoutRequest;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
+import com.duokoala.server.entity.InvalidatedToken;
 import com.duokoala.server.entity.user.User;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -50,7 +52,7 @@ public class AuthenticationService {
 
     @NonFinal
     @Value("${jwt.refreshable-duration}")
-    protected  long REFRESHABLE_DURATION;
+    protected long REFRESHABLE_DURATION;
 
     public AuthenticationResponse login(LoginRequest request) throws JOSEException {
         var user = userRepository.findByUsername(request.getUsername())
@@ -63,6 +65,28 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
+    }
+
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            SignedJWT signedJWT = verifyToken(request.getToken(), true);
+            //throw exception if this signedJWT expired!
+
+            String jit = signedJWT.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            String username = signedJWT.getJWTClaimsSet().getSubject();
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                    .tokenId(jit)
+                    .expiryTime(expiryTime)
+                    .user(user)
+                    .build();
+            invalidatedTokenRepository.save(invalidatedToken);
+        } catch (AppException e) {
+            log.info("Token already expired!");
+        }
     }
 
     public IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException {
@@ -92,12 +116,12 @@ public class AuthenticationService {
         Date expireTime = (isRefresh) ?
                 new Date(signedJWT.getJWTClaimsSet().getIssueTime().toInstant()
                         .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS).toEpochMilli())
-        :signedJWT.getJWTClaimsSet().getExpirationTime();
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        if(!(verified && expireTime.after(new Date())))
+        if (!(verified && expireTime.after(new Date())))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
@@ -107,7 +131,7 @@ public class AuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         //header => use Algorithm HS512, enough strong to protect token
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .claim("userId",user.getUserId())
+                .claim("userId", user.getUserId())
                 .subject(user.getUsername())
                 .jwtID(UUID.randomUUID().toString())
                 .issuer("duokoalaServer.com")
@@ -118,20 +142,21 @@ public class AuthenticationService {
                 .claim("scope", buildScope(user))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-        JWSObject jwsObject = new JWSObject(header,payload);
-            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
-            return jwsObject.serialize();
+        JWSObject jwsObject = new JWSObject(header, payload);
+        jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+        return jwsObject.serialize();
     }
 
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if(!CollectionUtils.isEmpty(user.getRoles())) {
-            user.getRoles().forEach( role -> {
+        if (!CollectionUtils.isEmpty(user.getRoles())) {
+            user.getRoles().forEach(role -> {
                 stringJoiner.add("ROLE_" + role.getRoleName());
-                if(!CollectionUtils.isEmpty(role.getPermissions())) {
+                if (!CollectionUtils.isEmpty(role.getPermissions())) {
                     role.getPermissions()
-                            .forEach(permission -> { stringJoiner.add(permission.getPermissionName());
-                    });
+                            .forEach(permission -> {
+                                stringJoiner.add(permission.getPermissionName());
+                            });
                 }
             });
         }
