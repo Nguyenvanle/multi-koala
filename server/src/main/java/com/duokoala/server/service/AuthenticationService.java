@@ -3,6 +3,7 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.authRequest.IntrospectRequest;
 import com.duokoala.server.dto.request.authRequest.LoginRequest;
 import com.duokoala.server.dto.request.authRequest.LogoutRequest;
+import com.duokoala.server.dto.request.authRequest.RefreshRequest;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
 import com.duokoala.server.entity.InvalidatedToken;
@@ -66,6 +67,30 @@ public class AuthenticationService {
                 .authenticated(true)
                 .build();
     }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request)
+            throws ParseException, JOSEException {
+        SignedJWT signedJWT = verifyToken(request.getToken(), true);
+
+        String jit = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        String username = signedJWT.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .tokenId(jit)
+                .expiryTime(expiryTime)
+                .user(user)
+                .build();
+        invalidatedTokenRepository.save(invalidatedToken);
+        var newToken = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(newToken)
+                .authenticated(true)
+                .build();
+    }
+
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {

@@ -1,9 +1,7 @@
 package com.duokoala.server.entity;
 
 import com.duokoala.server.entity.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,6 +17,6 @@ public class InvalidatedToken {
     @Id
     String tokenId;
     Date expiryTime;
-    @OneToOne
+    @ManyToOne
     User user;
 }
