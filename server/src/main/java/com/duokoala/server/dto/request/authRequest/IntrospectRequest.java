@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.request;
+package com.duokoala.server.dto.request.authRequest;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequest {
-    String username;
-    String password;
+public class IntrospectRequest {
+    String token;
 }

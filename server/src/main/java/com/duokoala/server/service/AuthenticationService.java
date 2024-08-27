@@ -1,7 +1,9 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.LoginRequest;
-import com.duokoala.server.dto.response.AuthenticationResponse;
+import com.duokoala.server.dto.request.authRequest.IntrospectRequest;
+import com.duokoala.server.dto.request.authRequest.LoginRequest;
+import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
+import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
 import com.duokoala.server.entity.user.User;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -9,17 +11,21 @@ import com.duokoala.server.repository.InvalidatedTokenRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -33,7 +39,6 @@ import java.util.UUID;
 public class AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
-    PasswordEncoder passwordEncoder;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -50,13 +55,52 @@ public class AuthenticationService {
     public AuthenticationResponse login(LoginRequest request) throws JOSEException {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if (!authenticated) throw new AppException(ErrorCode.PASSWORD_INCORRECT);
+        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
                 .build();
+    }
+
+    public IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException {
+        String token = request.getToken();
+        boolean isValid = true;
+        try {
+            verifyToken(token, false);
+        } catch (AppException e) {
+            isValid = false;
+        }
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .build();
+    }
+
+    private SignedJWT verifyToken(String token, boolean isRefresh)
+            throws ParseException, JOSEException {
+        JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes());
+        //create verify tool by signature
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        //changed token to signedJWT
+
+        var verified = signedJWT.verify(jwsVerifier);
+        //verified =>is signedJWT can use?
+
+        Date expireTime = (isRefresh) ?
+                new Date(signedJWT.getJWTClaimsSet().getIssueTime().toInstant()
+                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS).toEpochMilli())
+        :signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        if(!(verified && expireTime.after(new Date())))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        return signedJWT;
     }
 
     private String generateToken(User user) throws JOSEException {
