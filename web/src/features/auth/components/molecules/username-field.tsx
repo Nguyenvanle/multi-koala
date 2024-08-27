@@ -6,14 +6,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RegisterBodyType } from "@/types/auth/schema/register";
 import { Control } from "react-hook-form";
 
-export default function UsernameField({
-  control,
-}: {
-  control: Control<RegisterBodyType, any>;
-}) {
+export default function UsernameField({ control }: { control: Control<any> }) {
   return (
     <FormField
       control={control}

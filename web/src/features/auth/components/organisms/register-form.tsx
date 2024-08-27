@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import useRegisterForm from "@/features/auth/hooks/useRegister";
 import UsernameField from "@/features/auth/components/molecules/username-field";
 import NameFields from "@/features/auth/components/molecules/name-fields";
 import EmailField from "@/features/auth/components/molecules/email-field";
 import { Form } from "@/components/ui/form";
-import PasswordFields from "@/features/auth/components/molecules/password-field";
+import PasswordFields from "@/features/auth/components/molecules/password-fields";
 import TermField from "@/features/auth/components/molecules/term-field";
+import { H1 } from "@/components/ui/typography";
 
 export default function RegisterForm() {
   const { form, onSubmit } = useRegisterForm();
@@ -19,6 +19,9 @@ export default function RegisterForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4 flex-1 md:max-w-md border rounded shadow-md p-4"
       >
+        <div className="flex  justify-center">
+          <H1>Sign Up</H1>
+        </div>
         <UsernameField control={form.control} />
         <NameFields control={form.control} />
         <EmailField control={form.control} />

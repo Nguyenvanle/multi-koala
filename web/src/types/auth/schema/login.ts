@@ -2,10 +2,23 @@ import { z } from "zod";
 
 export const LoginBody = z
   .object({
-    email: z.string().email({ message: "Invalid email address." }),
+    username: z
+      .string()
+      .min(3, { message: "Username must be at least 3 characters." })
+      .max(20, { message: "Username must not exceed 20 characters." })
+      .regex(/^[a-zA-Z0-9]+$/, {
+        message: "Username can only contain letters and numbers.",
+      }),
+
     password: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters." }),
+      .min(8, { message: "Password must be at least 8 characters." })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter.",
+      })
+      .regex(/[0-9]/, {
+        message: "Password must contain at least one number.",
+      }),
   })
   .strict();
 
