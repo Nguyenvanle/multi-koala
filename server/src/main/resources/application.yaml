@@ -14,3 +14,5 @@ spring:
 
 jwt:
   signerKey: "9lg678a/5OweZHwtBKEjPfrwqe0wybmY0f67oNtqziI1UUSMM40iyrb481pdaf82"
+  valid-duration: 3600 #insecond = 1 hours
+  refreshable-duration: 360000 #insecond = 100 hours

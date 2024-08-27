@@ -17,7 +17,7 @@ import java.util.Date;
 @Entity
 public class InvalidatedToken {
     @Id
-    String token;
+    String tokenId;
     Date expiryTime;
     @OneToOne
     User user;

@@ -9,6 +9,7 @@ import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.AdminMapper;
 import com.duokoala.server.repository.userRepository.AdminRepository;
+import com.duokoala.server.repository.userRepository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,11 +25,14 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminService {
     AdminRepository adminRepository;
+    UserRepository userRepository;
     AdminMapper adminMapper;
     UserService userService;
     PasswordEncoder passwordEncoder;
 
     public AdminResponse createAdmin(AdminCreationRequest request) {
+        if(userRepository.existsByUsername(request.getUsername()))
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
         Admin admin = adminMapper.toAdmin(request);
         admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
