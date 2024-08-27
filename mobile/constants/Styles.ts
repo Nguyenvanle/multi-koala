@@ -58,3 +58,13 @@ export const circle = StyleSheet.create({
     // transform: [{ translateY: 110 }], // Dịch chuyển lên
   },
 });
+
+export const button = StyleSheet.create({
+  Authen: {
+    width: 80,
+    height: 45,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
