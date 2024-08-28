@@ -27,10 +27,10 @@ public class ActivityService {
     ActivityMapper activityMapper;
     AdminRepository adminRepository;
 
-    public ActivityResponse createActivity(ActivityCreateRequest request) {
+    public ActivityResponse createActivity(String adminId, ActivityCreateRequest request) {
         Activity activity = activityMapper.toActivity(request);
         activity.setHappenAt(new Date());
-        Admin admin = adminRepository.findById(request.getAdminId())
+        Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         activity.setActionedByAdmin(admin);
         return  activityMapper.toActivityResponse(activityRepository.save(activity));

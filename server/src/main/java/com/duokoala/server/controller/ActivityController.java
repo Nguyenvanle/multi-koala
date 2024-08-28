@@ -12,19 +12,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/activities")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ActivityController {
     ActivityService activityService;
 
-    @PostMapping
-    ApiResponse<ActivityResponse> createActivity(@RequestBody ActivityCreateRequest request) {
+    @PostMapping("/admins/{adminId}/activities")
+    ApiResponse<ActivityResponse> createActivity(@PathVariable String adminId, @RequestBody ActivityCreateRequest request) {
         return ApiResponse.<ActivityResponse>builder()
-                .result(activityService.createActivity(request))
+                .result(activityService.createActivity(adminId, request))
                 .build();
     }
-    @GetMapping
+    @GetMapping("/activities")
     ApiResponse<List<ActivityResponse>> getActivities() {
         return ApiResponse.<List<ActivityResponse>>builder()
                 .result(activityService.getActivities())
