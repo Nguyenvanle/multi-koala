@@ -46,14 +46,14 @@ public class StudentController {
     }
 
     @GetMapping
-    ApiResponse<List<StudentResponse>> getAdmins() {
+    ApiResponse<List<StudentResponse>> getStudents() {
         return ApiResponse.<List<StudentResponse>>builder()
                 .result(studentService.getStudents())
                 .build();
     }
 
     @DeleteMapping("/{studentId}")
-    ApiResponse<Void> deleteAdmin(@PathVariable String studentId) {
+    ApiResponse<Void> deleteStudent(@PathVariable String studentId) {
         userService.deleteUser(studentId);
         return ApiResponse.<Void>builder()
                 .message("Student has been deleted!")
