@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +45,16 @@ public class StudentService {
         userService.updateAvatarByUserId(student.getImage(), request.getImageUrl());
         student.setPassword(userService.encodePassword(request.getPassword()));
         return studentMapper.toStudentResponse(studentRepository.save(student));
+    }
+
+    public StudentResponse getStudent(String studentId) {
+        var student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return studentMapper.toStudentResponse(student);
+    }
+
+    public List<StudentResponse> getStudents() {
+        var students = studentRepository.findAll();
+        return students.stream().map(studentMapper::toStudentResponse).toList();
     }
 }

@@ -37,4 +37,26 @@ public class StudentController {
                 .result(studentService.updateStudent(studentId,request))
                 .build();
     }
+
+    @GetMapping("/{studentId}")
+    ApiResponse<StudentResponse> getStudent(@PathVariable String studentId) {
+        return ApiResponse.<StudentResponse>builder()
+                .result(studentService.getStudent(studentId))
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<List<StudentResponse>> getAdmins() {
+        return ApiResponse.<List<StudentResponse>>builder()
+                .result(studentService.getStudents())
+                .build();
+    }
+
+    @DeleteMapping("/{studentId}")
+    ApiResponse<Void> deleteAdmin(@PathVariable String studentId) {
+        userService.deleteUser(studentId);
+        return ApiResponse.<Void>builder()
+                .message("Student has been deleted!")
+                .build();
+    }
 }
