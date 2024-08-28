@@ -13,6 +13,7 @@ import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
+import CircleStyle from "@/components/common/CircleStyle";
 
 const SignIn: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -32,13 +33,15 @@ const SignIn: React.FC = () => {
   return (
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
+      <CircleStyle />
       <Text
         style={{
           ...text.h1,
           fontWeight: "bold",
           color: Colors.teal_dark,
-          paddingBottom: 20,
+          paddingTop: 20,
           paddingHorizontal: 20,
+          height: 120,
         }}
       >
         Sign In

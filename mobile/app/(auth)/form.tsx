@@ -7,10 +7,12 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  StatusBar,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
+import CircleStyle from "@/components/common/CircleStyle";
 
 const Form: React.FC = () => {
   const router = useRouter(); // Khai báo router
@@ -33,12 +35,15 @@ const Form: React.FC = () => {
 
   return (
     <SafeAreaView style={Styles.container}>
+      <StatusBar barStyle={"dark-content"} />
+      <CircleStyle />
       <Text
         style={{
           ...text.h1,
           fontWeight: "bold",
           color: Colors.teal_dark,
-          paddingBottom: 20,
+          paddingTop: 20,
+          height: 120,
           paddingHorizontal: 20,
         }}
       >

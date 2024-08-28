@@ -13,6 +13,7 @@ import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import { StatusBar } from "react-native";
+import CircleStyle from "@/components/common/CircleStyle";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -31,12 +32,14 @@ const SignUp: React.FC = () => {
   return (
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
+      <CircleStyle />
       <Text
         style={{
           ...text.h1,
           fontWeight: "bold",
           color: Colors.teal_dark,
-          paddingBottom: 20,
+          height: 120,
+          paddingTop: 20,
           paddingHorizontal: 20,
         }}
       >

@@ -21,15 +21,17 @@ const LogoScreen = () => {
         <StatusBar barStyle="dark-content"></StatusBar>
         <View style={logoscreen.Logo}>
           <Image source={require("@/assets/images/Logo.png")} />
-          <Text style={text.h2}>Small steps, big progress</Text>
+          <Text style={{ ...text.h3, fontWeight: "bold", color: Colors.blue }}>
+            Small steps - big progress
+          </Text>
         </View>
         <View style={logoscreen.myteam}>
-          <Text style={text.large}>©2024 Koala Team</Text>
+          <Text style={text.p}>©2024 Koala Team</Text>
         </View>
       </SafeAreaView>
     );
   } else {
-    return <Redirect href={"/(home)/home"}></Redirect>;
+    return <Redirect href={"/(auth)/sign-in"}></Redirect>;
   }
 };
 
