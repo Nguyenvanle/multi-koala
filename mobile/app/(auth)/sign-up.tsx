@@ -12,24 +12,14 @@ import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
+import SignIn from "./sign-in";
 
-const SignIn: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const SignUp: React.FC = () => {
+  const [email, setEmail] = useState("");
   const router = useRouter(); // Khai báo router
 
-  const handleLogin = () => {
-    // Xử lý đăng nhập
-    if (username && password) {
-      Alert.alert("Notification", "Sign in successfully!!!.");
-      <Home />;
-    } else {
-      Alert.alert("Notification", "Please enter username and password.");
-    }
-  };
-
   return (
-    <View style={{ ...Styles.container, flex: 0 }}>
+    <View style={Styles.container}>
       <Text
         style={{
           ...text.h1,
@@ -38,7 +28,7 @@ const SignIn: React.FC = () => {
           paddingHorizontal: 20,
         }}
       >
-        Sign In
+        Sign Up
       </Text>
 
       <Button
@@ -56,47 +46,53 @@ const SignIn: React.FC = () => {
       <Text style={{ ...text.p, alignSelf: "center", paddingVertical: 50 }}>
         Or
       </Text>
-      <View style={{ alignSelf: "baseline", paddingLeft: 5, paddingTop: 10 }}>
-        <Text style={text.p}>Username</Text>
+      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
+        <Text style={text.p}>Email</Text>
       </View>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Email"
         placeholderTextColor={Colors.grey}
-        value={username}
-        onChangeText={setUsername}
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 5, paddingTop: 10 }}>
-        <Text style={text.p}>Password</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={Colors.grey}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        value={email}
+        onChangeText={setEmail}
       />
 
-      <TouchableOpacity
-        onPress={() => Alert.alert("Forgot Password?")}
-        style={{ alignSelf: "baseline" }}
+      <View
+        style={{
+          alignItems: "baseline",
+          justifyContent: "center",
+          width: 350,
+          marginTop: 5,
+        }}
       >
-        <Text style={{ ...text.link, color: Colors.teal_dark }}>
-          Forgot Password?
+        <Text style={text.subtitle}>
+          By signing up for Duokoala you acknowledge that you agree to Koala
+          Team's{" "}
+          <Text style={{ ...text.link, fontWeight: "500" }}>
+            Terms of Service
+          </Text>{" "}
+          and{" "}
+          <Text style={{ ...text.link, fontWeight: "500" }}>
+            Privacy Policy
+          </Text>
+        </Text>
+      </View>
+
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={() => router.push("/")}
+      >
+        <Text style={{ ...text.h4, color: Colors.white }}>
+          Continue with Email
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
-      </TouchableOpacity>
-
       <View style={styles.registerContainer}>
-        <Text style={text.p}>Don't have an account yet?</Text>
-        <TouchableOpacity onPress={() => router.replace("./sign-up")}>
+        <Text style={text.p}>Not signed in yet?</Text>
+        <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
           <Text style={{ ...text.link, color: Colors.teal_dark }}>
             {" "}
-            Sign Up
+            Sign In
           </Text>
         </TouchableOpacity>
       </View>
@@ -125,8 +121,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 30,
   },
 });
 
-export default SignIn;
+export default SignUp;

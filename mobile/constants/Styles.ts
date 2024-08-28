@@ -46,6 +46,10 @@ export const text = StyleSheet.create({
     color: Colors.dark,
     textDecorationLine: "underline",
   },
+  subtitle: {
+    fontSize: 14,
+    color: Colors.dark,
+  },
 });
 
 export const circle = StyleSheet.create({

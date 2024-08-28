@@ -7,26 +7,13 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import Home from "@/app/(tabs)/(home)/home";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 
-const SignIn: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Confirm: React.FC = () => {
   const router = useRouter(); // Khai báo router
-
-  const handleLogin = () => {
-    // Xử lý đăng nhập
-    if (username && password) {
-      Alert.alert("Notification!", "Sign in successfully!!!.");
-      router.replace("/(home)/home");
-    } else {
-      Alert.alert("Error!", "Please enter username and password.");
-    }
-  };
 
   return (
     <View style={Styles.container}>
@@ -38,7 +25,7 @@ const SignIn: React.FC = () => {
           paddingHorizontal: 20,
         }}
       >
-        Sign In
+        Sign Up
       </Text>
 
       <Button
@@ -57,46 +44,47 @@ const SignIn: React.FC = () => {
         Or
       </Text>
       <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={text.p}>Username</Text>
+        <Text style={text.p}>Email</Text>
       </View>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Email"
         placeholderTextColor={Colors.grey}
-        value={username}
-        onChangeText={setUsername}
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={text.p}>Password</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={Colors.grey}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
       />
 
-      <TouchableOpacity
-        onPress={() => Alert.alert("Forgot Password?")}
-        style={{ alignSelf: "baseline", paddingLeft: 35 }}
+      <View
+        style={{
+          alignItems: "baseline",
+          justifyContent: "center",
+          width: 350,
+          marginTop: 5,
+        }}
       >
-        <Text style={{ ...text.link, color: Colors.teal_dark }}>
-          Forgot Password?
+        <Text style={text.subtitle}>
+          By signing up for Duokoala you acknowledge that you agree to Koala
+          Team's{" "}
+          <Text style={{ ...text.link, fontWeight: "500" }}>
+            Terms of Service
+          </Text>{" "}
+          and{" "}
+          <Text style={{ ...text.link, fontWeight: "500" }}>
+            Privacy Policy
+          </Text>
+        </Text>
+      </View>
+
+      <TouchableOpacity style={styles.loginButton} onPress={}>
+        <Text style={{ ...text.h4, color: Colors.white }}>
+          Continue with Email
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
-      </TouchableOpacity>
-
       <View style={styles.registerContainer}>
-        <Text style={text.p}>Don't have an account yet?</Text>
-        <TouchableOpacity onPress={() => router.replace("./sign-up")}>
+        <Text style={text.p}>Not signed in yet?</Text>
+        <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
           <Text style={{ ...text.link, color: Colors.teal_dark }}>
             {" "}
-            Sign Up
+            Sign In
           </Text>
         </TouchableOpacity>
       </View>
@@ -129,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default Confirm;
