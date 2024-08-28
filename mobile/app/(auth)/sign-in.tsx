@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   SafeAreaView,
+  StatusBar,
 } from "react-native";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
@@ -18,7 +19,7 @@ const SignIn: React.FC = () => {
   const [password, setPassword] = useState("");
   const router = useRouter(); // Khai báo router
 
-  const handleLogin = () => {
+  const handleSignIn = () => {
     // Xử lý đăng nhập
     if (username && password) {
       Alert.alert("Notification!", "Sign in successfully!!!.");
@@ -30,6 +31,7 @@ const SignIn: React.FC = () => {
 
   return (
     <SafeAreaView style={Styles.container}>
+      <StatusBar barStyle={"dark-content"} />
       <Text
         style={{
           ...text.h1,
@@ -54,11 +56,24 @@ const SignIn: React.FC = () => {
         buttonStyle={{ backgroundColor: Colors.teal_dark }}
         textStyle={{ color: Colors.white }}
       />
-      <Text style={{ ...text.p, alignSelf: "center", paddingVertical: 50 }}>
+      <Text
+        style={{
+          ...text.p,
+          alignSelf: "center",
+          paddingVertical: 50,
+          fontWeight: "500",
+        }}
+      >
         Or
       </Text>
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={text.p}>Username</Text>
+      <View
+        style={{
+          marginHorizontal: 35,
+          alignSelf: "flex-start",
+          paddingTop: 10,
+        }}
+      >
+        <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
       </View>
       <TextInput
         style={styles.input}
@@ -67,8 +82,14 @@ const SignIn: React.FC = () => {
         value={username}
         onChangeText={setUsername}
       />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={text.p}>Password</Text>
+      <View
+        style={{
+          marginHorizontal: 35,
+          alignSelf: "flex-start",
+          paddingTop: 10,
+        }}
+      >
+        <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
       </View>
       <TextInput
         style={styles.input}
@@ -81,21 +102,25 @@ const SignIn: React.FC = () => {
 
       <TouchableOpacity
         onPress={() => Alert.alert("Forgot Password?")}
-        style={{ alignSelf: "baseline", paddingLeft: 35 }}
+        style={{ alignSelf: "baseline", marginHorizontal: 35 }}
       >
-        <Text style={{ ...text.link, color: Colors.teal_dark }}>
+        <Text
+          style={{ ...text.link, color: Colors.teal_dark, fontWeight: "500" }}
+        >
           Forgot Password?
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+      <TouchableOpacity style={styles.loginButton} onPress={handleSignIn}>
         <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
       </TouchableOpacity>
 
       <View style={styles.registerContainer}>
         <Text style={text.p}>Don't have an account yet?</Text>
         <TouchableOpacity onPress={() => router.replace("./sign-up")}>
-          <Text style={{ ...text.link, color: Colors.teal_dark }}>
+          <Text
+            style={{ ...text.link, color: Colors.teal_dark, fontWeight: "500" }}
+          >
             {" "}
             Sign Up
           </Text>

@@ -8,6 +8,7 @@ export const Styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.background,
+    padding: 5,
   },
 });
 export const text = StyleSheet.create({

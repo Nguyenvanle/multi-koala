@@ -1,5 +1,11 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
@@ -8,7 +14,7 @@ const Confirm: React.FC = () => {
   const router = useRouter(); // Khai báo router
 
   return (
-    <View style={Styles.container}>
+    <SafeAreaView style={Styles.container}>
       <Text
         style={{
           ...text.h2,
@@ -29,7 +35,8 @@ const Confirm: React.FC = () => {
           paddingHorizontal: 30,
         }}
       >
-        To continue signing up, click the link that we emailed to abc@gmail.com.
+        To continue signing up, click the link that we emailed to{" "}
+        <Text style={{ fontWeight: "500" }}>abc@gmail.com</Text>.
       </Text>
 
       <TouchableOpacity
@@ -40,11 +47,11 @@ const Confirm: React.FC = () => {
           flexDirection: "row",
           justifyContent: "center",
         }}
-        onPress={() => router.push("/(auth)/sign-in")}
+        onPress={() => router.replace("/(auth)/form")}
       >
         <Text style={{ ...text.h3, color: Colors.white }}>Open Gmail</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
@@ -17,8 +18,18 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const router = useRouter(); // Khai báo router
 
+  const handleEmail = () => {
+    // Xử lý email
+    if (email) {
+      Alert.alert("Notification!", "Valid Email.");
+      router.push("/(auth)/confirm"); // Chuyển hướng tới trang Home
+    } else {
+      Alert.alert("Error!", "Invalid email, please check again.");
+    }
+  };
+
   return (
-    <View style={Styles.container}>
+    <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
       <Text
         style={{
@@ -44,11 +55,18 @@ const SignUp: React.FC = () => {
         buttonStyle={{ backgroundColor: Colors.teal_dark }}
         textStyle={{ color: Colors.white }}
       />
-      <Text style={{ ...text.p, alignSelf: "center", paddingVertical: 50 }}>
+      <Text
+        style={{
+          ...text.p,
+          alignSelf: "center",
+          paddingVertical: 50,
+          fontWeight: "500",
+        }}
+      >
         Or
       </Text>
       <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={text.p}>Email</Text>
+        <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
       </View>
       <TextInput
         style={styles.input}
@@ -79,10 +97,7 @@ const SignUp: React.FC = () => {
         </Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => router.push("/(auth)/confirm")}
-      >
+      <TouchableOpacity style={styles.loginButton} onPress={handleEmail}>
         <Text style={{ ...text.h4, color: Colors.white }}>
           Continue with Email
         </Text>
@@ -97,7 +112,7 @@ const SignUp: React.FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
