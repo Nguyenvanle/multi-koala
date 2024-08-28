@@ -1,5 +1,6 @@
 import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
+import LessonsCard from "@/features/courses/components/molecules/lessons-card";
 import { COURSES } from "@/types/course/course";
 
 export default function CourseDetail({
@@ -21,8 +22,8 @@ export default function CourseDetail({
           <DisplayCard {...course} />
           <DetailCard {...course} />
         </div>
-        <div className="p-4 bg-blue-500 flex flex-1">
-          {/* <LessonsCard course={course.lessons} /> */}
+        <div className="flex flex-col gap-4">
+          <LessonsCard {...course} />
           {/* <StudentsCard course={course.students} /> */}
         </div>
       </div>

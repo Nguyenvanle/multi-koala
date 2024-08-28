@@ -1,14 +1,17 @@
+import { Lesson, lessons } from "@/types/course/lesson";
+
 export interface CourseCardProps {
   courseId: string;
   courseName: string;
   courseCreateAt: Date;
-  coursePrice: Number;
+  coursePrice: number;
   courseDescription: string;
   courseType: string; // => Type?
   courseImage: string; // => Image?
   uploadByTeacher: string; // => Teacher?
   approvedByAdmin: string; // => Admin?
   status: "PENDING_APPROVAL" | "APPROVED" | "REJECTED";
+  lessons: Lesson[]; // Danh sách bài học liên quan đến khóa học
 }
 
 export const COURSES: CourseCardProps[] = [
@@ -17,13 +20,15 @@ export const COURSES: CourseCardProps[] = [
     courseName: "Introduction to React",
     courseCreateAt: new Date(),
     coursePrice: 49.99,
-    courseDescription: "Learn the basics of React and build your first app.",
+    courseDescription:
+      "Learn the basics of React and build your first app. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore quod eos corporis autem, architecto sint rem mollitia tenetur alias perferendis eum explicabo optio consectetur. Dolorem ratione eum obcaecati repellat quo?",
     courseType: "community",
     courseImage:
       "https://img.freepik.com/free-photo/online-education-studying-e-learning-technology-concept_53876-21187.jpg?t=st=1724768100~exp=1724771700~hmac=2a024739a1f3574497b5b0a183c2ccfd2f219a828bf004b565d0705abf8e2503&w=826",
     uploadByTeacher: "John Doe",
     approvedByAdmin: "Koala Nguyễn",
     status: "APPROVED",
+    lessons: lessons,
   },
   {
     courseId: "2",
@@ -37,6 +42,7 @@ export const COURSES: CourseCardProps[] = [
     uploadByTeacher: "John Doe",
     approvedByAdmin: "Koala Nguyễn",
     status: "APPROVED",
+    lessons: lessons,
   },
   {
     courseId: "3",
@@ -50,6 +56,7 @@ export const COURSES: CourseCardProps[] = [
     uploadByTeacher: "John Doe",
     approvedByAdmin: "Koala Nguyễn",
     status: "APPROVED",
+    lessons: lessons,
   },
   {
     courseId: "4",
@@ -63,6 +70,7 @@ export const COURSES: CourseCardProps[] = [
     uploadByTeacher: "John Doe",
     approvedByAdmin: "Koala Nguyễn",
     status: "APPROVED",
+    lessons: lessons,
   },
   {
     courseId: "5",
@@ -76,6 +84,7 @@ export const COURSES: CourseCardProps[] = [
     uploadByTeacher: "John Doe",
     approvedByAdmin: "Koala Nguyễn",
     status: "APPROVED",
+    lessons: lessons,
   },
   {
     courseId: "6",
@@ -89,5 +98,6 @@ export const COURSES: CourseCardProps[] = [
     uploadByTeacher: "John Doe",
     approvedByAdmin: "Koala Nguyễn",
     status: "APPROVED",
+    lessons: lessons,
   },
 ];
