@@ -11,6 +11,11 @@ export const Styles = StyleSheet.create({
   },
 });
 export const text = StyleSheet.create({
+  h1: {
+    fontSize: 48,
+    color: Colors.dark,
+    fontWeight: "bold",
+  },
   h2: {
     fontSize: 30,
     color: Colors.black,
@@ -35,6 +40,11 @@ export const text = StyleSheet.create({
     fontSize: 16,
     color: Colors.dark,
     fontStyle: "italic",
+  },
+  link: {
+    fontSize: 16,
+    color: Colors.dark,
+    textDecorationLine: "underline",
   },
 });
 
@@ -61,8 +71,9 @@ export const circle = StyleSheet.create({
 
 export const button = StyleSheet.create({
   Authen: {
-    width: 80,
-    height: 45,
+    width: 350,
+    marginTop: 20,
+    paddingVertical: 20,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",

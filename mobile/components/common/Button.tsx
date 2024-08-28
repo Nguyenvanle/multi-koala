@@ -16,27 +16,8 @@ const Button: React.FC<ButtonProps> = ({
   buttonStyle,
   textStyle,
 }) => {
-  const [isPressed, setIsPressed] = useState(false); // State để theo dõi trạng thái nhấn
-
-  const handlePressIn = () => {
-    setIsPressed(true); // Đặt trạng thái là nhấn
-  };
-
-  const handlePressOut = () => {
-    setIsPressed(false); // Đặt trạng thái là không nhấn
-  };
-
   return (
-    <TouchableOpacity
-      style={[
-        button.Authen,
-        buttonStyle,
-        { backgroundColor: isPressed ? Colors.teal_dark : Colors.background }, // Thay màu nền dựa trên trạng thái
-      ]}
-      onPress={onPress}
-      onPressIn={handlePressIn} // Khi nhấn vào
-      onPressOut={handlePressOut} // Khi bỏ tay ra
-    >
+    <TouchableOpacity style={[button.Authen, buttonStyle]} onPress={onPress}>
       <Text style={[text.p, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
