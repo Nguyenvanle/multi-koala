@@ -6,8 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from "react-native";
-import Home from "@/app/(tabs)/(home)/home";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
@@ -29,10 +29,11 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <View style={Styles.container}>
+    <SafeAreaView style={Styles.container}>
       <Text
         style={{
           ...text.h1,
+          fontWeight: "bold",
           color: Colors.teal_dark,
           paddingBottom: 20,
           paddingHorizontal: 20,
@@ -100,7 +101,7 @@ const SignIn: React.FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

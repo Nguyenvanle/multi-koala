@@ -14,7 +14,6 @@ export const text = StyleSheet.create({
   h1: {
     fontSize: 48,
     color: Colors.dark,
-    fontWeight: "bold",
   },
   h2: {
     fontSize: 30,
@@ -33,6 +32,7 @@ export const text = StyleSheet.create({
     color: Colors.dark,
   },
   large: {
+    fontWeight: "300",
     fontSize: 18,
     color: Colors.dark,
   },

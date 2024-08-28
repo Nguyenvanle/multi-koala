@@ -7,12 +7,11 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import Home from "@/app/(tabs)/(home)/home";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
-import SignIn from "./sign-in";
+import { StatusBar } from "react-native";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -20,9 +19,11 @@ const SignUp: React.FC = () => {
 
   return (
     <View style={Styles.container}>
+      <StatusBar barStyle={"dark-content"} />
       <Text
         style={{
           ...text.h1,
+          fontWeight: "bold",
           color: Colors.teal_dark,
           paddingBottom: 20,
           paddingHorizontal: 20,
@@ -80,7 +81,7 @@ const SignUp: React.FC = () => {
 
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={() => router.push("/")}
+        onPress={() => router.push("/(auth)/confirm")}
       >
         <Text style={{ ...text.h4, color: Colors.white }}>
           Continue with Email

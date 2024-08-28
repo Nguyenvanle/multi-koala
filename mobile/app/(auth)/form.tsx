@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 
-const Confirm: React.FC = () => {
+const Form: React.FC = () => {
   const router = useRouter(); // Khai báo router
 
   return (
@@ -40,7 +40,7 @@ const Confirm: React.FC = () => {
           flexDirection: "row",
           justifyContent: "center",
         }}
-        onPress={() => router.push("/(auth)/sign-in")}
+        onPress={() => router.push("/(auth)/sign-up")}
       >
         <Text style={{ ...text.h3, color: Colors.white }}>Open Gmail</Text>
       </TouchableOpacity>
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Confirm;
+export default Form;
