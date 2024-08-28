@@ -29,6 +29,11 @@ public class UserService {
     RoleRepository roleRepository;
     ImageRepository imageRepository;
     ImageMapper imageMapper;
+    PasswordEncoder passwordEncoder;
+
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
 
     public Image createNewAvatar(String imageUrl) {
         Image image = imageMapper.toImage(

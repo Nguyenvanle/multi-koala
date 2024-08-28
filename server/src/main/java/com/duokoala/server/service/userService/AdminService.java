@@ -28,16 +28,17 @@ public class AdminService {
     UserRepository userRepository;
     AdminMapper adminMapper;
     UserService userService;
-    PasswordEncoder passwordEncoder;
 
     public AdminResponse createAdmin(AdminCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         Admin admin = adminMapper.toAdmin(request);
+
         admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
         admin.setDeleted(false);
-        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.setPassword(userService.encodePassword(request.getPassword()));
+
         return adminMapper.toAdminResponse(adminRepository.save(admin));
 //        var context = SecurityContextHolder.getContext(); //get current context
 //        String name = context.getAuthentication().getName();
@@ -49,7 +50,7 @@ public class AdminService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         adminMapper.updateAdmin(admin,request);
         userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
-        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.setPassword(userService.encodePassword(request.getPassword()));
         return adminMapper.toAdminResponse(adminRepository.save(admin));
     }
 

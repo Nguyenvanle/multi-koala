@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +28,10 @@ public class RoleService {
     public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);
         // mapper request into role (different properties permissions) so we use var in this case
-        var permissions = permissionRepository.findAllById(request.getPermissions());
-        role.setPermissions(new HashSet<>(permissions)); // => hashset convert string to set
+        if(!Objects.isNull(request.getPermissions())) {
+            var permissions = permissionRepository.findAllById(request.getPermissions());
+            role.setPermissions(new HashSet<>(permissions));
+        }// => hashset convert string to set
         return roleMapper.toRoleResponse(roleRepository.save(role));
     }
 

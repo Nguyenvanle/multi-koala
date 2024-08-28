@@ -1,0 +1,38 @@
+package com.duokoala.server.service.userService;
+
+import com.duokoala.server.dto.request.userRequest.StudentCreationRequest;
+import com.duokoala.server.dto.response.userResponse.StudentResponse;
+import com.duokoala.server.entity.user.Student;
+import com.duokoala.server.enums.Role;
+import com.duokoala.server.exception.AppException;
+import com.duokoala.server.exception.ErrorCode;
+import com.duokoala.server.mapper.userMapper.StudentMapper;
+import com.duokoala.server.repository.userRepository.StudentRepository;
+import com.duokoala.server.repository.userRepository.UserRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class StudentService {
+    StudentRepository studentRepository;
+    StudentMapper studentMapper;
+    UserRepository userRepository;
+    UserService userService;
+
+    public StudentResponse createStudent(StudentCreationRequest request) {
+        if(userRepository.existsByUsername(request.getUsername()))
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        Student student = studentMapper.toStudent(request);
+
+        student.setImage(userService.createNewAvatar(request.getImageUrl()));
+        student.setRoles(userService.transferRoles(Role.STUDENT.name()));
+        student.setDeleted(false);
+        student.setPassword(userService.encodePassword(request.getPassword()));
+        return studentMapper.toStudentResponse(studentRepository.save(student));
+    }
+}
