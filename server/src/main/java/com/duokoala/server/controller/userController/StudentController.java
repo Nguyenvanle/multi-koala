@@ -1,6 +1,7 @@
 package com.duokoala.server.controller.userController;
 
 import com.duokoala.server.dto.request.userRequest.StudentCreationRequest;
+import com.duokoala.server.dto.request.userRequest.StudentUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
 import com.duokoala.server.service.userService.StudentService;
@@ -26,6 +27,14 @@ public class StudentController {
     ApiResponse<StudentResponse> createStudent(@RequestBody StudentCreationRequest request) {
         return ApiResponse.<StudentResponse>builder()
                 .result(studentService.createStudent(request))
+                .build();
+    }
+
+    @PutMapping("/{studentId}")
+    ApiResponse<StudentResponse> updateStudent(
+            @PathVariable String studentId, @RequestBody StudentUpdateRequest request) {
+        return ApiResponse.<StudentResponse>builder()
+                .result(studentService.updateStudent(studentId,request))
                 .build();
     }
 }

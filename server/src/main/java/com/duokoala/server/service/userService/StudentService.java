@@ -1,6 +1,7 @@
 package com.duokoala.server.service.userService;
 
 import com.duokoala.server.dto.request.userRequest.StudentCreationRequest;
+import com.duokoala.server.dto.request.userRequest.StudentUpdateRequest;
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
 import com.duokoala.server.entity.user.Student;
 import com.duokoala.server.enums.Role;
@@ -32,6 +33,15 @@ public class StudentService {
         student.setImage(userService.createNewAvatar(request.getImageUrl()));
         student.setRoles(userService.transferRoles(Role.STUDENT.name()));
         student.setDeleted(false);
+        student.setPassword(userService.encodePassword(request.getPassword()));
+        return studentMapper.toStudentResponse(studentRepository.save(student));
+    }
+
+    public StudentResponse updateStudent(String studentId, StudentUpdateRequest request) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        studentMapper.updateStudent(student,request);
+        userService.updateAvatarByUserId(student.getImage(), request.getImageUrl());
         student.setPassword(userService.encodePassword(request.getPassword()));
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }
