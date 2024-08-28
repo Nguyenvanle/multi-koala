@@ -20,7 +20,7 @@ export function CourseCard({
   return (
     <Card className="w-full max-w-sm rounded overflow-hidden hover:shadow-md">
       <CardHeader className="p-0 pb-4">
-        <div className="relative w-full h-48">
+        <div className="relative w-full h-48 overflow-hidden">
           <Image
             src={imageUrl}
             alt={title}
@@ -34,11 +34,14 @@ export function CourseCard({
 
       <CardContent className="px-4 pb-4">
         <CardTitle>{title}</CardTitle>
+
         <P>{description}</P>
       </CardContent>
 
       <CardFooter className="flex justify-between px-4 pb-4">
-        <Badge className="px-2 py-1">{price}</Badge>
+        <Badge className="px-2 py-1 bg-accent text-foreground hover:text-background">
+          {price}
+        </Badge>
 
         <Button>Enroll Now</Button>
       </CardFooter>
