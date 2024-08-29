@@ -7,10 +7,16 @@ import com.duokoala.server.dto.request.authRequest.RefreshRequest;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
 import com.duokoala.server.entity.InvalidatedToken;
+import com.duokoala.server.entity.user.Admin;
+import com.duokoala.server.entity.user.Student;
+import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.entity.user.User;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.repository.InvalidatedTokenRepository;
+import com.duokoala.server.repository.userRepository.AdminRepository;
+import com.duokoala.server.repository.userRepository.StudentRepository;
+import com.duokoala.server.repository.userRepository.TeacherRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -23,6 +29,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +49,10 @@ import java.util.UUID;
 public class AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    StudentRepository studentRepository;
+    TeacherRepository teacherRepository;
+    AdminRepository adminRepository;
+
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -187,4 +198,25 @@ public class AuthenticationService {
         }
         return stringJoiner.toString();
     }
+
+    public String getAuthenticatedUsername() {
+        var context = SecurityContextHolder.getContext(); //get current context
+        return context.getAuthentication().getName();
+    }
+
+    public Student getAuthenticatedStudent() {
+        return studentRepository.findByUsername(getAuthenticatedUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_EXISTED));
+    }
+
+    public Admin getAuthenticatedAdmin() {
+        return adminRepository.findByUsername(getAuthenticatedUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_EXISTED));
+    }
+
+    public Teacher getAuthenticatedTeacher() {
+        return teacherRepository.findByUsername(getAuthenticatedUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_EXISTED));
+    }
+
 }

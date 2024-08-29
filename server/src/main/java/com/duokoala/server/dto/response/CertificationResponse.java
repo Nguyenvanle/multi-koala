@@ -1,8 +1,7 @@
 package com.duokoala.server.dto.response;
 
-import com.duokoala.server.entity.user.Admin;
-import com.duokoala.server.entity.user.Teacher;
-import jakarta.persistence.ManyToOne;
+import com.duokoala.server.dto.response.userResponse.AdminResponse;
+import com.duokoala.server.dto.response.userResponse.TeacherResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,7 +18,7 @@ public class CertificationResponse {
     LocalDate issueDate;
     LocalDate expiryDate;
     String issuingOrganization;
-    Teacher uploadedByTeacher;
-    Admin approvedByAdmin;
+    TeacherResponse uploadedByTeacher;
+    AdminResponse approvedByAdmin;
     String status;
 }

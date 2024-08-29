@@ -2,6 +2,7 @@ package com.duokoala.server.entity;
 
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
+import com.duokoala.server.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -29,5 +30,6 @@ public class Certification {
     @ManyToOne
     Admin approvedByAdmin;
 
-    String status;
+    @Enumerated(EnumType.STRING) //enum but save in db with string
+    Status status;
 }

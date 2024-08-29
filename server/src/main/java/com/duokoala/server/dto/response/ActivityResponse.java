@@ -1,5 +1,6 @@
 package com.duokoala.server.dto.response;
 
+import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.entity.user.Admin;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,5 +16,5 @@ public class ActivityResponse {
     String activityId;
     String activityDescription;
     Date happenAt;
-    Admin actionedByAdmin;
+    AdminResponse actionedByAdmin;
 }
