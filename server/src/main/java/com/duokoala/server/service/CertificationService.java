@@ -17,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +56,15 @@ public class CertificationService {
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
         certificationMapper.updateCertification(certification,request);
         return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
+    }
+
+    public CertificationResponse getCertification(String certificationId) {
+        Certification certification = certificationRepository.findById(certificationId)
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
+        return certificationMapper.toCertificationResponse(certification);
+    }
+    public List<CertificationResponse> getCertifications() {
+        var certifications = certificationRepository.findAll();
+        return certifications.stream().map(certificationMapper::toCertificationResponse).toList();
     }
 }

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +44,20 @@ public class CertificationController {
         return ApiResponse.<CertificationResponse>builder()
                 .result(certificationService
                         .updateCertification(certificationId,request))
+                .build();
+    }
+
+    @GetMapping("/{certificationId}")
+    ApiResponse<CertificationResponse> getCertification(@PathVariable String certificationId) {
+        return ApiResponse.<CertificationResponse>builder()
+                .result(certificationService.getCertification(certificationId))
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<List<CertificationResponse>> getCertifications() {
+        return ApiResponse.<List<CertificationResponse>>builder()
+                .result(certificationService.getCertifications())
                 .build();
     }
 }
