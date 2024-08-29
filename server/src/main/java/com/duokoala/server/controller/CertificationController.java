@@ -1,5 +1,6 @@
 package com.duokoala.server.controller;
 
+import com.duokoala.server.dto.request.CertificationApproveRequest;
 import com.duokoala.server.dto.request.CertificationCreateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.CertificationResponse;
@@ -22,6 +23,15 @@ public class CertificationController {
             @RequestBody CertificationCreateRequest request) {
         return ApiResponse.<CertificationResponse>builder()
                 .result(certificationService.uploadCertification(request))
+                .build();
+    }
+
+    @PutMapping("/{certificationId}/approve")
+    ApiResponse<CertificationResponse> approveCertification(
+            @PathVariable String certificationId ,@RequestBody CertificationApproveRequest request) {
+        return ApiResponse.<CertificationResponse>builder()
+                .result(certificationService
+                        .approveCertification(certificationId,request))
                 .build();
     }
 }
