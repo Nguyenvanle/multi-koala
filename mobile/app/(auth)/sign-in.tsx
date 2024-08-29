@@ -160,7 +160,7 @@ const SignIn: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   registerContainer: {
     flexDirection: "row",
     justifyContent: "center",
