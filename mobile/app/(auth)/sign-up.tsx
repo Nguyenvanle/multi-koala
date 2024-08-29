@@ -19,13 +19,24 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const router = useRouter(); // Khai báo router
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Biểu thức chính quy để kiểm tra định dạng email
+    return emailRegex.test(email);
+  };
+
   const handleEmail = () => {
+    if (!email) {
+      Alert.alert("Error!", "Please enter your Email address.");
+      return;
+    }
     // Xử lý email
-    if (email) {
-      Alert.alert("Notification!", "Valid Email.");
-      router.push("/(auth)/confirm"); // Chuyển hướng tới trang Home
+
+    if (validateEmail(email)) {
+      // Xử lý dữ liệu email hợp lệ ở đây
+      router.push("/(auth)/confirm"); // Chuyển hướng tới trang Confirm
     } else {
-      Alert.alert("Error!", "Invalid email, please check again.");
+      // Hiển thị thông báo lỗi nếu email không hợp lệ
+      Alert.alert("Error", "Please enter a valid email address.");
     }
   };
 
@@ -77,6 +88,9 @@ const SignUp: React.FC = () => {
         placeholderTextColor={Colors.grey}
         value={email}
         onChangeText={setEmail}
+        keyboardType="email-address" // Đặt kiểu bàn phím là email
+        autoCapitalize="none" // Không tự động viết hoa chữ cái đầu
+        textContentType="emailAddress" // Hỗ trợ tự động điền trên iOS
       />
 
       <View

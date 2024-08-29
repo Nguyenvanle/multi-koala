@@ -36,12 +36,14 @@ const Confirm: React.FC = () => {
         style={{
           ...text.large,
           alignSelf: "center",
-          paddingTop: 50,
-          paddingHorizontal: 30,
+          height: 70,
+          marginHorizontal: 50,
+          alignItems: "baseline",
         }}
       >
-        To continue signing up, click the link that we emailed to{" "}
-        <Text style={{ fontWeight: "500" }}>abc@gmail.com</Text>.
+        To continue, click{" "}
+        <Text style={{ ...text.large, fontWeight: "500" }}>Open Gmail</Text>,
+        you will need to verify this is your email in order to continue Sign up
       </Text>
 
       <TouchableOpacity

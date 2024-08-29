@@ -129,7 +129,7 @@ const SignIn: React.FC = () => {
         secureTextEntry
       />
       <TouchableOpacity
-        onPress={() => Alert.alert("Forgot Password?")}
+        onPress={() => router.push("/(auth)/forgot")}
         style={{ alignSelf: "baseline", marginHorizontal: 35 }}
       >
         <Text

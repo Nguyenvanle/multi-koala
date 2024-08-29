@@ -11,25 +11,87 @@ import {
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
-import { useRouter } from "expo-router";
 import CircleStyle from "@/components/common/CircleStyle";
 
 const Form: React.FC = () => {
-  const router = useRouter(); // Khai báo router
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignUp = () => {
-    // Xử lý đăng nhập
-    if (username && password) {
-      Alert.alert("Notification!", "Sign up successfully.");
-      router.replace("/(home)/home");
+  const [errors, setErrors] = useState({
+    username: "",
+    firstname: "",
+    lastname: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const validateUsername = (username: string) => {
+    const usernameRegex = /^[A-Z][A-Za-z0-9]*[0-9]+$/;
+    return usernameRegex.test(username);
+  };
+
+  const validateFirstname = (firstname: string) => {
+    const firstnameRegex =
+      /^[A-ZÀÁẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶ][a-zA-ZÀÁẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶ\s]*$/;
+    return firstnameRegex.test(firstname);
+  };
+
+  const validateLastname = (lastname: string) => {
+    const lastnameRegex =
+      /^[A-ZÀÁẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶ][a-zA-ZÀÁẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶ\s]*$/;
+    return lastnameRegex.test(lastname);
+  };
+
+  const validatePassword = (password: string) => {
+    const passwordRegex = /^(?=.*[0-9]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const handleSubmit = () => {
+    const newErrors = {
+      username: "",
+      firstname: "",
+      lastname: "",
+      password: "",
+      confirmPassword: "",
+    };
+
+    if (!validateUsername(username)) {
+      newErrors.username =
+        "Tên người dùng không hợp lệ. Vui lòng kiểm tra lại.";
+    }
+    if (!validateFirstname(firstname)) {
+      newErrors.firstname = "Tên không hợp lệ. Vui lòng kiểm tra lại.";
+    }
+    if (!validateLastname(lastname)) {
+      newErrors.lastname = "Họ không hợp lệ. Vui lòng kiểm tra lại.";
+    }
+    if (!validatePassword(password)) {
+      newErrors.password =
+        "Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một số.";
+    }
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Mật khẩu xác nhận không trùng khớp.";
+    }
+
+    setErrors(newErrors);
+
+    // Kiểm tra xem có lỗi nào không
+    if (!Object.values(newErrors).some((error) => error)) {
+      // Nếu không có lỗi, hiển thị thông báo thành công
+      Alert.alert("Notification", "Sign Up Successfully.");
+      // Thực hiện hành động tiếp theo (ví dụ: gửi thông tin đăng ký)
     } else {
-      Alert.alert("Error!", "Invalid information, please check again.");
+      // Nếu có lỗi, hiển thị thông báo thất bại
+
+      Alert.alert("Notification", "Sign Up Failed.");
     }
   };
 
@@ -55,7 +117,7 @@ const Form: React.FC = () => {
       </View>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="abc@xyz.com"
         placeholderTextColor={Colors.grey}
         value={email}
         onChangeText={setEmail}
@@ -77,8 +139,8 @@ const Form: React.FC = () => {
         style={styles.input}
         placeholder="First name"
         placeholderTextColor={Colors.grey}
-        value={fname}
-        onChangeText={setFname}
+        value={firstname}
+        onChangeText={setFirstname}
       />
       <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>Last Name</Text>
@@ -87,8 +149,8 @@ const Form: React.FC = () => {
         style={styles.input}
         placeholder="Last name"
         placeholderTextColor={Colors.grey}
-        value={lname}
-        onChangeText={setLname}
+        value={lastname}
+        onChangeText={setLastname}
       />
       <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
@@ -108,14 +170,14 @@ const Form: React.FC = () => {
         style={styles.input}
         placeholder="Confirm Password"
         placeholderTextColor={Colors.grey}
-        value={confirm}
-        onChangeText={setConfirm}
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
         secureTextEntry
       />
 
       <TouchableOpacity
         style={{ ...styles.loginButton }}
-        onPress={handleSignUp}
+        onPress={handleSubmit}
       >
         <Text style={{ ...text.h4, color: Colors.white }}>Sign Up</Text>
       </TouchableOpacity>
