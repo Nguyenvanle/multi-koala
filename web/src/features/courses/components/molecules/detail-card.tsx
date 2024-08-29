@@ -20,19 +20,19 @@ export default function DetailCard({
   const discountedPrice: number = coursePrice - coursePrice * discount;
 
   return (
-    <Card className="w-full rounded overflow-hidden hover:shadow-md">
-      <CardHeader className="flex flex-row justify-between pb-4">
+    <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
+      <CardHeader className=" flex-row justify-between pb-4">
         <Muted className="mt-1.5">{uploadByTeacher}</Muted>
         <Badge>⭐ 4.5</Badge>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className=" flex flex-1 flex-col space-y-4">
         <CardTitle>{courseName}</CardTitle>
 
         <P>{courseDescription}</P>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="flex flex-0">
         <Button className="flex-1 space-x-1">
           <span className="font-bold">{`$${discountedPrice.toFixed(2)}`}</span>
           <Muted className="line-through">{`/${coursePrice.toFixed(2)}`}</Muted>{" "}

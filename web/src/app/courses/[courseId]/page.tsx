@@ -1,7 +1,16 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
-import LessonsCard from "@/features/courses/components/molecules/lessons-card";
+import StudentsCard from "@/features/courses/components/molecules/students-card";
 import { COURSES } from "@/types/course/course";
+import dynamic from "next/dynamic";
+
+const LessonsCard = dynamic(
+  () => import("@/features/courses/components/molecules/lessons-card"),
+  {
+    loading: () => <Skeleton className="h-20 w-full" />,
+  }
+);
 
 export default function CourseDetail({
   params,
@@ -24,7 +33,7 @@ export default function CourseDetail({
         </div>
         <div className="flex flex-col gap-4">
           <LessonsCard {...course} />
-          {/* <StudentsCard course={course.students} /> */}
+          <StudentsCard {...course} />
         </div>
       </div>
     </>

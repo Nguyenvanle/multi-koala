@@ -35,7 +35,7 @@ export function CourseCard({
       <CardContent className="px-4 pb-4">
         <CardTitle>{courseName}</CardTitle>
 
-        <P>{courseDescription}</P>
+        <P className="line-clamp-2">{courseDescription}</P>
       </CardContent>
 
       <CardFooter className="flex justify-between px-4 pb-4">
