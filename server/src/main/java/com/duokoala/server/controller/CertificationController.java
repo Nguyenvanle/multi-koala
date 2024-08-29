@@ -1,7 +1,8 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.CertificationApproveRequest;
-import com.duokoala.server.dto.request.CertificationCreateRequest;
+import com.duokoala.server.dto.request.certificationRequest.CertificationApproveRequest;
+import com.duokoala.server.dto.request.certificationRequest.CertificationCreateRequest;
+import com.duokoala.server.dto.request.certificationRequest.CertificationUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.CertificationResponse;
 import com.duokoala.server.service.CertificationService;
@@ -32,6 +33,15 @@ public class CertificationController {
         return ApiResponse.<CertificationResponse>builder()
                 .result(certificationService
                         .approveCertification(certificationId,request))
+                .build();
+    }
+
+    @PutMapping("/{certificationId}")
+    ApiResponse<CertificationResponse> updateCertification(
+            @PathVariable String certificationId ,@RequestBody CertificationUpdateRequest request) {
+        return ApiResponse.<CertificationResponse>builder()
+                .result(certificationService
+                        .updateCertification(certificationId,request))
                 .build();
     }
 }

@@ -1,7 +1,8 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.CertificationCreateRequest;
-import com.duokoala.server.dto.request.CertificationApproveRequest;
+import com.duokoala.server.dto.request.certificationRequest.CertificationCreateRequest;
+import com.duokoala.server.dto.request.certificationRequest.CertificationApproveRequest;
+import com.duokoala.server.dto.request.certificationRequest.CertificationUpdateRequest;
 import com.duokoala.server.dto.response.CertificationResponse;
 import com.duokoala.server.entity.Certification;
 import com.duokoala.server.entity.user.Admin;
@@ -37,18 +38,21 @@ public class CertificationService {
     public CertificationResponse approveCertification(
             String certificationId, CertificationApproveRequest request) {
         Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
-
         Certification certification = certificationRepository.findById(certificationId)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
-
         certification.setStatus(approvedStatus);
-
         if (!Objects.isNull(certification.getApprovedByAdmin()))
             throw new AppException(ErrorCode.CERTIFICATION_IS_APPROVED);
-
         Admin admin = authenticationService.getAuthenticatedAdmin();
-
         certification.setApprovedByAdmin(admin);
+        return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
+    }
+
+    public CertificationResponse updateCertification(
+            String certificationId, CertificationUpdateRequest request) {
+        Certification certification = certificationRepository.findById(certificationId)
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
+        certificationMapper.updateCertification(certification,request);
         return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
     }
 }

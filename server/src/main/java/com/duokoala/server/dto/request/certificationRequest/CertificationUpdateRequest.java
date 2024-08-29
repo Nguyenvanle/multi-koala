@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.request;
+package com.duokoala.server.dto.request.certificationRequest;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CertificationCreateRequest {
+public class CertificationUpdateRequest {
     String certificateName;
     LocalDate issueDate;
     LocalDate expiryDate;
