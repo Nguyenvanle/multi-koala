@@ -8,27 +8,54 @@ import {
   Alert,
   SafeAreaView,
   StatusBar,
+  Modal,
+  Linking,
 } from "react-native";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import CircleStyle from "@/components/common/CircleStyle";
+import openFacebook from "@/service/FacebookAuthen";
+import openGmail from "@/service/GoogleAuthen";
 
+const acc = [
+  {
+    username: "Tule",
+    password: "0102",
+  },
+];
 const SignIn: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter(); // Khai báo router
 
   const handleSignIn = () => {
+    // Kiểm tra nếu chưa nhập username hoặc password
+    if (!username || !password) {
+      Alert.alert("Error!", "Please enter your Username and Password");
+      return; // Dừng hàm nếu không có dữ liệu
+    }
+
     // Xử lý đăng nhập
-    if (username && password) {
-      Alert.alert("Notification!", "Sign in successfully!!!.");
-      router.replace("/(home)/home");
+    const user = acc.find(
+      (acc) => acc.username === username && acc.password === password
+    );
+
+    if (user) {
+      // Nếu tìm thấy người dùng
+      Alert.alert("Notification", "Sign In Successfully.");
+      router.replace("/(home)/home"); // Điều hướng đến trang chính
     } else {
-      Alert.alert("Error!", "Please enter username and password.");
+      // Nếu không tìm thấy người dùng
+      Alert.alert(
+        "Error!",
+        "Username or Password not true Please check again."
+      );
     }
   };
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <SafeAreaView style={Styles.container}>
@@ -46,16 +73,15 @@ const SignIn: React.FC = () => {
       >
         Sign In
       </Text>
-
       <Button
         title="Continue with Facebook"
-        onPress={() => Alert.alert("Facebook Login")}
+        onPress={openFacebook}
         buttonStyle={{ backgroundColor: Colors.dark }}
         textStyle={{ color: Colors.white }}
       />
       <Button
         title="Continue with Google"
-        onPress={() => Alert.alert("Google Login")}
+        onPress={openGmail}
         buttonStyle={{ backgroundColor: Colors.teal_dark }}
         textStyle={{ color: Colors.white }}
       />
@@ -102,7 +128,6 @@ const SignIn: React.FC = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-
       <TouchableOpacity
         onPress={() => Alert.alert("Forgot Password?")}
         style={{ alignSelf: "baseline", marginHorizontal: 35 }}
@@ -113,16 +138,18 @@ const SignIn: React.FC = () => {
           Forgot Password?
         </Text>
       </TouchableOpacity>
-
       <TouchableOpacity style={styles.loginButton} onPress={handleSignIn}>
         <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
       </TouchableOpacity>
-
       <View style={styles.registerContainer}>
         <Text style={text.p}>Don't have an account yet?</Text>
         <TouchableOpacity onPress={() => router.replace("./sign-up")}>
           <Text
-            style={{ ...text.link, color: Colors.teal_dark, fontWeight: "500" }}
+            style={{
+              ...text.link,
+              color: Colors.teal_dark,
+              fontWeight: "500",
+            }}
           >
             {" "}
             Sign Up

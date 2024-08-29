@@ -10,7 +10,7 @@ const Home = () => {
       <StatusBar barStyle={"dark-content"} />
 
       <CircleStyle />
-      <View style={{ height: 250, backgroundColor: Colors.black }}></View>
+      <View style={{ height: 250, backgroundColor: Colors.black,  }}></View>
     </SafeAreaView>
   );
 };
