@@ -6,18 +6,16 @@ import com.duokoala.server.entity.Activity;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
-import com.duokoala.server.mapper.userMapper.ActivityMapper;
+import com.duokoala.server.mapper.ActivityMapper;
 import com.duokoala.server.repository.ActivityRepository;
 import com.duokoala.server.repository.userRepository.AdminRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

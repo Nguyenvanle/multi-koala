@@ -1,4 +1,4 @@
-package com.duokoala.server.mapper.userMapper;
+package com.duokoala.server.mapper;
 
 
 import com.duokoala.server.dto.request.ActivityCreateRequest;
