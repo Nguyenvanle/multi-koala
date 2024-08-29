@@ -60,4 +60,12 @@ public class CertificationController {
                 .result(certificationService.getCertifications())
                 .build();
     }
+
+    @DeleteMapping("/{certificationId}")
+    ApiResponse<Void> deleteCertification(@PathVariable String certificationId) {
+        certificationService.deleteCertification(certificationId);
+        return ApiResponse.<Void>builder()
+                .message("Certification has been deleted!")
+                .build();
+    }
 }

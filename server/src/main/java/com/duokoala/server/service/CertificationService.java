@@ -67,4 +67,8 @@ public class CertificationService {
         var certifications = certificationRepository.findAll();
         return certifications.stream().map(certificationMapper::toCertificationResponse).toList();
     }
+
+    public void deleteCertification(String certificationId) {
+        certificationRepository.deleteById(certificationId);
+    }
 }
