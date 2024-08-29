@@ -123,7 +123,13 @@ const SignUp: React.FC = () => {
       <View style={styles.registerContainer}>
         <Text style={text.p}>Not signed in yet?</Text>
         <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
-          <Text style={{ ...text.link, color: Colors.teal_dark }}>
+          <Text
+            style={{
+              ...text.link,
+              color: Colors.teal_dark,
+              fontWeight: "500",
+            }}
+          >
             {" "}
             Sign In
           </Text>
