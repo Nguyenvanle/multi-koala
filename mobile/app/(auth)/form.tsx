@@ -12,6 +12,7 @@ import {
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
 import CircleStyle from "@/components/common/CircleStyle";
+import { Redirect, router } from "expo-router";
 
 const Form: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -87,6 +88,8 @@ const Form: React.FC = () => {
     if (!Object.values(newErrors).some((error) => error)) {
       // Nếu không có lỗi, hiển thị thông báo thành công
       Alert.alert("Notification", "Sign Up Successfully.");
+      return <Redirect href={"/(home)/home"} />;
+
       // Thực hiện hành động tiếp theo (ví dụ: gửi thông tin đăng ký)
     } else {
       // Nếu có lỗi, hiển thị thông báo thất bại
