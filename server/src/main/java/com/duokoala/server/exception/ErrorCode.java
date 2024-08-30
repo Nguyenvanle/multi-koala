@@ -17,6 +17,9 @@ public enum ErrorCode {
 
     // 4xx Client Errors
     USERNAME_EXISTED(409, "Conflict: Username already exists", HttpStatus.CONFLICT),
+    TYPE_EXISTED(409, "Conflict: Type already exists", HttpStatus.CONFLICT),
+    CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
+
     USER_NOT_FOUND(404, "Not found: User does not exist", HttpStatus.NOT_FOUND),
     TEACHER_NOT_FOUND(404, "Not found: Teacher does not exist", HttpStatus.NOT_FOUND),
     ADMIN_NOT_FOUND(404, "Not found: Admin does not exist", HttpStatus.NOT_FOUND),
@@ -27,9 +30,11 @@ public enum ErrorCode {
     CERTIFICATION_NOT_FOUND(404, "Not found: Certification does not exist", HttpStatus.NOT_FOUND),
     STATUS_NOT_FOUND(404, "Not found: Status does not exist", HttpStatus.NOT_FOUND),
     APPROVED_STATUS_NOT_FOUND(404, "Not found: Approved status does not exist", HttpStatus.NOT_FOUND),
-    CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
-    UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     ENDPOINT_NOT_FOUND(404, "Not found: Endpoint does not exist", HttpStatus.NOT_FOUND),
+    TYPE_NOT_FOUND(404, "Not found: Type does not exist", HttpStatus.NOT_FOUND),
+
+
+    UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN);
     ;
