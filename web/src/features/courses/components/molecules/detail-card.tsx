@@ -7,8 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Muted, P } from "@/components/ui/typography";
+import LinkButton from "@/components/ui/link-button";
+import { H3, H4, Large, Lead, Muted, P } from "@/components/ui/typography";
 import { CourseCardProps } from "@/types/course/course";
+import Link from "next/link";
 
 export default function DetailCard({
   courseName,
@@ -21,9 +23,11 @@ export default function DetailCard({
 
   return (
     <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
-      <CardHeader className=" flex-row justify-between pb-4">
-        <Muted className="mt-1.5">{uploadByTeacher}</Muted>
-        <Badge>⭐ 4.5</Badge>
+      <CardHeader className=" flex-row justify-between pb-4 items-center">
+        <Link href={"/"} className="text-teal-700 hover:text-teal-500">
+          {uploadByTeacher}
+        </Link>
+        <Badge className="rounded-xl">⭐ 4.5</Badge>
       </CardHeader>
 
       <CardContent className=" flex flex-1 flex-col space-y-4">

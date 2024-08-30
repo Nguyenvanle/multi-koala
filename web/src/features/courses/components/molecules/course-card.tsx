@@ -18,7 +18,7 @@ export function CourseCard({
   courseImage,
 }: CourseCardProps) {
   return (
-    <Card className="w-full max-w-sm rounded overflow-hidden hover:shadow-md">
+    <Card className="w-full max-w-sm rounded overflow-hidden hover:shadow-md hover:shadow-accent">
       <CardHeader className="p-0 pb-4">
         <div className="relative w-full h-48 overflow-hidden">
           <Image
