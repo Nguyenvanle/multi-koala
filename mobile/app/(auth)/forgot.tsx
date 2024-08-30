@@ -5,7 +5,6 @@ import React, { useRef, useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   Text,
   StyleSheet,
   SafeAreaView,
@@ -13,6 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { styles } from "./sign-in";
+import { router } from "expo-router";
 
 const ForgotPasswordScreen = () => {
   const [username, setUsername] = useState("");
@@ -21,7 +21,10 @@ const ForgotPasswordScreen = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [otpErrorMessage, setOtpErrorMessage] = useState("");
+  const [otpSuccessMessage, setOtpSuccessMessage] = useState("");
+  const [passwordSuccessMessage, setPasswordSuccessMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const handleSendOtp = () => {
     // Giả sử gọi API gửi OTP tới email dựa trên username
@@ -38,30 +41,40 @@ const ForgotPasswordScreen = () => {
     const validOtp = "1234"; // Giả sử đây là OTP đã gửi
 
     if (otpValue === validOtp) {
-      setErrorMessage("");
-      setSuccessMessage("OTP confirmed successfully!"); // Cập nhật successMessage
-      // Bạn có thể thêm code cần thiết khác ở đây
+      setOtpErrorMessage(""); // Đặt lại thông báo lỗi OTP
+      setOtpSuccessMessage("OTP confirmed successfully!");
     } else {
-      setErrorMessage("OTP code is incorrect. Please check again.");
-      setSuccessMessage(""); // Đặt lại successMessage nếu OTP không đúng
+      setOtpErrorMessage("OTP code is incorrect. Please check again.");
+      setOtpSuccessMessage(""); // Đặt lại successMessage nếu OTP không đúng
     }
   };
 
   const handleResetPassword = () => {
-    if (!newPassword || !confirmPassword) {
-      setErrorMessage("Vui lòng điền vào cả hai trường mật khẩu.");
-      setSuccessMessage(""); // Đặt lại successMessage nếu mật khẩu không hợp lệ
+    if (!newPassword && !confirmPassword) {
+      setPasswordErrorMessage("Vui lòng điền vào cả hai trường mật khẩu."); // Thông báo lỗi khi cả hai trường đều trống
+      setPasswordSuccessMessage(""); // Đặt lại successMessage
+      return;
+    }
+
+    // Kiểm tra xem trường nào còn thiếu
+    if (!newPassword) {
+      setPasswordErrorMessage("Vui lòng nhập mật khẩu mới.");
+      setErrorMessage("");
+      return;
+    }
+
+    if (!confirmPassword) {
+      setPasswordErrorMessage("Vui lòng xác nhận mật khẩu mới.");
+      setPasswordSuccessMessage("");
       return;
     }
 
     if (newPassword === confirmPassword) {
-      setSuccessMessage("Mật khẩu đã được đặt lại thành công!");
-      setErrorMessage("");
-      // Thực hiện gọi API để lưu mật khẩu mới
-      console.log("Đặt lại mật khẩu thành công:", newPassword);
+      setPasswordSuccessMessage("Mật khẩu đã được đặt lại thành công!");
+      setPasswordErrorMessage(""); // Đặt lại thông báo lỗi mật khẩu
     } else {
-      setErrorMessage("Mật khẩu xác nhận không trùng khớp.");
-      setSuccessMessage(""); // Đặt lại successMessage nếu mật khẩu không trùng khớp
+      setPasswordErrorMessage("Mật khẩu xác nhận không trùng khớp.");
+      setPasswordSuccessMessage(""); // Đặt lại successMessage nếu mật khẩu không trùng khớp
     }
   };
 
@@ -150,12 +163,6 @@ const ForgotPasswordScreen = () => {
                     // Nếu xóa ký tự, cập nhật giá trị
                     newOtp[index] = "";
                     setOtp(newOtp);
-
-                    // Chuyển về ô trước đó nếu không phải ô đầu tiên
-                    if (index > 0) {
-                      const prevInput = index - 1;
-                      otpRefs.current[prevInput]?.focus();
-                    }
                   }
                 }}
                 keyboardType="numeric"
@@ -170,8 +177,14 @@ const ForgotPasswordScreen = () => {
           >
             <Text style={{ ...text.h4, color: Colors.white }}>Confirm OTP</Text>
           </TouchableOpacity>
+          {otpErrorMessage ? (
+            <Text style={forgot.error}>{otpErrorMessage}</Text>
+          ) : null}
+          <Text style={forgot.success}>{otpSuccessMessage}</Text>
 
-          {successMessage && (
+          {/* Nếu OTP đúng, hiển thị ô nhập mật khẩu mới */}
+
+          {otpSuccessMessage && (
             <>
               <Text
                 style={{
@@ -234,14 +247,10 @@ const ForgotPasswordScreen = () => {
                   Reset Password
                 </Text>
               </TouchableOpacity>
-              {errorMessage ? (
-                <Text style={forgot.error}>{errorMessage}</Text>
+              {passwordErrorMessage ? (
+                <Text style={forgot.error}>{passwordErrorMessage}</Text>
               ) : null}
-              <Text style={forgot.success}>{successMessage}</Text>
-              {errorMessage ? (
-                <Text style={forgot.error}>{errorMessage}</Text>
-              ) : null}
-              {/* Nếu OTP đúng, hiển thị ô nhập mật khẩu mới */}
+              <Text style={forgot.success}>{passwordSuccessMessage}</Text>
             </>
           )}
         </>
