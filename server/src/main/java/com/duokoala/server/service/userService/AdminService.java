@@ -10,6 +10,7 @@ import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.AdminMapper;
 import com.duokoala.server.repository.userRepository.AdminRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
+import com.duokoala.server.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +29,7 @@ public class AdminService {
     UserRepository userRepository;
     AdminMapper adminMapper;
     UserService userService;
+    AuthenticationService authenticationService;
 
     public AdminResponse createAdmin(AdminCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
@@ -38,11 +40,8 @@ public class AdminService {
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
         admin.setDeleted(false);
         admin.setPassword(userService.encodePassword(request.getPassword()));
-
+        admin.setCreateByAdmin(authenticationService.getAuthenticatedAdmin());
         return adminMapper.toAdminResponse(adminRepository.save(admin));
-//        var context = SecurityContextHolder.getContext(); //get current context
-//        String name = context.getAuthentication().getName();
-//        Admin createByAdmin = adminMapper
     }
 
     public AdminResponse updateAdmin(String adminId, AdminUpdateRequest request) {

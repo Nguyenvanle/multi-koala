@@ -1,10 +1,9 @@
 package com.duokoala.server.entity.user;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 //@Builder
 @Entity
 public class Admin extends User {
-    @OneToOne
+    @ManyToOne
     Admin createByAdmin;
 }
