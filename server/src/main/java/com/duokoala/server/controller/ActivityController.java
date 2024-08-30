@@ -13,17 +13,18 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/activities")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ActivityController {
     ActivityService activityService;
 
-    @PostMapping("/admins/{adminId}/activities")
-    ApiResponse<ActivityResponse> createActivity(@PathVariable String adminId, @RequestBody ActivityCreateRequest request) {
+    @PostMapping
+    ApiResponse<ActivityResponse> createActivity(@RequestBody ActivityCreateRequest request) {
         return ApiResponse.<ActivityResponse>builder()
-                .result(activityService.createActivity(adminId, request))
+                .result(activityService.createActivity(request))
                 .build();
     }
-    @GetMapping("/activities")
+    @GetMapping
     ApiResponse<List<ActivityResponse>> getActivities() {
         return ApiResponse.<List<ActivityResponse>>builder()
                 .result(activityService.getActivities())

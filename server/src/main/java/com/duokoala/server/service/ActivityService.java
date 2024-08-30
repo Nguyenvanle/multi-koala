@@ -23,15 +23,12 @@ import java.util.List;
 public class ActivityService {
     ActivityRepository activityRepository;
     ActivityMapper activityMapper;
-    AdminRepository adminRepository;
     AuthenticationService authenticationService;
 
-    public ActivityResponse createActivity(String adminId, ActivityCreateRequest request) {
+    public ActivityResponse createActivity(ActivityCreateRequest request) {
         Activity activity = activityMapper.toActivity(request);
         activity.setHappenAt(new Date());
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
-        activity.setActionedByAdmin(admin);
+        activity.setActionedByAdmin(authenticationService.getAuthenticatedAdmin());
         return  activityMapper.toActivityResponse(activityRepository.save(activity));
     }
 
