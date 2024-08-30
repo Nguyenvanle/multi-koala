@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,6 +18,7 @@ export default function DetailCard({
   coursePrice,
   courseDescription,
   uploadByTeacher,
+  lessons,
 }: CourseCardProps) {
   const discount: number = 0.2;
   const discountedPrice: number = coursePrice - coursePrice * discount;
@@ -24,7 +26,7 @@ export default function DetailCard({
   return (
     <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
       <CardHeader className=" flex-row justify-between pb-4 items-center">
-        <Link href={"/"} className="text-primary hover:text-accent">
+        <Link href={""} className=" hover:text-primary mt-1.5">
           {uploadByTeacher}
         </Link>
         <Badge className="rounded-xl">⭐ 4.5</Badge>
@@ -32,6 +34,7 @@ export default function DetailCard({
 
       <CardContent className=" flex flex-1 flex-col space-y-4">
         <CardTitle>{courseName}</CardTitle>
+        <Muted> 1h 23m • 18 lessons</Muted>
 
         <P>{courseDescription}</P>
       </CardContent>

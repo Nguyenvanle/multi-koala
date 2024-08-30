@@ -70,12 +70,17 @@ export function H4({
 export function P({
   children,
   className = "",
+  title,
 }: {
   children: React.ReactNode;
   className?: string;
+  title?: string;
 }) {
   return (
-    <p className={`leading-7 [&:not(:first-child)]:mt-6 ${className}`}>
+    <p
+      className={`leading-7 [&:not(:first-child)]:mt-6 ${className}`}
+      title={title}
+    >
       {children}
     </p>
   );

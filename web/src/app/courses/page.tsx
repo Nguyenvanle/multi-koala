@@ -1,5 +1,3 @@
-
-import { Separator } from "@/components/ui/separator";
 import { H1 } from "@/components/ui/typography";
 import { CourseCard } from "@/features/courses/components/molecules/course-card";
 import { COURSES } from "@/types/course/course";
