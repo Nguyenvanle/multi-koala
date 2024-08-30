@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum Role {
     ADMIN,
     STUDENT,
-    TEACHER
+    TEACHER,
+    CLEAR,
     ;
 }
