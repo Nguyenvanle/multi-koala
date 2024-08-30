@@ -7,6 +7,5 @@ public enum Role {
     ADMIN,
     STUDENT,
     TEACHER,
-    CLEAR,
     ;
 }
