@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Logo() {
   return (
-    <div className="flex flex-col h-full w-28 mr-2 relative">
+    <div className="flex flex-col h-9 w-28 mr-2 relative">
       <Image
         src="/images/Duokoala-Logo-512h.png"
         alt="Image"

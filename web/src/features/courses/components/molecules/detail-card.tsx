@@ -24,7 +24,7 @@ export default function DetailCard({
   return (
     <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
       <CardHeader className=" flex-row justify-between pb-4 items-center">
-        <Link href={"/"} className="text-teal-700 hover:text-teal-500">
+        <Link href={"/"} className="text-primary hover:text-accent">
           {uploadByTeacher}
         </Link>
         <Badge className="rounded-xl">⭐ 4.5</Badge>

@@ -1,5 +1,6 @@
 "use client";
 import Logo from "@/components/layout/logo";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRoles } from "@/hooks/useRoles";
 import Link from "next/link";
@@ -18,15 +19,15 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
         <Logo />
       </Link>
       {menuItems.map((item) => (
-        <Link key={item.label} href={item.href}>
-          <Button
-            variant={item.variant || "link"}
-            className={`h-full ${
-              item.href === path && "text-primary underline underline-offset-4"
-            }`}
-          >
-            {item.label}
-          </Button>
+        <Link
+          key={item.label}
+          href={item.href}
+          className={`flex flex-col gap-1 ${
+            item.href === path && "text-primary"
+          }`}
+        >
+          {item.label}
+          {item.href === path && <Badge className="p-[1px]" />}
         </Link>
       ))}
     </nav>
