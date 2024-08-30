@@ -32,14 +32,14 @@ public class ImageService {
 
     public ImageResponse updateImage(String imageId, ImageUpdateRequest request) {
         Image image = imageRepository.findById(imageId)
-                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         imageMapper.updateImage(image, request);
         return imageMapper.toImageResponse(imageRepository.save(image));
     }
 
     public ImageResponse getImage(String imageId) {
         Image image = imageRepository.findById(imageId)
-                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         return imageMapper.toImageResponse(image);
     }
 

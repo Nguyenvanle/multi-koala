@@ -31,14 +31,14 @@ public class VideoService {
 
     public VideoResponse updateVideo(String videoId, VideoUpdateRequest request) {
         Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new AppException(ErrorCode.VIDEO_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.VIDEO_NOT_FOUND));
         videoMapper.updateVideo(video,request);
         return videoMapper.toVideoResponse(videoRepository.save(video));
     }
 
     public VideoResponse getVideo(String videoId) {
         Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new AppException(ErrorCode.VIDEO_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.VIDEO_NOT_FOUND));
         return videoMapper.toVideoResponse(video);
     }
 

@@ -68,7 +68,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(LoginRequest request) throws JOSEException {
         var user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
@@ -87,7 +87,7 @@ public class AuthenticationService {
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
         String username = signedJWT.getJWTClaimsSet().getSubject();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         InvalidatedToken invalidatedToken = InvalidatedToken.builder()
                 .tokenId(jit)
                 .expiryTime(expiryTime)
@@ -112,7 +112,7 @@ public class AuthenticationService {
             Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
             String username = signedJWT.getJWTClaimsSet().getSubject();
             User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
             InvalidatedToken invalidatedToken = InvalidatedToken.builder()
                     .tokenId(jit)
@@ -206,17 +206,17 @@ public class AuthenticationService {
 
     public Student getAuthenticatedStudent() {
         return studentRepository.findByUsername(getAuthenticatedUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
     }
 
     public Admin getAuthenticatedAdmin() {
         return adminRepository.findByUsername(getAuthenticatedUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
     }
 
     public Teacher getAuthenticatedTeacher() {
         return teacherRepository.findByUsername(getAuthenticatedUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
     }
 
 }
