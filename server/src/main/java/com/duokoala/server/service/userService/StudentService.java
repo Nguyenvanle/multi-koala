@@ -40,7 +40,7 @@ public class StudentService {
 
     public StudentResponse updateStudent(String studentId, StudentUpdateRequest request) {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         studentMapper.updateStudent(student,request);
         userService.updateAvatarByUserId(student.getImage(), request.getImageUrl());
         student.setPassword(userService.encodePassword(request.getPassword()));
@@ -49,7 +49,7 @@ public class StudentService {
 
     public StudentResponse getStudent(String studentId) {
         var student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         return studentMapper.toStudentResponse(student);
     }
 

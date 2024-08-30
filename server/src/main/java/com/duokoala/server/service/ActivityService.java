@@ -30,7 +30,7 @@ public class ActivityService {
         Activity activity = activityMapper.toActivity(request);
         activity.setHappenAt(new Date());
         Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
         activity.setActionedByAdmin(admin);
         return  activityMapper.toActivityResponse(activityRepository.save(activity));
     }

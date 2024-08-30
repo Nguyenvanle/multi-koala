@@ -55,13 +55,13 @@ public class UserService {
     public HashSet<Role> transferRoles(String role) {
         HashSet<Role> roles = new HashSet<>();
         roles.add(roleRepository.findById(role)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED)));
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)));
         return roles;
     }
 
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         user.setDeleted(true);
         userRepository.save(user);
     }

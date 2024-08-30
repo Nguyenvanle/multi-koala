@@ -41,10 +41,10 @@ public class CertificationService {
             String certificationId, CertificationApproveRequest request) {
         Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
         Certification certification = certificationRepository.findById(certificationId)
-                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_FOUND));
         certification.setStatus(approvedStatus);
         if (!Objects.isNull(certification.getApprovedByAdmin()))
-            throw new AppException(ErrorCode.CERTIFICATION_IS_APPROVED);
+            throw new AppException(ErrorCode.CERTIFICATION_ALREADY_APPROVED);
         Admin admin = authenticationService.getAuthenticatedAdmin();
         certification.setApprovedByAdmin(admin);
         return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
@@ -53,14 +53,14 @@ public class CertificationService {
     public CertificationResponse updateCertification(
             String certificationId, CertificationUpdateRequest request) {
         Certification certification = certificationRepository.findById(certificationId)
-                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_FOUND));
         certificationMapper.updateCertification(certification,request);
         return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
     }
 
     public CertificationResponse getCertification(String certificationId) {
         Certification certification = certificationRepository.findById(certificationId)
-                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_FOUND));
         return certificationMapper.toCertificationResponse(certification);
     }
     public List<CertificationResponse> getCertifications() {

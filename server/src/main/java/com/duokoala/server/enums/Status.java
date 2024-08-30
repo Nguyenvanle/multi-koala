@@ -14,14 +14,14 @@ public enum Status {
         try {
             return Status.valueOf(status);
         } catch (Exception e) {
-            throw new AppException(ErrorCode.STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.STATUS_NOT_FOUND);
         }
     }
 
     public static Status validateApprovedStatus(String status) {
         Status approvedStatus = fromString(status);
         if (approvedStatus == PENDING_APPROVAL)
-            throw new AppException(ErrorCode.APPROVED_STATUS_NOT_EXISTED);
+            throw new AppException(ErrorCode.APPROVED_STATUS_NOT_FOUND);
         return approvedStatus;
     }
 }

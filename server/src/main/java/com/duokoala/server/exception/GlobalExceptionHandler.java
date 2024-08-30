@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(value = NoResourceFoundException.class)
     ResponseEntity<ApiResponse> handlingNoResourceFoundException(NoResourceFoundException exception) {
-        ErrorCode errorCode = ErrorCode.NOT_FOUND_PATH;
+        ErrorCode errorCode = ErrorCode.ENDPOINT_NOT_FOUND;
         return ResponseEntity.status(errorCode.getStatusCode()).body(
                 ApiResponse.builder()
                         .code(errorCode.getCode())
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(value = TransactionSystemException.class)
     ResponseEntity<ApiResponse> handlingTransactionSystemException(TransactionSystemException exception) {
-        ErrorCode errorCode = ErrorCode.INCORRECT_FORMAT_JPA;
+        ErrorCode errorCode = ErrorCode.INVALID_REQUEST_DATA;
         return ResponseEntity.status(errorCode.getStatusCode()).body(
                 ApiResponse.builder()
                         .code(errorCode.getCode())

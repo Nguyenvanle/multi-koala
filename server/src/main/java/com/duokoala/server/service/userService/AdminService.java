@@ -47,7 +47,7 @@ public class AdminService {
 
     public AdminResponse updateAdmin(String adminId, AdminUpdateRequest request) {
         Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
         adminMapper.updateAdmin(admin,request);
         userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
         admin.setPassword(userService.encodePassword(request.getPassword()));
@@ -56,7 +56,7 @@ public class AdminService {
 
     public AdminResponse getAdmin(String adminId) {
         var admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
         return adminMapper.toAdminResponse(admin);
     }
 
