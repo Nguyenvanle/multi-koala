@@ -4,13 +4,17 @@ import { Colors } from "./Colors";
 
 export const Styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.background,
+    padding: 5,
   },
 });
 export const text = StyleSheet.create({
+  h1: {
+    fontSize: 48,
+    color: Colors.dark,
+  },
   h2: {
     fontSize: 30,
     color: Colors.black,
@@ -28,6 +32,7 @@ export const text = StyleSheet.create({
     color: Colors.dark,
   },
   large: {
+    fontWeight: "300",
     fontSize: 18,
     color: Colors.dark,
   },
@@ -35,6 +40,15 @@ export const text = StyleSheet.create({
     fontSize: 16,
     color: Colors.dark,
     fontStyle: "italic",
+  },
+  link: {
+    fontSize: 16,
+    color: Colors.dark,
+    textDecorationLine: "underline",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: Colors.dark,
   },
 });
 
@@ -56,5 +70,16 @@ export const circle = StyleSheet.create({
     backgroundColor: "#FFFFFF", // Màu trắng
     // right: "50%", // Đặt vị trí ở giữa phải
     // transform: [{ translateY: 110 }], // Dịch chuyển lên
+  },
+});
+
+export const button = StyleSheet.create({
+  Authen: {
+    width: 350,
+    marginTop: 20,
+    paddingVertical: 20,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

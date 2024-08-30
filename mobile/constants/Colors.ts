@@ -9,7 +9,8 @@ export const Colors = {
   white: "#FFFFFF",
   black: "#000000",
   background: "#EEEEEE",
-  dark: "#1E201E",
+  dark: "#222831",
   red: "#C7253E",
   blue: "#3795BD",
+  grey: "#E2DAD6",
 };
