@@ -32,10 +32,13 @@ public enum ErrorCode {
     APPROVED_STATUS_NOT_FOUND(404, "Not found: Approved status does not exist", HttpStatus.NOT_FOUND),
     ENDPOINT_NOT_FOUND(404, "Not found: Endpoint does not exist", HttpStatus.NOT_FOUND),
     TYPE_NOT_FOUND(404, "Not found: Type does not exist", HttpStatus.NOT_FOUND),
+    DISCOUNT_NOT_FOUND(404, "Not found: Discount does not exist", HttpStatus.NOT_FOUND),
+
 
 
     UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
+    INVALID_DATE_FORMAT(400, "Invalid date format: Failed to parse date. Expected format is yyyy-MM-dd.", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN);
     ;
     final int code;
