@@ -3,6 +3,8 @@ import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -35,4 +37,6 @@ public class Course {
     @Enumerated(EnumType.STRING)
     Status status;
     boolean isDeleted;
+    @OneToMany(mappedBy = "course", orphanRemoval = true)
+    Set<DiscountCourse> discountCourses;
 }

@@ -18,8 +18,11 @@ public enum ErrorCode {
     // 4xx Client Errors
     USERNAME_EXISTED(409, "Conflict: Username already exists", HttpStatus.CONFLICT),
     TYPE_EXISTED(409, "Conflict: Type already exists", HttpStatus.CONFLICT),
+    DISCOUNT_COURSE_EXISTED(409, "Conflict: Discount for Course already exists", HttpStatus.CONFLICT),
     CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
     COURSE_ALREADY_APPROVED(409, "Conflict: Course is already approved", HttpStatus.CONFLICT),
+    DISCOUNT_COURSE_ALREADY_APPROVED(409, "Conflict: Discount for Course is already approved", HttpStatus.CONFLICT),
+
 
     USER_NOT_FOUND(404, "Not found: User does not exist", HttpStatus.NOT_FOUND),
     TEACHER_NOT_FOUND(404, "Not found: Teacher does not exist", HttpStatus.NOT_FOUND),
@@ -35,6 +38,8 @@ public enum ErrorCode {
     TYPE_NOT_FOUND(404, "Not found: Type does not exist", HttpStatus.NOT_FOUND),
     DISCOUNT_NOT_FOUND(404, "Not found: Discount does not exist", HttpStatus.NOT_FOUND),
     COURSE_NOT_FOUND(404, "Not found: Course does not exist", HttpStatus.NOT_FOUND),
+    DISCOUNT_COURSE_NOT_FOUND(404, "Not found: Discount for Course does not exist", HttpStatus.NOT_FOUND),
+
 
 
 

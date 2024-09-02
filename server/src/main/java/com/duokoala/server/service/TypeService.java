@@ -1,11 +1,8 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.ActivityCreateRequest;
 import com.duokoala.server.dto.request.TypeCreateRequest;
 import com.duokoala.server.dto.request.TypeUpdateRequest;
-import com.duokoala.server.dto.response.ActivityResponse;
 import com.duokoala.server.dto.response.TypeResponse;
-import com.duokoala.server.entity.Activity;
 import com.duokoala.server.entity.Type;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;

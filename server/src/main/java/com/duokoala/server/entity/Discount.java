@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +24,6 @@ public class Discount {
     LocalDate endDate;
     @ManyToOne
     Admin createdByAdmin;
+    @OneToMany(mappedBy = "discount",cascade = CascadeType.REMOVE, orphanRemoval = true)
+    Set<DiscountCourse> discountCourses;
 }
