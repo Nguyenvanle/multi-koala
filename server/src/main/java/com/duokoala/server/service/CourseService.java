@@ -1,10 +1,15 @@
 package com.duokoala.server.service;
 
+import com.duokoala.server.dto.request.certificationRequest.CertificationApproveRequest;
+import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
+import com.duokoala.server.dto.response.CertificationResponse;
 import com.duokoala.server.dto.response.CourseResponse;
+import com.duokoala.server.entity.Certification;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
+import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.enums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +75,18 @@ public class CourseService {
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
         course.setDeleted(true);
         courseRepository.save(course);
+    }
+    public CourseResponse approve(String courseId, CourseApproveRequest request) {
+        Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
+
+        if (!Objects.isNull(course.getApprovedByAdmin()))
+            throw new AppException(ErrorCode.COURSE_ALREADY_APPROVED);
+
+        course.setStatus(approvedStatus);
+        course.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
+        return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 }

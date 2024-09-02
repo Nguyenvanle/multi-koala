@@ -31,8 +31,7 @@ public class CertificationService {
 
     public CertificationResponse uploadCertification(CertificationCreateRequest request) {
         Certification certification = certificationMapper.toCertification(request);
-        Teacher teacher = authenticationService.getAuthenticatedTeacher();
-        certification.setUploadedByTeacher(teacher);
+        certification.setUploadedByTeacher(authenticationService.getAuthenticatedTeacher());
         certification.setStatus(Status.PENDING_APPROVAL);
         return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
     }
@@ -40,13 +39,14 @@ public class CertificationService {
     public CertificationResponse approveCertification(
             String certificationId, CertificationApproveRequest request) {
         Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
+
         Certification certification = certificationRepository.findById(certificationId)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATION_NOT_FOUND));
-        certification.setStatus(approvedStatus);
         if (!Objects.isNull(certification.getApprovedByAdmin()))
             throw new AppException(ErrorCode.CERTIFICATION_ALREADY_APPROVED);
-        Admin admin = authenticationService.getAuthenticatedAdmin();
-        certification.setApprovedByAdmin(admin);
+
+        certification.setStatus(approvedStatus);
+        certification.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
         return certificationMapper.toCertificationResponse(certificationRepository.save(certification));
     }
 

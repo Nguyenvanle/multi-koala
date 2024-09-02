@@ -19,6 +19,7 @@ public enum ErrorCode {
     USERNAME_EXISTED(409, "Conflict: Username already exists", HttpStatus.CONFLICT),
     TYPE_EXISTED(409, "Conflict: Type already exists", HttpStatus.CONFLICT),
     CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
+    COURSE_ALREADY_APPROVED(409, "Conflict: Course is already approved", HttpStatus.CONFLICT),
 
     USER_NOT_FOUND(404, "Not found: User does not exist", HttpStatus.NOT_FOUND),
     TEACHER_NOT_FOUND(404, "Not found: Teacher does not exist", HttpStatus.NOT_FOUND),
