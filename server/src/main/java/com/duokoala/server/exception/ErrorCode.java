@@ -33,6 +33,8 @@ public enum ErrorCode {
     ENDPOINT_NOT_FOUND(404, "Not found: Endpoint does not exist", HttpStatus.NOT_FOUND),
     TYPE_NOT_FOUND(404, "Not found: Type does not exist", HttpStatus.NOT_FOUND),
     DISCOUNT_NOT_FOUND(404, "Not found: Discount does not exist", HttpStatus.NOT_FOUND),
+    COURSE_NOT_FOUND(404, "Not found: Course does not exist", HttpStatus.NOT_FOUND),
+
 
 
 
