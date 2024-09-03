@@ -39,6 +39,8 @@ public enum ErrorCode {
     DISCOUNT_NOT_FOUND(404, "Not found: Discount does not exist", HttpStatus.NOT_FOUND),
     COURSE_NOT_FOUND(404, "Not found: Course does not exist", HttpStatus.NOT_FOUND),
     DISCOUNT_COURSE_NOT_FOUND(404, "Not found: Discount for Course does not exist", HttpStatus.NOT_FOUND),
+    LESSON_NOT_FOUND(404, "Not found: Lesson does not exist", HttpStatus.NOT_FOUND),
+
 
 
 

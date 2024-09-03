@@ -1,6 +1,7 @@
 package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.lessonRequest.LessonCreateRequest;
+import com.duokoala.server.dto.request.lessonRequest.LessonUpdateRequest;
 import com.duokoala.server.dto.response.LessonResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Lesson;
@@ -39,6 +40,16 @@ public class LessonService {
         lesson.setVideo(video);
         lesson.setCourse(course);
         lesson.setDeleted(false);
+        return lessonMapper.toLessonResponse(lessonRepository.save(lesson));
+    }
+
+    public LessonResponse update(String lessonId, LessonUpdateRequest request) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
+        lessonMapper.updateLesson(lesson,request);
+        lesson.getImage().setImageUrl(request.getImageUrl());
+        lesson.getVideo().setVideoUrl(request.getVideoUrl());
+        lesson.getVideo().setVideoDuration(request.getVideoDuration());
         return lessonMapper.toLessonResponse(lessonRepository.save(lesson));
     }
 }
