@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LessonResponse {
     String lessonId;
-    int lessonDuration;
     String lessonDescription;
     Image image;
     Video video;

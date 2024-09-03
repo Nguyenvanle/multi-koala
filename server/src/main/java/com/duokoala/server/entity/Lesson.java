@@ -21,7 +21,6 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String lessonId;
-    int lessonDuration;
     String lessonDescription;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     Image image;
