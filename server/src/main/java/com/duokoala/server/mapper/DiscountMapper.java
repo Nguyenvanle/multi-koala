@@ -1,8 +1,8 @@
 package com.duokoala.server.mapper;
 
 
-import com.duokoala.server.dto.request.DiscountCreateRequest;
-import com.duokoala.server.dto.request.DiscountUpdateRequest;
+import com.duokoala.server.dto.request.discountRequest.DiscountCreateRequest;
+import com.duokoala.server.dto.request.discountRequest.DiscountUpdateRequest;
 import com.duokoala.server.dto.response.DiscountResponse;
 import com.duokoala.server.entity.Discount;
 import org.mapstruct.Mapper;

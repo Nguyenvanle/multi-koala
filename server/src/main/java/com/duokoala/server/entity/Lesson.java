@@ -1,5 +1,6 @@
 package com.duokoala.server.entity;
 import com.duokoala.server.entity.media.Image;
+import com.duokoala.server.entity.media.Video;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.enums.Status;
@@ -16,25 +17,17 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Course {
+public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String courseId;
-    String courseName;
-    LocalDateTime courseUploadedAt;
-    float coursePrice;
-    String courseDescription;
-    @ManyToMany
-    Set<Type> types;
+    String lessonId;
+    int lessonDuration;
+    String lessonDescription;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     Image image;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    Video video;
     @ManyToOne
-    Teacher uploadedByTeacher;
-    @ManyToOne
-    Admin approvedByAdmin;
-    @Enumerated(EnumType.STRING)
-    Status status;
+    Course course;
     boolean isDeleted;
-    @OneToMany(mappedBy = "course", orphanRemoval = true)
-    Set<DiscountCourse> discountCourses;
 }

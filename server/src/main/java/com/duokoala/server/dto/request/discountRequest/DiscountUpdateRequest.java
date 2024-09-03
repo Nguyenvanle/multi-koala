@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.request;
+package com.duokoala.server.dto.request.discountRequest;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

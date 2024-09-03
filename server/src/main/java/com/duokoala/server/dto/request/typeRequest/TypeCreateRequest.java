@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.request;
+package com.duokoala.server.dto.request.typeRequest;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TypeUpdateRequest {
+public class TypeCreateRequest {
+    String typeName;
     String typeDescription;
 }

@@ -1,7 +1,7 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.TypeCreateRequest;
-import com.duokoala.server.dto.request.TypeUpdateRequest;
+import com.duokoala.server.dto.request.typeRequest.TypeCreateRequest;
+import com.duokoala.server.dto.request.typeRequest.TypeUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.TypeResponse;
 import com.duokoala.server.service.TypeService;
