@@ -17,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -51,5 +54,22 @@ public class LessonService {
         lesson.getVideo().setVideoUrl(request.getVideoUrl());
         lesson.getVideo().setVideoDuration(request.getVideoDuration());
         return lessonMapper.toLessonResponse(lessonRepository.save(lesson));
+    }
+
+    public LessonResponse get(String lessonId) {
+        return lessonMapper.toLessonResponse(lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND)));
+    }
+
+    public List<LessonResponse> getAll() {
+        var lessons = lessonRepository.findAll();
+        return lessons.stream().map(lessonMapper::toLessonResponse).toList();
+    }
+
+    public void delete(String lessonId) {
+        var lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
+        lesson.setDeleted(true);
+        lessonRepository.save(lesson);
     }
 }

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -31,6 +33,27 @@ public class LessonController {
             @RequestBody LessonUpdateRequest request) {
         return ApiResponse.<LessonResponse>builder()
                 .result(lessonService.update(lessonId,request))
+                .build();
+    }
+
+    @GetMapping("/lessons/{lessonId}")
+    ApiResponse<LessonResponse> get(@PathVariable String lessonId) {
+        return ApiResponse.<LessonResponse>builder()
+                .result(lessonService.get(lessonId))
+                .build();
+    }
+
+    @GetMapping("/lessons")
+    ApiResponse<List<LessonResponse>> getAll() {
+        return ApiResponse.<List<LessonResponse>>builder()
+                .result(lessonService.getAll())
+                .build();
+    }
+
+    @DeleteMapping("/lessons/{lessonId}")
+    ApiResponse<Void> delete(@PathVariable String lessonId) {
+        lessonService.delete(lessonId);
+        return ApiResponse.<Void>builder()
                 .build();
     }
 }

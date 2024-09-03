@@ -1,8 +1,7 @@
 package com.duokoala.server.dto.response;
 
-import com.duokoala.server.entity.Course;
-import com.duokoala.server.entity.media.Image;
-import com.duokoala.server.entity.media.Video;
+import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
+import com.duokoala.server.dto.response.mediaResponse.VideoResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 public class LessonResponse {
     String lessonId;
     String lessonDescription;
-    Image image;
-    Video video;
-    Course course;
+    ImageResponse image;
+    VideoResponse video;
+    CourseResponse course;
     boolean isDeleted;
 }
