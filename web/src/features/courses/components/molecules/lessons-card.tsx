@@ -63,7 +63,7 @@ export default function LessonsCard({ lessons }: CourseCardProps) {
       </CardHeader>
 
       <CardFooter className="flex flex-0 flex-col pr-4">
-        <ScrollArea className="min-h-[260px] max-h-[75vh] flex-1 w-full items-start space-y-4 pr-4 pb-4">
+        <ScrollArea className="min-h-[260px] max-h-[75vh] flex-1 w-full items-start space-y-4  pb-4">
           {lessons.slice(0, visibleLessons).map((lesson) => (
             <LessonCard key={lesson.lessonId} {...lesson} />
           ))}
