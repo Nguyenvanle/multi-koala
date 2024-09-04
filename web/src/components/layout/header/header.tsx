@@ -8,7 +8,7 @@ import { ModeToggle } from "@/components/layout/header/mode-toogle";
 
 export default function Header() {
   let menuItems: MenuItems = [
-    { href: "/", label: "Home" },
+    { href: "/home", label: "Home" },
     { href: "/courses", label: "Course" },
   ];
 
@@ -27,7 +27,7 @@ export default function Header() {
         </Link>
       </nav>
 
-      <div className="flex flex-0 items-center space-x-4">
+      <div className="flex flex-0 items-center space-x-2">
         <AuthButtons />
         <UserMenu />
         <ModeToggle />
