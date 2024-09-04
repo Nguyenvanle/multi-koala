@@ -29,7 +29,7 @@ export default function DetailCard({
         <Link href={""} className=" hover:text-primary mt-1.5">
           {uploadByTeacher}
         </Link>
-        <Badge className="rounded-xl">⭐ 4.5</Badge>
+        <Badge className="rounded-xl ">⭐ 4.5</Badge>
       </CardHeader>
 
       <CardContent className=" flex flex-1 flex-col space-y-4">
@@ -41,7 +41,9 @@ export default function DetailCard({
 
       <CardFooter className="flex flex-0">
         <Button className="flex-1 space-x-1">
-          <span className="font-bold">{`$${discountedPrice.toFixed(2)}`}</span>
+          <span className="font-bold text-primary-foreground">{`$${discountedPrice.toFixed(
+            2
+          )}`}</span>
           <Muted className="line-through">{`/${coursePrice.toFixed(2)}`}</Muted>{" "}
         </Button>
       </CardFooter>
