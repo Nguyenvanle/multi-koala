@@ -32,7 +32,7 @@ export const COURSES: CourseCardProps[] = [
   },
   {
     courseId: "2",
-    courseName: "Introduction to React",
+    courseName: "English with Koala - Zero to Hero",
     courseCreateAt: new Date(),
     coursePrice: 49.99,
     courseDescription: "Learn the basics of React and build your first app.",

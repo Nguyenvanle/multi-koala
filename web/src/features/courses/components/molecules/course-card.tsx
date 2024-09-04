@@ -23,7 +23,7 @@ export function CourseCard({
   const discountedPrice: number = coursePrice - coursePrice * discount;
 
   return (
-    <Card className="flex flex-col justify-between w-full max-w-sm min-h-[390px] rounded overflow-hidden hover:shadow-md hover:shadow-accent">
+    <Card className="flex flex-col justify-between w-full max-w-sm min-h-[370px] rounded overflow-hidden hover:shadow-md hover:shadow-accent">
       <CardHeader className="p-0 pb-4">
         <div className="relative w-full h-48 overflow-hidden">
           <Image
@@ -37,12 +37,12 @@ export function CourseCard({
         </div>
       </CardHeader>
 
-      <CardContent className="px-4 pb-4">
-        <CardTitle>{courseName}</CardTitle>
+      <CardContent className="px-4 pb-4 space-y-4">
+        <CardTitle className="line-clamp-2" title={courseName}>
+          {courseName}
+        </CardTitle>
 
-        <P className="line-clamp-2" title={courseDescription}>
-          {courseDescription}
-        </P>
+        <Muted> 1h 23m • 18 lessons</Muted>
       </CardContent>
 
       <CardFooter className="flex justify-between px-4 pb-4">
