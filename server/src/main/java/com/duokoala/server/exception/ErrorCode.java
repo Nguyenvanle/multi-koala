@@ -41,12 +41,12 @@ public enum ErrorCode {
     DISCOUNT_COURSE_NOT_FOUND(404, "Not found: Discount for Course does not exist", HttpStatus.NOT_FOUND),
     LESSON_NOT_FOUND(404, "Not found: Lesson does not exist", HttpStatus.NOT_FOUND),
     TEST_NOT_FOUND(404, "Not found: Test does not exist", HttpStatus.NOT_FOUND),
-
-
+    QUESTION_NOT_FOUND(404, "Not found: Question does not exist", HttpStatus.NOT_FOUND),
 
     UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
     INVALID_DATE_FORMAT(400, "Invalid date format: Failed to parse date. Expected format is yyyy-MM-dd.", HttpStatus.BAD_REQUEST),
+    INVALID_ANSWER_FORMAT(400, "Invalid format: Answers must be a Set of Strings", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN);
     ;
     final int code;
