@@ -11,19 +11,23 @@ const Home = () => {
     <SafeAreaView
       style={{
         ...Styles.container,
-        flex: 1,
-        justifyContent: "space-evenly",
       }}
     >
       <StatusBar barStyle={"dark-content"} />
-      <CircleStyle />
       <View
         style={{
           backgroundColor: Colors.teal_dark,
           borderRadius: 20,
+          alignItems: "center",
+          justifyContent: "center",
+          height: 298,
           width: 420,
+          paddingTop: 50,
+          paddingBottom: 50,
+          top: -50,
         }}
       >
+        <CircleStyle />
         <View
           style={{
             flexDirection: "row",
@@ -35,7 +39,7 @@ const Home = () => {
             style={{
               justifyContent: "center",
               alignItems: "center",
-              marginHorizontal: 20,
+              marginHorizontal: 50,
             }}
           >
             <Text style={text.h4}>Welcome</Text>
@@ -103,7 +107,19 @@ const Home = () => {
           </View>
         </View>
       </View>
-      <View style={{ height: 250, backgroundColor: Colors.black }}></View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: 410,
+          paddingLeft: 50,
+          paddingRight: 10,
+        }}
+      >
+        <Text style={{ ...text.h4, fontWeight: "500" }}>My Courses</Text>
+        <Text style={{ ...text.link, color: Colors.teal_dark }}>See All</Text>
+      </View>
     </SafeAreaView>
   );
 };
