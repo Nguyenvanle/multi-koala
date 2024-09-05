@@ -3,6 +3,7 @@ package com.duokoala.server.dto.request.questionRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -12,6 +13,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionUpdateRequest {
     String testDescription;
-    Set<String> answers;
+    List<String> answers;
     int correctIndex;
 }

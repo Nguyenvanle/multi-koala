@@ -44,6 +44,7 @@ public class QuestionService {
                     .question(question)
                     .build();
             answer.setCorrect(indexAnswer == request.getCorrectIndex());
+            log.info("answer: "+answerDescription +" / "+"index: "+indexAnswer+" / correct: "+request.getCorrectIndex());
             answers.add(answer);
             indexAnswer++;
         }

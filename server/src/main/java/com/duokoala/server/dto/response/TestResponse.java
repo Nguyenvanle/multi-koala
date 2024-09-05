@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 public class TestResponse {
     String testId;
     String testDescription;
-    Lesson lesson;
+    LessonResponse lesson;
     boolean isDeleted;
 }
