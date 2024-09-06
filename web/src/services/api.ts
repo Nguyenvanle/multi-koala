@@ -26,11 +26,12 @@ export class ApiService {
         url: `${this.baseUrl}${config.url}`,
       });
 
-      return { result: response.data, error: null, message: "" };
+      return { code: response.status, result: response.data, error: null, message: "", };
     } catch (error) {
       const axiosError = error as AxiosError<AxiosErrorResponse>;
 
       return {
+        code: axiosError.status,
         result: null,
         error:
           axiosError.response?.data?.message || "An unexpected error occurred",

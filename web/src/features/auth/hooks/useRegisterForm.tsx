@@ -3,12 +3,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { toast } from "@/components/ui/use-toast";
 import { RegisterBody, RegisterBodyType } from "@/types/auth/schema/register";
-import { DURATION } from "@/types/layout/toast";
 import { registerService } from "@/features/auth/services/register";
 import { showToast } from "@/lib/utils";
 import { useEffect } from "react";
+import { handlerErrorApi } from "@/services/handler-error";
 
 export default function useRegisterForm() {
   const router = useRouter();
@@ -38,10 +37,17 @@ export default function useRegisterForm() {
     console.log(values);
 
     // Proceed with registration
-    const { result, error } = await registerService.register(values);
+    const { result, error, code } = await registerService.register(
+      values
+    );
 
     if (error) {
-      showToast("Registration Error", error, "destructive");
+      // Sử dụng handlerErrorApi để xử lý lỗi từ API
+      handlerErrorApi({
+        code,
+        error,
+        setError: form.setError, // Thiết lập hàm setError từ react-hook-form
+      });
     } else if (result) {
       showToast(
         "Registration Successful!",
