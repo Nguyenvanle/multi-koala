@@ -6,7 +6,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RegisterBodyType } from "@/types/auth/schema/auth";
+import { RegisterBodyType } from "@/types/auth/schema/register";
 import { Control } from "react-hook-form";
 
 export default function NameFields({
@@ -18,7 +18,7 @@ export default function NameFields({
     <div className="flex flex-row gap-4">
       <FormField
         control={control}
-        name="firstName"
+        name="firstname"
         render={({ field }) => (
           <FormItem className="flex flex-1 flex-col">
             <FormLabel>First Name</FormLabel>
@@ -32,7 +32,7 @@ export default function NameFields({
 
       <FormField
         control={control}
-        name="lastName"
+        name="lastname"
         render={({ field }) => (
           <FormItem className="flex flex-1 flex-col">
             <FormLabel>Last Name</FormLabel>

@@ -11,12 +11,12 @@ export const RegisterBody = z
         message: "Username can only contain letters and numbers.",
       }),
 
-    firstName: z
+    firstname: z
       .string()
       .min(1, { message: "First name is required." })
       .max(10, { message: "First name must not exceed 10 characters." }),
 
-    lastName: z
+    lastname: z
       .string()
       .min(1, { message: "Last name is required." })
       .max(10, { message: "Last name must not exceed 10 characters." }),
