@@ -1,7 +1,7 @@
 "use client";
+
 import Logo from "@/components/layout/logo";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useRoles } from "@/hooks/useRoles";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,7 +22,7 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
         <Link
           key={item.label}
           href={item.href}
-          className={`flex flex-col gap-1 ${
+          className={`flex flex-col gap-1  mt-2 ${
             item.href === path && "text-primary"
           }`}
         >

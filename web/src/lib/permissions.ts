@@ -1,6 +1,10 @@
 // roles.ts
 export type Role = "admin" | "teacher" | "guest";
 
+export interface Roles {
+  roles: string[];
+}
+
 // viết hoa
 export const permissionMap: Record<string, Role[]> = {
   reviewPosts: ["admin"], // Chỉ admin có quyền duyệt bài

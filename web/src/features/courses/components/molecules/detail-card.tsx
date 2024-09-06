@@ -18,7 +18,6 @@ export default function DetailCard({
   coursePrice,
   courseDescription,
   uploadByTeacher,
-  lessons,
 }: CourseCardProps) {
   const discount: number = 0.2;
   const discountedPrice: number = coursePrice - coursePrice * discount;
@@ -33,7 +32,7 @@ export default function DetailCard({
       </CardHeader>
 
       <CardContent className=" flex flex-1 flex-col space-y-4">
-        <CardTitle>{courseName}</CardTitle>
+        <CardTitle className="line-clamp-2">{courseName}</CardTitle>
         <Muted> 1h 23m • 18 lessons</Muted>
 
         <P>{courseDescription}</P>

@@ -4,6 +4,7 @@ import Link from "next/link";
 interface LinkButtonProps {
   href: string;
   label: string;
+  className?: string;
   variant?:
     | "secondary"
     | "link"
@@ -15,10 +16,17 @@ interface LinkButtonProps {
     | undefined; // Có thể mở rộng thêm các kiểu khác
 }
 
-export default function LinkButton({ href, label, variant }: LinkButtonProps) {
+export default function LinkButton({
+  href,
+  label,
+  variant,
+  className,
+}: LinkButtonProps) {
   return (
-    <Link href={href} passHref>
-      <Button variant={variant}>{label}</Button>
+    <Link href={href} passHref className={className}>
+      <Button variant={variant} className={className}>
+        {label}
+      </Button>
     </Link>
   );
 }

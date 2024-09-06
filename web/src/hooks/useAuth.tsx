@@ -1,10 +1,12 @@
+import { User } from "@/types/account/user";
 import { useEffect, useState } from "react";
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User>(undefined);
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     setUser({
+      id: "123",
       firstName: "John",
       lastName: "Doe",
       userBirth: new Date("1990-01-01"),
