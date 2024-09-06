@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { RegisterBody, RegisterBodyType } from "@/types/auth/schema/register";
 import { DURATION } from "@/types/layout/toast";
+import { registerService } from "@/features/auth/services/register";
+import { showToast } from "@/lib/utils";
+import { useEffect } from "react";
 
 export default function useRegisterForm() {
   const router = useRouter();
@@ -13,8 +16,8 @@ export default function useRegisterForm() {
     resolver: zodResolver(RegisterBody),
     defaultValues: {
       username: "",
-      firstName: "",
-      lastName: "",
+      firstname: "",
+      lastname: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -22,28 +25,38 @@ export default function useRegisterForm() {
     },
   });
 
-  const onSubmit = (values: RegisterBodyType) => {
+  const onSubmit = async (values: RegisterBodyType) => {
     if (!values.terms) {
-      toast({
-        title: "Error",
-        description: "You must agree to the terms and conditions",
-        variant: "destructive",
-        duration: DURATION,
-      });
+      showToast(
+        "Error",
+        "You must agree to the terms and conditions",
+        "destructive"
+      );
       return;
     }
 
     console.log(values);
 
     // Proceed with registration
-    toast({
-      title: "Registration Successful!",
-      description: "Your account has been created successfully.",
-      duration: DURATION,
-    });
+    const { result, error } = await registerService.register(values);
 
-    router.push("/verify");
+    if (error) {
+      showToast("Registration Error", error, "destructive");
+    } else if (result) {
+      showToast(
+        "Registration Successful!",
+        "Your account has been created successfully."
+      );
+
+      router.push("/verify");
+    }
   };
+
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      form.reset();
+    }
+  }, [form]);
 
   return { form, onSubmit };
 }
