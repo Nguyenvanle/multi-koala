@@ -46,6 +46,7 @@ public enum ErrorCode {
     QUESTION_NOT_FOUND(404, "Not found: Question does not exist", HttpStatus.NOT_FOUND),
     ENROLL_COURSE_NOT_FOUND(404, "Not found: Enroll for Course does not exist", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(404, "Not found: Review does not exist", HttpStatus.NOT_FOUND),
+    QUIZ_RESULT_NOT_FOUND(404, "Not found: Quiz Result does not exist", HttpStatus.NOT_FOUND),
 
 
 
@@ -54,8 +55,9 @@ public enum ErrorCode {
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
     INVALID_DATE_FORMAT(400, "Invalid date format: Failed to parse date. Expected format is yyyy-MM-dd.", HttpStatus.BAD_REQUEST),
     INVALID_ANSWER_FORMAT(400, "Invalid format: Answers must be a Set of Strings", HttpStatus.BAD_REQUEST),
-    ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN);
-    ;
+    ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN),
+    INVALID_PASSWORD(401, "Invalid password: Password is incorrect", HttpStatus.UNAUTHORIZED),
+            ;
     final int code;
     String message;
     private HttpStatusCode statusCode;
