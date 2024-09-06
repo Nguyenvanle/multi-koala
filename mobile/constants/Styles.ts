@@ -50,6 +50,10 @@ export const text = StyleSheet.create({
     fontSize: 14,
     color: Colors.dark,
   },
+  small: {
+    fontSize: 14,
+    color: Colors.black,
+  },
 });
 
 export const circle = StyleSheet.create({
