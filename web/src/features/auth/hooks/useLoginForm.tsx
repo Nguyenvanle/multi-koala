@@ -8,7 +8,7 @@ import {} from "@/types/auth/schema/register";
 import { LoginBody, LoginBodyType } from "@/types/auth/schema/login";
 import { DURATION } from "@/types/layout/toast";
 import { loginService } from "@/features/auth/services/login";
-import { handlerErrorApi } from "@/services/handler-error";
+import { handlerAuth } from "@/features/auth/services/handler-auth";
 
 export default function useLoginForm() {
   const router = useRouter();
@@ -27,8 +27,8 @@ export default function useLoginForm() {
     const { result, error, code } = await loginService.login(values);
 
     if (error) {
-      // Sử dụng handlerErrorApi để xử lý lỗi từ API
-      handlerErrorApi({
+      // Sử dụng handlerAuth để xử lý lỗi từ API
+      handlerAuth({
         code,
         error,
         setError: form.setError, // Thiết lập hàm setError từ react-hook-form

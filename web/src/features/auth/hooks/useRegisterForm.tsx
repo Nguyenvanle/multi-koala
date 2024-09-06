@@ -7,7 +7,7 @@ import { RegisterBody, RegisterBodyType } from "@/types/auth/schema/register";
 import { registerService } from "@/features/auth/services/register";
 import { showToast } from "@/lib/utils";
 import { useEffect } from "react";
-import { handlerErrorApi } from "@/services/handler-error";
+import { handlerAuth } from "@/features/auth/services/handler-auth";
 
 export default function useRegisterForm() {
   const router = useRouter();
@@ -37,13 +37,11 @@ export default function useRegisterForm() {
     console.log(values);
 
     // Proceed with registration
-    const { result, error, code } = await registerService.register(
-      values
-    );
+    const { result, error, code } = await registerService.register(values);
 
     if (error) {
-      // Sử dụng handlerErrorApi để xử lý lỗi từ API
-      handlerErrorApi({
+      // Sử dụng handlerAuth để xử lý lỗi từ API
+      handlerAuth({
         code,
         error,
         setError: form.setError, // Thiết lập hàm setError từ react-hook-form

@@ -2,7 +2,7 @@ import { toast } from "@/components/ui/use-toast";
 import { DURATION } from "@/types/layout/toast";
 import { UseFormSetError } from "react-hook-form";
 
-export const handlerErrorApi = ({
+export const handlerAuth = ({
   code,
   error,
   setError,
@@ -16,7 +16,6 @@ export const handlerErrorApi = ({
     switch (code) {
       case 401:
         setError("password", {
-          type: "server",
           message: "Password is incorrect. Try again.",
         });
         break;
@@ -31,7 +30,7 @@ export const handlerErrorApi = ({
       case 409:
         setError("username", {
           type: "server",
-          message: error.split(": ")[1],
+          message: "Username already exists. Try again.",
         });
         break;
 
