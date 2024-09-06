@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import StudentsCard from "@/features/courses/components/molecules/students-card";
-import { COURSES } from "@/types/course/course";
+import { COURSES } from "@/types/course/data";
 import dynamic from "next/dynamic";
 
 const LessonsCard = dynamic(

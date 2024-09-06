@@ -2,16 +2,13 @@ import DesktopNav from "@/components/layout/header/desktop-nav";
 import MobileNav from "@/components/layout/header/mobile-nav";
 import AuthButtons from "@/features/auth/components/molecules/auth-buttons";
 import UserMenu from "@/components/layout/header/user-menu";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/layout/header/mode-toogle";
+import { ModeToggle } from "@/components/layout/header/mode-toggle";
 import LinkButton from "@/components/ui/link-button";
 
 export default function Header() {
   let menuItems: MenuItems = [
     { href: "/home", label: "Home" },
     { href: "/courses", label: "Courses" },
-    { href: "/teachers", label: "Teachers" },
   ];
 
   return (

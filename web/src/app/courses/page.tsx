@@ -1,6 +1,6 @@
 import { H1 } from "@/components/ui/typography";
 import { CourseCard } from "@/features/courses/components/molecules/course-card";
-import { COURSES } from "@/types/course/course";
+import { COURSES } from "@/types/course/data";
 import Link from "next/link";
 
 export default function Courses() {

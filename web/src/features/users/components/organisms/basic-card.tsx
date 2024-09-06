@@ -7,11 +7,10 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
-import { CalendarFold, Mail } from "lucide-react";
+import { CalendarFold, Mail, MapPinHouse } from "lucide-react";
 import UserAvatar from "@/features/users/components/molecules/avatar-card";
 import UserRoles from "@/features/users/components/molecules/role-card";
 import UserInfo from "@/features/users/components/molecules/info-card";
-import { useRoles } from "@/hooks/useRoles";
 
 export default function BasicCard() {
   const { user } = useAuth();
@@ -19,7 +18,7 @@ export default function BasicCard() {
   return (
     <Card className="flex flex-1 flex-col gap-2 sm:flex-0">
       <CardHeader className="items-center">
-        <UserAvatar {...user} />
+        <UserAvatar imageUrl={user?.imageUrl} firstName={user?.firstName}  />
       </CardHeader>
 
       <CardContent className="flex gap-2 flex-col pb-0 items-center">
@@ -35,6 +34,11 @@ export default function BasicCard() {
         <UserInfo
           icon={<CalendarFold size={24} className="text-foreground" />}
           text={user?.userBirth.toLocaleDateString()}
+        />
+
+        <UserInfo
+          icon={<MapPinHouse size={24} className="text-foreground" />}
+          text={user?.homeTown}
         />
       </CardFooter>
     </Card>
