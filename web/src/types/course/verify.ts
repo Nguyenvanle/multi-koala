@@ -1,5 +1,7 @@
-export const COURSE_VERIFY = {
-  PENDING_APPROVAL: "PENDING_APPROVAL",
-  APPROVED: "APPROVED",
-  REJECTED: " REJECTED",
-};
+import { z } from "zod";
+
+export const COURSE_VERIFY = z.enum([
+  "PENDING_APPROVED",
+  "APPROVED",
+  "REJECTED",
+]);

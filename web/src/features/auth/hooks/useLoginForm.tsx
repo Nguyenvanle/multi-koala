@@ -7,6 +7,8 @@ import { toast } from "@/components/ui/use-toast";
 import {} from "@/types/auth/schema/register";
 import { LoginBody, LoginBodyType } from "@/types/auth/schema/login";
 import { DURATION } from "@/types/layout/toast";
+import { loginService } from "@/features/auth/services/login";
+import { handlerAuth } from "@/features/auth/services/handler-auth";
 
 export default function useLoginForm() {
   const router = useRouter();
@@ -18,17 +20,29 @@ export default function useLoginForm() {
     },
   });
 
-  const onSubmit = (values: LoginBodyType) => {
+  const onSubmit = async (values: LoginBodyType) => {
     console.log(values);
 
     // Proceed with registration
-    toast({
-      title: "Login Successful!",
-      description: "Welcome back",
-      duration: DURATION,
-    });
+    const { result, error, code } = await loginService.login(values);
 
-    router.push("/dashboard");
+    if (error) {
+      // Sử dụng handlerAuth để xử lý lỗi từ API
+      handlerAuth({
+        code,
+        error,
+        setError: form.setError, // Thiết lập hàm setError từ react-hook-form
+      });
+    } else if (result) {
+      // Proceed with registration
+      toast({
+        title: "Login Successful!",
+        description: "Welcome back",
+        duration: DURATION,
+      });
+
+      router.push("/dashboard");
+    }
   };
 
   return { form, onSubmit };
