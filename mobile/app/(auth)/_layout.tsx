@@ -11,7 +11,7 @@ const Auth_Layout = () => {
         name="confirm"
         options={{
           headerShown: false,
-          presentation: "fullScreenModal",
+          presentation: "modal",
         }}
       />
       <Stack.Screen name="form" options={{ headerShown: false }} />

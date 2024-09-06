@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Alert,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
@@ -18,6 +20,7 @@ import CircleStyle from "@/components/common/CircleStyle";
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const router = useRouter(); // Khai báo router
+  const [errorMessage, setErrorMessage] = useState(""); // State để lưu thông báo lỗi
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Biểu thức chính quy để kiểm tra định dạng email
@@ -26,7 +29,7 @@ const SignUp: React.FC = () => {
 
   const handleEmail = () => {
     if (!email) {
-      Alert.alert("Error!", "Please enter your Email address.");
+      setErrorMessage("Please enter your Email address.");
       return;
     }
     // Xử lý email
@@ -36,7 +39,7 @@ const SignUp: React.FC = () => {
       router.push("/(auth)/confirm"); // Chuyển hướng tới trang Confirm
     } else {
       // Hiển thị thông báo lỗi nếu email không hợp lệ
-      Alert.alert("Error", "Please enter a valid email address.");
+      setErrorMessage("Please enter a valid email address.");
     }
   };
 
@@ -44,97 +47,108 @@ const SignUp: React.FC = () => {
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
       <CircleStyle />
-      <Text
-        style={{
-          ...text.h1,
-          fontWeight: "bold",
-          color: Colors.teal_dark,
-          height: 120,
-          paddingTop: 20,
-          paddingHorizontal: 20,
-        }}
+      <KeyboardAvoidingView
+        style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100} // Điều chỉnh khoảng cách nếu cần
       >
-        Sign Up
-      </Text>
+        <Text
+          style={{
+            ...text.h1,
+            fontWeight: "bold",
+            color: Colors.teal_dark,
+            height: 120,
+            paddingTop: 20,
+            paddingHorizontal: 20,
+          }}
+        >
+          Sign Up
+        </Text>
 
-      <Button
-        title="Continue with Facebook"
-        onPress={() => Alert.alert("Facebook Login")}
-        buttonStyle={{ backgroundColor: Colors.dark }}
-        textStyle={{ color: Colors.white }}
-      />
-      <Button
-        title="Continue with Google"
-        onPress={() => Alert.alert("Google Login")}
-        buttonStyle={{ backgroundColor: Colors.teal_dark }}
-        textStyle={{ color: Colors.white }}
-      />
-      <Text
-        style={{
-          ...text.p,
-          alignSelf: "center",
-          paddingVertical: 50,
-          fontWeight: "500",
-        }}
-      >
-        Or
-      </Text>
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={Colors.grey}
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address" // Đặt kiểu bàn phím là email
-        autoCapitalize="none" // Không tự động viết hoa chữ cái đầu
-        textContentType="emailAddress" // Hỗ trợ tự động điền trên iOS
-      />
+        <Button
+          title="Continue with Facebook"
+          onPress={() => Alert.alert("Facebook Login")}
+          buttonStyle={{ backgroundColor: Colors.dark }}
+          textStyle={{ color: Colors.white }}
+        />
+        <Button
+          title="Continue with Google"
+          onPress={() => Alert.alert("Google Login")}
+          buttonStyle={{ backgroundColor: Colors.teal_dark }}
+          textStyle={{ color: Colors.white }}
+        />
+        <Text
+          style={{
+            ...text.p,
+            alignSelf: "center",
+            paddingVertical: 50,
+            fontWeight: "500",
+          }}
+        >
+          Or
+        </Text>
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={Colors.grey}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address" // Đặt kiểu bàn phím là email
+          autoCapitalize="none" // Không tự động viết hoa chữ cái đầu
+          textContentType="emailAddress" // Hỗ trợ tự động điền trên iOS
+        />
 
-      <View
-        style={{
-          alignItems: "baseline",
-          justifyContent: "center",
-          width: 350,
-          marginTop: 5,
-        }}
-      >
-        <Text style={text.subtitle}>
-          By signing up for Duokoala you acknowledge that you agree to Koala
-          Team's{" "}
-          <Text style={{ ...text.link, fontWeight: "500" }}>
-            Terms of Service
-          </Text>{" "}
-          and{" "}
-          <Text style={{ ...text.link, fontWeight: "500" }}>
-            Privacy Policy
+        {/* Hiển thị thông báo lỗi nếu có */}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
+
+        <View
+          style={{
+            alignItems: "baseline",
+            justifyContent: "center",
+            width: 350,
+            marginTop: 5,
+          }}
+        >
+          <Text style={text.subtitle}>
+            By signing up for Duokoala you acknowledge that you agree to Koala
+            Team's{" "}
+            <Text style={{ ...text.link, fontWeight: "500" }}>
+              Terms of Service
+            </Text>{" "}
+            and{" "}
+            <Text style={{ ...text.link, fontWeight: "500" }}>
+              Privacy Policy
+            </Text>
           </Text>
-        </Text>
-      </View>
+        </View>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleEmail}>
-        <Text style={{ ...text.h4, color: Colors.white }}>
-          Continue with Email
-        </Text>
-      </TouchableOpacity>
-
-      <View style={styles.registerContainer}>
-        <Text style={text.p}>Not signed in yet?</Text>
-        <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
-          <Text
-            style={{
-              ...text.link,
-              color: Colors.teal_dark,
-              fontWeight: "500",
-            }}
-          >
-            {" "}
-            Sign In
+        <TouchableOpacity style={styles.loginButton} onPress={handleEmail}>
+          <Text style={{ ...text.h4, color: Colors.white }}>
+            Continue with Email
           </Text>
         </TouchableOpacity>
-      </View>
+
+        <View style={styles.registerContainer}>
+          <Text style={text.p}>Not signed in yet?</Text>
+          <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
+            <Text
+              style={{
+                ...text.link,
+                color: Colors.teal_dark,
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              Sign In
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -161,6 +175,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     marginTop: 30,
+  },
+  errorText: {
+    color: Colors.red, // Màu cho thông báo lỗi
+    textAlign: "center",
+    marginVertical: 10,
   },
 });
 

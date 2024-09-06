@@ -1,8 +1,8 @@
-import { CheckBox } from "react-native-elements"; // Thư viện checkbox
-import { router } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
+import React, { useEffect, useState } from "react";
+import { CheckBox } from "react-native-elements";
+import { Redirect, router } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
 import { Styles, text } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
-import React from "react";
 import {
   Image,
   StyleSheet,
@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const topics = [
   {
@@ -20,13 +21,13 @@ const topics = [
   },
   {
     title: "Diverse and Rich",
-    image: require("@/assets/images/diverse_rich.png"), // Liên kết đến hình ảnh trong thư mục assets
+    image: require("@/assets/images/diverse_rich.png"),
     description:
       "Explore a colorful world of knowledge from talented teachers in many different languages.",
   },
   {
     title: "Flexible and Convenient",
-    image: require("@/assets/images/flexible_convenient.png"), // Liên kết đến hình ảnh trong thư mục assets
+    image: require("@/assets/images/flexible_convenient.png"),
     description:
       "Learn anytime, anywhere - Duokoala turns every moment into a learning opportunity.",
   },
@@ -39,11 +40,32 @@ const topics = [
 ];
 
 export const IntroDetails = () => {
-  const [selectedIndex, setIndex] = React.useState(0);
+  const [selectedIndex, setIndex] = useState(0);
+  const [hasLaunched, setHasLaunched] = useState(false);
 
-  const handlePress = (index: any) => {
+  const handlePress = (index: number) => {
     setIndex(index);
   };
+
+  useEffect(() => {
+    const checkFirstLaunch = async () => {
+      const hasLaunchedValue = await AsyncStorage.getItem("hasLaunched");
+      if (hasLaunchedValue !== null) {
+        setHasLaunched(true); // Đã xem intro, không cần hiển thị
+      }
+    };
+
+    checkFirstLaunch();
+  }, []);
+
+  const handleGetStarted = async () => {
+    await AsyncStorage.setItem("hasLaunched", "true"); // Đánh dấu đã xem intro
+    router.replace("/(home)/home"); // Chuyển sang trang chính
+  };
+
+  if (hasLaunched) {
+    return <Redirect href={"/(home)/home"} />; // Nếu đã xem intro, không hiển thị gì
+  }
 
   return (
     <View style={Styles.container}>
@@ -52,15 +74,10 @@ export const IntroDetails = () => {
         source={topics[selectedIndex].image}
         style={{ height: 550, marginVertical: 20, width: 450 }}
       />
-      <Image source={{ uri: topics[selectedIndex].image }} />
       <View style={{ marginHorizontal: 25 }}>
         <Text style={text.blackquote}>{topics[selectedIndex].description}</Text>
       </View>
-      <View
-        style={{
-          ...styles.checkboxContainer,
-        }}
-      >
+      <View style={styles.checkboxContainer}>
         {topics.map((topic, index) => (
           <CheckBox
             key={index}
@@ -71,14 +88,9 @@ export const IntroDetails = () => {
           />
         ))}
       </View>
-      <TouchableHighlight
-        onPress={() => router.replace("/(home)/home")}
-        style={styles.start}
-      >
+      <TouchableHighlight onPress={handleGetStarted} style={styles.start}>
         <Text style={{ ...text.p, color: Colors.white }}>Get started</Text>
       </TouchableHighlight>
-
-      {/* Hiển thị nội dung dựa trên lựa chọn */}
     </View>
   );
 };

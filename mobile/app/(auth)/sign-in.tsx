@@ -5,11 +5,10 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   SafeAreaView,
   StatusBar,
-  Modal,
-  Linking,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Button from "@/components/common/Button";
 import { Colors } from "@/constants/Colors";
@@ -25,16 +24,28 @@ const acc = [
     password: "0102",
   },
 ];
+
 const SignIn: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State để lưu thông báo lỗi
   const router = useRouter(); // Khai báo router
 
   const handleSignIn = () => {
     // Kiểm tra nếu chưa nhập username hoặc password
-    if (!username || !password) {
-      Alert.alert("Error!", "Please enter your Username and Password");
+    if (!username && !password) {
+      setErrorMessage("Please enter your Username and Password");
       return; // Dừng hàm nếu không có dữ liệu
+    }
+
+    if (!username) {
+      setErrorMessage("Please enter your Username");
+      return; // Dừng hàm nếu không có username
+    }
+
+    if (!password) {
+      setErrorMessage("Please enter your Password");
+      return; // Dừng hàm nếu không có password
     }
 
     // Xử lý đăng nhập
@@ -44,118 +55,134 @@ const SignIn: React.FC = () => {
 
     if (user) {
       // Nếu tìm thấy người dùng
-      Alert.alert("Notification", "Sign In Successfully.");
       router.replace("/(home)/home"); // Điều hướng đến trang chính
     } else {
       // Nếu không tìm thấy người dùng
-      Alert.alert(
-        "Error!",
-        "Username or Password not true Please check again."
-      );
+      setErrorMessage("Sign In failed. Please check again.");
     }
   };
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
       <CircleStyle />
-      <Text
-        style={{
-          ...text.h1,
-          fontWeight: "bold",
-          color: Colors.teal_dark,
-          paddingTop: 20,
-          paddingHorizontal: 20,
-          height: 120,
-        }}
-      >
-        Sign In
-      </Text>
-      <Button
-        title="Continue with Facebook"
-        onPress={openFacebook}
-        buttonStyle={{ backgroundColor: Colors.dark }}
-        textStyle={{ color: Colors.white }}
-      />
-      <Button
-        title="Continue with Google"
-        onPress={openGmail}
-        buttonStyle={{ backgroundColor: Colors.teal_dark }}
-        textStyle={{ color: Colors.white }}
-      />
-      <Text
-        style={{
-          ...text.p,
-          alignSelf: "center",
-          paddingVertical: 50,
-          fontWeight: "500",
-        }}
-      >
-        Or
-      </Text>
-      <View
-        style={{
-          marginHorizontal: 35,
-          alignSelf: "flex-start",
-          paddingTop: 10,
-        }}
-      >
-        <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor={Colors.grey}
-        value={username}
-        onChangeText={setUsername}
-      />
-      <View
-        style={{
-          marginHorizontal: 35,
-          alignSelf: "flex-start",
-          paddingTop: 10,
-        }}
-      >
-        <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={Colors.grey}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity
-        onPress={() => router.push("/(auth)/forgot")}
-        style={{ alignSelf: "baseline", marginHorizontal: 35 }}
+      <KeyboardAvoidingView
+        style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={0} // Điều chỉnh khoảng cách nếu cần
       >
         <Text
-          style={{ ...text.link, color: Colors.teal_dark, fontWeight: "500" }}
+          style={{
+            ...text.h1,
+            fontWeight: "bold",
+            color: Colors.teal_dark,
+            paddingTop: 20,
+            paddingHorizontal: 20,
+            height: 120,
+          }}
         >
-          Forgot Password?
+          Sign In
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton} onPress={handleSignIn}>
-        <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
-      </TouchableOpacity>
-      <View style={styles.registerContainer}>
-        <Text style={text.p}>Don't have an account yet?</Text>
-        <TouchableOpacity onPress={() => router.replace("./sign-up")}>
+
+        {/* Các button đăng nhập */}
+        <Button
+          title="Continue with Facebook"
+          onPress={openFacebook}
+          buttonStyle={{ backgroundColor: Colors.dark }}
+          textStyle={{ color: Colors.white }}
+          icon="logo-facebook"
+        />
+        <Button
+          title="Continue with Google"
+          onPress={openGmail}
+          buttonStyle={{ backgroundColor: Colors.teal_dark }}
+          textStyle={{ color: Colors.white }}
+          icon="logo-google"
+        />
+        <Text
+          style={{
+            ...text.p,
+            alignSelf: "center",
+            paddingVertical: 50,
+            fontWeight: "500",
+          }}
+        >
+          Or
+        </Text>
+
+        {/* Nhập username */}
+        <View
+          style={{
+            alignSelf: "flex-start",
+            paddingTop: 10,
+          }}
+        >
+          <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          placeholderTextColor={Colors.grey}
+          value={username}
+          onChangeText={setUsername}
+        />
+
+        {/* Nhập password */}
+        <View
+          style={{
+            alignSelf: "flex-start",
+            paddingTop: 10,
+          }}
+        >
+          <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={Colors.grey}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        {/* Hiển thị thông báo lỗi nếu có */}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
+
+        {/* Liên kết quên mật khẩu */}
+        <TouchableOpacity
+          onPress={() => router.push("/(auth)/forgot")}
+          style={{ alignSelf: "baseline" }}
+        >
           <Text
-            style={{
-              ...text.link,
-              color: Colors.teal_dark,
-              fontWeight: "500",
-            }}
+            style={{ ...text.link, color: Colors.teal_dark, fontWeight: "500" }}
           >
-            {" "}
-            Sign Up
+            Forgot Password?
           </Text>
         </TouchableOpacity>
-      </View>
+
+        {/* Nút đăng nhập */}
+        <TouchableOpacity style={styles.loginButton} onPress={handleSignIn}>
+          <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
+        </TouchableOpacity>
+
+        {/* Phần đăng ký tài khoản */}
+        <View style={styles.registerContainer}>
+          <Text style={text.p}>Don't have an account yet?</Text>
+          <TouchableOpacity onPress={() => router.replace("./sign-up")}>
+            <Text
+              style={{
+                ...text.link,
+                color: Colors.teal_dark,
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -182,6 +209,11 @@ export const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     marginTop: 30,
+  },
+  errorText: {
+    color: Colors.red, // Màu cho thông báo lỗi
+    textAlign: "center",
+    marginVertical: 10,
   },
 });
 

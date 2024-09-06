@@ -8,6 +8,8 @@ import {
   TextInput,
   Alert,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Styles, text } from "@/constants/Styles";
@@ -15,7 +17,6 @@ import CircleStyle from "@/components/common/CircleStyle";
 import { Redirect, router } from "expo-router";
 
 const Form: React.FC = () => {
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -102,88 +103,87 @@ const Form: React.FC = () => {
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
       <CircleStyle />
-      <Text
-        style={{
-          ...text.h1,
-          fontWeight: "bold",
-          color: Colors.teal_dark,
-          paddingTop: 20,
-          height: 120,
-          paddingHorizontal: 20,
-        }}
+      <KeyboardAvoidingView
+        style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100} // Điều chỉnh khoảng cách nếu cần
       >
-        Sign Up
-      </Text>
+        <Text
+          style={{
+            ...text.h1,
+            fontWeight: "bold",
+            color: Colors.teal_dark,
+            paddingTop: 20,
+            height: 120,
+            paddingHorizontal: 20,
+          }}
+        >
+          Sign Up
+        </Text>
 
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="abc@xyz.com"
-        placeholderTextColor={Colors.grey}
-        value={email}
-        onChangeText={setEmail}
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor={Colors.grey}
-        value={username}
-        onChangeText={setUsername}
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}>First Name</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="First name"
-        placeholderTextColor={Colors.grey}
-        value={firstname}
-        onChangeText={setFirstname}
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}>Last Name</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Last name"
-        placeholderTextColor={Colors.grey}
-        value={lastname}
-        onChangeText={setLastname}
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={Colors.grey}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <View style={{ alignSelf: "baseline", paddingLeft: 35, paddingTop: 10 }}>
-        <Text style={{ ...text.p, fontWeight: "500" }}> Confirm Password</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        placeholderTextColor={Colors.grey}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-      />
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          placeholderTextColor={Colors.grey}
+          value={username}
+          onChangeText={setUsername}
+        />
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>First Name</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="First name"
+          placeholderTextColor={Colors.grey}
+          value={firstname}
+          onChangeText={setFirstname}
+        />
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>Last Name</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Last name"
+          placeholderTextColor={Colors.grey}
+          value={lastname}
+          onChangeText={setLastname}
+        />
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={Colors.grey}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>
+            {" "}
+            Confirm Password
+          </Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          placeholderTextColor={Colors.grey}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+        />
 
-      <TouchableOpacity
-        style={{ ...styles.loginButton }}
-        onPress={handleSubmit}
-      >
-        <Text style={{ ...text.h4, color: Colors.white }}>Sign Up</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={{ ...styles.loginButton }}
+          onPress={handleSubmit}
+        >
+          <Text style={{ ...text.h4, color: Colors.white }}>Sign Up</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
