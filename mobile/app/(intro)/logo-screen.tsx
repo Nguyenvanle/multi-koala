@@ -31,7 +31,7 @@ const LogoScreen = () => {
       </SafeAreaView>
     );
   } else {
-    return <Redirect href={"/(auth)/sign-in"}></Redirect>;
+    return <Redirect href={"/(intro)/intro-screen"}></Redirect>;
   }
 };
 
