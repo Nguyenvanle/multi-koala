@@ -14,6 +14,20 @@ export const handlerErrorApi = ({
 }) => {
   if ((error as AxiosErrorResponse) && setError) {
     switch (code) {
+      case 401:
+        setError("password", {
+          type: "server",
+          message: "Password is incorrect. Try again.",
+        });
+        break;
+
+      case 404:
+        setError("username", {
+          type: "server",
+          message: "Username not found. Try again.",
+        });
+        break;
+
       case 409:
         setError("username", {
           type: "server",
