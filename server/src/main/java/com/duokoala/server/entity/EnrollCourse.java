@@ -1,9 +1,10 @@
 package com.duokoala.server.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.duokoala.server.entity.user.Student;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -11,13 +12,14 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Answer {
+public class EnrollCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String answerId;
-    String answerDescription;
-    boolean isCorrect;
+    String enrollCourseId;
+    LocalDateTime enrollAt;
+    float process;
     @ManyToOne
-    @JsonIgnore
-    Question question;
+    Student student;
+    @ManyToOne
+    Course course;
 }

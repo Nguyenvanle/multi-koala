@@ -19,6 +19,7 @@ public enum ErrorCode {
     USERNAME_EXISTED(409, "Conflict: Username already exists", HttpStatus.CONFLICT),
     TYPE_EXISTED(409, "Conflict: Type already exists", HttpStatus.CONFLICT),
     DISCOUNT_COURSE_EXISTED(409, "Conflict: Discount for Course already exists", HttpStatus.CONFLICT),
+    ENROLL_COURSE_EXISTED(409, "Conflict: Enroll for Course already exists", HttpStatus.CONFLICT),
     CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
     COURSE_ALREADY_APPROVED(409, "Conflict: Course is already approved", HttpStatus.CONFLICT),
     DISCOUNT_COURSE_ALREADY_APPROVED(409, "Conflict: Discount for Course is already approved", HttpStatus.CONFLICT),
@@ -42,6 +43,8 @@ public enum ErrorCode {
     LESSON_NOT_FOUND(404, "Not found: Lesson does not exist", HttpStatus.NOT_FOUND),
     TEST_NOT_FOUND(404, "Not found: Test does not exist", HttpStatus.NOT_FOUND),
     QUESTION_NOT_FOUND(404, "Not found: Question does not exist", HttpStatus.NOT_FOUND),
+    ENROLL_COURSE_NOT_FOUND(404, "Not found: Enroll for Course does not exist", HttpStatus.NOT_FOUND),
+
 
     UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
