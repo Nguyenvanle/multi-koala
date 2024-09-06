@@ -4,6 +4,7 @@ import com.duokoala.server.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -67,6 +68,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     ResponseEntity<ApiResponse> handlingHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
         ErrorCode errorCode = ErrorCode.INVALID_REQUEST_DATA;
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(exception.getMessage())
+                        .build()
+        );
+    }
+    @ExceptionHandler(value = AuthenticationServiceException.class)
+    ResponseEntity<ApiResponse> handlingAuthenticationServiceException(AuthenticationServiceException exception) {
+        ErrorCode errorCode = ErrorCode.TOKEN_INVALID;
         return ResponseEntity.status(errorCode.getStatusCode()).body(
                 ApiResponse.builder()
                         .code(errorCode.getCode())
