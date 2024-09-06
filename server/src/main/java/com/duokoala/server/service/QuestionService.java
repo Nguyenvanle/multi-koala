@@ -37,7 +37,7 @@ public class QuestionService {
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
-        int indexAnswer = 1;
+        int indexAnswer = 0;
         for(String answerDescription: request.getAnswers()) {
             Answer answer = Answer.builder()
                     .answerDescription(answerDescription)
@@ -58,7 +58,7 @@ public class QuestionService {
         questionMapper.updateQuestion(question,request);
         List<Answer> answers = question.getAnswers();
         answers.clear();
-        int indexAnswer = 1;
+        int indexAnswer = 0;
         for(String answerDescription: request.getAnswers()) {
             Answer answer = Answer.builder()
                     .answerDescription(answerDescription)
