@@ -4,6 +4,7 @@ import AuthButtons from "@/features/auth/components/molecules/auth-buttons";
 import UserMenu from "@/components/layout/header/user-menu";
 import { ModeToggle } from "@/components/layout/header/mode-toggle";
 import LinkButton from "@/components/ui/link-button";
+import SearchDialog from "@/components/layout/header/search-dialog";
 
 export default function Header() {
   let menuItems: MenuItems = [
@@ -20,12 +21,7 @@ export default function Header() {
 
       <nav className="flex flex-1 justify-end">
         <nav className="flex flex-row flex-grow justify-end md:flex-grow-0">
-          <LinkButton
-            href=""
-            label="Search..."
-            variant={"outline"}
-            className="flex justify-start flex-grow md:min-w-40"
-          />
+          <SearchDialog />
         </nav>
       </nav>
 
