@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto_Flex } from "next/font/google";
 import "@/styles/globals.css";
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header/header";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Toaster } from "@/components/ui/toaster";
 
