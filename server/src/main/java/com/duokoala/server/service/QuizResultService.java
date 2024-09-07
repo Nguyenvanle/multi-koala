@@ -7,6 +7,7 @@ import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuizResultMapper;
 import com.duokoala.server.repository.AnswerRepository;
+import com.duokoala.server.repository.QuestionRepository;
 import com.duokoala.server.repository.QuizResultRepository;
 import com.duokoala.server.repository.TestRepository;
 import lombok.AccessLevel;
@@ -25,14 +26,14 @@ public class QuizResultService {
     QuizResultRepository quizResultRepository;
     QuizResultMapper quizResultMapper;
     TestRepository testRepository;
-    AnswerRepository answerRepository;
+    QuestionRepository questionRepository;
     AuthenticationService authenticationService;
 
     public QuizResultResponse create(
             String testId,
             QuizResultCreateRequest request) {
         QuizResult quizResult = quizResultMapper.toQuizResult(request);
-        quizResult.setTotalQuestion(answerRepository.countQuestionsByTestId(testId));
+        quizResult.setTotalQuestion(questionRepository.countQuestionsByTestId(testId));
         quizResult.setDateTaken(LocalDateTime.now());
         quizResult.setStudent(authenticationService.getAuthenticatedStudent());
         quizResult.setTest(testRepository.findById(testId)
