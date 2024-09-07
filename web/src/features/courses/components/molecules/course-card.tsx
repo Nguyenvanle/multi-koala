@@ -10,12 +10,10 @@ import {
 import { Muted, P } from "@/components/ui/typography";
 import { CourseCardProps } from "@/types/course/course";
 import Image from "next/image";
-import Link from "next/link";
 
 export function CourseCard({
   courseName,
   coursePrice,
-  courseDescription,
   courseImage,
   uploadByTeacher,
 }: CourseCardProps) {
@@ -23,7 +21,7 @@ export function CourseCard({
   const discountedPrice: number = coursePrice - coursePrice * discount;
 
   return (
-    <Card className="flex flex-col justify-between w-full max-w-sm min-h-[370px] rounded overflow-hidden hover:shadow-md hover:shadow-accent">
+    <Card className="flex flex-col justify-between w-full max-w-sm min-h-[370px] min-w-60 rounded overflow-hidden hover:shadow-md hover:shadow-accent">
       <CardHeader className="p-0 pb-4">
         <div className="relative w-full h-48 overflow-hidden">
           <Image
