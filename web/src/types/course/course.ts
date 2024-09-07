@@ -10,7 +10,6 @@ export interface CourseCardProps {
   courseImage: string; // => Image?
   uploadByTeacher: string; // => Teacher?
   approvedByAdmin: string; // => Admin?
-  status: "PENDING_APPROVAL" | "APPROVED" | "REJECTED";
-  lessons: Lesson[]; // Danh sách bài học liên quan đến khóa học
+  status: "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | string;
 }
 

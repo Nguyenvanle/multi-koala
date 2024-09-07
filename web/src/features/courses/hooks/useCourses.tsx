@@ -3,7 +3,7 @@ import { courseService } from "@/features/courses/services/courses";
 import { CoursesResultResType } from "@/features/courses/types/course";
 
 export default function useCourses() {
-  const [courses, setCourses] = useState<CoursesResultResType[] | null>(null);
+  const [courses, setCourses] = useState<CoursesResultResType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
