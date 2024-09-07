@@ -27,7 +27,7 @@ export default function About() {
   ];
 
   return (
-    <div className="flex flex-col px-8 py-4">
+    <div className="flex flex-col px-6 py-4">
       <div className="flex flex-col gap-4 items-center">
         <H1 className="text-primary">What&apos;s in Duokoala?</H1>
 

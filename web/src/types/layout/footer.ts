@@ -13,7 +13,7 @@ export const RESOURCES = [
 ];
 
 export const MORES = [
-  { href: "https://github.com/Nguyenvanle/multi-koala", label: "Github" },
+  { href: "https://github.com/Nguyenvanle/multi-koala", label: "Source Code" },
   { href: "", label: "Mobile App" },
 ];
 
