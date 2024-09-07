@@ -20,17 +20,35 @@ export class ApiService {
     config: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
     try {
-      const response: AxiosResponse<T> = await axios({
-        ...config,
-        url: `${this.baseUrl}${config.url}`,
-      });
+      const defaultConfig: AxiosRequestConfig = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
 
-      return { code: response.status, result: response.data, error: null, message: "", };
+      const mergedConfig = {
+        ...defaultConfig,
+        ...config,
+        headers: {
+          ...defaultConfig.headers,
+          ...config.headers,
+        },
+        url: `${this.baseUrl}${config.url}`,
+      };
+
+      const response: AxiosResponse<T> = await axios(mergedConfig);
+
+      return {
+        code: response.status,
+        result: response.data,
+        error: null,
+        message: "",
+      };
     } catch (error) {
       const axiosError = error as AxiosError<AxiosErrorResponse>;
 
       return {
-        code: axiosError.status,
+        code: axiosError.response?.status ?? 500,
         result: null,
         error:
           axiosError.response?.data?.message || "An unexpected error occurred",
@@ -54,7 +72,7 @@ export class ApiService {
     return this.request<T>({ ...config, method: "POST", url, data });
   }
 
-  //more methods
+  // Thêm các phương thức khác nếu cần
 }
 
 export const apiService = ApiService.getInstance();
