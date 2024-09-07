@@ -1,8 +1,21 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
+type ApiResponse<T> = {
+  code: number;
+  result: T | null;
+  error: string | null;
+  message: string;
+};
+
+type AxiosErrorResponse = {
+  message: string;
+};
+
 export class ApiService {
   private static instance: ApiService;
   private baseUrl: string;
+
+  private cache = new Map<string, ApiResponse<any>>(); // Khởi tạo cache
 
   private constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -19,18 +32,49 @@ export class ApiService {
   private async request<T>(
     config: AxiosRequestConfig
   ): Promise<ApiResponse<T>> {
-    try {
-      const response: AxiosResponse<T> = await axios({
-        ...config,
-        url: `${this.baseUrl}${config.url}`,
-      });
+    const cacheKey = `${config.method}-${config.url}`; // Tạo khóa cache
 
-      return { code: response.status, result: response.data, error: null, message: "", };
+    // Kiểm tra cache
+    if (this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey) as ApiResponse<T>;
+    }
+
+    try {
+      const defaultConfig: AxiosRequestConfig = {
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+      };
+
+      const mergedConfig = {
+        ...defaultConfig,
+        ...config,
+        headers: {
+          ...defaultConfig.headers,
+          ...config.headers,
+        },
+        url: `${this.baseUrl}${config.url}`,
+      };
+
+      const response: AxiosResponse<T> = await axios(mergedConfig);
+
+      const result: ApiResponse<T> = {
+        code: response.status,
+        result: response.data,
+        error: null,
+        message: "",
+      };
+
+      // Lưu vào cache
+      this.cache.set(cacheKey, result);
+
+      return result;
     } catch (error) {
       const axiosError = error as AxiosError<AxiosErrorResponse>;
 
       return {
-        code: axiosError.status,
+        code: axiosError.response?.status ?? 500,
         result: null,
         error:
           axiosError.response?.data?.message || "An unexpected error occurred",
@@ -54,7 +98,7 @@ export class ApiService {
     return this.request<T>({ ...config, method: "POST", url, data });
   }
 
-  //more methods
+  // Thêm các phương thức khác nếu cần
 }
 
 export const apiService = ApiService.getInstance();
