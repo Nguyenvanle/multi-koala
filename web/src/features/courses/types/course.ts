@@ -4,6 +4,7 @@ import { UserBodyType } from "@/features/users/types/user";
 import { COURSE_VERIFY } from "@/types/course/verify";
 import { z } from "zod";
 
+// Định nghĩa schema cho khóa học
 export const CourseBodyType = z.object({
   courseId: z.string().uuid(),
   courseName: z.string(),
@@ -20,4 +21,16 @@ export const CourseBodyType = z.object({
   deleted: z.boolean(),
 });
 
-export type CourseResType = z.infer<typeof CourseBodyType>;
+// Định nghĩa schema cho phản hồi
+export const CourseResponseBodyType = z.object({
+  code: z.number(),
+  message: z.string(),
+  result: z.array(CourseBodyType), // Một mảng khóa học
+});
+
+// Xuất kiểu dữ liệu cho phản hồi
+export type CourseResType = z.infer<typeof CourseResponseBodyType>;
+
+export const CoursesResultBodyType = z.array(CourseBodyType);
+
+export type CoursesResultResType = z.infer<typeof CoursesResultBodyType>;
