@@ -1,5 +1,6 @@
 import { ApiCache } from "@/services/cache";
 import { ApiRequest } from "@/services/request";
+import { API_CONFIG } from "@/types/api/config";
 
 export class ApiService {
   private static instance: ApiService;
@@ -35,7 +36,7 @@ export class ApiService {
 
   public clearCache(): void {
     this.cache.clear();
-    console.log("Cache cleared");
+    if (API_CONFIG.cacheLog) console.log("Cache cleared");
   }
 }
 

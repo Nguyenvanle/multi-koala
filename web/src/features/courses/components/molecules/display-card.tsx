@@ -12,6 +12,7 @@ export default function DisplayCard({
   courseImage: string;
 }) {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   return (
     <Card className="rounded overflow-hidden hover:shadow-md">
@@ -24,12 +25,13 @@ export default function DisplayCard({
             alt={courseName}
             fill
             className={`object-cover object-center ${
-              loading ? "hidden" : "block"
+              loading && error ? "hidden" : "block"
             }`} // Ẩn ảnh khi đang loading
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority
             quality={100}
             onLoad={() => setLoading(false)} // Đặt state loading thành false khi ảnh hoàn thành tải
+            onError={() => setError(true)}
           />
         </div>
       </CardHeader>

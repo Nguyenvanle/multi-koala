@@ -72,7 +72,7 @@ export class ApiRequest {
     if (shouldCache(method, url)) {
       const cachedData = this.cache.get<T>(cacheKey);
       if (cachedData) {
-        console.log(`Using cached data for ${url}`);
+        if (API_CONFIG.cacheLog) console.log(`Using cached data for ${url}`);
         return cachedData;
       }
     }
@@ -80,7 +80,7 @@ export class ApiRequest {
     const result = await this.performRequest<T>(method, url, data, config);
 
     if (shouldCache(method, url)) {
-      console.log(`Caching data for ${url}`);
+      if (API_CONFIG.cacheLog) console.log(`Caching data for ${url}`);
       this.cache.set(cacheKey, result);
     }
 
