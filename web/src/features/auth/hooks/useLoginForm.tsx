@@ -21,8 +21,6 @@ export default function useLoginForm() {
   });
 
   const onSubmit = async (values: LoginBodyType) => {
-    console.log(values);
-
     // Proceed with registration
     const { result, error, code } = await loginService.login(values);
 

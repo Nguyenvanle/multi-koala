@@ -34,8 +34,6 @@ export default function useRegisterForm() {
       return;
     }
 
-    console.log(values);
-
     // Proceed with registration
     const { result, error, code } = await registerService.register(values);
 

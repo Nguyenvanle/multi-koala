@@ -1,8 +1,9 @@
+import { Student } from "@/features/courses/components/molecules/students-card";
 import { courseService } from "@/features/courses/services/courses";
 import { useEffect, useState } from "react";
 
 export default function useStudent({ courseId }: { courseId: string }) {
-  const [students, setStudents] = useState<any | null>(null);
+  const [students, setStudents] = useState<Student[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
