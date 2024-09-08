@@ -13,6 +13,9 @@ import { convertDuration } from "@/lib/utils";
 import { CourseCardProps } from "@/types/course/course";
 import { H3, H4, Large, Lead, Muted, P } from "@/components/ui/typography";
 import { useMemo } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { DURATION } from "@/types/layout/toast";
+import { redirect, useRouter } from "next/navigation";
 
 export default function DetailCard({
   courseName,
@@ -30,10 +33,15 @@ export default function DetailCard({
   totalLessons: number | null;
 }) {
   const discount: number = 0.2;
-  const discountedPrice = useMemo(() => coursePrice - coursePrice * discount, [coursePrice]);
-  
+  const discountedPrice = useMemo(
+    () => coursePrice - coursePrice * discount,
+    [coursePrice]
+  );
+
   // Kiểm tra totalDuration, nếu null thì sử dụng 0
   const { hours, minutes, seconds } = convertDuration(totalDuration || 0);
+
+  const router = useRouter();
 
   return (
     <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
@@ -57,8 +65,21 @@ export default function DetailCard({
       </CardContent>
 
       <CardFooter className="flex flex-0">
-        <Button className="flex-1 space-x-1">
-          <span className="font-bold text-primary-foreground">{`$${discountedPrice.toFixed(2)}`}</span>
+        <Button
+          className="flex-1 space-x-1"
+          onClick={() => {
+            toast({
+              title: "Login Required",
+              description: "Please log in to your account to purchase courses.",
+              duration: 5000,
+            });
+
+            router.push("/login");
+          }}
+        >
+          <span className="font-bold text-primary-foreground">{`$${discountedPrice.toFixed(
+            2
+          )}`}</span>
           <Muted className="line-through">{`/${coursePrice.toFixed(2)}`}</Muted>
         </Button>
       </CardFooter>

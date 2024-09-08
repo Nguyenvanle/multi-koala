@@ -5,12 +5,8 @@ import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import StudentsCard from "@/features/courses/components/molecules/students-card";
 import useCourses from "@/features/courses/hooks/useCourses";
-import useLesson from "@/features/lessons/hooks/useLesson";
 import useLessons from "@/features/lessons/hooks/useLessons";
-import { convertDuration } from "@/lib/utils";
-import { COURSES } from "@/types/course/data";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
 
 const LessonsCard = dynamic(
   () => import("@/features/courses/components/molecules/lessons-card"),
@@ -24,13 +20,13 @@ export default function CourseDetail({
 }: {
   params: { courseId: string };
 }) {
-  const { courses } = useCourses();
+  const { courses, loading } = useCourses();
   const { lessons, duration } = useLessons({ params });
 
   const course = courses?.find((course) => course.courseId === params.courseId);
 
   if (!course) {
-    return <div>Course not found</div>;
+    return <Skeleton className="flex w-[96vw] h-[82vh]" />;
   }
 
   return (
@@ -55,7 +51,7 @@ export default function CourseDetail({
         </div>
         <div className="flex flex-col gap-4">
           <LessonsCard lessons={lessons || []} />
-          <StudentsCard {...course} />
+          {/* <StudentsCard courseId={params.courseId} /> */}
         </div>
       </div>
     </>

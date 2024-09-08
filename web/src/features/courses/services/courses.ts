@@ -12,4 +12,8 @@ export const courseService = {
   getDetail: async (courseId: string) => {
     return await apiService.get<CourseDetailResType>(`/courses/${courseId}`);
   },
+
+  getAllStudent: async (courseId: string) => {
+    return await apiService.get<any>(`/courses/${courseId}/students`);
+  },
 };
