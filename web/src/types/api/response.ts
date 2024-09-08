@@ -4,9 +4,10 @@ interface ErrorResponse {
   message: string;
 }
 
-// Create Response Interface
-interface ApiResponse<T> {
+// src/services/api/types.ts
+type ApiResponse<T> = {
   code: number;
-  message: string;
   result: T | null;
-}
+  error: string | null;
+  message: string;
+};
