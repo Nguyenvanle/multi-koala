@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, String> {
     @Query(nativeQuery = true,
@@ -13,4 +15,10 @@ public interface LessonRepository extends JpaRepository<Lesson, String> {
                     "FROM lesson " +
                     "WHERE course_course_id = :courseId")
     int countLessonsByCourseId(@Param("courseId") String courseId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM lesson " +
+                    "WHERE course_course_id = :courseId")
+    List<Lesson> getLessonsByCourseId(@Param("courseId") String courseId);
 }

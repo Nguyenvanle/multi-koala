@@ -66,10 +66,16 @@ public class LessonService {
         return lessons.stream().map(lessonMapper::toLessonResponse).toList();
     }
 
+    public List<LessonResponse> getLessonsByCourseId(String courseId) {
+        var lessons = lessonRepository.getLessonsByCourseId(courseId);
+        return lessons.stream().map(lessonMapper::toLessonResponse).toList();
+    }
+
     public void delete(String lessonId) {
         var lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
         lesson.setDeleted(true);
         lessonRepository.save(lesson);
     }
+
 }
