@@ -14,18 +14,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/discount-courses")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DiscountCourseController {
     DiscountCourseService discountCourseService;
-    @PostMapping
+    @PostMapping("/discount-courses")
     ApiResponse<DiscountCourseResponse> proposal(@RequestBody DiscountCourseCreateRequest request) {
         return ApiResponse.<DiscountCourseResponse>builder()
                 .result(discountCourseService.create(request))
                 .build();
     }
 
-    @PutMapping("/{discountCourseId}")
+    @PutMapping("/discount-courses/{discountCourseId}")
     ApiResponse<DiscountCourseResponse> approve(
             @PathVariable String discountCourseId,
             @RequestBody DiscountCourseApproveRequest request) {
@@ -34,21 +33,28 @@ public class DiscountCourseController {
                 .build();
     }
 
-    @GetMapping("/{discountCourseId}")
+    @GetMapping("/discount-courses/{discountCourseId}")
     ApiResponse<DiscountCourseResponse> get(@PathVariable String discountCourseId) {
         return ApiResponse.<DiscountCourseResponse>builder()
                 .result(discountCourseService.get(discountCourseId))
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("/discount-courses")
     ApiResponse<List<DiscountCourseResponse>> getAll() {
         return ApiResponse.<List<DiscountCourseResponse>>builder()
                 .result(discountCourseService.getAll())
                 .build();
     }
 
-    @DeleteMapping("/{discountCourseId}")
+    @GetMapping("courses/{courseId}/discount-courses")
+    ApiResponse<List<DiscountCourseResponse>> getListByCourseId(@PathVariable String courseId) {
+        return ApiResponse.<List<DiscountCourseResponse>>builder()
+                .result(discountCourseService.getListByCourseId(courseId))
+                .build();
+    }
+
+    @DeleteMapping("/discount-courses/{discountCourseId}")
     ApiResponse<Void> delete(@PathVariable String discountCourseId) {
         discountCourseService.delete(discountCourseId);
         return ApiResponse.<Void>builder()
