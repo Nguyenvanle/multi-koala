@@ -5,7 +5,9 @@ import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import StudentsCard from "@/features/courses/components/molecules/students-card";
 import useCourses from "@/features/courses/hooks/useCourses";
+import useLesson from "@/features/lessons/hooks/useLesson";
 import useLessons from "@/features/lessons/hooks/useLessons";
+import { convertDuration } from "@/lib/utils";
 import { COURSES } from "@/types/course/data";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
@@ -23,11 +25,7 @@ export default function CourseDetail({
   params: { courseId: string };
 }) {
   const { courses } = useCourses();
-  const { lessons } = useLessons();
-
-  useEffect(() => {
-    console.log(lessons);
-  }, [lessons]);
+  const { lessons, duration } = useLessons({ params });
 
   const course = courses?.find((course) => course.courseId === params.courseId);
 
@@ -51,10 +49,12 @@ export default function CourseDetail({
               course.uploadedByTeacher.firstname +
               course.uploadedByTeacher.lastname
             }
+            totalDuration={duration}
+            totalLessons={lessons?.length ?? 0}
           />
         </div>
         <div className="flex flex-col gap-4">
-          <LessonsCard {...course} />
+          <LessonsCard lessons={lessons || []} />
           <StudentsCard {...course} />
         </div>
       </div>
