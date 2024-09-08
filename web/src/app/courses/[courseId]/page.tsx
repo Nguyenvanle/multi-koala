@@ -5,8 +5,10 @@ import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import StudentsCard from "@/features/courses/components/molecules/students-card";
 import useCourses from "@/features/courses/hooks/useCourses";
+import useLessons from "@/features/lessons/hooks/useLessons";
 import { COURSES } from "@/types/course/data";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
 const LessonsCard = dynamic(
   () => import("@/features/courses/components/molecules/lessons-card"),
@@ -21,6 +23,11 @@ export default function CourseDetail({
   params: { courseId: string };
 }) {
   const { courses } = useCourses();
+  const { lessons } = useLessons();
+
+  useEffect(() => {
+    console.log(lessons);
+  }, [lessons]);
 
   const course = courses?.find((course) => course.courseId === params.courseId);
 
