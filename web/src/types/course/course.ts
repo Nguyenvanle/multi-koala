@@ -1,5 +1,3 @@
-import { Lesson, lessons } from "@/types/course/lesson";
-
 export interface CourseCardProps {
   courseId: string;
   courseName: string;
@@ -12,4 +10,3 @@ export interface CourseCardProps {
   approvedByAdmin: string; // => Admin?
   status: "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | string;
 }
-

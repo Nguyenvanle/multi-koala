@@ -1,4 +1,5 @@
-import { Badge } from "@/components/ui/badge";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,16 +9,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Muted, P } from "@/components/ui/typography";
+import useLessons from "@/features/lessons/hooks/useLessons";
+import { convertDuration } from "@/lib/utils";
 import { CourseCardProps } from "@/types/course/course";
 import Image from "next/image";
 
 export function CourseCard({
+  courseId,
   courseName,
   coursePrice,
   courseImage,
 }: CourseCardProps) {
+  const { duration, lessons } = useLessons({ params: { courseId } });
   const discount: number = 0.2;
   const discountedPrice: number = coursePrice - coursePrice * discount;
+  // Kiểm tra totalDuration, nếu null thì sử dụng 0
+  const { hours, minutes, seconds } = convertDuration(duration || 0);
 
   return (
     <Card className="flex flex-col justify-between gap-0 w-full max-w-sm min-h-[370px] min-w-60 rounded overflow-hidden hover:shadow-md hover:shadow-accent">
@@ -39,7 +46,12 @@ export function CourseCard({
           {courseName}
         </CardTitle>
 
-        <Muted> 1h 23m • 18 lessons</Muted>
+        <Muted>
+          {hours > 0
+            ? `${hours}h ${minutes}m ${seconds}'`
+            : `${minutes}m ${seconds}'`}{" "}
+          • {lessons?.length ?? 0} lessons
+        </Muted>
       </CardContent>
 
       <CardFooter className="flex justify-between px-4 pb-4">

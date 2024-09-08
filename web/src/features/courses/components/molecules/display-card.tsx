@@ -29,7 +29,7 @@ export default function DisplayCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority
             quality={100}
-            onLoadingComplete={() => setLoading(false)} // Đặt state loading thành false khi ảnh hoàn thành tải
+            onLoad={() => setLoading(false)} // Đặt state loading thành false khi ảnh hoàn thành tải
           />
         </div>
       </CardHeader>

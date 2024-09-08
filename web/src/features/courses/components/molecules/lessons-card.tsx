@@ -34,7 +34,6 @@ export default function LessonsCard({ lessons }: { lessons: LessonsResult }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(lessons);
     const observer = new IntersectionObserver(
       (entries) => {
         if (!lessons) return;
