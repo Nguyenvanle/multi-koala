@@ -66,8 +66,8 @@ public class LessonService {
         return lessons.stream().map(lessonMapper::toLessonResponse).toList();
     }
 
-    public List<LessonResponse> getLessonsByCourseId(String courseId) {
-        var lessons = lessonRepository.getLessonsByCourseId(courseId);
+    public List<LessonResponse> getListByCourseId(String courseId) {
+        var lessons = lessonRepository.getListByCourseId(courseId);
         return lessons.stream().map(lessonMapper::toLessonResponse).toList();
     }
 

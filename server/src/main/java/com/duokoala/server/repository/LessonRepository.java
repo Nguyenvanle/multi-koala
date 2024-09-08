@@ -20,5 +20,5 @@ public interface LessonRepository extends JpaRepository<Lesson, String> {
             value = "SELECT * " +
                     "FROM lesson " +
                     "WHERE course_course_id = :courseId")
-    List<Lesson> getLessonsByCourseId(@Param("courseId") String courseId);
+    List<Lesson> getListByCourseId(@Param("courseId") String courseId);
 }

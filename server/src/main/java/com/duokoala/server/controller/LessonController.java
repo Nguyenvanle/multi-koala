@@ -28,10 +28,10 @@ public class LessonController {
     }
 
     @GetMapping("/courses/{courseId}/lessons")
-    ApiResponse<List<LessonResponse>> create(
+    ApiResponse<List<LessonResponse>> getListByCourseId(
             @PathVariable String courseId) {
         return ApiResponse.<List<LessonResponse>>builder()
-                .result(lessonService.getLessonsByCourseId(courseId))
+                .result(lessonService.getListByCourseId(courseId))
                 .build();
     }
 

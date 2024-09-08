@@ -14,4 +14,5 @@ public interface DiscountCourseRepository extends JpaRepository<DiscountCourse, 
                     "WHERE discount_discount_id = :discountId " +
                     "AND course_course_id = :courseId")
     DiscountCourse findByDiscountIdAndCourseId(@Param("discountId") String discountId, @Param("courseId") String courseId);
+
 }
