@@ -70,6 +70,11 @@ public class CourseService {
         return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
+    public List<CourseResponse> getListByTeacherId(String teacherId) {
+        var courses = courseRepository.getListByTeacherId(teacherId);
+        return courses.stream().map(courseMapper::toCourseResponse).toList();
+    }
+
     public void delete(String courseId) {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
