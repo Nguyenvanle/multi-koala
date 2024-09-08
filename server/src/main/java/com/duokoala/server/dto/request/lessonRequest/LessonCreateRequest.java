@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LessonCreateRequest {
+    String lessonName;
     String lessonDescription;
     String imageUrl;
     String videoUrl;
