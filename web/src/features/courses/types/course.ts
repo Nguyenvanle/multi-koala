@@ -22,15 +22,30 @@ export const CourseBodyType = z.object({
 });
 
 // Định nghĩa schema cho phản hồi
+
+// Mảng khóa học
 export const CourseResponseBodyType = z.object({
   code: z.number(),
   message: z.string(),
   result: z.array(CourseBodyType), // Một mảng khóa học
 });
 
+// Chi tiết khóa học
+export const CourseDetailResponseBodyType = z.object({
+  code: z.number(),
+  message: z.string(),
+  result: CourseBodyType, // Chi tiết khóa học
+});
+
 // Xuất kiểu dữ liệu cho phản hồi
+
+// Mảng khóa học
 export type CourseResType = z.infer<typeof CourseResponseBodyType>;
 
 export const CoursesResultBodyType = z.array(CourseBodyType);
 
 export type CoursesResultResType = z.infer<typeof CoursesResultBodyType>;
+
+// Chi tiết khóa học
+export type CourseDetailResType = z.infer<typeof CourseDetailResponseBodyType>;
+

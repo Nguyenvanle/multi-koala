@@ -14,7 +14,7 @@ export default function StudentsCard({ lessons }: CourseCardProps) {
         <CardTitle>Students</CardTitle>
 
         <div className="flex flex-1 flex-row gap-1 flex-wrap">
-          {lessons.map((lesson, index) => (
+          {/* {lessons.map((lesson, index) => (
             <Avatar key={lesson.lessonId}>
               <AvatarImage
                 title={lesson.lessonTitle}
@@ -23,7 +23,7 @@ export default function StudentsCard({ lessons }: CourseCardProps) {
               />
               <AvatarFallback></AvatarFallback>
             </Avatar>
-          ))}
+          ))} */}
 
           <Link href={""}>
             <Avatar>

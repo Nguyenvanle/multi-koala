@@ -15,13 +15,12 @@ export function CourseCard({
   courseName,
   coursePrice,
   courseImage,
-  uploadByTeacher,
 }: CourseCardProps) {
   const discount: number = 0.2;
   const discountedPrice: number = coursePrice - coursePrice * discount;
 
   return (
-    <Card className="flex flex-col justify-between w-full max-w-sm min-h-[370px] min-w-60 rounded overflow-hidden hover:shadow-md hover:shadow-accent">
+    <Card className="flex flex-col justify-between gap-0 w-full max-w-sm min-h-[370px] min-w-60 rounded overflow-hidden hover:shadow-md hover:shadow-accent">
       <CardHeader className="p-0 pb-4">
         <div className="relative w-full h-48 overflow-hidden">
           <Image
@@ -35,7 +34,7 @@ export function CourseCard({
         </div>
       </CardHeader>
 
-      <CardContent className="px-4 pb-4 space-y-4">
+      <CardContent className="flex flex-col flex-1 px-4 pb-4 justify-between">
         <CardTitle className="line-clamp-2" title={courseName}>
           {courseName}
         </CardTitle>

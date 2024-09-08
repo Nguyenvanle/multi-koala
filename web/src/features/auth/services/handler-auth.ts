@@ -12,7 +12,7 @@ export const handlerAuth = ({
   setError?: UseFormSetError<any>;
   duration?: number;
 }) => {
-  if ((error as AxiosErrorResponse) && setError) {
+  if ((error as ErrorResponse) && setError) {
     switch (code) {
       case 401:
         setError("password", {

@@ -5,9 +5,9 @@ import Link from "next/link";
 export const Resources = () => (
   <div className="flex flex-col">
     <H4>Resources</H4>
-    {RESOURCES.map((link) => (
-      <Link key={link.label} href={link.href}>
-        <List className="ml-0 mb-0 mt-4">{link.label}</List>
+    {RESOURCES.map((link, index) => (
+      <Link key={index} href={link.href} className="mt-4">
+        {link.label}
       </Link>
     ))}
   </div>

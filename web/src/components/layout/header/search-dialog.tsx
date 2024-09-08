@@ -42,12 +42,10 @@ export default function SearchDialog() {
           <ScrollArea className="h-72 w-full ">
             <div className="px-4 text-left">
               {tags.map((tag) => (
-                <>
-                  <div key={tag} className="text-sm">
-                    {tag}
-                  </div>
+                <div key={tag}>
+                  <div className="text-sm">{tag}</div>
                   <Separator className="my-2" />
-                </>
+                </div>
               ))}
             </div>
           </ScrollArea>

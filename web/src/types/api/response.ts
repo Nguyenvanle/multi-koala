@@ -1,13 +1,13 @@
 // Thêm type cho response data của AxiosError
-interface AxiosErrorResponse {
+interface ErrorResponse {
   code: number;
-  message?: string;
+  message: string;
 }
 
-// Create Response Interface
-interface ApiResponse<T> {
-  code: number | undefined;
+// src/services/api/types.ts
+type ApiResponse<T> = {
+  code: number;
   result: T | null;
   error: string | null;
-  message: string | null;
-}
+  message: string;
+};
