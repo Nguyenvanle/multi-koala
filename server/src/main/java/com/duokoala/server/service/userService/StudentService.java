@@ -53,8 +53,14 @@ public class StudentService {
         return studentMapper.toStudentResponse(student);
     }
 
+
     public List<StudentResponse> getStudents() {
         var students = studentRepository.findAll();
+        return students.stream().map(studentMapper::toStudentResponse).toList();
+    }
+
+    public List<StudentResponse> getListByCourseId(String courseId) {
+        var students = studentRepository.getListByCourseId(courseId);
         return students.stream().map(studentMapper::toStudentResponse).toList();
     }
 }

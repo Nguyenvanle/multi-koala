@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @Slf4j
@@ -23,14 +22,14 @@ public class StudentController {
     StudentService studentService;
     UserService userService;
 
-    @PostMapping
+    @PostMapping("/students")
     ApiResponse<StudentResponse> createStudent(@RequestBody StudentCreationRequest request) {
         return ApiResponse.<StudentResponse>builder()
                 .result(studentService.createStudent(request))
                 .build();
     }
 
-    @PutMapping("/{studentId}")
+    @PutMapping("/students/{studentId}")
     ApiResponse<StudentResponse> updateStudent(
             @PathVariable String studentId, @RequestBody StudentUpdateRequest request) {
         return ApiResponse.<StudentResponse>builder()
@@ -45,14 +44,21 @@ public class StudentController {
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("/students")
     ApiResponse<List<StudentResponse>> getStudents() {
         return ApiResponse.<List<StudentResponse>>builder()
                 .result(studentService.getStudents())
                 .build();
     }
 
-    @DeleteMapping("/{studentId}")
+    @GetMapping("courses/{courseId}/students")
+    ApiResponse<List<StudentResponse>> getListByCourseId(@PathVariable String courseId) {
+        return ApiResponse.<List<StudentResponse>>builder()
+                .result(studentService.getListByCourseId(courseId))
+                .build();
+    }
+
+    @DeleteMapping("/students/{studentId}")
     ApiResponse<Void> deleteStudent(@PathVariable String studentId) {
         userService.deleteUser(studentId);
         return ApiResponse.<Void>builder()
