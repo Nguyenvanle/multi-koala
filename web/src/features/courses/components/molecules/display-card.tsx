@@ -5,7 +5,10 @@ import Image from "next/image";
 export default function DisplayCard({
   courseName,
   courseImage,
-}: CourseCardProps) {
+}: {
+  courseName: string;
+  courseImage: string;
+}) {
   return (
     <Card className=" rounded overflow-hidden hover:shadow-md">
       <CardHeader className="p-0">

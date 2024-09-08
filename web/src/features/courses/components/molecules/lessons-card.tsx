@@ -35,26 +35,26 @@ export default function LessonsCard({ lessons }: CourseCardProps) {
   const [visibleLessons, setVisibleLessons] = useState<number>(10);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && visibleLessons < lessons.length) {
-          setVisibleLessons((prev) => Math.min(prev + 10, lessons.length));
-        }
-      },
-      { threshold: 0.1 }
-    );
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       if (entries[0].isIntersecting && visibleLessons < lessons.length) {
+  //         setVisibleLessons((prev) => Math.min(prev + 10, lessons.length));
+  //       }
+  //     },
+  //     { threshold: 0.1 }
+  //   );
 
-    if (scrollRef.current) {
-      observer.observe(scrollRef.current);
-    }
+  //   if (scrollRef.current) {
+  //     observer.observe(scrollRef.current);
+  //   }
 
-    return () => {
-      if (scrollRef.current) {
-        observer.unobserve(scrollRef.current);
-      }
-    };
-  }, [visibleLessons, lessons.length]);
+  //   return () => {
+  //     if (scrollRef.current) {
+  //       observer.unobserve(scrollRef.current);
+  //     }
+  //   };
+  // }, [visibleLessons, lessons.length]);
 
   return (
     <Card className="flex flex-0 flex-col w-full rounded overflow-hidden hover:shadow-md">
@@ -64,12 +64,12 @@ export default function LessonsCard({ lessons }: CourseCardProps) {
 
       <CardFooter className="flex flex-0 flex-col pr-4">
         <ScrollArea className="min-h-[260px] max-h-[75vh] flex-1 w-full items-start space-y-4  pb-4">
-          {lessons.slice(0, visibleLessons).map((lesson) => (
+          {/* {lessons.slice(0, visibleLessons).map((lesson) => (
             <LessonCard key={lesson.lessonId} {...lesson} />
           ))}
           {visibleLessons < lessons.length && (
             <div ref={scrollRef} style={{ height: "20px" }} />
-          )}
+          )} */}
         </ScrollArea>
       </CardFooter>
     </Card>

@@ -18,7 +18,12 @@ export default function DetailCard({
   coursePrice,
   courseDescription,
   uploadByTeacher,
-}: CourseCardProps) {
+}: {
+  courseName: string;
+  coursePrice: number;
+  courseDescription: string;
+  uploadByTeacher: string;
+}) {
   const discount: number = 0.2;
   const discountedPrice: number = coursePrice - coursePrice * discount;
 
