@@ -23,7 +23,6 @@ public class Reference {
     Set<Field> favoriteFields;
     @Enumerated(EnumType.STRING)
     Level learningLevel;
-
     @OneToOne
     Student student;
 }
