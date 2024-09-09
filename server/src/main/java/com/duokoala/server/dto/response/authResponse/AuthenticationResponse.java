@@ -1,10 +1,8 @@
 package com.duokoala.server.dto.response.authResponse;
 
-import com.duokoala.server.dto.response.RoleResponse;
+import com.duokoala.server.dto.response.userResponse.UserResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +11,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationResponse {
     String token;
-    String userId;
-    Set<RoleResponse> roles;
+    UserResponse user;
     boolean authenticated;
 }

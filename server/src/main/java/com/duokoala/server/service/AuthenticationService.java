@@ -13,7 +13,7 @@ import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.entity.user.User;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
-import com.duokoala.server.mapper.RoleMapper;
+import com.duokoala.server.mapper.userMapper.UserMapper;
 import com.duokoala.server.repository.InvalidatedTokenRepository;
 import com.duokoala.server.repository.userRepository.AdminRepository;
 import com.duokoala.server.repository.userRepository.StudentRepository;
@@ -42,19 +42,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
-    RoleMapper roleMapper;
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     StudentRepository studentRepository;
     TeacherRepository teacherRepository;
     AdminRepository adminRepository;
+    UserMapper userMapper;
 
 
     @NonFinal
@@ -78,10 +77,7 @@ public class AuthenticationService {
         var token = generateToken(user);
         return AuthenticationResponse.builder()
                 .token(token)
-                .userId(user.getUserId())
-                .roles(user.getRoles().
-                        stream().map(roleMapper::toRoleResponse)
-                        .collect(Collectors.toSet()))
+                .user(userMapper.toUserResponse(user))
                 .authenticated(true)
                 .build();
     }
@@ -105,10 +101,7 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder()
                 .token(newToken)
-                .userId(user.getUserId())
-                .roles(user.getRoles().
-                        stream().map(roleMapper::toRoleResponse)
-                        .collect(Collectors.toSet()))
+                .user(userMapper.toUserResponse(user))
                 .authenticated(true)
                 .build();
     }
