@@ -50,7 +50,7 @@ const SignUp: React.FC = () => {
       <KeyboardAvoidingView
         style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={100} // Điều chỉnh khoảng cách nếu cần
+        keyboardVerticalOffset={80} // Điều chỉnh khoảng cách nếu cần
       >
         <Text
           style={{
@@ -74,19 +74,10 @@ const SignUp: React.FC = () => {
         <Button
           title="Continue with Google"
           onPress={() => Alert.alert("Google Login")}
-          buttonStyle={{ backgroundColor: Colors.teal_dark }}
+          buttonStyle={{ backgroundColor: Colors.teal_dark, marginBottom: 30 }}
           textStyle={{ color: Colors.white }}
         />
-        <Text
-          style={{
-            ...text.p,
-            alignSelf: "center",
-            paddingVertical: 50,
-            fontWeight: "500",
-          }}
-        >
-          Or
-        </Text>
+
         <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
           <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
         </View>

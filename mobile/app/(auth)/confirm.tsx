@@ -17,7 +17,7 @@ import { forgot } from "./forgot";
 
 const Confirm: React.FC = () => {
   const router = useRouter(); // Khai báo router
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [otpErrorMessage, setOtpErrorMessage] = useState("");
   const [otpSuccessMessage, setOtpSuccessMessage] = useState("");
   const otpRefs = useRef<Array<TextInput | null>>([]);
@@ -25,7 +25,7 @@ const Confirm: React.FC = () => {
 
   const handleConfirmOtp = () => {
     const otpValue = otp.join("");
-    const validOtp = "1234"; // Giả sử đây là OTP đã gửi
+    const validOtp = "123456"; // Giả sử đây là OTP đã gửi
 
     if (otpValue === validOtp) {
       setOtpErrorMessage("");

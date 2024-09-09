@@ -122,6 +122,9 @@ const Form: React.FC = () => {
         </Text>
 
         <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+          <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
+        </View>
+        <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
           <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
         </View>
         <TextInput

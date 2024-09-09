@@ -69,7 +69,7 @@ const SignIn: React.FC = () => {
       <KeyboardAvoidingView
         style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={0} // Điều chỉnh khoảng cách nếu cần
+        keyboardVerticalOffset={70} // Điều chỉnh khoảng cách nếu cần
       >
         <Text
           style={{
@@ -99,17 +99,6 @@ const SignIn: React.FC = () => {
           textStyle={{ color: Colors.white }}
           icon="logo-google"
         />
-        <Text
-          style={{
-            ...text.p,
-            alignSelf: "center",
-            paddingVertical: 50,
-            fontWeight: "500",
-          }}
-        >
-          Or
-        </Text>
-
         {/* Nhập username */}
         <View
           style={{

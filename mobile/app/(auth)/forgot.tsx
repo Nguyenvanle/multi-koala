@@ -17,8 +17,8 @@ import { styles } from "./sign-in";
 import { router } from "expo-router";
 
 const ForgotPasswordScreen = () => {
-  const [username, setUsername] = useState("");
-  const [otp, setOtp] = useState(["", "", "", ""]); // Mảng để chứa từng số của OTP
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Mảng để chứa từng số của OTP
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,6 +26,7 @@ const ForgotPasswordScreen = () => {
   const [otpErrorMessage, setOtpErrorMessage] = useState("");
   const [otpSuccessMessage, setOtpSuccessMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [step, setStep] = useState(1); // 1: nhập email, 2: nhập OTP, 3: nhập mật khẩu mới
 
   const acc = [
     {
@@ -34,22 +35,21 @@ const ForgotPasswordScreen = () => {
     },
   ];
   const handleSendOtp = () => {
-    // Giả sử gọi API gửi OTP tới email dựa trên username
-    if (username) {
-      setIsOtpSent(true);
+    // Giả sử gọi API gửi OTP tới email dựa trên email
+    if (email) {
+      setStep(2);
       setErrorMessage("");
     } else {
-      setErrorMessage("Please enter your username.");
+      setErrorMessage("Please enter your email.");
     }
   };
 
   const handleConfirmOtp = () => {
     const otpValue = otp.join("");
-    const validOtp = "1234"; // Giả sử đây là OTP đã gửi
+    const validOtp = "123456"; // Giả sử đây là OTP đã gửi
 
     if (otpValue === validOtp) {
-      setOtpErrorMessage(""); // Đặt lại thông báo lỗi OTP
-      setOtpSuccessMessage("OTP confirmed successfully!");
+      setStep(3);
     } else {
       setOtpErrorMessage("OTP code is incorrect. Please check again.");
       setOtpSuccessMessage(""); // Đặt lại successMessage nếu OTP không đúng
@@ -80,6 +80,7 @@ const ForgotPasswordScreen = () => {
 
     if (user) {
       // Nếu tìm thấy người dùng
+      setErrorMessage("");
       router.replace("/(auth)/sign-in"); // Điều hướng đến trang dăng nhập
     } else {
       // Nếu không tìm thấy người dùng
@@ -98,7 +99,7 @@ const ForgotPasswordScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={100} // Điều chỉnh khoảng cách nếu cần
       >
-        {!isOtpSent ? (
+        {step === 1 && (
           <>
             <Text
               style={{
@@ -119,14 +120,16 @@ const ForgotPasswordScreen = () => {
                 paddingTop: 10,
               }}
             >
-              <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
+              <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
             </View>
             <TextInput
               style={styles.input}
               placeholder="Username"
               placeholderTextColor={Colors.grey}
-              value={username}
-              onChangeText={setUsername}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
             {errorMessage ? (
               <Text style={forgot.error}>{errorMessage}</Text>
@@ -138,7 +141,8 @@ const ForgotPasswordScreen = () => {
               <Text style={{ ...text.h4, color: Colors.white }}>Send OTP</Text>
             </TouchableOpacity>
           </>
-        ) : (
+        )}
+        {step === 2 && (
           <>
             <View style={{ height: 80, marginTop: 40 }}>
               <Text
@@ -196,75 +200,70 @@ const ForgotPasswordScreen = () => {
                 Confirm OTP
               </Text>
             </TouchableOpacity>
-
-            {/* Nếu OTP đúng, hiển thị ô nhập mật khẩu mới */}
-
-            {otpSuccessMessage && (
-              <>
-                <Text
-                  style={{
-                    ...text.h3,
-                    color: Colors.teal_dark,
-                    alignSelf: "center",
-                    fontWeight: "500",
-                    marginTop: 30,
-                  }}
-                >
-                  Please enter your new password
-                </Text>
-                <View
-                  style={{
-                    alignSelf: "flex-start",
-                    paddingTop: 10,
-                  }}
-                >
-                  <Text style={{ ...text.p, fontWeight: "500" }}>
-                    New password
-                  </Text>
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  placeholderTextColor={Colors.grey}
-                  value={newPassword}
-                  onChangeText={setNewPassword}
-                  secureTextEntry
-                />
-                <View
-                  style={{
-                    alignSelf: "flex-start",
-                    paddingTop: 10,
-                  }}
-                >
-                  <Text style={{ ...text.p, fontWeight: "500" }}>
-                    Confirm new password
-                  </Text>
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Confirm password"
-                  placeholderTextColor={Colors.grey}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry
-                />
-                {passwordErrorMessage ? (
-                  <Text style={forgot.error}>{passwordErrorMessage}</Text>
-                ) : null}
-                <TouchableOpacity
-                  style={{
-                    ...styles.loginButton,
-                    marginTop: 10,
-                    marginBottom: 30,
-                  }}
-                  onPress={handleResetPassword}
-                >
-                  <Text style={{ ...text.h4, color: Colors.white }}>
-                    Reset Password
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <Text
+              style={{
+                ...text.h3,
+                color: Colors.teal_dark,
+                alignSelf: "center",
+                fontWeight: "500",
+                marginVertical: 30,
+              }}
+            >
+              Please enter your new password
+            </Text>
+            <View
+              style={{
+                alignSelf: "flex-start",
+                paddingTop: 10,
+              }}
+            >
+              <Text style={{ ...text.p, fontWeight: "500" }}>New password</Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              placeholderTextColor={Colors.grey}
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+            />
+            <View
+              style={{
+                alignSelf: "flex-start",
+                paddingTop: 10,
+              }}
+            >
+              <Text style={{ ...text.p, fontWeight: "500" }}>
+                Confirm new password
+              </Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm password"
+              placeholderTextColor={Colors.grey}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
+            {passwordErrorMessage ? (
+              <Text style={forgot.error}>{passwordErrorMessage}</Text>
+            ) : null}
+            <TouchableOpacity
+              style={{
+                ...styles.loginButton,
+                marginTop: 10,
+                marginBottom: 30,
+              }}
+              onPress={handleResetPassword}
+            >
+              <Text style={{ ...text.h4, color: Colors.white }}>
+                Reset Password
+              </Text>
+            </TouchableOpacity>
           </>
         )}
       </KeyboardAvoidingView>
@@ -293,13 +292,13 @@ export const forgot = StyleSheet.create({
     marginBottom: 10,
   },
   otpInput: {
-    height: 60,
-    width: 60,
+    height: 50,
+    width: 50,
     borderColor: Colors.dark,
     borderWidth: 1,
     borderRadius: 10,
     textAlign: "center",
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   otpTitle: {
     fontSize: 18,
