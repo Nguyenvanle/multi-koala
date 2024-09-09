@@ -22,4 +22,10 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
                     "FROM review " +
                     "WHERE course_course_id = :courseId")
     Float getAvgCourse(@Param("courseId") String courseId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT AVG(r.rating) " +
+                    "FROM review r JOIN course c ON r.course_course_id = c.course_id " +
+                    "WHERE c.uploaded_by_teacher_user_id = :teacherId")
+    Float getAvgTeacher(@Param("teacherId") String teacherId);
 }

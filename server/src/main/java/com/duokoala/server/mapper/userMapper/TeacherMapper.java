@@ -13,7 +13,7 @@ public interface TeacherMapper {
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "roles", ignore = true)
     Teacher toTeacher(TeacherCreationRequest request);
-    TeacherResponse toTeacherResponse(Teacher teacher);
+    TeacherResponse toTeacherResponse(Teacher teacher,Float teacherRating);
     @Mapping(target = "image", ignore = true)
     void updateTeacher(@MappingTarget Teacher teacher, TeacherUpdateRequest request);
 }
