@@ -29,6 +29,8 @@ public class Course {
     Level courseLevel;
     @ManyToMany
     Set<Type> types;
+    @ManyToMany
+    Set<Field> fields;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     Image image;
     @ManyToOne

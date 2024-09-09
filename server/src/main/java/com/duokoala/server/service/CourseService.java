@@ -12,6 +12,7 @@ import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.CourseMapper;
 import com.duokoala.server.repository.CourseRepository;
+import com.duokoala.server.repository.FieldRepository;
 import com.duokoala.server.repository.ReviewRepository;
 import com.duokoala.server.repository.TypeRepository;
 import lombok.AccessLevel;
@@ -33,6 +34,7 @@ public class CourseService {
     TypeRepository typeRepository;
     AuthenticationService authenticationService;
     ReviewRepository reviewRepository;
+    private final FieldRepository fieldRepository;
 
     float getAvgRatingCourse(String courseId) {
         Float avgCourse = reviewRepository.getAvgCourse(courseId);
@@ -44,6 +46,8 @@ public class CourseService {
         course.setCourseUploadedAt(LocalDateTime.now());
         var types = typeRepository.findAllById(request.getTypes());
         course.setTypes(new HashSet<>(types));
+        var fields = fieldRepository.findAllById(request.getFields());
+        course.setFields(new HashSet<>(fields));
         Image image = new Image();
         image.setImageUrl(request.getImageUrl());
         course.setImage(image);
@@ -61,6 +65,8 @@ public class CourseService {
         courseMapper.updateCourse(course, request);
         var types = typeRepository.findAllById(request.getTypes());
         course.setTypes(new HashSet<>(types));
+        var fields = fieldRepository.findAllById(request.getFields());
+        course.setFields(new HashSet<>(fields));
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.getImage().setImageUrl(request.getImageUrl());
         return courseMapper.toCourseResponse(courseRepository.save(course), getAvgRatingCourse(courseId));

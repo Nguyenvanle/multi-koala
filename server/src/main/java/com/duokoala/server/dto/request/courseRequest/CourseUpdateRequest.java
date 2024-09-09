@@ -16,5 +16,6 @@ public class CourseUpdateRequest {
     String courseDescription;
     String courseLevel;
     Set<String> types;
+    Set<String> fields;
     String imageUrl;
 }

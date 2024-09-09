@@ -23,6 +23,7 @@ public class CourseResponse {
     Level courseLevel;
     float courseRating;
     Set<TypeResponse> types;
+    Set<FieldResponse> fields;
     ImageResponse image;
     TeacherResponse uploadedByTeacher;
     AdminResponse approvedByAdmin;

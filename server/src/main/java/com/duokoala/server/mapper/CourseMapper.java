@@ -12,10 +12,12 @@ import org.mapstruct.MappingTarget;
 public interface CourseMapper {
     @Mapping(target = "courseLevel", ignore = true)
     @Mapping(target = "types", ignore = true)
+    @Mapping(target = "fields", ignore = true)
     Course toCourse(CourseCreateRequest request);
     CourseResponse toCourseResponse(Course course, float courseRating);
 
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "courseLevel", ignore = true)
+    @Mapping(target = "fields", ignore = true)
     void updateCourse(@MappingTarget Course course, CourseUpdateRequest request);
 }
