@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -19,5 +20,6 @@ public class ReferenceResponse {
     int studyTimeGoal;
     Set<FieldResponse> favoriteFields;
     Level learningLevel;
+    LocalDateTime takenDate;
     StudentResponse student;
 }

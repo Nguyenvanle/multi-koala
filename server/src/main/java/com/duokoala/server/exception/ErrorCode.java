@@ -27,6 +27,7 @@ public enum ErrorCode {
     DISCOUNT_COURSE_ALREADY_APPROVED(409, "Conflict: Discount for Course is already approved", HttpStatus.CONFLICT),
 
 
+    REFERENCE_NOT_FOUND(404, "Not found: Reference does not exist", HttpStatus.NOT_FOUND),
     USER_NOT_FOUND(404, "Not found: User does not exist", HttpStatus.NOT_FOUND),
     TEACHER_NOT_FOUND(404, "Not found: Teacher does not exist", HttpStatus.NOT_FOUND),
     ADMIN_NOT_FOUND(404, "Not found: Admin does not exist", HttpStatus.NOT_FOUND),

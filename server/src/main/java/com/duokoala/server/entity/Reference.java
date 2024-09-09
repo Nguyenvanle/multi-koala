@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -23,6 +24,7 @@ public class Reference {
     Set<Field> favoriteFields;
     @Enumerated(EnumType.STRING)
     Level learningLevel;
+    LocalDateTime takenDate;
     @OneToOne
     Student student;
 }
