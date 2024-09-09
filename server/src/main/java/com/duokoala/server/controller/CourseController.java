@@ -19,7 +19,7 @@ import java.util.List;
 public class CourseController {
     CourseService courseService;
 
-    @PostMapping
+    @PostMapping("/courses")
     ApiResponse<CourseResponse> create(@RequestBody CourseCreateRequest request) {
         return ApiResponse.<CourseResponse>builder()
                 .result(courseService.create(request))

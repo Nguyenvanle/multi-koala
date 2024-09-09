@@ -14,6 +14,7 @@ public class CourseCreateRequest {
     String courseName;
     float coursePrice;
     String courseDescription;
+    String courseLevel;
     Set<String> types;
     String imageUrl;
 }

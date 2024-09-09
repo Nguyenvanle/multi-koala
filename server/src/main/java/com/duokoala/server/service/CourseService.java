@@ -1,15 +1,12 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.certificationRequest.CertificationApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
-import com.duokoala.server.dto.response.CertificationResponse;
 import com.duokoala.server.dto.response.CourseResponse;
-import com.duokoala.server.entity.Certification;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
-import com.duokoala.server.entity.user.Admin;
+import com.duokoala.server.enums.Level;
 import com.duokoala.server.enums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -50,6 +47,7 @@ public class CourseService {
         Image image = new Image();
         image.setImageUrl(request.getImageUrl());
         course.setImage(image);
+        course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
         course.setStatus(Status.PENDING_APPROVAL);
@@ -63,6 +61,7 @@ public class CourseService {
         courseMapper.updateCourse(course, request);
         var types = typeRepository.findAllById(request.getTypes());
         course.setTypes(new HashSet<>(types));
+        course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.getImage().setImageUrl(request.getImageUrl());
         return courseMapper.toCourseResponse(courseRepository.save(course), getAvgRatingCourse(courseId));
     }

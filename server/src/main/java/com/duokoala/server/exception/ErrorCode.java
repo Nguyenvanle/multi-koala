@@ -47,6 +47,7 @@ public enum ErrorCode {
     ENROLL_COURSE_NOT_FOUND(404, "Not found: Enroll for Course does not exist", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(404, "Not found: Review does not exist", HttpStatus.NOT_FOUND),
     QUIZ_RESULT_NOT_FOUND(404, "Not found: Quiz Result does not exist", HttpStatus.NOT_FOUND),
+    LEVEL_NOT_FOUND(404, "Not found: Level does not exist", HttpStatus.NOT_FOUND),
 
 
 
