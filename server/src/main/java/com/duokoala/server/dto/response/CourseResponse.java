@@ -19,6 +19,7 @@ public class CourseResponse {
     LocalDateTime courseUploadedAt;
     float coursePrice;
     String courseDescription;
+    float courseRating;
     Set<TypeResponse> types;
     ImageResponse image;
     TeacherResponse uploadedByTeacher;

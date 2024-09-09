@@ -13,7 +13,8 @@ import org.mapstruct.MappingTarget;
 public interface CourseMapper {
     @Mapping(target = "types", ignore = true)
     Course toCourse(CourseCreateRequest request);
-    CourseResponse toCourseResponse(Course course);
+    CourseResponse toCourseResponse(Course course, float courseRating);
+
     @Mapping(target = "types", ignore = true)
     void updateCourse(@MappingTarget Course course, CourseUpdateRequest request);
 }
