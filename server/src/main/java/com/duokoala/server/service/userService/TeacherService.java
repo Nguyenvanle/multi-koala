@@ -8,6 +8,7 @@ import com.duokoala.server.enums.Role;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.TeacherMapper;
+import com.duokoala.server.repository.ReviewRepository;
 import com.duokoala.server.repository.userRepository.TeacherRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
 import lombok.AccessLevel;
@@ -25,6 +26,12 @@ public class TeacherService {
     TeacherMapper teacherMapper;
     UserRepository userRepository;
     UserService userService;
+    ReviewRepository reviewRepository;
+
+    public float getAvgRatingTeacher(String teacherId) {
+        Float avgRating = reviewRepository.getAvgTeacher(teacherId);
+        return avgRating!=null? avgRating:0.0f;
+    }
 
     public TeacherResponse createTeacher(TeacherCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
@@ -35,7 +42,7 @@ public class TeacherService {
         teacher.setRoles(userService.transferRoles(Role.TEACHER.name()));
         teacher.setDeleted(false);
         teacher.setPassword(userService.encodePassword(request.getPassword()));
-        return teacherMapper.toTeacherResponse(teacherRepository.save(teacher));
+        return teacherMapper.toTeacherResponse(teacherRepository.save(teacher),0.0f);
     }
 
     public TeacherResponse updateTeacher(String teacherId, TeacherUpdateRequest request) {
@@ -44,17 +51,20 @@ public class TeacherService {
         teacherMapper.updateTeacher(teacher,request);
         userService.updateAvatarByUserId(teacher.getImage(), request.getImageUrl());
         teacher.setPassword(userService.encodePassword(request.getPassword()));
-        return teacherMapper.toTeacherResponse(teacherRepository.save(teacher));
+        return teacherMapper.toTeacherResponse(teacherRepository.save(teacher)
+        ,getAvgRatingTeacher(teacherId));
     }
 
     public TeacherResponse getTeacher(String teacherId) {
         var teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
-        return teacherMapper.toTeacherResponse(teacher);
+        return teacherMapper.toTeacherResponse(teacher,getAvgRatingTeacher(teacherId));
     }
 
     public List<TeacherResponse> getTeachers() {
         var teachers = teacherRepository.findAll();
-        return teachers.stream().map(teacherMapper::toTeacherResponse).toList();
+        return teachers.stream().map(teacher -> teacherMapper
+                .toTeacherResponse(teacher,getAvgRatingTeacher(teacher.getUserId()))
+        ).toList();
     }
 }

@@ -27,6 +27,14 @@ public class LessonController {
                 .build();
     }
 
+    @GetMapping("/courses/{courseId}/lessons")
+    ApiResponse<List<LessonResponse>> getListByCourseId(
+            @PathVariable String courseId) {
+        return ApiResponse.<List<LessonResponse>>builder()
+                .result(lessonService.getListByCourseId(courseId))
+                .build();
+    }
+
     @PutMapping("/lessons/{lessonId}")
     ApiResponse<LessonResponse> update(
             @PathVariable String lessonId,

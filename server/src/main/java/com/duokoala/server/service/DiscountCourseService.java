@@ -75,6 +75,11 @@ public class DiscountCourseService {
         return discountCourses.stream().map(discountCourseMapper::toDiscountCourseResponse).toList();
     }
 
+    public List<DiscountCourseResponse> getListByCourseId(String courseId) {
+        var discountCourses = discountCourseRepository.getListByCourseId(courseId);
+        return discountCourses.stream().map(discountCourseMapper::toDiscountCourseResponse).toList();
+    }
+
     public void delete(String discountCourseId) {
         discountCourseRepository.deleteById(discountCourseId);
     }

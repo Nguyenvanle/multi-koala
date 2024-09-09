@@ -2,6 +2,7 @@ package com.duokoala.server.entity;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
+import com.duokoala.server.enums.Level;
 import com.duokoala.server.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,8 @@ public class Course {
     LocalDateTime courseUploadedAt;
     float coursePrice;
     String courseDescription;
+    @Enumerated(EnumType.STRING)
+    Level courseLevel;
     @ManyToMany
     Set<Type> types;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

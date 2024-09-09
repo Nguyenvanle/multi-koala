@@ -8,9 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer,String> {
-    @Query(nativeQuery = true,
-            value = "SELECT COUNT(*) " +
-                    "FROM question " +
-                    "WHERE test_test_id = :testId")
-    int countQuestionsByTestId(@Param("testId") String testId);
+
 }

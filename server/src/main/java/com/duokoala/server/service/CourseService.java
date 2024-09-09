@@ -1,20 +1,18 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.certificationRequest.CertificationApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
-import com.duokoala.server.dto.response.CertificationResponse;
 import com.duokoala.server.dto.response.CourseResponse;
-import com.duokoala.server.entity.Certification;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
-import com.duokoala.server.entity.user.Admin;
+import com.duokoala.server.enums.Level;
 import com.duokoala.server.enums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.CourseMapper;
 import com.duokoala.server.repository.CourseRepository;
+import com.duokoala.server.repository.ReviewRepository;
 import com.duokoala.server.repository.TypeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +32,12 @@ public class CourseService {
     CourseMapper courseMapper;
     TypeRepository typeRepository;
     AuthenticationService authenticationService;
+    ReviewRepository reviewRepository;
+
+    float getAvgRatingCourse(String courseId) {
+        Float avgCourse = reviewRepository.getAvgCourse(courseId);
+        return avgCourse != null ? avgCourse : 0.0f;
+    }
 
     public CourseResponse create(CourseCreateRequest request) {
         Course course = courseMapper.toCourse(request);
@@ -43,31 +47,44 @@ public class CourseService {
         Image image = new Image();
         image.setImageUrl(request.getImageUrl());
         course.setImage(image);
+        course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
         course.setStatus(Status.PENDING_APPROVAL);
         course.setDeleted(false);
-        return courseMapper.toCourseResponse(courseRepository.save(course));
+        return courseMapper.toCourseResponse(courseRepository.save(course), 0.0f);
     }
 
     public CourseResponse update(String courseId, CourseUpdateRequest request) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
-        courseMapper.updateCourse(course,request);
+        courseMapper.updateCourse(course, request);
         var types = typeRepository.findAllById(request.getTypes());
         course.setTypes(new HashSet<>(types));
+        course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.getImage().setImageUrl(request.getImageUrl());
-        return courseMapper.toCourseResponse(courseRepository.save(course));
+        return courseMapper.toCourseResponse(courseRepository.save(course), getAvgRatingCourse(courseId));
     }
 
     public CourseResponse get(String courseId) {
-        return courseMapper.toCourseResponse(courseRepository.findById(courseId)
-                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND)));
+        var course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
+        return courseMapper.toCourseResponse(course, getAvgRatingCourse(courseId));
     }
 
     public List<CourseResponse> getAll() {
         var courses = courseRepository.findAll();
-        return courses.stream().map(courseMapper::toCourseResponse).toList();
+        return courses.stream().map(
+                course -> courseMapper
+                        .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
+                .toList();
+    }
+
+    public List<CourseResponse> getListByTeacherId(String teacherId) {
+        var courses = courseRepository.getListByTeacherId(teacherId);
+        return courses.stream().map(course -> courseMapper
+                .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
+                .toList();
     }
 
     public void delete(String courseId) {
@@ -76,6 +93,7 @@ public class CourseService {
         course.setDeleted(true);
         courseRepository.save(course);
     }
+
     public CourseResponse approve(String courseId, CourseApproveRequest request) {
         Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
 
@@ -87,6 +105,6 @@ public class CourseService {
 
         course.setStatus(approvedStatus);
         course.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
-        return courseMapper.toCourseResponse(courseRepository.save(course));
+        return courseMapper.toCourseResponse(courseRepository.save(course),0.0f);
     }
 }
