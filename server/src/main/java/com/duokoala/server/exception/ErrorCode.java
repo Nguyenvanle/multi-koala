@@ -18,6 +18,7 @@ public enum ErrorCode {
     // 4xx Client Errors
     USERNAME_EXISTED(409, "Conflict: Username already exists", HttpStatus.CONFLICT),
     TYPE_EXISTED(409, "Conflict: Type already exists", HttpStatus.CONFLICT),
+    FIELD_EXISTED(409, "Conflict: Field already exists", HttpStatus.CONFLICT),
     DISCOUNT_COURSE_EXISTED(409, "Conflict: Discount for Course already exists", HttpStatus.CONFLICT),
     ENROLL_COURSE_EXISTED(409, "Conflict: Enroll for Course already exists", HttpStatus.CONFLICT),
     REVIEW_EXISTED(409, "Conflict: Review already exists", HttpStatus.CONFLICT),
@@ -48,6 +49,7 @@ public enum ErrorCode {
     REVIEW_NOT_FOUND(404, "Not found: Review does not exist", HttpStatus.NOT_FOUND),
     QUIZ_RESULT_NOT_FOUND(404, "Not found: Quiz Result does not exist", HttpStatus.NOT_FOUND),
     LEVEL_NOT_FOUND(404, "Not found: Level does not exist", HttpStatus.NOT_FOUND),
+    FIELD_NOT_FOUND(404, "Not found: Field does not exist", HttpStatus.NOT_FOUND),
 
 
 
