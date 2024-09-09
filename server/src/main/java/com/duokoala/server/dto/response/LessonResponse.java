@@ -5,6 +5,8 @@ import com.duokoala.server.dto.response.mediaResponse.VideoResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +17,7 @@ public class LessonResponse {
     String lessonDescription;
     ImageResponse image;
     VideoResponse video;
+    LocalDateTime lessonUploadedAt;
     CourseResponse course;
     boolean isDeleted;
 }

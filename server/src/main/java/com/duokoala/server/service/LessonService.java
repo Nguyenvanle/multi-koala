@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +41,7 @@ public class LessonService {
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
         lesson.setImage(image);
         lesson.setVideo(video);
+        lesson.setLessonUploadedAt(LocalDateTime.now());
         lesson.setCourse(course);
         lesson.setDeleted(false);
         return lessonMapper.toLessonResponse(lessonRepository.save(lesson));

@@ -1,15 +1,12 @@
 package com.duokoala.server.entity;
+
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.media.Video;
-import com.duokoala.server.entity.user.Admin;
-import com.duokoala.server.entity.user.Teacher;
-import com.duokoala.server.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +20,7 @@ public class Lesson {
     String lessonId;
     String lessonName;
     String lessonDescription;
+    LocalDateTime lessonUploadedAt;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     Image image;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
