@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +16,7 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.UUID)
     String testId;
     String testDescription;
+    LocalDateTime TestUploadedAt;
     @ManyToOne
     Lesson lesson;
     boolean isDeleted;

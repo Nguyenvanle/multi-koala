@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,6 +27,7 @@ public class TestService {
 
     public TestResponse create(String lessonId, TestCreateRequest request) {
         Test test = testMapper.toTest(request);
+        test.setTestUploadedAt(LocalDateTime.now());
         test.setLesson(lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND)));
         return testMapper.toTestResponse(testRepository.save(test));
