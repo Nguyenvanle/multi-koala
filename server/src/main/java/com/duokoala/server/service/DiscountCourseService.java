@@ -2,7 +2,8 @@ package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.discountCourseRequest.DiscountCourseApproveRequest;
 import com.duokoala.server.dto.request.discountCourseRequest.DiscountCourseCreateRequest;
-import com.duokoala.server.dto.response.DiscountCourseResponse;
+import com.duokoala.server.dto.response.discountCourseResponse.DiscountCourseResponse;
+import com.duokoala.server.dto.response.discountCourseResponse.DiscountOnlyResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Discount;
 import com.duokoala.server.entity.DiscountCourse;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,9 +75,9 @@ public class DiscountCourseService {
         return discountCourses.stream().map(discountCourseMapper::toDiscountCourseResponse).toList();
     }
 
-    public List<DiscountCourseResponse> getListByCourseId(String courseId) {
+    public List<DiscountOnlyResponse> getListByCourseId(String courseId) {
         var discountCourses = discountCourseRepository.getListByCourseId(courseId);
-        return discountCourses.stream().map(discountCourseMapper::toDiscountCourseResponse).toList();
+        return discountCourses.stream().map(discountCourseMapper::toDiscountOnlyResponse).toList();
     }
 
     public void delete(String discountCourseId) {

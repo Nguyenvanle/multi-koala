@@ -3,7 +3,8 @@ package com.duokoala.server.controller;
 import com.duokoala.server.dto.request.discountCourseRequest.DiscountCourseApproveRequest;
 import com.duokoala.server.dto.request.discountCourseRequest.DiscountCourseCreateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.DiscountCourseResponse;
+import com.duokoala.server.dto.response.discountCourseResponse.DiscountCourseResponse;
+import com.duokoala.server.dto.response.discountCourseResponse.DiscountOnlyResponse;
 import com.duokoala.server.service.DiscountCourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +48,9 @@ public class DiscountCourseController {
                 .build();
     }
 
-    @GetMapping("courses/{courseId}/discount-courses")
-    ApiResponse<List<DiscountCourseResponse>> getListByCourseId(@PathVariable String courseId) {
-        return ApiResponse.<List<DiscountCourseResponse>>builder()
+    @GetMapping("courses/{courseId}/discount-only")
+    ApiResponse<List<DiscountOnlyResponse>> getListByCourseId(@PathVariable String courseId) {
+        return ApiResponse.<List<DiscountOnlyResponse>>builder()
                 .result(discountCourseService.getListByCourseId(courseId))
                 .build();
     }
