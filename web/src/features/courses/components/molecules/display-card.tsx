@@ -18,21 +18,24 @@ export default function DisplayCard({
     <Card className="rounded overflow-hidden hover:shadow-md">
       <CardHeader className="p-0 ">
         <div className="relative w-full h-[62vh] overflow-hidden">
-          {loading && <Skeleton className="absolute inset-0 w-full h-full" />}{" "}
-          {/* Hiển thị skeleton */}
-          <Image
-            src={courseImage}
-            alt={courseName}
-            fill
-            className={`object-cover object-center ${
-              loading && error ? "hidden" : "block"
-            }`} // Ẩn ảnh khi đang loading
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
-            quality={100}
-            onLoad={() => setLoading(false)} // Đặt state loading thành false khi ảnh hoàn thành tải
-            onError={() => setError(true)}
-          />
+          {loading && <Skeleton className="absolute inset-0 w-full h-full" />}
+          {!courseImage.includes("https://img.freepik.com") ? (
+            <Skeleton className="absolute inset-0 w-full h-full" />
+          ) : (
+            <Image
+              src={courseImage}
+              alt={courseName}
+              fill
+              className={`object-cover object-center ${
+                loading && error ? "hidden" : "block"
+              }`} // Ẩn ảnh khi đang loading
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority
+              quality={100}
+              onLoad={() => setLoading(false)} // Đặt state loading thành false khi ảnh hoàn thành tải
+              onError={() => setError(true)}
+            />
+          )}
         </div>
       </CardHeader>
     </Card>

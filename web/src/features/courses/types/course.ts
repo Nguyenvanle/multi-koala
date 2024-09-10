@@ -11,7 +11,9 @@ export const CourseBodyType = z.object({
   courseUploadedAt: z.string().transform((date) => new Date(date)),
   coursePrice: z.number(),
   courseDescription: z.string(),
+  courseLevel: z.string(),
   types: z.array(CourseTypeBodyType),
+  courseRating: z.number(),
   image: ImageBodyType,
   uploadedByTeacher: UserBodyType,
   approvedByAdmin: UserBodyType.extend({

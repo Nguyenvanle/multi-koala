@@ -24,9 +24,7 @@ export default function Courses() {
                 courseCreateAt={course.courseUploadedAt}
                 coursePrice={course.coursePrice}
                 courseDescription={course.courseDescription}
-                courseType={course.types
-                  .map((type) => type.typeName)
-                  .join(", ")}
+                courseType={course.types}
                 courseImage={course.image.imageUrl || ""}
                 uploadByTeacher={
                   course.uploadedByTeacher?.firstname +
@@ -39,6 +37,8 @@ export default function Courses() {
                     course.approvedByAdmin?.lastname || ""
                 }
                 status={course.status}
+                courseRating={course.courseRating}
+                courseLevel={course.courseLevel}
               />
             </Link>
           ))

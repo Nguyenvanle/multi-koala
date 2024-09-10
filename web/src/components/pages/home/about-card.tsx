@@ -24,7 +24,7 @@ export default function AboutCard({
 }: AboutCardProps) {
   return (
     <Link href={link} className="flex flex-0">
-      <Card className="flex flex-0 flex-col border rounded hover:shadow-md overflow-hidden">
+      <Card className="flex flex-1 flex-col border rounded hover:shadow-md overflow-hidden">
         <CardContent className="px-0">
           <AspectRatio ratio={16 / 9} className=" overflow-hidden">
             <Image
