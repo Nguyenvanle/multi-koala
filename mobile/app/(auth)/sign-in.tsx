@@ -17,13 +17,9 @@ import { useRouter } from "expo-router";
 import CircleStyle from "@/components/common/CircleStyle";
 import openFacebook from "@/service/FacebookAuthen";
 import openGmail from "@/service/GoogleAuthen";
+import axios from "axios";
 
-const acc = [
-  {
-    username: "Tule",
-    password: "0102",
-  },
-];
+const API_URL = "https://humbly-thankful-mackerel.ngrok-free.app/auth/login"; // Đường dẫn tới API
 
 const SignIn: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -31,7 +27,7 @@ const SignIn: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState(""); // State để lưu thông báo lỗi
   const router = useRouter(); // Khai báo router
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     // Kiểm tra nếu chưa nhập username hoặc password
     if (!username && !password) {
       setErrorMessage("Please enter your Username and Password");
@@ -49,16 +45,26 @@ const SignIn: React.FC = () => {
     }
 
     // Xử lý đăng nhập
-    const user = acc.find(
-      (acc) => acc.username === username && acc.password === password
-    );
+    try {
+      // Xử lý đăng nhập
+      const response = await axios.post(API_URL, {
+        username,
+        password,
+      });
 
-    if (user) {
-      // Nếu tìm thấy người dùng
-      router.replace("/(home)/home"); // Điều hướng đến trang chính
-    } else {
-      // Nếu không tìm thấy người dùng
-      setErrorMessage("Sign In failed. Please check again.");
+      // Kiểm tra phản hồi từ API
+      if (response.data.success) {
+        // Nếu đăng nhập thành công
+        router.replace("/(home)/home"); // Điều hướng đến trang chính
+      } else {
+        // Nếu không thành công
+        setErrorMessage("Sign In failed. Please check your credentials.");
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu API trả về lỗi
+      setErrorMessage(
+        error.response?.data?.message || "Sign In failed. Please try again."
+      );
     }
   };
 
@@ -114,6 +120,8 @@ const SignIn: React.FC = () => {
           placeholderTextColor={Colors.grey}
           value={username}
           onChangeText={setUsername}
+          autoComplete="password" // Ngăn không cho hiển thị gợi ý mật khẩu
+          textContentType="newPassword"
         />
 
         {/* Nhập password */}
@@ -132,6 +140,7 @@ const SignIn: React.FC = () => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          textContentType="newPassword"
         />
         {/* Hiển thị thông báo lỗi nếu có */}
         {errorMessage ? (

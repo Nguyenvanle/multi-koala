@@ -1,9 +1,9 @@
-import axios from "axios";
-
-const API_CONFIG = axios.create({
-  baseURL:
+// src/services/api/config.ts
+export const API_CONFIG = {
+  baseUrl:
     process.env.NEXT_PUBLIC_API_URL ||
     "https://humbly-thankful-mackerel.ngrok-free.app/",
-  responseType: "json",
-  withCredentials: true,
-});
+  cacheDuration: 5 * 60 * 1000, // 5 minutes in milliseconds
+  cachableEndpoints: ["/courses", "/lessons", "/students"],
+  cacheLog: false,
+};
