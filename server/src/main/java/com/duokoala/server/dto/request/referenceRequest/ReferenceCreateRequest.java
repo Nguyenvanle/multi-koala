@@ -11,7 +11,7 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReferenceCreateRequest {
-    int studyTimeGoal;
-    Set<String> favoriteFields;
-    String learningLevel;
+    int studyTimeGoal; //thời gian học trong 1 ngày
+    Set<String> favoriteFields;//lĩnh vực yêu thích (exist)
+    String learningLevel; //cấp độ (enum)
 }

@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getStatusCode()).body(
                 ApiResponse.builder()
                         .code(errorCode.getCode())
-                        .message(errorCode.getMessage())
+                        .message(errorCode.getMessage() +": "+exception.getMessage())
                         .build()
         );
     }
@@ -78,6 +78,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AuthenticationServiceException.class)
     ResponseEntity<ApiResponse> handlingAuthenticationServiceException(AuthenticationServiceException exception) {
         ErrorCode errorCode = ErrorCode.TOKEN_INVALID;
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(exception.getMessage())
+                        .build()
+        );
+    }
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    ResponseEntity<ApiResponse> handlingIllegalArgumentExceptionException(IllegalArgumentException exception) {
+        ErrorCode errorCode = ErrorCode.INVALID_ARGUMENT;
         return ResponseEntity.status(errorCode.getStatusCode()).body(
                 ApiResponse.builder()
                         .code(errorCode.getCode())
