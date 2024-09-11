@@ -2,12 +2,10 @@ package com.duokoala.server.entity;
 
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
+import com.duokoala.server.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -15,16 +13,17 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Payment {
+public class RequestDiscount {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String paymentId;
-    float totalAmount;
-    float teacherAmount;
-    float orgAmount;
-    LocalDateTime processedDate;
-    @OneToOne
-    EnrollCourse enrollCourse;
+    String RequestDiscountId;
+    float discountRate;
+    @Enumerated(EnumType.STRING) //enum but save in db with string
+    Status status;
     @ManyToOne
-    Teacher teacher;
+    Course course;
+    @ManyToOne
+    Teacher submittedByTeacher;
+    @ManyToOne
+    Admin approvedByAdmin;
 }
