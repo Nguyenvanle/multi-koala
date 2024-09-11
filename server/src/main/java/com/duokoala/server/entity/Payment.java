@@ -19,14 +19,12 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String paymentId;
-    BigDecimal totalAmount;
+    float totalAmount;
     float teacherAmount;
-    float adminAmount;
+    float orgAmount;
     LocalDateTime processedDate;
     @OneToOne
     EnrollCourse enrollCourse;
-    @ManyToOne
-    Admin admin;
     @ManyToOne
     Teacher teacher;
 }
