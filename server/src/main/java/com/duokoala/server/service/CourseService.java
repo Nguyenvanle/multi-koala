@@ -93,6 +93,15 @@ public class CourseService {
                 .toList();
     }
 
+    public List<CourseResponse> getMine() {
+        var courses = courseRepository
+                .findAllByUploadedByTeacher
+                        (authenticationService.getAuthenticatedTeacher());
+        return courses.stream().map(course -> courseMapper
+                        .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
+                .toList();
+    }
+
     public void delete(String courseId) {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));

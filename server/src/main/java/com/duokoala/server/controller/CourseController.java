@@ -53,6 +53,12 @@ public class CourseController {
                 .result(courseService.getAll())
                 .build();
     }
+    @GetMapping("/courses/mine")
+    ApiResponse<List<CourseResponse>> getMyCourses() {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.getMine())
+                .build();
+    }
 
     @GetMapping("teachers/{teacherId}/courses")
     ApiResponse<List<CourseResponse>> getListByTeacherId(@PathVariable String teacherId) {
