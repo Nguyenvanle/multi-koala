@@ -4,9 +4,14 @@ export interface CourseCardProps {
   courseCreateAt: Date;
   coursePrice: number;
   courseDescription: string;
-  courseType: string; // => Type?
+  courseType: {
+    typeName: string;
+    typeDescription: string;
+  }[];
   courseImage: string; // => Image?
   uploadByTeacher: string; // => Teacher?
   approvedByAdmin: string; // => Admin?
   status: "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | string;
+  courseRating: number;
+  courseLevel: CourseLevel | string;
 }

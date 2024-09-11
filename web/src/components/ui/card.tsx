@@ -41,7 +41,7 @@ const CardTitle = React.forwardRef<
     )}
     {...props}
   />
-))
+));
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<

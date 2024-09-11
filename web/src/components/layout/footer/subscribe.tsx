@@ -13,7 +13,10 @@ export default function Subscribe() {
         Stay up to date with the latest news and updates from our team.
       </p>
       <div className="flex flex-row items-center gap-2">
-        <Input className="flex flex-1 focus-visible:ring-accent focus-visible:ring-offset-0 my-2"></Input>
+        <Input
+          className="flex flex-1 focus-visible:ring-accent focus-visible:ring-offset-0 my-2"
+          placeholder="you@mail.com"
+        ></Input>
         <Button
           className="flex flex-0 "
           onClick={() => showToast("Success", "You have been subscribed")}

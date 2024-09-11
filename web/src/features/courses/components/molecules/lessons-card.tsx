@@ -3,7 +3,6 @@
 // LessonsCard.tsx
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
-import { CourseCardProps } from "@/types/course/course";
 import {
   Card,
   CardContent,

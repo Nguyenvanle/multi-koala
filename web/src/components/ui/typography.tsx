@@ -77,10 +77,7 @@ export function P({
   title?: string;
 }) {
   return (
-    <p
-      className={`leading-7 [&:not(:first-child)]:mt-6 ${className}`}
-      title={title}
-    >
+    <p className={`leading-7 ${className}`} title={title}>
       {children}
     </p>
   );

@@ -26,17 +26,22 @@ export default function LessonCard({
         {imageLoading && (
           <Skeleton className="h-20 w-20 rounded-none absolute top-0 left-0 z-10" />
         )}
-        <Image
-          src={image.imageUrl}
-          alt={lessonId}
-          width={80}
-          height={80}
-          quality={100}
-          onLoad={() => setImageLoading(false)}
-          className={`h-20 w-20 object-cover ${
-            imageLoading ? "invisible" : "visible"
-          }`}
-        />
+
+        {!image.imageUrl.includes("https://img.freepik.com") ? (
+          <Skeleton className="h-20 w-20 rounded-none top-0 left-0 z-10" />
+        ) : (
+          <Image
+            src={image.imageUrl}
+            alt={lessonId}
+            width={80}
+            height={80}
+            quality={100}
+            onLoad={() => setImageLoading(false)}
+            className={`h-20 w-20 object-cover ${
+              imageLoading ? "invisible" : "visible"
+            }`}
+          />
+        )}
       </CardContent>
 
       <CardHeader className="flex flex-1 flex-row gap-4 items-center px-2 py-0 content-between pr-4">
