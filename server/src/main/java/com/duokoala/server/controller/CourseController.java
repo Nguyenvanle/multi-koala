@@ -53,10 +53,17 @@ public class CourseController {
                 .result(courseService.getAll())
                 .build();
     }
-    @GetMapping("/courses/mine")
+    @GetMapping("/courses/my-uploaded-courses")
     ApiResponse<List<CourseResponse>> getMyCourses() {
         return ApiResponse.<List<CourseResponse>>builder()
                 .result(courseService.getMine())
+                .build();
+    }
+
+    @GetMapping("/courses/my-enrolled-courses")
+    ApiResponse<List<CourseResponse>> getMyEnrollCourses() {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.getMyEnrollCourse())
                 .build();
     }
 

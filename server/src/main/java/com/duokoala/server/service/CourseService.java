@@ -81,15 +81,15 @@ public class CourseService {
     public List<CourseResponse> getAll() {
         var courses = courseRepository.findAll();
         return courses.stream().map(
-                course -> courseMapper
-                        .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
+                        course -> courseMapper
+                                .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
                 .toList();
     }
 
     public List<CourseResponse> getListByTeacherId(String teacherId) {
         var courses = courseRepository.getListByTeacherId(teacherId);
         return courses.stream().map(course -> courseMapper
-                .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
+                        .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
                 .toList();
     }
 
@@ -97,6 +97,16 @@ public class CourseService {
         var courses = courseRepository
                 .findAllByUploadedByTeacher
                         (authenticationService.getAuthenticatedTeacher());
+        return courses.stream().map(course -> courseMapper
+                        .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
+                .toList();
+    }
+
+    public List<CourseResponse> getMyEnrollCourse() {
+        var courses = courseRepository
+                .findAllByUploadedByStudentId(authenticationService
+                        .getAuthenticatedStudent()
+                        .getUserId());
         return courses.stream().map(course -> courseMapper
                         .toCourseResponse(course, getAvgRatingCourse(course.getCourseId())))
                 .toList();
@@ -120,6 +130,6 @@ public class CourseService {
 
         course.setStatus(approvedStatus);
         course.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
-        return courseMapper.toCourseResponse(courseRepository.save(course),0.0f);
+        return courseMapper.toCourseResponse(courseRepository.save(course), 0.0f);
     }
 }
