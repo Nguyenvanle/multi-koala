@@ -5,6 +5,7 @@ import IntroScreen from "./intro-screen";
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Redirect } from "expo-router";
+import { UserProvider, useUser } from "@/context/UserContext";
 
 const LogoScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -17,18 +18,22 @@ const LogoScreen = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={logoscreen.containerlogo}>
-        <StatusBar barStyle="dark-content"></StatusBar>
-        <View style={logoscreen.Logo}>
-          <Image source={require("@/assets/images/Logo.png")} />
-          <Text style={{ ...text.h3, fontWeight: "bold", color: Colors.blue }}>
-            Small steps - big progress
-          </Text>
-        </View>
-        <View style={logoscreen.myteam}>
-          <Text style={text.p}>©2024 Koala Team</Text>
-        </View>
-      </SafeAreaView>
+      <UserProvider>
+        <SafeAreaView style={logoscreen.containerlogo}>
+          <StatusBar barStyle="dark-content"></StatusBar>
+          <View style={logoscreen.Logo}>
+            <Image source={require("@/assets/images/Logo.png")} />
+            <Text
+              style={{ ...text.h3, fontWeight: "bold", color: Colors.blue }}
+            >
+              Small steps - big progress
+            </Text>
+          </View>
+          <View style={logoscreen.myteam}>
+            <Text style={text.p}>©2024 Koala Team</Text>
+          </View>
+        </SafeAreaView>
+      </UserProvider>
     );
   } else {
     return <Redirect href={"/(intro)/intro-screen"}></Redirect>;

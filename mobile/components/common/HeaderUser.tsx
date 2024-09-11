@@ -1,13 +1,18 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Colors } from "@/constants/Colors";
 import CircleStyle from "./CircleStyle";
 import { button, text } from "@/constants/Styles";
 import Button from "./Button";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
+import { useUser } from "@/context/UserContext";
 
-const HeaderUser = () => {
+const HeaderUser: React.FC = () => {
+  const { user } = useUser(); // Sử dụng context
+
   return (
     <View
       style={{
@@ -25,58 +30,67 @@ const HeaderUser = () => {
       }}
     >
       <CircleStyle />
-      <View
-        style={{
-          flexDirection: "row",
-          alignSelf: "center",
-          marginVertical: 20,
-        }}
-      >
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginHorizontal: 50,
-          }}
-        >
+
+      {user ? (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Text style={text.h4}>Welcome</Text>
-          <Text style={{ ...text.h3, color: Colors.teal_light }}>User</Text>
+          <Text style={{ ...text.h3, color: Colors.teal_light }}>
+            {user.firstname} {user.lastname}
+          </Text>
         </View>
+      ) : (
         <View
           style={{
             flexDirection: "row",
             alignSelf: "center",
-            paddingHorizontal: 10,
+            marginVertical: 20,
           }}
         >
-          <Button
-            title="Sign In"
-            onPress={() => router.replace("/(auth)/sign-in")}
-            buttonStyle={{
-              ...button.Authen,
-              backgroundColor: Colors.dark,
-              width: 100,
-              borderRadius: 15,
-              marginHorizontal: 5,
-              marginTop: 0,
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginHorizontal: 50,
             }}
-            textStyle={{ ...text.p, color: Colors.white }}
-          />
-          <Button
-            title="Sign Up"
-            onPress={() => router.replace("/(auth)/sign-up")}
-            buttonStyle={{
-              ...button.Authen,
-              backgroundColor: Colors.white,
-              width: 100,
-              borderRadius: 15,
-              marginHorizontal: 5,
-              marginTop: 0,
+          >
+            <Text style={text.h4}>Welcome</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignSelf: "center",
+              paddingHorizontal: 10,
             }}
-            textStyle={{ ...text.p, color: Colors.black }}
-          />
+          >
+            <Button
+              title="Sign In"
+              onPress={() => router.replace("/(auth)/sign-in")}
+              buttonStyle={{
+                ...button.Authen,
+                backgroundColor: Colors.dark,
+                width: 100,
+                borderRadius: 15,
+                marginHorizontal: 5,
+                marginTop: 0,
+              }}
+              textStyle={{ ...text.p, color: Colors.white }}
+            />
+            <Button
+              title="Sign Up"
+              onPress={() => router.replace("/(auth)/sign-up")}
+              buttonStyle={{
+                ...button.Authen,
+                backgroundColor: Colors.white,
+                width: 100,
+                borderRadius: 15,
+                marginHorizontal: 5,
+                marginTop: 0,
+              }}
+              textStyle={{ ...text.p, color: Colors.black }}
+            />
+          </View>
         </View>
-      </View>
+      )}
       <TouchableOpacity
         style={{
           borderRadius: 10,

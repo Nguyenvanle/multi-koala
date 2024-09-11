@@ -3,65 +3,56 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
-  TouchableOpacity,
   SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
-import Button from "@/components/common/Button";
-import { Colors } from "@/constants/Colors";
-import { Styles, text } from "@/constants/Styles";
-import { useRouter } from "expo-router";
+import { useUser } from "@/context/UserContext"; // Import UserContext
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import CircleStyle from "@/components/common/CircleStyle";
+import { Styles, text } from "@/constants/Styles";
+import { Colors } from "@/constants/Colors";
 import openFacebook from "@/service/FacebookAuthen";
 import openGmail from "@/service/GoogleAuthen";
-import axios from "axios";
+import Button from "@/components/common/Button";
+import { router } from "expo-router";
 
-const API_URL = "https://humbly-thankful-mackerel.ngrok-free.app/auth/login"; // Đường dẫn tới API
+const API_URL = "https://humbly-thankful-mackerel.ngrok-free.app/auth/login"; // Đặt URL của bạn ở đây
 
 const SignIn: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // State để lưu thông báo lỗi
-  const router = useRouter(); // Khai báo router
+  const { setUser } = useUser(); // Sử dụng context
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSignIn = async () => {
-    // Kiểm tra nếu chưa nhập username hoặc password
-    if (!username && !password) {
+    if (!username || !password) {
       setErrorMessage("Please enter your Username and Password");
-      return; // Dừng hàm nếu không có dữ liệu
+      return;
     }
 
-    if (!username) {
-      setErrorMessage("Please enter your Username");
-      return; // Dừng hàm nếu không có username
-    }
-
-    if (!password) {
-      setErrorMessage("Please enter your Password");
-      return; // Dừng hàm nếu không có password
-    }
-
-    // Xử lý đăng nhập
     try {
-      // Xử lý đăng nhập
-      const response = await axios.post(API_URL, {
-        username,
-        password,
-      });
+      const response = await axios.post(API_URL, { username, password });
+      console.log(JSON.stringify(response));
 
-      // Kiểm tra phản hồi từ API
-      if (response.data.success) {
-        // Nếu đăng nhập thành công
-        router.replace("/(home)/home"); // Điều hướng đến trang chính
+      if (response.data.code === 200) {
+        const { token, firstname, lastname } = response.data.data;
+
+        await AsyncStorage.setItem("userToken", token);
+        await AsyncStorage.setItem("userFirstname", firstname);
+        await AsyncStorage.setItem("userLastname", lastname);
+
+        setUser({ firstname, lastname, token }); // Cập nhật trạng thái người dùng
+        // Chuyển hướng tới trang chính
       } else {
-        // Nếu không thành công
         setErrorMessage("Sign In failed. Please check your credentials.");
       }
     } catch (error) {
-      // Xử lý lỗi nếu API trả về lỗi
+      console.log("Error response:", error.response);
       setErrorMessage(
         error.response?.data?.message || "Sign In failed. Please try again."
       );
@@ -120,8 +111,6 @@ const SignIn: React.FC = () => {
           placeholderTextColor={Colors.grey}
           value={username}
           onChangeText={setUsername}
-          autoComplete="password" // Ngăn không cho hiển thị gợi ý mật khẩu
-          textContentType="newPassword"
         />
 
         {/* Nhập password */}
@@ -139,8 +128,9 @@ const SignIn: React.FC = () => {
           placeholderTextColor={Colors.grey}
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
-          textContentType="newPassword"
+          secureTextEntry={true}
+          autoComplete="password" // Tắt gợi ý mật khẩu
+          autoCorrect={false} // Tắt sửa chính tả
         />
         {/* Hiển thị thông báo lỗi nếu có */}
         {errorMessage ? (
@@ -153,7 +143,11 @@ const SignIn: React.FC = () => {
           style={{ alignSelf: "baseline" }}
         >
           <Text
-            style={{ ...text.link, color: Colors.teal_dark, fontWeight: "500" }}
+            style={{
+              ...text.link,
+              color: Colors.teal_dark,
+              fontWeight: "500",
+            }}
           >
             Forgot Password?
           </Text>
