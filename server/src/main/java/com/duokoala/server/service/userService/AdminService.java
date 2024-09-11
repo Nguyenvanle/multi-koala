@@ -59,6 +59,10 @@ public class AdminService {
         return adminMapper.toAdminResponse(admin);
     }
 
+    public AdminResponse getMyInfo() {
+        return adminMapper.toAdminResponse(authenticationService.getAuthenticatedAdmin());
+    }
+
     @PreAuthorize("hasAuthority('GET_ALL_USER')")
     public List<AdminResponse> getAdmins() {
         var admins = adminRepository.findAll();

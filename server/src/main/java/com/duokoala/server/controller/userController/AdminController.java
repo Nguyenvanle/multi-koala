@@ -44,6 +44,13 @@ public class AdminController {
                 .build();
     }
 
+    @GetMapping("/me")
+    ApiResponse<AdminResponse> getAdmin() {
+        return ApiResponse.<AdminResponse>builder()
+                .result(adminService.getMyInfo())
+                .build();
+    }
+
     @GetMapping
     ApiResponse<List<AdminResponse>> getAdmins() {
         return ApiResponse.<List<AdminResponse>>builder()
