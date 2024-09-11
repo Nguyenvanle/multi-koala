@@ -4,14 +4,28 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  ScrollView,
+  StyleSheet,
 } from "react-native";
-import React from "react";
-import { Link, router } from "expo-router";
-import { Styles } from "@/constants/Styles";
+import React, { useState } from "react";
+import { Styles, text } from "@/constants/Styles";
 import HeaderUser from "@/components/common/HeaderUser";
 import { Colors } from "@/constants/Colors";
+import AllCourses from "@/components/common/AllCourses";
+import InProgressCourses from "@/components/common/InProgressCourses";
+import FinishedCourses from "@/components/common/FinishedCourses";
 
 const CourseList = () => {
+  const [selectedIndex, setSelectedIndex] = useState(1);
+  const data = [
+    { id: 1, label: "See All", component: <AllCourses /> },
+    { id: 2, label: "In Progress", component: <InProgressCourses /> },
+    { id: 3, label: "Finished", component: <FinishedCourses /> },
+  ];
+
+  const handlePress = (index) => {
+    setSelectedIndex(index); // Cập nhật chỉ số đã chọn
+  };
   return (
     <SafeAreaView
       style={{
@@ -25,18 +39,70 @@ const CourseList = () => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          width: 410,
+          width: 380,
+          height: 60,
           top: -40,
-          paddingLeft: 20,
-          paddingRight: 10,
+          paddingHorizontal: 30,
+          backgroundColor: Colors.white,
+          borderRadius: 50,
+          shadowOpacity: 0.05,
         }}
       >
-        <Text>See All</Text>
-        <Text>In Progress</Text>
-        <Text>Finished</Text>
+        {data.map((item, index) => (
+          <TouchableOpacity key={item.id} onPress={() => handlePress(index)}>
+            <Text
+              style={[
+                text.p,
+                selectedIndex === index
+                  ? styles.selectedText
+                  : styles.defaultText, // Đổi màu chữ
+              ]}
+            >
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
+      {/* Hiển thị component dữ liệu tương ứng */}
+      {selectedIndex !== null && (
+        <ScrollView showsVerticalScrollIndicator={false} style={{ top: -40 }}>
+          {data[selectedIndex].component}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 10,
+  },
+  defaultButton: {
+    color: Colors.white, // Màu mặc định
+  },
+  selectedButton: {
+    color: Colors.teal_dark, // Màu khi được chọn
+  },
+  dataContainer: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 5,
+    width: "80%", // Đảm bảo kích thước phù hợp
+  },
+  defaultText: {
+    color: Colors.black, // Màu chữ mặc định
+  },
+  selectedText: {
+    color: Colors.teal_light, // Màu chữ khi được chọn
+  },
+});
 
 export default CourseList;
