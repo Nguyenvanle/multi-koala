@@ -10,6 +10,7 @@ import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.StudentMapper;
 import com.duokoala.server.repository.userRepository.StudentRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
+import com.duokoala.server.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +26,7 @@ public class StudentService {
     StudentMapper studentMapper;
     UserRepository userRepository;
     UserService userService;
+    AuthenticationService authenticationService;
 
     public StudentResponse createStudent(StudentCreationRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
@@ -53,11 +55,16 @@ public class StudentService {
         return studentMapper.toStudentResponse(student);
     }
 
+    public StudentResponse getMyInfo() {
+        return studentMapper.toStudentResponse(authenticationService.getAuthenticatedStudent());
+    }
+
 
     public List<StudentResponse> getStudents() {
         var students = studentRepository.findAll();
         return students.stream().map(studentMapper::toStudentResponse).toList();
     }
+
 
     public List<StudentResponse> getListByCourseId(String courseId) {
         var students = studentRepository.getListByCourseId(courseId);

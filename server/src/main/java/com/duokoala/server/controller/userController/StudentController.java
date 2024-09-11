@@ -44,6 +44,13 @@ public class StudentController {
                 .build();
     }
 
+    @GetMapping("/students/me")
+    ApiResponse<StudentResponse> getMyInfo() {
+        return ApiResponse.<StudentResponse>builder()
+                .result(studentService.getMyInfo())
+                .build();
+    }
+
     @GetMapping("/students")
     ApiResponse<List<StudentResponse>> getStudents() {
         return ApiResponse.<List<StudentResponse>>builder()
