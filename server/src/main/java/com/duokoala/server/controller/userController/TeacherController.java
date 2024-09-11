@@ -46,6 +46,13 @@ public class TeacherController {
                 .build();
     }
 
+    @GetMapping("/me")
+    ApiResponse<TeacherResponse> getMyInfo() {
+        return ApiResponse.<TeacherResponse>builder()
+                .result(teacherService.getMyInfo())
+                .build();
+    }
+
     @GetMapping
     ApiResponse<List<TeacherResponse>> getTeachers() {
         return ApiResponse.<List<TeacherResponse>>builder()

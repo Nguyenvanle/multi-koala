@@ -11,6 +11,7 @@ import com.duokoala.server.mapper.userMapper.TeacherMapper;
 import com.duokoala.server.repository.ReviewRepository;
 import com.duokoala.server.repository.userRepository.TeacherRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
+import com.duokoala.server.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,7 @@ public class TeacherService {
     UserRepository userRepository;
     UserService userService;
     ReviewRepository reviewRepository;
+    AuthenticationService authenticationService;
 
     public float getAvgRatingTeacher(String teacherId) {
         Float avgRating = reviewRepository.getAvgTeacher(teacherId);
@@ -59,6 +61,11 @@ public class TeacherService {
         var teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
         return teacherMapper.toTeacherResponse(teacher,getAvgRatingTeacher(teacherId));
+    }
+
+    public TeacherResponse getMyInfo() {
+        var teacher = authenticationService.getAuthenticatedTeacher();
+        return teacherMapper.toTeacherResponse(teacher,getAvgRatingTeacher(teacher.getUserId()));
     }
 
     public List<TeacherResponse> getTeachers() {
