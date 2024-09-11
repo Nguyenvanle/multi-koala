@@ -6,8 +6,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { H1, H2, H3, H4, P, Small } from "@/components/ui/typography";
 import { CourseCard } from "@/features/courses/components/molecules/course-card";
 import useCourses from "@/features/courses/hooks/useCourses";
-import { FolderSearch, FolderTree, Mail } from "lucide-react";
+import {
+  ArrowDownAZ,
+  ArrowDownUp,
+  BookUser,
+  DollarSign,
+  Filter,
+  FolderSearch,
+  FolderTree,
+  Mail,
+} from "lucide-react";
 import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+// Định nghĩa loại cho SortIcons
+type SortKey = "A-Z" | "Price" | "Recommend";
+
+const SortIcons: Record<SortKey, JSX.Element> = {
+  "A-Z": <ArrowDownAZ className="w-4 h-4" />,
+  Price: <DollarSign className="w-4 h-4" />,
+  Recommend: <BookUser className="w-4 h-4" />,
+};
 
 export default function Courses() {
   const { courses } = useCourses();
@@ -23,25 +48,34 @@ export default function Courses() {
         </P>
       </div>
 
-      <div className="flex flex-1 flex-row justify-between">
-        <div className="flex flex-0 justify-start gap-4">
-          <Input placeholder="Filter courses" className="max-w-52" />
-
-          <Button
-            variant={"outline"}
-            className="flex flex-row gap-1 items-center text-xs"
-          >
-            <FolderSearch className="w-4 h-4" />
-            Course Type
+      <div className="flex flex-1 flex-row justify-end gap-4">
+        <div className="flex flex-0 justify-end gap-2">
+          <Button variant={"outline"}>
+            <Filter className="w-4 h-4" />
           </Button>
 
-          <Button
-            variant={"outline"}
-            className="flex flex-row gap-1 items-center text-xs"
-          >
-            <FolderTree className="w-4 h-4" />
-            Course Field
-          </Button>
+          <Select>
+            <SelectTrigger className="w-40 hover:border-primary">
+              <SelectValue
+                placeholder={
+                  <div className="flex flex-row gap-2">
+                    <ArrowDownUp className="w-4 h-4" />
+                    Sort
+                  </div>
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(SortIcons) as SortKey[]).map((sortKey) => (
+                <SelectItem key={sortKey} value={sortKey}>
+                  <div className="flex items-center gap-2">
+                    {SortIcons[sortKey]}
+                    {sortKey.charAt(0) + sortKey.slice(1)}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

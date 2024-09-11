@@ -5,6 +5,7 @@ interface LinkButtonProps {
   href: string;
   label: string;
   className?: string;
+  children?: React.ReactNode;
   variant?:
     | "secondary"
     | "link"
@@ -21,10 +22,12 @@ export default function LinkButton({
   label,
   variant,
   className,
+  children,
 }: LinkButtonProps) {
   return (
     <Link href={href} passHref className={className}>
       <Button variant={variant} className={className}>
+        {children}
         {label}
       </Button>
     </Link>
