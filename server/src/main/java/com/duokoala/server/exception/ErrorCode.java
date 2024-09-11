@@ -52,6 +52,8 @@ public enum ErrorCode {
     QUIZ_RESULT_NOT_FOUND(404, "Not found: Quiz Result does not exist", HttpStatus.NOT_FOUND),
     LEVEL_NOT_FOUND(404, "Not found: Level does not exist", HttpStatus.NOT_FOUND),
     FIELD_NOT_FOUND(404, "Not found: Field does not exist", HttpStatus.NOT_FOUND),
+    REQUEST_DISCOUNT_NOT_FOUND(404, "Not found: Request discount does not exist", HttpStatus.NOT_FOUND),
+
 
 
 
