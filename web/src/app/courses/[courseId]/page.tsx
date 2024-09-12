@@ -20,41 +20,49 @@ export default function CourseDetail({
 }: {
   params: { courseId: string };
 }) {
-  const { courses, loading } = useCourses();
-  const { lessons, duration } = useLessons({ params });
+  const { courses, loading: coursesLoading } = useCourses();
+  const { lessons, duration, loading: lessonsLoading } = useLessons({ params });
 
-  const course = courses?.find((course) => course.courseId === params.courseId);
+  // Only check for the course if loading is complete
+  const isLoading = coursesLoading || lessonsLoading;
+  const course = !isLoading
+    ? courses?.find((course) => course.courseId === params.courseId)
+    : null;
 
-  if (!course) {
+  // Show a loading skeleton while courses or lessons are loading
+  if (isLoading) {
     return <Skeleton className="flex w-[96vw] h-[82vh]" />;
   }
 
-  return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
-        <div className="flex flex-col gap-4">
-          <DisplayCard
-            courseImage={course.image.imageUrl}
-            courseName={course.courseName}
-          />
-          <DetailCard
-            courseName={course.courseName}
-            coursePrice={course.coursePrice}
-            courseDescription={course.courseDescription}
-            uploadByTeacher={
-              course.uploadedByTeacher.firstname +
-              " " +
-              course.uploadedByTeacher.lastname
-            }
-            totalDuration={duration}
-            totalLessons={lessons?.length ?? 0}
-          />
-        </div>
-        <div className="flex flex-col gap-4">
-          <LessonsCard lessons={lessons || []} />
-          {/* <StudentsCard courseId={params.courseId} /> */}
-        </div>
+  // Handle case when course is not found after loading
+  if (!course) {
+    return (
+      <div className="flex justify-center items-center w-full h-[82vh]">
+        No course found.
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
+      <div className="flex flex-col gap-4">
+        <DisplayCard
+          courseImage={course.image.imageUrl}
+          courseName={course.courseName}
+        />
+        <DetailCard
+          courseName={course.courseName}
+          coursePrice={course.coursePrice}
+          courseDescription={course.courseDescription}
+          uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
+          totalDuration={duration}
+          totalLessons={lessons?.length ?? 0}
+        />
+      </div>
+      <div className="flex flex-col gap-4">
+        <LessonsCard lessons={lessons || []} />
+        {/* <StudentsCard courseId={params.courseId} /> */}
+      </div>
+    </div>
   );
 }
