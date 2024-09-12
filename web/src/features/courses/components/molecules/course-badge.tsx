@@ -21,6 +21,7 @@ const CourseBadges: React.FC<CourseBadgesProps> = ({ courseType }) => {
           #{type.typeName}
         </Badge>
       ))}
+
       {additionalTypesCount > 0 && (
         <Badge className="bg-secondary text-secondary-foreground rounded px-1">
           +{additionalTypesCount}

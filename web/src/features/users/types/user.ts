@@ -14,6 +14,7 @@ export const UserBodyType = z.object({
   image: ImageBodyType,
   roles: z.array(RoleBodyType),
   deleted: z.boolean(),
+  isFirstLogin: z.boolean(),
 });
 
 export type UserResType = z.infer<typeof UserBodyType>;

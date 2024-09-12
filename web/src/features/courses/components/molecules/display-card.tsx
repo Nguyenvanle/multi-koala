@@ -1,5 +1,4 @@
 import { Card, CardHeader } from "@/components/ui/card";
-import { CourseCardProps } from "@/types/course/course";
 import Image from "next/image";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton"; // Đảm bảo bạn đã import Skeleton

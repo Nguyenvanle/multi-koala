@@ -47,6 +47,7 @@ export const CoursesList: React.FC<CoursesListProps> = ({
             coursePrice={course.coursePrice}
             courseDescription={course.courseDescription}
             courseType={course.types}
+            courseFields={course.fields}
             courseImage={course.image.imageUrl || ""}
             uploadByTeacher={
               course.uploadedByTeacher

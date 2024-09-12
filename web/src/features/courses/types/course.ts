@@ -1,3 +1,4 @@
+import { CourseFieldBodyType } from "@/features/courses/types/course-field";
 import { CourseTypeBodyType } from "@/features/courses/types/course-type";
 import { ImageBodyType } from "@/features/images/types/image";
 import { UserBodyType } from "@/features/users/types/user";
@@ -13,6 +14,7 @@ export const CourseBodyType = z.object({
   courseDescription: z.string(),
   courseLevel: z.string(),
   types: z.array(CourseTypeBodyType),
+  fields: z.array(CourseFieldBodyType),
   courseRating: z.number(),
   image: ImageBodyType,
   uploadedByTeacher: UserBodyType,
@@ -50,4 +52,3 @@ export type CoursesResultResType = z.infer<typeof CoursesResultBodyType>;
 
 // Chi tiết khóa học
 export type CourseDetailResType = z.infer<typeof CourseDetailResponseBodyType>;
-
