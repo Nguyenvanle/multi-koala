@@ -39,7 +39,9 @@ const Home = () => {
         }}
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>My Courses</Text>
-        <TouchableOpacity onPress={() => router.replace("/(account)/account")}>
+        <TouchableOpacity
+          onPress={() => router.replace("/(courses)/course-list")}
+        >
           <Text style={{ ...text.link, color: Colors.teal_dark }}>See All</Text>
         </TouchableOpacity>
       </View>

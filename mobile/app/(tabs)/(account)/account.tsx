@@ -1,15 +1,19 @@
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView, StatusBar } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import { Styles } from "@/constants/Styles";
+import UserAccount from "@/components/common/UserAccount";
 
 const Account = () => {
   return (
-    <View style={Styles.container}>
-      <Link href={"/(auth)/auth-screen"} replace>
-        Log Out
-      </Link>
-    </View>
+    <SafeAreaView
+      style={{
+        ...Styles.container,
+      }}
+    >
+      <StatusBar barStyle={"dark-content"} />
+      <UserAccount />
+    </SafeAreaView>
   );
 };
 
