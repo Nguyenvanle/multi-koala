@@ -8,6 +8,10 @@ export interface CourseCardProps {
     typeName: string;
     typeDescription: string;
   }[];
+  courseFields: {
+    fieldName: string;
+    fieldDescription: string;
+  }[];
   courseImage: string; // => Image?
   uploadByTeacher: string; // => Teacher?
   approvedByAdmin: string; // => Admin?

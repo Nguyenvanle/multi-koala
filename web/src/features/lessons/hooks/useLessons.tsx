@@ -11,13 +11,12 @@ interface UseLessonsProps {
 
 export default function useLessons({ params }: UseLessonsProps) {
   const [lessons, setLessons] = useState<LessonsResult | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchLessons = async () => {
-      setLoading(true);
       try {
         const { result } = params?.courseId
           ? await lessonService.getAllByCourseId(params.courseId)

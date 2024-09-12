@@ -3,19 +3,16 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
 import { convertDuration } from "@/lib/utils";
-import { CourseCardProps } from "@/types/course/course";
-import { H3, H4, Large, Lead, Muted, P } from "@/components/ui/typography";
+import { Muted, P } from "@/components/ui/typography";
 import { useMemo } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { DURATION } from "@/types/layout/toast";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function DetailCard({
   courseName,
@@ -46,7 +43,7 @@ export default function DetailCard({
   return (
     <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
       <CardHeader className="flex-row justify-between pb-4 items-center">
-        <Link href={""} className="hover:text-primary mt-1.5">
+        <Link href={""} className="hover:text-primary mt-1.5 font-medium">
           {uploadByTeacher}
         </Link>
         <Badge className="rounded-xl">⭐ 4.5</Badge>
