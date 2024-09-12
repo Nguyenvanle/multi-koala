@@ -19,4 +19,5 @@ public class UserUpdateRequest {
     String userBio;
     String userHometown;
     String imageUrl;
+    boolean isFirstLogin;
 }

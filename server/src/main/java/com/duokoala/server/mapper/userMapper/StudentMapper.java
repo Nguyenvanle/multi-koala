@@ -13,7 +13,6 @@ public interface StudentMapper {
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "roles", ignore = true)
     Student toStudent(StudentCreationRequest request);
-
     StudentResponse toStudentResponse(Student student);
     @Mapping(target = "image", ignore = true)
     void updateStudent(@MappingTarget Student student, StudentUpdateRequest request);
