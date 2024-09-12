@@ -81,7 +81,7 @@ export const button = StyleSheet.create({
   Authen: {
     width: 350,
     marginTop: 20,
-    paddingVertical: 20,
+    paddingVertical: 17,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",

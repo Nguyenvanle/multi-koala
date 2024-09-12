@@ -51,7 +51,7 @@ export const IntroDetails = () => {
     const checkFirstLaunch = async () => {
       const hasLaunchedValue = await AsyncStorage.getItem("hasLaunched");
       if (hasLaunchedValue !== null) {
-        setHasLaunched(true); // Đã xem intro, không cần hiển thị
+        setHasLaunched(false); // Đã xem intro, không cần hiển thị
       }
     };
 
@@ -63,8 +63,9 @@ export const IntroDetails = () => {
     router.replace("/(home)/home"); // Chuyển sang trang chính
   };
 
+  // Nếu đã xem intro, chuyển hướng đến trang chính
   if (hasLaunched) {
-    return <Redirect href={"/(home)/home"} />; // Nếu đã xem intro, không hiển thị gì
+    return <Redirect href={"/(home)/home"} />;
   }
 
   return (
