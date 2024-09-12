@@ -43,6 +43,7 @@ export default function CourseDetail({
             courseDescription={course.courseDescription}
             uploadByTeacher={
               course.uploadedByTeacher.firstname +
+              " " +
               course.uploadedByTeacher.lastname
             }
             totalDuration={duration}
