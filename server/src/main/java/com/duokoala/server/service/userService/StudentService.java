@@ -32,10 +32,10 @@ public class StudentService {
         if(userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         Student student = studentMapper.toStudent(request);
-
         student.setImage(userService.createNewAvatar(request.getImageUrl()));
         student.setRoles(userService.transferRoles(Role.STUDENT.name()));
         student.setDeleted(false);
+        student.setFirstLogin(true);
         student.setPassword(userService.encodePassword(request.getPassword()));
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }

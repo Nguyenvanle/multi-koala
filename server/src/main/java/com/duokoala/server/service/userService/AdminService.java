@@ -39,6 +39,7 @@ public class AdminService {
         admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
         admin.setDeleted(false);
+        admin.setFirstLogin(true);
         admin.setPassword(userService.encodePassword(request.getPassword()));
         admin.setCreateByAdmin(authenticationService.getAuthenticatedAdmin());
         return adminMapper.toAdminResponse(adminRepository.save(admin));

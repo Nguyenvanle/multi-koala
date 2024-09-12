@@ -33,5 +33,6 @@ public class User {
     Image image;
     @ManyToMany
     Set<Role> roles;
+    boolean isFirstLogin;
     boolean isDeleted;
 }

@@ -39,10 +39,10 @@ public class TeacherService {
         if(userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         Teacher teacher = teacherMapper.toTeacher(request);
-
         teacher.setImage(userService.createNewAvatar(request.getImageUrl()));
         teacher.setRoles(userService.transferRoles(Role.TEACHER.name()));
         teacher.setDeleted(false);
+        teacher.setFirstLogin(true);
         teacher.setPassword(userService.encodePassword(request.getPassword()));
         return teacherMapper.toTeacherResponse(teacherRepository.save(teacher),0.0f);
     }

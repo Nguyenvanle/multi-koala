@@ -23,5 +23,6 @@ public class UserResponse {
     String email;
     ImageResponse image;
     Set<RoleResponse> roles;
+    boolean isFirstLogin;
     boolean isDeleted;
 }
