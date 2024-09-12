@@ -28,5 +28,6 @@ public class CourseResponse {
     TeacherResponse uploadedByTeacher;
     AdminResponse approvedByAdmin;
     Status status;
+    float discountApprovedRate;
     boolean isDeleted;
 }

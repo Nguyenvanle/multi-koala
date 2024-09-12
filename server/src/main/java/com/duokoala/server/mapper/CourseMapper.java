@@ -14,8 +14,7 @@ public interface CourseMapper {
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "fields", ignore = true)
     Course toCourse(CourseCreateRequest request);
-    CourseResponse toCourseResponse(Course course, float courseRating);
-
+    CourseResponse toCourseResponse(Course course, float courseRating, float discountApprovedRate);
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "courseLevel", ignore = true)
     @Mapping(target = "fields", ignore = true)
