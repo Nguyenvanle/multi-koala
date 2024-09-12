@@ -73,7 +73,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       <CardFooter className="flex flex-row gap-2 justify-between px-4 pb-4">
         <Button className="flex-1 space-x-1">
           <span className="font-bold">{`$${discountedPrice.toFixed(2)}`}</span>
-          <span className="line-through  text-foreground">{`/${coursePrice.toFixed(
+          <span className="line-through text-foreground">{`/${coursePrice.toFixed(
             2
           )}`}</span>
         </Button>
