@@ -62,6 +62,7 @@ export const CoursesList: React.FC<CoursesListProps> = ({
             status={course.status}
             courseRating={course.courseRating}
             courseLevel={course.courseLevel}
+            courseDiscount={course.discountApprovedRate}
           />
         </Link>
       ))}

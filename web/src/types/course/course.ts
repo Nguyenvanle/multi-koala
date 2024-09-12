@@ -18,4 +18,5 @@ export interface CourseCardProps {
   status: "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | string;
   courseRating: number;
   courseLevel: CourseLevel | string;
+  courseDiscount: number;
 }
