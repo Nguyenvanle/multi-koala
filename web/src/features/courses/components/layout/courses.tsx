@@ -6,13 +6,15 @@ import React from "react";
 
 interface CoursesTemplateProps {
   courses: CoursesResultResType | null;
+  loading: boolean;
 }
 
 export const CoursesTemplate: React.FC<CoursesTemplateProps> = ({
   courses,
+  loading,
 }) => (
   <div className="flex flex-1 flex-col justify-center gap-4">
     <CoursesHeader />
-    <CoursesList courses={courses} />
+    <CoursesList courses={courses} loading={loading}/>
   </div>
 );

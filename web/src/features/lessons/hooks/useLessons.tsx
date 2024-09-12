@@ -3,7 +3,7 @@ import {
   LessonResponse,
   LessonsResult,
 } from "@/features/lessons/types/lessons-res";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 interface UseLessonsProps {
   params?: { courseId?: string };
@@ -11,43 +11,36 @@ interface UseLessonsProps {
 
 export default function useLessons({ params }: UseLessonsProps) {
   const [lessons, setLessons] = useState<LessonsResult | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Mặc định là true
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [duration, setDuration] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchLessons = async () => {
-      setError(null);
       try {
-        const response = params?.courseId
+        const { result } = params?.courseId
           ? await lessonService.getAllByCourseId(params.courseId)
           : await lessonService.getAll();
 
-        if (response && Array.isArray(response.result)) {
-          setLessons(response.result);
-        } else {
-          throw new Error(
-            "Invalid response format or lessons data is not an array"
-          );
+        // Kiểm tra nếu res.result tồn tại
+        if (result) {
+          setLessons(result.result as any);
         }
       } catch (err: any) {
-        setError(err.message || "An error occurred");
-        setLessons(null);
+        setError(err.message);
       } finally {
-        setLoading(false); // Đặt loading thành false khi hoàn thành
+        setLoading(false);
       }
     };
 
     fetchLessons();
-  }, [params?.courseId]);
 
-  const duration = useMemo(() => {
-    if (!Array.isArray(lessons) || lessons.length === 0) {
-      return null;
-    }
-    return lessons.reduce((total, lesson) => {
-      return total + (lesson.video?.videoDuration || 0);
+    const totalDuration = lessons?.reduce((total, lesson) => {
+      return total + (lesson.video.videoDuration || 0); // Cộng dồn videoDuration, đảm bảo nó có giá trị
     }, 0);
-  }, [lessons]);
+
+    if (totalDuration) setDuration(totalDuration);
+  }, [lessons, params]); // Thêm params vào dependency array
 
   return { lessons, loading, error, duration };
 }

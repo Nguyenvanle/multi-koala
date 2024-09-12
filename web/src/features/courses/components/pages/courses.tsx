@@ -6,9 +6,9 @@ import useCourses from "@/features/courses/hooks/useCourses";
 import { CoursesTemplate } from "@/features/courses/components/layout/courses";
 
 const CoursesPage: React.FC = () => {
-  const { courses } = useCourses();
+  const { courses, loading } = useCourses();
 
-  return <CoursesTemplate courses={courses} />;
+  return <CoursesTemplate courses={courses} loading={loading} />;
 };
 
 export default CoursesPage;
