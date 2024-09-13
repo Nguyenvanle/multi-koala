@@ -1,12 +1,20 @@
 // src/features/courses/components/organisms/CoursesHeader.tsx
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { H4, P } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { FilterIcon } from "@/features/courses/components/atoms/icon";
-import { SelectSort } from "@/features/courses/components/molecules/select-sort";
+import {
+  SelectSort,
+  SortOption,
+} from "@/features/courses/components/molecules/select-sort";
 
+interface CoursesHeaderProps {
+  setSortOrder: Dispatch<SetStateAction<SortOption>>;
+}
 
-export const CoursesHeader: React.FC = () => (
+export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
+  setSortOrder,
+}) => (
   <>
     <div className="flex flex-1 flex-col justify-start">
       <H4 className="mt-0 text-primary">Courses</H4>
@@ -22,7 +30,7 @@ export const CoursesHeader: React.FC = () => (
         <FilterIcon />
       </Button>
 
-      <SelectSort />
+      <SelectSort setSortOrder={setSortOrder} />
     </div>
   </>
 );

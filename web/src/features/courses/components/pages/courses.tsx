@@ -6,9 +6,15 @@ import useCourses from "@/features/courses/hooks/useCourses";
 import { CoursesTemplate } from "@/features/courses/components/layout/courses";
 
 const CoursesPage: React.FC = () => {
-  const { courses, loading } = useCourses();
+  const { courses, loading, setSortOrder } = useCourses();
 
-  return <CoursesTemplate courses={courses} loading={loading} />;
+  return (
+    <CoursesTemplate
+      courses={courses}
+      loading={loading}
+      setSortOrder={setSortOrder}
+    />
+  );
 };
 
 export default CoursesPage;
