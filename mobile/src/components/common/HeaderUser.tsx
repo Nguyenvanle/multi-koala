@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "./CircleStyle";
@@ -6,15 +6,58 @@ import { button, text } from "@/src/constants/Styles";
 import Button from "./Button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import API_MAIN from "@/src/feature/api/config";
 import { Ionicons } from "@expo/vector-icons";
 
-const API_URL = "https://humbly-thankful-mackerel.ngrok-free.app/students/me";
+interface UserData {
+  firstname: string;
+  lastname: string;
+  image: {
+    imageUrl: string;
+  };
+  token: string;
+}
 
 const HeaderUser: React.FC = () => {
-  const [firstname, setFirstName] = useState<string | null>(null);
-  const [lastname, setLastName] = useState<string | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+
+        if (!token) {
+          setErrorMessage("No token found. Please log in.");
+          console.error("token not found");
+          return;
+        }
+
+        const response = await API_MAIN.get("/students/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.data.code === 200) {
+          setUserData({
+            firstname: response.data.result.firstname,
+            lastname: response.data.result.lastname,
+            image: response.data.result.image,
+            token: token,
+          });
+        } else {
+          setErrorMessage(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setErrorMessage("Failed to fetch user data.");
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <View
       style={{
@@ -33,12 +76,38 @@ const HeaderUser: React.FC = () => {
     >
       <CircleStyle />
 
-      {firstname && lastname ? (
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={text.h4}>Welcome</Text>
-          <Text style={{ ...text.h3, color: Colors.teal_light }}>
-            {firstname} {lastname}
-          </Text>
+      {userData ? (
+        <View
+          style={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            top: -20,
+          }}
+        >
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Text style={text.h4}>Welcome</Text>
+            <Text style={{ ...text.h3, color: Colors.teal_light }}>
+              {userData.firstname} {userData.lastname}
+            </Text>
+          </View>
+          {userData.image && (
+            <Image
+              source={{ uri: userData.image.imageUrl }}
+              style={{
+                width: 75,
+                height: 75,
+                borderRadius: 35,
+                marginLeft: 180,
+              }}
+            />
+          )}
         </View>
       ) : (
         <View
@@ -180,6 +249,7 @@ const HeaderUser: React.FC = () => {
           />
         </View>
       </TouchableOpacity>
+      {/* Rest of the component remains the same */}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,37 +10,47 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import CircleStyle from "@/src//components/common/CircleStyle";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import Button from "@/src/components/common/Button";
 import { router } from "expo-router";
-
-const API_URL = "https://humbly-thankful-mackerel.ngrok-free.app/auth/login"; // Đặt URL của bạn ở đây
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import API_MAIN from "@/src/feature/api/config";
 
 const SignIn = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [firstname, setFirstName] = useState();
-  const [lastname, setLastName] = useState();
+  const [token, setToken] = useState();
+  const [firstname, setFirstName] = useState<string>("");
+  const [lastname, setLastName] = useState<string>("");
 
   const handleLogin = async () => {
     if (!username || !password) {
       setErrorMessage("Please enter your Username and Password");
       return;
     }
+    if (!username) {
+      setErrorMessage("Please enter your Username");
+      return;
+    }
+    if (!password) {
+      setErrorMessage("Please enter your Password");
+      return;
+    }
     try {
-      const response = await axios.post(API_URL, { username, password });
-      if (response.data.code === 200) {
-        console.log(response.data);
+      const postAuth = await API_MAIN.post("/auth/login", {
+        username,
+        password,
+      });
+      if (postAuth.data.code == 200) {
+        await AsyncStorage.setItem("token", postAuth.data.result.token);
         router.replace("/(home)/home");
       }
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message || "Sign In failed. Please try again."
-      );
+      console.error(error);
     }
   };
 
