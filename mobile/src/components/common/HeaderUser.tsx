@@ -15,7 +15,11 @@ interface UserData {
   image: {
     imageUrl: string;
   };
+  email: string;
+  roles: string;
+  userBirth: string;
   token: string;
+  userBio: string;
 }
 
 const HeaderUser: React.FC = () => {
@@ -44,7 +48,11 @@ const HeaderUser: React.FC = () => {
             firstname: response.data.result.firstname,
             lastname: response.data.result.lastname,
             image: response.data.result.image,
+            email: response.data.result.email,
+            roles: response.data.result.roles[0].roleName,
             token: token,
+            userBirth: response.data.result.userBirth,
+            userBio: response.data.result.userBio,
           });
         } else {
           setErrorMessage(response.data.message);
@@ -93,7 +101,7 @@ const HeaderUser: React.FC = () => {
             }}
           >
             <Text style={text.h4}>Welcome</Text>
-            <Text style={{ ...text.h3, color: Colors.teal_light }}>
+            <Text style={{ ...text.h4, color: Colors.teal_light }}>
               {userData.firstname} {userData.lastname}
             </Text>
           </View>

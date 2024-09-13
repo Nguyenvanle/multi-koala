@@ -47,6 +47,7 @@ const SignIn = () => {
       });
       if (postAuth.data.code == 200) {
         await AsyncStorage.setItem("token", postAuth.data.result.token);
+        console.log(postAuth.data);
         router.replace("/(home)/home");
       }
     } catch (error) {
