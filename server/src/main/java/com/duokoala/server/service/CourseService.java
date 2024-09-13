@@ -32,7 +32,6 @@ public class CourseService {
     AuthenticationService authenticationService;
     ReviewRepository reviewRepository;
     FieldRepository fieldRepository;
-    DiscountRepository discountRepository;
     DiscountCourseRepository discountCourseRepository;
     RequestDiscountRepository requestDiscountRepository;
 
@@ -111,6 +110,17 @@ public class CourseService {
                                         getAvgApprovedDiscountRate(course.getCourseId())))
                 .toList();
     }
+
+    public List<CourseResponse> getAvailableCourses() {
+        var courses = courseRepository.findAllByStatus(Status.APPROVED);
+        return courses.stream().map(
+                        course -> courseMapper
+                                .toCourseResponse(course,
+                                        getAvgRatingCourse(course.getCourseId()),
+                                        getAvgApprovedDiscountRate(course.getCourseId())))
+                .toList();
+    }
+
 
     public List<CourseResponse> getListByTeacherId(String teacherId) {
         var courses = courseRepository.getListByTeacherId(teacherId);

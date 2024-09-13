@@ -53,6 +53,13 @@ public class CourseController {
                 .result(courseService.getAll())
                 .build();
     }
+    @GetMapping("/courses/approved-courses")
+    ApiResponse<List<CourseResponse>> getApprovedCourses() {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.getAvailableCourses())
+                .build();
+    }
+
     @GetMapping("/courses/my-uploaded-courses")
     ApiResponse<List<CourseResponse>> getMyCourses() {
         return ApiResponse.<List<CourseResponse>>builder()

@@ -3,6 +3,7 @@ package com.duokoala.server.repository;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Review;
 import com.duokoala.server.entity.user.Teacher;
+import com.duokoala.server.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +23,6 @@ public interface CourseRepository extends JpaRepository<Course, String> {
                     "FROM course c JOIN enroll_course ec " +
                     "WHERE ec.student_user_id = :studentId")
     List<Course> findAllByUploadedByStudentId(@Param("studentId") String studentId);
-
     List<Course> findAllByUploadedByTeacher(Teacher teacher);
-
+    List<Course> findAllByStatus(Status status);
 }
