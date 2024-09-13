@@ -50,7 +50,7 @@ export const SelectSort: React.FC<SelectSortProps> = ({ setSortOrder }) => {
 
   return (
     <Select onValueChange={handleChange}>
-      <SelectTrigger className="w-44 hover:border-primary">
+      <SelectTrigger className="hover:border-primary sm:w-44">
         <SelectValue
           placeholder={
             <div className="flex flex-row gap-2">

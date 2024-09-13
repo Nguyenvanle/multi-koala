@@ -31,7 +31,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   const { hours, minutes } = convertDuration(duration || 0);
 
   return (
-    <Card className="flex flex-col justify-between gap-0 w-full max-w-sm min-w-60 marker:min-h-96 h-full rounded overflow-hidden hover:shadow-md hover:shadow-accent">
+    <Card className="flex flex-col justify-between gap-0 w-full md:max-w-sm min-w-60 marker:min-h-96 h-full rounded overflow-hidden hover:shadow-md hover:shadow-accent">
       <CardHeader className="p-0 space-y-0 relative">
         <CourseImage src={courseImage} alt={courseName} />
 
