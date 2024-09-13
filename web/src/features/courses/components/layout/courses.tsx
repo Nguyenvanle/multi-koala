@@ -9,15 +9,20 @@ interface CoursesTemplateProps {
   courses: CoursesResultResType | null;
   loading: boolean;
   setSortOrder: Dispatch<SetStateAction<SortOption>>;
+  setFilterKeyword: Dispatch<SetStateAction<string>>;
 }
 
 export const CoursesTemplate: React.FC<CoursesTemplateProps> = ({
   courses,
   loading,
   setSortOrder,
+  setFilterKeyword,
 }) => (
   <div className="flex flex-1 flex-col justify-center gap-4">
-    <CoursesHeader setSortOrder={setSortOrder} />
+    <CoursesHeader
+      setSortOrder={setSortOrder}
+      setFilterKeyword={setFilterKeyword}
+    />
     <CoursesList courses={courses} loading={loading} />
   </div>
 );

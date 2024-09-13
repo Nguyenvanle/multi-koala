@@ -8,6 +8,7 @@ export default function useCourses() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOption>("rating_desc");
+  const [filterKeyword, setFilterKeyword] = useState<string>("");
 
   // Hàm để tính giá trị sau khi áp dụng giảm giá
   const getDiscountedPrice = useCallback(
@@ -54,12 +55,26 @@ export default function useCourses() {
     [getDiscountedPrice]
   );
 
+  const filterCourses = useCallback(
+    (courses: CoursesResultResType, keyword: string) => {
+      if (!keyword) return courses;
+
+      return courses.filter((course) =>
+        course.courseName.toLowerCase().includes(keyword.toLowerCase())
+      );
+    },
+    []
+  );
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const { result } = await courseService.getAll();
+
         if (result?.result) {
-          const sortedCourses = sortCourses(result.result, sortOrder);
+          const filteredCourses = filterCourses(result.result, filterKeyword);
+          const sortedCourses = sortCourses(filteredCourses, sortOrder);
+
           setCourses(sortedCourses);
         }
       } catch (err: any) {
@@ -70,7 +85,7 @@ export default function useCourses() {
     };
 
     fetchCourses();
-  }, [sortOrder, sortCourses]);
+  }, [sortOrder, filterKeyword, sortCourses, filterCourses]);
 
-  return { courses, loading, error, setSortOrder };
+  return { courses, loading, error, setSortOrder, setFilterKeyword };
 }
