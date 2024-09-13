@@ -6,14 +6,14 @@ import useCourses from "@/features/courses/hooks/useCourses";
 import { CoursesTemplate } from "@/features/courses/components/layout/courses";
 
 const CoursesPage: React.FC = () => {
-  const { courses, loading, setSortOrder, setFilterKeyword } = useCourses();
+  const { courses, loading, setSortOrder, updateFilter } = useCourses();
 
   return (
     <CoursesTemplate
       courses={courses}
       loading={loading}
       setSortOrder={setSortOrder}
-      setFilterKeyword={setFilterKeyword}
+      updateFilter={updateFilter}
     />
   );
 };
