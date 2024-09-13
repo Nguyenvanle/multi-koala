@@ -31,10 +31,10 @@ const SortIcons: Record<SortOption, JSX.Element> = {
 };
 
 const SortLabels: Record<SortOption, string> = {
-  courseName_asc: "Course Name: A to Z", // Nhãn cho tên khóa học tăng dần
-  courseName_desc: "Course Name: Z to A", // Nhãn cho tên khóa học giảm dần
-  price_asc: "Price: Low to High",
-  price_desc: "Price: High to Low",
+  courseName_asc: "Name: A-Z", // Nhãn cho tên khóa học tăng dần
+  courseName_desc: "Name: Z-A", // Nhãn cho tên khóa học giảm dần
+  price_asc: "Price: Low-High",
+  price_desc: "Price: High-Low",
   rating_desc: "Highest Rated",
   uploadedAt_desc: "Newest",
 };
@@ -50,12 +50,12 @@ export const SelectSort: React.FC<SelectSortProps> = ({ setSortOrder }) => {
 
   return (
     <Select onValueChange={handleChange}>
-      <SelectTrigger className="w-52 hover:border-primary">
+      <SelectTrigger className="w-44 hover:border-primary">
         <SelectValue
           placeholder={
             <div className="flex flex-row gap-2">
-              <ArrowDownAZIcon />
-              Course Name: A to Z
+              <BookUserIcon />
+              Highest Rated
             </div>
           }
         />

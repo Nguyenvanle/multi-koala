@@ -1,23 +1,22 @@
-// src/features/courses/components/organisms/CoursesHeader.tsx
 import React, { Dispatch, SetStateAction, useState, useCallback } from "react";
 import { H4, P } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
-import { FilterIcon } from "@/features/courses/components/atoms/icon";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   SelectSort,
   SortOption,
 } from "@/features/courses/components/molecules/select-sort";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FilterIcon, Search } from "lucide-react";
 import { debounce } from "lodash";
 
 interface CoursesHeaderProps {
@@ -36,7 +35,6 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
   const [ratingFilter, setRatingFilter] = useState<number>(0);
   const [nameFilter, setNameFilter] = useState<string>("");
 
-  // Debounce the updateFilter function for name search
   const debouncedUpdateNameFilter = useCallback(
     debounce((value: string) => {
       updateFilter("name", value);
@@ -51,35 +49,37 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
   };
 
   const handleFilterSubmit = () => {
+    updateFilter("name", nameFilter);
     updateFilter("priceRange", priceRange);
     updateFilter("rating", ratingFilter);
   };
 
   return (
-    <>
-      <div className="flex flex-1 flex-col justify-start">
-        <H4 className="mt-0 text-primary">Courses</H4>
-        <P>
-          Explore our diverse range of courses designed to enhance your skills
-          and knowledge. Discover more about each course below!
-        </P>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <H4>Courses</H4>
+        <P className="text-sm text-gray-500">Discover and learn new skills</P>
       </div>
 
-      <div className="flex flex-1 flex-col gap-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-1 justify-between items-center space-x-2">
+        <div className="relative flex-grow max-w-80">
+          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
           <Input
             placeholder="Search courses..."
             value={nameFilter}
             onChange={handleNameFilterChange}
-            className="flex-grow"
+            className="pl-8"
           />
+        </div>
+
+        <div className="flex gap-2">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">
-                <FilterIcon />
+                <FilterIcon className="h-4 w-4 mr-2" />
+                Filters
               </Button>
             </DialogTrigger>
-
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Filter Courses</DialogTitle>
@@ -156,6 +156,8 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
           <SelectSort setSortOrder={setSortOrder} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
+
+export default CoursesHeader;
