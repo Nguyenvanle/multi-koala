@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import { StyleSheet } from "react-native";
 import { Colors } from "./Colors";
 
 export const Styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     justifyContent: "center",
     alignItems: "center",
     padding: 5,

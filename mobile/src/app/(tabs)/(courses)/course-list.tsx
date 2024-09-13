@@ -19,8 +19,8 @@ const CourseList = () => {
   const [selectedIndex, setSelectedIndex] = useState(1);
   const data = [
     { id: 1, label: "See All", component: <AllCourses /> },
-    { id: 2, label: "In Progress", component: <InProgressCourses /> },
-    { id: 3, label: "Finished", component: <FinishedCourses /> },
+    { id: 2, label: "In Progress" },
+    { id: 3, label: "Finished" },
   ];
 
   const handlePress = (index) => {
@@ -65,9 +65,9 @@ const CourseList = () => {
       </View>
       {/* Hiển thị component dữ liệu tương ứng */}
       {selectedIndex !== null && (
-        <ScrollView showsVerticalScrollIndicator={false} style={{ top: -40 }}>
+        <View style={{ top: -40, height: 450 }}>
           {data[selectedIndex].component}
-        </ScrollView>
+        </View>
       )}
     </SafeAreaView>
   );
