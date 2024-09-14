@@ -41,7 +41,9 @@ class FieldsFilter implements FilterStrategy {
   apply(courses: CoursesResultResType, fields: string[]): CoursesResultResType {
     if (fields.length === 0) return courses;
     return courses.filter((course) =>
-      course.fields.some((field) => fields.includes(field.fieldName))
+      fields.every((field) =>
+        course.fields.some((courseField) => courseField.fieldName === field)
+      )
     );
   }
 }
@@ -50,7 +52,9 @@ class TypesFilter implements FilterStrategy {
   apply(courses: CoursesResultResType, types: string[]): CoursesResultResType {
     if (types.length === 0) return courses;
     return courses.filter((course) =>
-      course.types.some((type) => types.includes(type.typeName))
+      types.every((type) =>
+        course.types.some((courseType) => courseType.typeName === type)
+      )
     );
   }
 }
