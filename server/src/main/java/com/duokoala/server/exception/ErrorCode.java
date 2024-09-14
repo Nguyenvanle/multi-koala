@@ -53,6 +53,8 @@ public enum ErrorCode {
     LEVEL_NOT_FOUND(404, "Not found: Level does not exist", HttpStatus.NOT_FOUND),
     FIELD_NOT_FOUND(404, "Not found: Field does not exist", HttpStatus.NOT_FOUND),
     REQUEST_DISCOUNT_NOT_FOUND(404, "Not found: Request discount does not exist", HttpStatus.NOT_FOUND),
+    EMAIL_NOT_FOUND(404, "Not Found: Email does not exist in Redis", HttpStatus.NOT_FOUND),
+
 
 
 
