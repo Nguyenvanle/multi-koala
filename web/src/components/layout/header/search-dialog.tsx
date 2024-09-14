@@ -22,9 +22,9 @@ export default function SearchDialog() {
       <DialogTrigger asChild>
         <LinkButton
           href=""
-          label="Search"
+          label="Search..."
           variant={"outline"}
-          className="flex justify-start flex-grow md:min-w-40 focus-visible:ring-0 gap-1"
+          className="flex justify-start flex-grow md:min-w-40 focus-visible:ring-0 gap-2 text-muted-foreground"
         >
           <Search className="w-4 h-4" />
         </LinkButton>
