@@ -17,6 +17,7 @@ import com.duokoala.server.repository.DiscountRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,22 +33,21 @@ public class DiscountCourseService {
     CourseRepository courseRepository;
 
     public DiscountCourseResponse create(DiscountCourseCreateRequest request) {
-        if(Objects.nonNull(discountCourseRepository.findByDiscountIdAndCourseId(
-                request.getDiscountId(),request.getCourseId())))
-            throw new AppException(ErrorCode.DISCOUNT_COURSE_EXISTED);
-
         Discount discount = discountRepository.findById(request.getDiscountId())
                 .orElseThrow(() -> new AppException(ErrorCode.DISCOUNT_NOT_FOUND));
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
-
         DiscountCourse discountCourse = DiscountCourse.builder()
                 .discount(discount)
                 .course(course)
                 .status(Status.PENDING_APPROVAL)
                 .build();
-        return discountCourseMapper.toDiscountCourseResponse(
-                discountCourseRepository.save(discountCourse));
+        try {
+            discountCourseRepository.save(discountCourse);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.DISCOUNT_COURSE_EXISTED);
+        }
+        return discountCourseMapper.toDiscountCourseResponse(discountCourse);
     }
 
     public DiscountCourseResponse approve(String discountCourseId, DiscountCourseApproveRequest request) {

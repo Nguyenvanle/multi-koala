@@ -11,12 +11,6 @@ import java.util.List;
 
 @Repository
 public interface DiscountCourseRepository extends JpaRepository<DiscountCourse, String> {
-    @Query(nativeQuery = true,
-            value = "SELECT * " +
-                    "FROM discount_course " +
-                    "WHERE discount_discount_id = :discountId " +
-                    "AND course_course_id = :courseId")
-    DiscountCourse findByDiscountIdAndCourseId(@Param("discountId") String discountId, @Param("courseId") String courseId);
 
     @Query(nativeQuery = true,
             value = "SELECT * " +
