@@ -11,7 +11,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { H4 } from "@/components/ui/typography";
-import { fieldOptions, typeOptions } from "@/features/filter/enum";
+import useField from "@/features/field/hooks/useField";
+import { formatString } from "@/features/field/libs/util";
+import { typeOptions } from "@/features/filter/enum";
 import { useFilter } from "@/features/filter/hooks/useFilter";
 import { useState } from "react";
 
@@ -29,6 +31,13 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
     filters.fields
   );
   const [selectedTypes, setSelectedTypes] = useState<string[]>(filters.types);
+
+  const { fields, loading, error } = useField();
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!fields) return <div>No fields found</div>;
+  let fieldOptions = fields;
 
   const handleFieldToggle = (field: string) => {
     setSelectedFields((prev) =>
@@ -74,15 +83,20 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               <div className=" flex flex-col ">
                 <div className="flex flex-col gap-2">
                   {fieldOptions.map((field) => (
-                    <div key={field} className="flex items-center gap-2">
+                    <div
+                      key={field.fieldName}
+                      className="flex items-center gap-2"
+                    >
                       <Checkbox
                         id={`field-${field}`}
-                        checked={selectedFields.includes(field)}
-                        onCheckedChange={() => handleFieldToggle(field)}
+                        checked={selectedFields.includes(field.fieldName)}
+                        onCheckedChange={() =>
+                          handleFieldToggle(field.fieldName)
+                        }
                       />
 
                       <Label className="mt-1" htmlFor={`field-${field}`}>
-                        {field}
+                        {formatString(field.fieldName)}
                       </Label>
                     </div>
                   ))}
