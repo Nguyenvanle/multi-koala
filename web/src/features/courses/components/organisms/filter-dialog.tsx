@@ -35,15 +35,18 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Filter Courses</DialogTitle>
+
         <DialogDescription>
           Set your preferred filters for courses.
         </DialogDescription>
       </DialogHeader>
+
       <div className="grid gap-4 py-4">
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="price-range" className="text-right">
             Price Range
           </Label>
+
           <div className="col-span-3 flex items-center gap-2">
             <Input
               id="price-min"
@@ -57,7 +60,9 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               }
               placeholder="Min"
             />
+
             <span>-</span>
+
             <Input
               id="price-max"
               type="number"
@@ -72,10 +77,12 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
             />
           </div>
         </div>
+
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="rating-filter" className="text-right">
             Minimum Rating
           </Label>
+
           <Input
             id="rating-filter"
             type="number"
@@ -89,7 +96,8 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
           />
         </div>
       </div>
-      <DialogFooter>
+
+      <DialogFooter className="gap-2 sm:space-x-0">
         <Button
           onClick={() => {
             setPriceRange({ min: 0, max: 1000 });
@@ -98,6 +106,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
         >
           Reset
         </Button>
+
         <Button onClick={onSubmit}>Apply Filters</Button>
       </DialogFooter>
     </DialogContent>
