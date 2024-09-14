@@ -1,4 +1,3 @@
-import { ArrowDownUp } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,9 +6,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  ArrowDown01Icon,
+  ArrowDown10Icon,
   ArrowDownAZIcon,
   BookUserIcon,
+  CalendarArrowDownIcon,
   DollarSignIcon,
+  StarIcon,
 } from "@/features/courses/components/atoms/icon";
 import { Dispatch, SetStateAction } from "react";
 
@@ -24,10 +27,10 @@ export type SortOption =
 const SortIcons: Record<SortOption, JSX.Element> = {
   courseName_asc: <ArrowDownAZIcon />, // Sử dụng biểu tượng đã có cho tên khóa học tăng dần
   courseName_desc: <ArrowDownAZIcon />, // Sử dụng biểu tượng đã có cho tên khóa học giảm dần
-  price_asc: <DollarSignIcon />,
-  price_desc: <DollarSignIcon />,
-  rating_desc: <BookUserIcon />,
-  uploadedAt_desc: <ArrowDownAZIcon />,
+  price_asc: <ArrowDown01Icon />,
+  price_desc: <ArrowDown10Icon />,
+  rating_desc: <StarIcon />,
+  uploadedAt_desc: <CalendarArrowDownIcon />,
 };
 
 const SortLabels: Record<SortOption, string> = {
@@ -54,7 +57,7 @@ export const SelectSort: React.FC<SelectSortProps> = ({ setSortOrder }) => {
         <SelectValue
           placeholder={
             <div className="flex flex-row gap-2">
-              <BookUserIcon />
+              <StarIcon />
               Highest Rated
             </div>
           }

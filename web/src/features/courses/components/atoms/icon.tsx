@@ -1,14 +1,30 @@
-// src/components/atoms/icons/ArrowDownAZIcon.tsx
 import React from "react";
-import { ArrowDownAZ, BookUser, DollarSign, Filter } from "lucide-react";
+import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZA, BookUser, CalendarArrowDown, DollarSign, Filter, LucideIcon, Settings2, Star } from "lucide-react";
 
-export const ArrowDownAZIcon: React.FC = () => (
-  <ArrowDownAZ className="w-4 h-4" />
-);
-export const BookUserIcon: React.FC = () => <BookUser className="w-4 h-4" />;
-export const DollarSignIcon: React.FC = () => (
-  <DollarSign className="w-4 h-4" />
-);
-export const FilterIcon: React.FC = () => <Filter className="w-4 h-4" />;
+interface IconProps {
+  IconComponent: LucideIcon;
+  className?: string;
+}
 
-// Create similar components for other icons: ArrowDownUpIcon, BookUserIcon, DollarSignIcon, FilterIcon
+const Icon: React.FC<IconProps> = ({ IconComponent, className }) => (
+  <IconComponent className={`w-4 h-4 ${className}`} />
+);
+
+export const ArrowDownAZIcon: React.FC = () => <Icon IconComponent={ArrowDownAZ} />;
+export const ArrowDownZAIcon: React.FC = () => <Icon IconComponent={ArrowDownZA} />;
+
+export const ArrowDown01Icon: React.FC = () => <Icon IconComponent={ArrowDown01} />
+export const ArrowDown10Icon: React.FC = () => <Icon IconComponent={ArrowDown10} />
+
+export const StarIcon: React.FC = () => <Icon IconComponent={Star} />;
+
+export const CalendarArrowDownIcon: React.FC = () => <Icon IconComponent={CalendarArrowDown} />;
+
+export const Settings2Icon: React.FC = () => <Icon IconComponent={Settings2} />;
+
+
+export const BookUserIcon: React.FC = () => <Icon IconComponent={BookUser} />;
+
+export const DollarSignIcon: React.FC = () => <Icon IconComponent={DollarSign} />;
+
+export const FilterIcon: React.FC = () => <Icon IconComponent={Filter} />;
