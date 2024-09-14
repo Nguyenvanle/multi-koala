@@ -37,4 +37,29 @@ class RatingFilter implements FilterStrategy {
   }
 }
 
-export { RatingFilter, PriceRangeFilter, NameFilter };
+class FieldsFilter implements FilterStrategy {
+  apply(courses: CoursesResultResType, fields: string[]): CoursesResultResType {
+    if (fields.length === 0) return courses;
+    return courses.filter((course) =>
+      course.fields.some((field) => fields.includes(field.fieldName))
+    );
+  }
+}
+
+class TypesFilter implements FilterStrategy {
+  apply(courses: CoursesResultResType, types: string[]): CoursesResultResType {
+    if (types.length === 0) return courses;
+    return courses.filter((course) =>
+      course.types.some((type) => types.includes(type.typeName))
+    );
+  }
+}
+
+export {
+  RatingFilter,
+  PriceRangeFilter,
+  NameFilter,
+  FieldsFilter,
+  TypesFilter,
+};
+

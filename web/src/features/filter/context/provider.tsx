@@ -13,6 +13,8 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({
     name: "",
     priceRange: { min: 0, max: 1000 },
     rating: 0,
+    fields: [],
+    types: [],
   });
 
   const updateFilter = useCallback(
@@ -27,6 +29,8 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({
       name: "",
       priceRange: { min: 0, max: 1000 },
       rating: 0,
+      fields: [],
+      types: [],
     });
   }, []);
 
