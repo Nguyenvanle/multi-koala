@@ -8,45 +8,20 @@ import SearchInputCourse from "@/features/courses/components/molecules/search-in
 import { FilterButton } from "@/features/courses/components/molecules/filter-button";
 import { FilterDialog } from "@/features/courses/components/organisms/filter-dialog";
 import { H4, P } from "@/components/ui/typography";
+import { useFilter } from "@/features/filter/hooks/useFilter";
 
 interface CoursesHeaderProps {
   setSortOrder: React.Dispatch<React.SetStateAction<SortOption>>;
-  updateFilter: (filterType: string, value: any) => void;
 }
 
 export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
   setSortOrder,
-  updateFilter,
 }) => {
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 1000,
-  });
-  const [ratingFilter, setRatingFilter] = useState<number>(0);
-  const [nameFilter, setNameFilter] = useState<string>("");
-
-  const debouncedUpdateNameFilter = useCallback(
-    (value: string) => {
-      const debouncedFn = debounce((val: string) => {
-        updateFilter("name", val);
-      }, 300);
-      debouncedFn(value);
-    },
-    [updateFilter]
-  );
+  const { filters, updateFilter } = useFilter();
 
   const handleNameFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setNameFilter(value);
-    debouncedUpdateNameFilter(value);
-  };
-
-  const handleFilterSubmit = () => {
-    updateFilter("name", nameFilter);
-    updateFilter("priceRange", priceRange);
-    updateFilter("rating", ratingFilter);
-    setIsFilterDialogOpen(false);
+    updateFilter("name", e.target.value);
   };
 
   return (
@@ -62,7 +37,7 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
         <div className="w-full sm:w-auto sm:flex-grow">
           <SearchInputCourse
-            value={nameFilter}
+            value={filters.name}
             onChange={handleNameFilterChange}
           />
         </div>
@@ -76,11 +51,6 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
       <FilterDialog
         isOpen={isFilterDialogOpen}
         onClose={() => setIsFilterDialogOpen(false)}
-        priceRange={priceRange}
-        setPriceRange={setPriceRange}
-        ratingFilter={ratingFilter}
-        setRatingFilter={setRatingFilter}
-        onSubmit={handleFilterSubmit}
       />
     </div>
   );

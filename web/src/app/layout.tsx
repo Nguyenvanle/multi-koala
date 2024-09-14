@@ -3,6 +3,7 @@ import { Roboto_Flex } from "next/font/google";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Toaster } from "@/components/ui/toaster";
+import { FilterProvider } from "@/features/filter/context/provider";
 
 const inter = Roboto_Flex({
   subsets: ["latin"],
@@ -31,8 +32,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster />
-          {children}
+          <FilterProvider>
+            <Toaster />
+            {children}
+          </FilterProvider>
         </ThemeProvider>
       </body>
     </html>

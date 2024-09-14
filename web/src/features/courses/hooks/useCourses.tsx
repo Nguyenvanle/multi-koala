@@ -3,13 +3,14 @@ import { courseService } from "@/features/courses/services/courses";
 import { CoursesResultResType } from "@/features/courses/types/course";
 import { SortOption } from "@/features/courses/components/molecules/select-sort";
 import { FilterFactory } from "@/features/filter/services/factory";
+import { useFilter } from "@/features/filter/hooks/useFilter";
 
 export default function useCourses() {
   const [courses, setCourses] = useState<CoursesResultResType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOption>("rating_desc");
-  const [filters, setFilters] = useState<{ [key: string]: any }>({});
+  const { filters } = useFilter();
 
   // Hàm để tính giá trị sau khi áp dụng giảm giá
   const getDiscountedPrice = useCallback(
@@ -90,12 +91,5 @@ export default function useCourses() {
     fetchCourses();
   }, [sortOrder, filters, sortCourses, applyFilters]);
 
-  const updateFilter = useCallback((filterType: string, value: any) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [filterType]: value,
-    }));
-  }, []);
-
-  return { courses, loading, error, setSortOrder, updateFilter };
+  return { courses, loading, error, setSortOrder };
 }

@@ -9,106 +9,80 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useFilter } from "@/features/filter/hooks/useFilter";
 
 interface FilterDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  priceRange: { min: number; max: number };
-  setPriceRange: React.Dispatch<
-    React.SetStateAction<{ min: number; max: number }>
-  >;
-  ratingFilter: number;
-  setRatingFilter: React.Dispatch<React.SetStateAction<number>>;
-  onSubmit: () => void;
 }
 
 export const FilterDialog: React.FC<FilterDialogProps> = ({
   isOpen,
   onClose,
-  priceRange,
-  setPriceRange,
-  ratingFilter,
-  setRatingFilter,
-  onSubmit,
-}) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="sm:max-w-[425px]">
-      <DialogHeader>
-        <DialogTitle>Filter Courses</DialogTitle>
+}) => {
+  const { filters, updateFilter, resetFilters } = useFilter();
 
-        <DialogDescription>
-          Set your preferred filters for courses.
-        </DialogDescription>
-      </DialogHeader>
+  const handleSubmit = () => {
+    onClose();
+  };
 
-      <div className="grid gap-4 py-4">
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="price-range" className="text-right">
-            Price Range
-          </Label>
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Filter Courses</DialogTitle>
 
-          <div className="col-span-3 flex items-center gap-2">
-            <Input
-              id="price-min"
-              type="number"
-              value={priceRange.min}
-              onChange={(e) =>
-                setPriceRange((prev) => ({
-                  ...prev,
-                  min: Number(e.target.value),
-                }))
-              }
-              placeholder="Min"
-            />
+          <DialogDescription>
+            Set your preferred filters for courses.
+          </DialogDescription>
+        </DialogHeader>
 
-            <span>-</span>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="price-range" className="text-right">
+              Price Range
+            </Label>
 
-            <Input
-              id="price-max"
-              type="number"
-              value={priceRange.max}
-              onChange={(e) =>
-                setPriceRange((prev) => ({
-                  ...prev,
-                  max: Number(e.target.value),
-                }))
-              }
-              placeholder="Max"
-            />
+            <div className="col-span-3 flex items-center gap-2">
+              <Input
+                id="price-min"
+                type="number"
+                value={filters.priceRange.min}
+                onChange={(e) =>
+                  updateFilter("priceRange", {
+                    ...filters.priceRange,
+                    min: Number(e.target.value),
+                  })
+                }
+                placeholder="Min"
+              />
+
+              <span>-</span>
+
+              <Input
+                id="price-max"
+                type="number"
+                value={filters.priceRange.max}
+                onChange={(e) =>
+                  updateFilter("priceRange", {
+                    ...filters.priceRange,
+                    max: Number(e.target.value),
+                  })
+                }
+                placeholder="Max"
+              />
+            </div>
           </div>
+
+          {/* ... (các filter khác) */}
         </div>
 
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="rating-filter" className="text-right">
-            Minimum Rating
-          </Label>
+        <DialogFooter className="gap-2 sm:space-x-0">
+          <Button onClick={resetFilters}>Reset</Button>
 
-          <Input
-            id="rating-filter"
-            type="number"
-            min="0"
-            max="5"
-            step="0.1"
-            value={ratingFilter}
-            onChange={(e) => setRatingFilter(Number(e.target.value))}
-            className="col-span-3"
-            placeholder="Enter minimum rating"
-          />
-        </div>
-      </div>
-
-      <DialogFooter className="gap-2 sm:space-x-0">
-        <Button
-          onClick={() => {
-            setPriceRange({ min: 0, max: 1000 });
-            setRatingFilter(0);
-          }}
-        >
-          Reset
-        </Button>
-
-        <Button onClick={onSubmit}>Apply Filters</Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
-);
+          <Button onClick={handleSubmit}>Apply Filters</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
