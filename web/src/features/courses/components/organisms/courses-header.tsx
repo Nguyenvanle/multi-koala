@@ -34,7 +34,7 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
         </P>
       </div>
 
-      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
+      <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2">
         <div className="w-full sm:w-auto sm:flex-grow">
           <SearchInputCourse
             value={filters.name}
