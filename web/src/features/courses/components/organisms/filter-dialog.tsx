@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -8,14 +7,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { H4 } from "@/components/ui/typography";
-import useField from "@/features/field/hooks/useField";
-import { formatString } from "@/features/field/libs/util";
-import { typeOptions } from "@/features/filter/enum";
-import { useFilter } from "@/features/filter/hooks/useFilter";
-import { useState } from "react";
+import { FilterFields } from "@/features/courses/components/molecules/filter-fields";
+import { FilterTypes } from "@/features/courses/components/molecules/filter-types";
+import { useFilterDialog } from "@/features/courses/hooks/useFilterDialog";
 
 interface FilterDialogProps {
   isOpen: boolean;
@@ -26,42 +21,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { filters, updateFilter, resetFilters } = useFilter();
-  const [selectedFields, setSelectedFields] = useState<string[]>(
-    filters.fields
-  );
-  const [selectedTypes, setSelectedTypes] = useState<string[]>(filters.types);
-
-  const { fields, loading, error } = useField();
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!fields) return <div>No fields found</div>;
-  let fieldOptions = fields;
-
-  const handleFieldToggle = (field: string) => {
-    setSelectedFields((prev) =>
-      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field]
-    );
-  };
-
-  const handleTypeToggle = (type: string) => {
-    setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
-  const handleApply = () => {
-    updateFilter("fields", selectedFields);
-    updateFilter("types", selectedTypes);
-    onClose();
-  };
-
-  const handleReset = () => {
-    setSelectedFields([]);
-    setSelectedTypes([]);
-    resetFilters();
-  };
+  const { handleApply, handleReset } = useFilterDialog(onClose);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -78,53 +38,9 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
 
         <ScrollArea className="h-[50vh]">
           <div className="flex flex-col gap-2 justify-between sm:flex-row min-h-[400px]">
-            <div className="flex flex-1 flex-col">
-              <H4 className="pb-2">Course Fields</H4>
-              <div className=" flex flex-col ">
-                <div className="flex flex-col gap-2">
-                  {fieldOptions.map((field) => (
-                    <div
-                      key={field.fieldName}
-                      className="flex items-center gap-2"
-                    >
-                      <Checkbox
-                        id={`field-${field}`}
-                        checked={selectedFields.includes(field.fieldName)}
-                        onCheckedChange={() =>
-                          handleFieldToggle(field.fieldName)
-                        }
-                      />
+            <FilterFields />
 
-                      <Label className="mt-1" htmlFor={`field-${field}`}>
-                        {formatString(field.fieldName)}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-1 flex-col">
-              <H4 className="pb-2"> Course Types</H4>
-
-              <div className=" flex flex-col gap-2">
-                <div className="flex flex-col gap-2">
-                  {typeOptions.map((type) => (
-                    <div key={type} className="flex items-center gap-2">
-                      <Checkbox
-                        id={`type-${type}`}
-                        checked={selectedTypes.includes(type)}
-                        onCheckedChange={() => handleTypeToggle(type)}
-                      />
-
-                      <Label className="mt-1" htmlFor={`type-${type}`}>
-                        {type}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <FilterTypes />
           </div>
         </ScrollArea>
 
