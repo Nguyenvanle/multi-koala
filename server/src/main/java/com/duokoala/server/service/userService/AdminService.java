@@ -15,9 +15,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -32,23 +34,25 @@ public class AdminService {
     AuthenticationService authenticationService;
 
     public AdminResponse createAdmin(AdminCreationRequest request) {
-        if(userRepository.existsByUsername(request.getUsername()))
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
         Admin admin = adminMapper.toAdmin(request);
-
         admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
         admin.setDeleted(false);
         admin.setFirstLogin(true);
         admin.setPassword(userService.encodePassword(request.getPassword()));
         admin.setCreateByAdmin(authenticationService.getAuthenticatedAdmin());
-        return adminMapper.toAdminResponse(adminRepository.save(admin));
+        try {
+            adminRepository.save(admin);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        return adminMapper.toAdminResponse(admin);
     }
 
     public AdminResponse updateAdmin(String adminId, AdminUpdateRequest request) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
-        adminMapper.updateAdmin(admin,request);
+        adminMapper.updateAdmin(admin, request);
         userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
         admin.setPassword(userService.encodePassword(request.getPassword()));
         return adminMapper.toAdminResponse(adminRepository.save(admin));

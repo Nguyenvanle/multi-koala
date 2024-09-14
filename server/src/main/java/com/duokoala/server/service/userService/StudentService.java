@@ -14,6 +14,7 @@ import com.duokoala.server.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,15 +30,18 @@ public class StudentService {
     AuthenticationService authenticationService;
 
     public StudentResponse createStudent(StudentCreationRequest request) {
-        if(userRepository.existsByUsername(request.getUsername()))
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
         Student student = studentMapper.toStudent(request);
         student.setImage(userService.createNewAvatar(request.getImageUrl()));
         student.setRoles(userService.transferRoles(Role.STUDENT.name()));
         student.setDeleted(false);
         student.setFirstLogin(true);
         student.setPassword(userService.encodePassword(request.getPassword()));
-        return studentMapper.toStudentResponse(studentRepository.save(student));
+        try {
+            studentRepository.save(student);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        }
+        return studentMapper.toStudentResponse(student);
     }
 
     public StudentResponse updateStudent(String studentId, StudentUpdateRequest request) {
