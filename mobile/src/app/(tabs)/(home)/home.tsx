@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Image,
   TouchableOpacity,
 } from "react-native";
 import React from "react";
@@ -37,18 +36,18 @@ const Home = () => {
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>My Courses</Text>
         <TouchableOpacity
-          onPress={() => router.replace("/(courses)/course-list")}
+          onPress={() =>
+            router.replace("/(courses)/course-list?tab=inprogress")
+          }
         >
           <Text style={{ ...text.link, color: Colors.teal_dark }}>See All</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={{ top: -40, height: 200, marginHorizontal: 10 }}
+      <View
+        style={{ top: -40, height: 200, marginHorizontal: 10, marginLeft: 25 }}
       >
         <MyCoures />
-      </ScrollView>
+      </View>
       <View
         style={{
           flexDirection: "row",
@@ -62,7 +61,7 @@ const Home = () => {
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>New Courses</Text>
         <TouchableOpacity
-          onPress={() => router.replace("/(courses)/course-list")}
+          onPress={() => router.replace("/(courses)/course-list?tab=all")}
         >
           <Text style={{ ...text.link, color: Colors.teal_dark }}>See All</Text>
         </TouchableOpacity>

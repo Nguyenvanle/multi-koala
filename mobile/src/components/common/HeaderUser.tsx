@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import { Ionicons } from "@expo/vector-icons";
+import * as Progress from "react-native-progress";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -164,7 +165,6 @@ const HeaderUser: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           shadowColor: Colors.dark,
-          paddingBottom: 15,
         }}
       >
         <View
@@ -226,14 +226,18 @@ const HeaderUser: React.FC = () => {
             </View>
             <View
               style={{
-                height: 8,
                 backgroundColor: Colors.white,
-                width: 280,
-                borderRadius: 20,
                 marginLeft: 20,
                 marginTop: 5,
+                borderRadius: 20,
               }}
-            />
+            >
+              <Progress.Bar
+                width={280}
+                progress={0.7}
+                color={Colors.teal_dark}
+              />
+            </View>
           </View>
           <Ionicons
             name="chevron-forward-outline"

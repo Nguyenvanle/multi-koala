@@ -1,13 +1,13 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { Component, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { Styles, text } from "@/src/constants/Styles";
 import HeaderUser from "@/src/components/common/HeaderUser";
 import { Colors } from "@/src/constants/Colors";
@@ -16,38 +16,43 @@ import InProgressCourses from "@/src/components/common/InProgressCourses";
 import FinishedCourses from "@/src/components/common/FinishedCourses";
 
 const CourseList = () => {
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const { tab } = useLocalSearchParams();
+
   const data = [
-    { id: 1, label: "See All", component: <AllCourses /> },
-    { id: 2, label: "In Progress", component: <InProgressCourses /> },
-    { id: 3, label: "Finished", Component: <FinishedCourses /> },
+    { id: 1, label: "See All", component: <AllCourses />, param: "all" },
+    {
+      id: 2,
+      label: "In Progress",
+      component: <InProgressCourses />,
+      param: "inprogress",
+    },
+    {
+      id: 3,
+      label: "Finished",
+      component: <FinishedCourses />,
+      param: "finished",
+    },
   ];
 
+  useEffect(() => {
+    if (tab) {
+      const index = data.findIndex((item) => item.param === tab);
+      if (index !== -1) {
+        setSelectedIndex(index);
+      }
+    }
+  }, [tab]);
+
   const handlePress = (index) => {
-    setSelectedIndex(index); // Cập nhật chỉ số đã chọn
+    setSelectedIndex(index);
   };
+
   return (
-    <SafeAreaView
-      style={{
-        ...Styles.container,
-      }}
-    >
-      <StatusBar barStyle={"dark-content"} />
+    <SafeAreaView style={Styles.container}>
+      <StatusBar barStyle="dark-content" />
       <HeaderUser />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: 380,
-          height: 60,
-          top: -40,
-          paddingHorizontal: 30,
-          backgroundColor: Colors.white,
-          borderRadius: 50,
-          shadowOpacity: 0.05,
-        }}
-      >
+      <View style={styles.tabContainer}>
         {data.map((item, index) => (
           <TouchableOpacity key={item.id} onPress={() => handlePress(index)}>
             <Text
@@ -55,7 +60,7 @@ const CourseList = () => {
                 text.p,
                 selectedIndex === index
                   ? styles.selectedText
-                  : styles.defaultText, // Đổi màu chữ
+                  : styles.defaultText,
               ]}
             >
               {item.label}
@@ -63,45 +68,35 @@ const CourseList = () => {
           </TouchableOpacity>
         ))}
       </View>
-      {/* Hiển thị component dữ liệu tương ứng */}
-      {selectedIndex !== null && (
-        <View style={{ top: -40, height: 450 }}>
-          {data[selectedIndex].component}
-        </View>
-      )}
+      <View style={styles.contentContainer}>
+        {data[selectedIndex].component}
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
+  tabContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    width: 380,
+    height: 60,
+    marginTop: -40,
+    paddingHorizontal: 30,
+    backgroundColor: Colors.white,
+    borderRadius: 50,
+    shadowOpacity: 0.05,
   },
-  button: {
-    padding: 15,
-    borderRadius: 5,
-    marginVertical: 10,
-  },
-  defaultButton: {
-    color: Colors.white, // Màu mặc định
-  },
-  selectedButton: {
-    color: Colors.teal_dark, // Màu khi được chọn
-  },
-  dataContainer: {
+  contentContainer: {
     marginTop: 20,
-    padding: 15,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 5,
-    width: "80%", // Đảm bảo kích thước phù hợp
+    height: 450,
   },
   defaultText: {
-    color: Colors.black, // Màu chữ mặc định
+    color: Colors.black,
   },
   selectedText: {
-    color: Colors.teal_light, // Màu chữ khi được chọn
+    color: Colors.teal_light,
   },
 });
 
