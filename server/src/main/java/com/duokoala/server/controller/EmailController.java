@@ -2,6 +2,7 @@ package com.duokoala.server.controller;
 
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.service.EmailService;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +16,7 @@ public class EmailController {
     EmailService emailService;
 
     @PostMapping("/{emailAddress}/send-OTP")
-    ApiResponse<Void> sendOTP(@PathVariable String emailAddress) {
+    ApiResponse<Void> sendOTP(@PathVariable String emailAddress) throws MessagingException {
         emailService.sendVerificationEmail(emailAddress);
         return ApiResponse.<Void>builder()
                 .message("OTP has been sent")
