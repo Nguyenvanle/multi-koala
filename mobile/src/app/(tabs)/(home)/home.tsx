@@ -8,12 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import CircleStyle from "@/src/components/common/CircleStyle";
-import { button, Styles, text } from "@/src/constants/Styles";
+import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
-import Button from "@/src/components/common/Button";
 import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import HeaderUser from "@/src/components/common/HeaderUser";
 import MyCoures from "@/src/components/common/MyCoures";
 import NewCoures from "@/src/components/common/NewCoures";

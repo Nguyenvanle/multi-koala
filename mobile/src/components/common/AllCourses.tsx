@@ -5,20 +5,6 @@ import API_MAIN from "@/src/feature/api/config";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 
-interface CourseData {
-  courseId: string;
-  courseName: string;
-  coursePrice: number;
-  image: {
-    imageUrl: string;
-  };
-  courseDescription: string;
-  uploadedByTeacher: {
-    firstname: string;
-    lastname: string;
-  };
-}
-
 const AllCourses = () => {
   const [courseData, setCourseData] = useState<CourseData[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");

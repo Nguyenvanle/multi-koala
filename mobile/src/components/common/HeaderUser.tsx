@@ -9,19 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import { Ionicons } from "@expo/vector-icons";
 
-interface UserData {
-  firstname: string;
-  lastname: string;
-  image: {
-    imageUrl: string;
-  };
-  email: string;
-  roles: string;
-  userBirth: string;
-  token: string;
-  userBio: string;
-}
-
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -186,6 +173,7 @@ const HeaderUser: React.FC = () => {
             margin: 10,
             marginBottom: 0,
             height: 20,
+            marginLeft: 20,
           }}
         >
           <Text style={{ ...text.p, color: Colors.white }}>
@@ -213,7 +201,7 @@ const HeaderUser: React.FC = () => {
               style={{
                 flexDirection: "row",
                 alignSelf: "baseline",
-                marginLeft: 10,
+                marginLeft: 20,
               }}
             >
               <Text
@@ -242,7 +230,7 @@ const HeaderUser: React.FC = () => {
                 backgroundColor: Colors.white,
                 width: 280,
                 borderRadius: 20,
-                marginLeft: 10,
+                marginLeft: 20,
                 marginTop: 5,
               }}
             />

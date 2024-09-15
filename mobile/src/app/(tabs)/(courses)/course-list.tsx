@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import { Styles, text } from "@/src/constants/Styles";
 import HeaderUser from "@/src/components/common/HeaderUser";
 import { Colors } from "@/src/constants/Colors";
@@ -19,8 +19,8 @@ const CourseList = () => {
   const [selectedIndex, setSelectedIndex] = useState(1);
   const data = [
     { id: 1, label: "See All", component: <AllCourses /> },
-    { id: 2, label: "In Progress" },
-    { id: 3, label: "Finished" },
+    { id: 2, label: "In Progress", component: <InProgressCourses /> },
+    { id: 3, label: "Finished", Component: <FinishedCourses /> },
   ];
 
   const handlePress = (index) => {
