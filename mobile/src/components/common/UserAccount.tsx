@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Alert,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "./CircleStyle";
@@ -7,19 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
-
-interface UserData {
-  firstname: string;
-  lastname: string;
-  image: {
-    imageUrl: string;
-  };
-  email: string;
-  roles: string;
-  userBirth: string;
-  token: string;
-  userBio: string;
-}
 
 const UserAccount: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -73,6 +67,20 @@ const UserAccount: React.FC = () => {
       day: "numeric",
     };
     return date.toLocaleDateString(undefined, options);
+  };
+  const handleLogout = async () => {
+    try {
+      // Xóa token khỏi AsyncStorage
+      await AsyncStorage.removeItem("token");
+      // Xóa dữ liệu người dùng khỏi state
+      setUserData(null);
+      // Chuyển hướng đến màn hình đăng nhập
+      router.replace("/(auth)/sign-in");
+      console.log(JSON.stringify(response.data));
+    } catch (error) {
+      console.error("Error during logout:", error);
+      Alert.alert("Lỗi", "Không thể đăng xuất. Vui lòng thử lại.");
+    }
   };
 
   return (
@@ -527,7 +535,7 @@ const UserAccount: React.FC = () => {
             borderRadius: 20,
             marginVertical: 5,
           }}
-          onPress={() => router.replace("/(auth)/sign-in")}
+          onPress={handleLogout}
         >
           <Text
             style={{ ...text.large, color: Colors.white, fontWeight: "500" }}

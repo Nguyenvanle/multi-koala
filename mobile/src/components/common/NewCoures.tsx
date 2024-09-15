@@ -24,7 +24,7 @@ const NewCoures = () => {
           setIsLoggedIn(true);
           const response = await API_MAIN.get("/courses");
           if (response.data.code === 200) {
-            const lastTwoCourses = response.data.result.slice(-2);
+            const lastTwoCourses = response.data.result.slice(0, 2);
             setNewCourses(lastTwoCourses);
           }
         } else {
@@ -109,7 +109,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.dark,
     fontWeight: "500",
-    marginLeft: 80,
+    marginLeft: 10,
+    width: 250,
   },
   container: {
     flexDirection: "column",

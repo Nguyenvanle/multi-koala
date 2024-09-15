@@ -13,6 +13,9 @@ import * as Progress from "react-native-progress";
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [progressCourses, setProgressCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -211,7 +214,7 @@ const HeaderUser: React.FC = () => {
                   marginRight: 67,
                 }}
               >
-                TOEIC 650+
+                Toeic 650+
               </Text>
               <Text
                 style={{
