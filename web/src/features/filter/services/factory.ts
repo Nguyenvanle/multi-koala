@@ -1,6 +1,7 @@
 import {
   FieldsFilter,
   FilterStrategy,
+  LevelsFilter,
   NameFilter,
   PriceRangeFilter,
   RatingFilter,
@@ -20,8 +21,9 @@ export class FilterFactory {
       case "fields":
         return new FieldsFilter();
       case "types":
-        ``;
         return new TypesFilter();
+      case "levels":
+        return new LevelsFilter();
       default:
         throw new Error(`Unsupported filter type: ${filterType}`);
     }

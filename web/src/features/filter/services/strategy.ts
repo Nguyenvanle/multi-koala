@@ -65,11 +65,19 @@ class TypesFilter implements FilterStrategy {
   }
 }
 
+class LevelsFilter implements FilterStrategy {
+  apply(courses: CoursesResultResType, levels: string[]): CoursesResultResType {
+    if (levels.length === 0) return courses;
+    return courses.filter((course) => levels.includes(course.courseLevel));
+  }
+}
+
 export {
   RatingFilter,
   PriceRangeFilter,
   NameFilter,
   FieldsFilter,
   TypesFilter,
+  LevelsFilter,
 };
 

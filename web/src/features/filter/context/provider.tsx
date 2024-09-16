@@ -15,6 +15,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({
     rating: 0,
     fields: [],
     types: [],
+    levels: [],
   });
 
   const updateFilter = useCallback(
@@ -31,6 +32,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({
       rating: 0,
       fields: [],
       types: [],
+      levels: [],
     });
   }, []);
 

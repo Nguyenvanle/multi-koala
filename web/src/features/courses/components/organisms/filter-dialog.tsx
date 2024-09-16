@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FilterFields } from "@/features/courses/components/molecules/filter-fields";
+import { FilterLevels } from "@/features/courses/components/molecules/filter-level";
 import { FilterPrice } from "@/features/courses/components/molecules/filter-price";
 import { FilterRating } from "@/features/courses/components/molecules/filter-rating";
 import { FilterTypes } from "@/features/courses/components/molecules/filter-types";
@@ -48,6 +49,8 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               <FilterPrice />
 
               <FilterRating />
+
+              <FilterLevels />
             </div>
           </div>
         </ScrollArea>

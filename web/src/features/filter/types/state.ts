@@ -4,4 +4,5 @@ type FilterState = {
   rating: number;
   fields: string[];
   types: string[];
+  levels: string[];
 };
