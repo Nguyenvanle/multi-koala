@@ -1,9 +1,9 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import StudentsCard from "@/features/courses/components/molecules/students-card";
+import { DetailCard } from "@/features/courses/components/organisms/detail-card";
 import useCourses from "@/features/courses/hooks/useCourses";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import dynamic from "next/dynamic";
@@ -57,6 +57,7 @@ export default function CourseDetail({
           uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
           totalDuration={duration}
           totalLessons={lessons?.length ?? 0}
+          courseRating={course.courseRating}
         />
       </div>
       <div className="flex flex-col gap-4">
