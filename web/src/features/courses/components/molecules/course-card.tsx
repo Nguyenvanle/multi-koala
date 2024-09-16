@@ -29,6 +29,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   const discount = courseDiscount;
   const discountedPrice = coursePrice - coursePrice * discount;
   const { hours, minutes } = convertDuration(duration || 0);
+  const rating = Math.round(courseRating * 5 * 10) / 10;
 
   return (
     <Card className="flex flex-col justify-between gap-0 w-full md:max-w-sm min-w-60 marker:min-h-96 h-full rounded overflow-hidden hover:shadow-md hover:shadow-accent">
@@ -41,9 +42,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
         <div className="flex w-full justify-between flex-row absolute bottom-0 left-0 p-4">
           <div className="px-2 bg-foreground rounded">
-            <Small className="font-medium text-background">{`⭐ ${
-              courseRating * 5
-            }`}</Small>
+            <Small className="font-medium text-background">{`⭐ ${rating}`}</Small>
           </div>
 
           <div className="flex flex-row items-center pt-[1px] px-2 gap-1 bg-foreground rounded">
