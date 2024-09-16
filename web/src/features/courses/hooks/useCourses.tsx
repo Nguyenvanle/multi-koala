@@ -61,6 +61,12 @@ export default function useCourses() {
     (courses: CoursesResultResType) => {
       return Object.entries(filters).reduce(
         (filteredCourses, [filterType, filterValue]) => {
+          if (
+            filterValue === undefined ||
+            (filterType === "rating" && filterValue === 0)
+          ) {
+            return filteredCourses;
+          }
           const filterStrategy = FilterFactory.createFilter(filterType);
           return filterStrategy.apply(filteredCourses, filterValue);
         },

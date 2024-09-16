@@ -32,7 +32,13 @@ class PriceRangeFilter implements FilterStrategy {
 
 // Triển khai với tiêu chí: Lọc theo đánh giá
 class RatingFilter implements FilterStrategy {
-  apply(courses: CoursesResultResType, value: number): CoursesResultResType {
+  apply(
+    courses: CoursesResultResType,
+    value: number | undefined
+  ): CoursesResultResType {
+    if (value === undefined || value === 0) {
+      return courses;
+    }
     return courses.filter((course) => course.courseRating >= value);
   }
 }

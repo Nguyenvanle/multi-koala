@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FilterFields } from "@/features/courses/components/molecules/filter-fields";
+import { FilterPrice } from "@/features/courses/components/molecules/filter-price";
+import { FilterRating } from "@/features/courses/components/molecules/filter-rating";
 import { FilterTypes } from "@/features/courses/components/molecules/filter-types";
 import { useFilterDialog } from "@/features/courses/hooks/useFilterDialog";
 
@@ -25,7 +27,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] md:max-w-[700px]">
+      <DialogContent className="sm:max-w-[425px] md:max-w-[700px] pr-2">
         <DialogHeader>
           <DialogTitle className="text-primary text-xl">
             Filter Courses
@@ -37,10 +39,16 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
         </DialogHeader>
 
         <ScrollArea className="h-[50vh]">
-          <div className="flex flex-col gap-2 justify-between sm:flex-row min-h-[400px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 min-h-[400px] pr-4">
             <FilterFields />
 
             <FilterTypes />
+
+            <div className="flex flex-col gap-4">
+              <FilterPrice />
+
+              <FilterRating />
+            </div>
           </div>
         </ScrollArea>
 
