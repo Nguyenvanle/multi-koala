@@ -3,7 +3,6 @@ import {
   SelectSort,
   SortOption,
 } from "@/features/courses/components/molecules/select-sort";
-import { debounce } from "lodash";
 import SearchInputCourse from "@/features/courses/components/molecules/search-input";
 import { FilterButton } from "@/features/courses/components/molecules/filter-button";
 import { FilterDialog } from "@/features/courses/components/organisms/filter-dialog";
@@ -28,6 +27,7 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
     <div className="space-y-4 ">
       <div className="flex flex-1 flex-col justify-start">
         <H4 className="mt-0">All Courses</H4>
+
         <P>
           Explore our diverse range of courses designed to enhance your skills
           and knowledge. Discover more about each course below!
@@ -44,6 +44,7 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
 
         <div className="flex flex-row space-x-2 ">
           <FilterButton onClick={() => setIsFilterDialogOpen(true)} />
+
           <SelectSort setSortOrder={setSortOrder} />
         </div>
       </div>
