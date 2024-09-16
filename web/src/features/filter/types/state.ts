@@ -5,4 +5,5 @@ type FilterState = {
   fields: string[];
   types: string[];
   levels: string[];
+  status: boolean;
 };

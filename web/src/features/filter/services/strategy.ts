@@ -1,4 +1,5 @@
 import { CoursesResultResType } from "@/features/courses/types/course";
+import { COURSE_VERIFY } from "@/types/course/verify";
 
 // src/features/courses/filters/filterStrategies.ts
 // Interface tổng quát cho chức năng filter
@@ -72,6 +73,20 @@ class LevelsFilter implements FilterStrategy {
   }
 }
 
+class CourseStatusFilter implements FilterStrategy {
+  apply(
+    courses: CoursesResultResType,
+    showApprovedOnly: boolean
+  ): CoursesResultResType {
+    if (!showApprovedOnly) {
+      return courses;
+    }
+    return courses.filter(
+      (course) => course.status === COURSE_VERIFY.Enum.APPROVED
+    );
+  }
+}
+
 export {
   RatingFilter,
   PriceRangeFilter,
@@ -79,5 +94,6 @@ export {
   FieldsFilter,
   TypesFilter,
   LevelsFilter,
+  CourseStatusFilter,
 };
 

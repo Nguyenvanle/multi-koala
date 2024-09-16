@@ -19,8 +19,10 @@ export const FilterLevels: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="font-medium">Course Level</h3>
+    <div>
+      <h3 className="scroll-m-20 text-xl font-semibold tracking-tight pb-2">
+        Course Level
+      </h3>
       <div className="space-y-2">
         {LEVELS.map((level) => (
           <div key={level.value} className="flex items-center space-x-2">

@@ -1,4 +1,5 @@
 import {
+  CourseStatusFilter,
   FieldsFilter,
   FilterStrategy,
   LevelsFilter,
@@ -24,6 +25,8 @@ export class FilterFactory {
         return new TypesFilter();
       case "levels":
         return new LevelsFilter();
+      case "status":
+        return new CourseStatusFilter();
       default:
         throw new Error(`Unsupported filter type: ${filterType}`);
     }
