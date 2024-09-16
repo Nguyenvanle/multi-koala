@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Select,
   SelectContent,
@@ -47,21 +48,16 @@ interface SelectSortProps {
 }
 
 export const SelectSort: React.FC<SelectSortProps> = ({ setSortOrder }) => {
+  const defaultSortOrder: SortOption = "rating_desc"; // Thiết lập giá trị mặc định là sắp xếp theo đánh giá cao nhất
+
   const handleChange = (value: string) => {
     setSortOrder(value as SortOption); // Chuyển đổi giá trị thành SortOption
   };
 
   return (
-    <Select onValueChange={handleChange}>
+    <Select defaultValue={defaultSortOrder} onValueChange={handleChange}>
       <SelectTrigger className="hover:border-primary sm:w-44">
-        <SelectValue
-          placeholder={
-            <div className="flex flex-row gap-2">
-              <StarIcon />
-              Highest Rated
-            </div>
-          }
-        />
+        <SelectValue placeholder="Select sort type" />
       </SelectTrigger>
 
       <SelectContent>

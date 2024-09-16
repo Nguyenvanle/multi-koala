@@ -8,11 +8,10 @@ export default function Banner() {
     <div className="flex flex-row  space-x-4 bg-accent py-16 px-8">
       <div className="flex flex-1 flex-col space-y-4 justify-center">
         <H4 className="text-primary">Duokoala</H4>
-        <H1>Course sharing platform for English teachers</H1>
+        <H1>Course sharing platform for teachers</H1>
         <Lead>
           The ideal learning environment to connect students with teachers.
-          Share English knowledge with free and paid courses. Be a part of us
-          today.
+          Share knowledge with free and paid courses. Be a part of us today.
         </Lead>
         <LinkButton label="Get Started" href="/login" />
       </div>
