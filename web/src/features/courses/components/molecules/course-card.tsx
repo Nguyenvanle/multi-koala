@@ -24,11 +24,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   courseLevel,
   courseFields,
   courseDiscount,
+  courseCreateAt,
 }) => {
   const { duration, lessons } = useLessons({ params: { courseId } });
+
   const discount = courseDiscount;
   const discountedPrice = coursePrice - coursePrice * discount;
+
   const { hours, minutes } = convertDuration(duration || 0);
+  const formattedDate = new Date(courseCreateAt).toLocaleDateString();
+
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
   return (
@@ -70,8 +75,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         </div>
       </CardContent>
 
-      <CardFooter className="flex flex-row gap-2 justify-between px-4 pb-4">
-        <Button className="flex-1 space-x-1">
+      <CardFooter className="flex flex-col px-4 gap-2 pb-4">
+        <Button className="flex-1 flex-grow self-stretch space-x-1">
           <span className="font-bold">{`$${discountedPrice.toFixed(2)}`}</span>
           {discount !== 0 ? (
             <span className="line-through text-foreground">{`/${coursePrice.toFixed(
@@ -81,6 +86,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             <></>
           )}
         </Button>
+
+        <Muted className="flex text-right self-stretch items-end">
+          {formattedDate}
+        </Muted>
       </CardFooter>
     </Card>
   );
