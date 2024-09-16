@@ -13,6 +13,7 @@ import { router } from "expo-router";
 import HeaderUser from "@/src/components/specific/user/HeaderUser";
 import MyCoures from "@/src/components/specific/course/smallPart/MyCoures";
 import CircleStyle from "@/src/components/common/CircleStyle";
+import NewCoures from "./../../../components/specific/course/smallPart/NewCourse";
 
 const Home = () => {
   return (
@@ -63,6 +64,7 @@ const Home = () => {
           <Text style={{ ...text.p, color: Colors.teal_dark }}>See All</Text>
         </TouchableOpacity>
       </View>
+      <NewCoures />
     </SafeAreaView>
   );
 };
