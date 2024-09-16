@@ -1,19 +1,15 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { LessonsCard } from "@/features/courses/components/layout/lesson-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import StudentsCard from "@/features/courses/components/molecules/students-card";
 import { DetailCard } from "@/features/courses/components/organisms/detail-card";
+import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useCourses from "@/features/courses/hooks/useCourses";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import dynamic from "next/dynamic";
 
-const LessonsCard = dynamic(
-  () => import("@/features/courses/components/molecules/lessons-card"),
-  {
-    loading: () => <Skeleton className="h-20 w-full" />,
-  }
-);
 
 export default function CourseDetail({
   params,
@@ -21,7 +17,7 @@ export default function CourseDetail({
   params: { courseId: string };
 }) {
   const { courses, loading: coursesLoading } = useCourses();
-  const { lessons, duration, loading: lessonsLoading } = useLessons({ params });
+  const { lessons, duration, loading: lessonsLoading, } = useLessons({ params });
 
   // Only check for the course if loading is complete
   const isLoading = coursesLoading || lessonsLoading;
@@ -58,10 +54,11 @@ export default function CourseDetail({
           totalDuration={duration}
           totalLessons={lessons?.length ?? 0}
           courseRating={course.courseRating}
+          courseDiscount={course.discountApprovedRate}
         />
       </div>
       <div className="flex flex-col gap-4">
-        <LessonsCard lessons={lessons || []} />
+        <LessonsCardPage lessons={lessons || []} />
         {/* <StudentsCard courseId={params.courseId} /> */}
       </div>
     </div>

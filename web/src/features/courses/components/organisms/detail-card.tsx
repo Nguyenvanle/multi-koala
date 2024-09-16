@@ -13,12 +13,13 @@ import { TeacherLink } from "@/features/courses/components/molecules/teacher-lin
 import { Badge } from "@/components/ui/badge";
 import { CourseInfo } from "@/features/courses/components/molecules/course-info";
 import { P } from "@/components/ui/typography";
-import { Price } from "@/features/courses/components/atoms/price";
+import PriceButton from "@/features/courses/components/atoms/price-button";
 
 type DetailCardProps = {
   courseName: string;
   coursePrice: number;
   courseRating: number;
+  courseDiscount: number;
   courseDescription: string;
   uploadByTeacher: string;
   totalDuration: number | null;
@@ -29,16 +30,14 @@ export const DetailCard: React.FC<DetailCardProps> = ({
   courseName,
   coursePrice,
   courseRating,
+  courseDiscount,
   courseDescription,
   uploadByTeacher,
   totalDuration,
   totalLessons,
 }) => {
-  const discount: number = 0.2;
-  const discountedPrice = useMemo(
-    () => coursePrice - coursePrice * discount,
-    [coursePrice]
-  );
+  const discount = courseDiscount;
+  const discountedPrice = coursePrice - coursePrice * discount;
 
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
@@ -67,12 +66,12 @@ export const DetailCard: React.FC<DetailCardProps> = ({
       </CardContent>
 
       <CardFooter className="flex flex-0">
-        <Button className="flex-1 space-x-1" onClick={handlePurchase}>
-          <Price
-            discountedPrice={discountedPrice}
-            originalPrice={coursePrice}
-          />
-        </Button>
+        <PriceButton
+          discountedPrice={discountedPrice}
+          originalPrice={coursePrice}
+          discount={discount}
+          onClick={handlePurchase}
+        />
       </CardFooter>
     </Card>
   );
