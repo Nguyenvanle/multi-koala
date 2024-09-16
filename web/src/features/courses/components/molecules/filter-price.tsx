@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { SliderTwoSide } from "@/components/ui/slider-two-side";
 import { useFilter } from "@/features/filter/hooks/useFilter";
 import { Input } from "@/components/ui/input";
+import { DollarSign } from "lucide-react";
 
 interface PriceRange {
   min: number;
@@ -26,9 +27,10 @@ export const FilterPrice: React.FC = () => {
   };
 
   const handleInputChange = (type: "min" | "max", value: string) => {
-    const numValue = parseInt(value, 10);
-    if (!isNaN(numValue)) {
-      const newRange = { ...priceRange, [type]: numValue };
+    const numValue = value === "" ? undefined : parseInt(value, 10);
+    // Cho phép người dùng xóa số 0 hoặc nhập giá trị không âm
+    if (numValue === undefined || (numValue >= 0 && !isNaN(numValue))) {
+      const newRange = { ...priceRange, [type]: numValue !== undefined ? numValue : 0 };
       if (newRange.min <= newRange.max) {
         setPriceRange(newRange);
         updateFilter("priceRange", newRange);
@@ -53,24 +55,30 @@ export const FilterPrice: React.FC = () => {
         value={[priceRange.min, priceRange.max]}
         onValueChange={handleSliderChange}
       />
+
       <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <span>$</span>
+        <div className="relative flex items-center">
           <Input
             type="number"
-            value={priceRange.min}
+            value={priceRange.min === 0 ? "" : priceRange.min} // Hiển thị rỗng khi giá trị là 0
             onChange={(e) => handleInputChange("min", e.target.value)}
-            className="w-20"
+            className="w-24 pl-6"
+            min={0} // Ngăn không cho nhập số âm
           />
+          <DollarSign className="absolute left-2 text-gray-500 w-4 h-4" />
         </div>
-        <div className="flex items-center space-x-2">
-          <span>$</span>
+
+        <span className="text-muted-foreground">-</span>
+
+        <div className="relative flex items-center">
           <Input
             type="number"
-            value={priceRange.max}
+            value={priceRange.max === 0 ? "" : priceRange.max} // Hiển thị rỗng khi giá trị là 0
             onChange={(e) => handleInputChange("max", e.target.value)}
-            className="w-20"
+            className="w-24 pl-6"
+            min={0} // Ngăn không cho nhập số âm
           />
+          <DollarSign className="absolute left-2 text-gray-500 w-4 h-4" />
         </div>
       </div>
     </div>
