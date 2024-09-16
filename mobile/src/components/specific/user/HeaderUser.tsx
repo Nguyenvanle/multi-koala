@@ -25,7 +25,6 @@ const HeaderUser: React.FC = () => {
 
         if (!token) {
           setErrorMessage("No token found. Please log in.");
-          console.error("token not found");
           return;
         }
 

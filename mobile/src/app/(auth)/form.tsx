@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
 import CircleStyle from "@/src/components/common/CircleStyle";
-import { Redirect } from "expo-router";
+import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 
 const Form: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -22,6 +22,15 @@ const Form: React.FC = () => {
   const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
+  const { email } = useLocalSearchParams();
+  const [emailState, setEmailState] = useState("");
+
+  useEffect(() => {
+    if (email) {
+      setEmailState(decodeURIComponent(email as string));
+    }
+  }, [email]);
 
   const [errors, setErrors] = useState({
     username: "",
@@ -124,6 +133,7 @@ const Form: React.FC = () => {
         <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
           <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
         </View>
+        <Text style={{ ...text.p, fontWeight: "500" }}>{emailState}</Text>
         <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
           <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
         </View>

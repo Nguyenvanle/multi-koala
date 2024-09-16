@@ -51,7 +51,20 @@ const NewCoures = () => {
         <Text style={styles.clampedText} numberOfLines={1}>
           {title}
         </Text>
-        <Text style={styles.priceText}>${price}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: 130,
+            paddingVertical: 8,
+          }}
+        >
+          <Text style={styles.duration}>1h 23m</Text>
+          <Text style={styles.duration}>12 lessons</Text>
+        </View>
+        <View style={{ paddingTop: 8 }}>
+          <Text style={styles.priceText}>${price}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -128,6 +141,10 @@ const styles = StyleSheet.create({
     ...text.p,
     color: Colors.teal_dark, // Có thể thay đổi màu sắc theo ý thích
     fontWeight: "300",
+  },
+  duration: {
+    ...text.small,
+    color: Colors.dark_grey,
   },
 });
 

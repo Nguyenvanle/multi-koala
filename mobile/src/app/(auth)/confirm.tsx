@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,17 +10,24 @@ import {
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
-import { Redirect, useRouter } from "expo-router";
+import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import CircleStyle from "@/src/components/common/CircleStyle";
 import { forgot } from "./forgot";
 
 const Confirm: React.FC = () => {
   const router = useRouter(); // Khai báo router
+  const { email } = useLocalSearchParams();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [otpErrorMessage, setOtpErrorMessage] = useState("");
   const [otpSuccessMessage, setOtpSuccessMessage] = useState("");
   const otpRefs = useRef<Array<TextInput | null>>([]);
   const [isOtpSent, setIsOtpSent] = useState(false);
+
+  useEffect(() => {
+    if (email) {
+      setIsOtpSent(true);
+    }
+  }, [email]);
 
   const handleConfirmOtp = () => {
     const otpValue = otp.join("");

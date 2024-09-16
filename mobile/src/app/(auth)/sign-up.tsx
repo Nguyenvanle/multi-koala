@@ -19,11 +19,11 @@ import CircleStyle from "@/src/components/common/CircleStyle";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
-  const router = useRouter(); // Khai báo router
-  const [errorMessage, setErrorMessage] = useState(""); // State để lưu thông báo lỗi
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Biểu thức chính quy để kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
@@ -32,13 +32,14 @@ const SignUp: React.FC = () => {
       setErrorMessage("Please enter your Email address.");
       return;
     }
-    // Xử lý email
 
     if (validateEmail(email)) {
-      // Xử lý dữ liệu email hợp lệ ở đây
-      router.push("/(auth)/confirm"); // Chuyển hướng tới trang Confirm
+      // Pass the email to the confirm page
+      router.push({
+        pathname: "/(auth)/confirm",
+        params: { email: encodeURIComponent(email) },
+      });
     } else {
-      // Hiển thị thông báo lỗi nếu email không hợp lệ
       setErrorMessage("Please enter a valid email address.");
     }
   };
@@ -50,20 +51,9 @@ const SignUp: React.FC = () => {
       <KeyboardAvoidingView
         style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={80} // Điều chỉnh khoảng cách nếu cần
+        keyboardVerticalOffset={80}
       >
-        <Text
-          style={{
-            ...text.h1,
-            fontWeight: "bold",
-            color: Colors.teal_dark,
-            height: 120,
-            paddingTop: 20,
-            paddingHorizontal: 20,
-          }}
-        >
-          Sign Up
-        </Text>
+        <Text style={styles.title}>Sign Up</Text>
 
         <Button
           title="Continue with Facebook"
@@ -87,24 +77,16 @@ const SignUp: React.FC = () => {
           placeholderTextColor={Colors.grey}
           value={email}
           onChangeText={setEmail}
-          keyboardType="email-address" // Đặt kiểu bàn phím là email
-          autoCapitalize="none" // Không tự động viết hoa chữ cái đầu
-          textContentType="emailAddress" // Hỗ trợ tự động điền trên iOS
+          keyboardType="email-address"
+          autoCapitalize="none"
+          textContentType="emailAddress"
         />
 
-        {/* Hiển thị thông báo lỗi nếu có */}
         {errorMessage ? (
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
 
-        <View
-          style={{
-            alignItems: "baseline",
-            justifyContent: "center",
-            width: 350,
-            marginTop: 5,
-          }}
-        >
+        <View style={styles.termsContainer}>
           <Text style={text.subtitle}>
             By signing up for Duokoala you acknowledge that you agree to Koala
             Team's{" "}
@@ -127,16 +109,7 @@ const SignUp: React.FC = () => {
         <View style={styles.registerContainer}>
           <Text style={text.p}>Not signed in yet?</Text>
           <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
-            <Text
-              style={{
-                ...text.link,
-                color: Colors.teal_dark,
-                fontWeight: "500",
-              }}
-            >
-              {" "}
-              Sign In
-            </Text>
+            <Text style={styles.signInText}> Sign In</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -145,10 +118,13 @@ const SignUp: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  registerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginVertical: 10,
+  title: {
+    ...text.h1,
+    fontWeight: "bold",
+    color: Colors.teal_dark,
+    height: 120,
+    paddingTop: 20,
+    paddingHorizontal: 20,
   },
   input: {
     height: 45,
@@ -168,9 +144,25 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   errorText: {
-    color: Colors.red, // Màu cho thông báo lỗi
+    color: Colors.red,
     textAlign: "center",
     marginVertical: 10,
+  },
+  registerContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+  termsContainer: {
+    alignItems: "baseline",
+    justifyContent: "center",
+    width: 350,
+    marginTop: 5,
+  },
+  signInText: {
+    ...text.link,
+    color: Colors.teal_dark,
+    fontWeight: "500",
   },
 });
 

@@ -17,7 +17,7 @@ const FinishedCourses = () => {
 
         if (!token) {
           setErrorMessage("No token found. Please log in.");
-          console.error("Token not found");
+
           return;
         }
 

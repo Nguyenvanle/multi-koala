@@ -2,18 +2,23 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   Image,
   Alert,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../../common/CircleStyle";
 import { text } from "@/src/constants/Styles";
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { MaterialIcons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const UserAccount: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -26,7 +31,7 @@ const UserAccount: React.FC = () => {
 
         if (!token) {
           setErrorMessage("No token found. Please log in.");
-          console.error("token not found");
+
           return;
         }
 
@@ -47,6 +52,9 @@ const UserAccount: React.FC = () => {
             token: token,
             userBirth: response.data.result.userBirth,
             userBio: response.data.result.userBio,
+            process: response.data.result,
+            userHometown: response.data.result.userHometown,
+            firstlogin: response.data.result.firstlogin,
           });
         } else {
           setErrorMessage(response.data.message);
@@ -71,478 +79,225 @@ const UserAccount: React.FC = () => {
   const handleLogout = async () => {
     try {
       // Xóa token khỏi AsyncStorage
-      await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("token", response.data.result.token);
       // Xóa dữ liệu người dùng khỏi state
       setUserData(null);
       // Chuyển hướng đến màn hình đăng nhập
       router.replace("/(auth)/sign-in");
-      console.log(JSON.stringify(response.data));
     } catch (error) {
       console.error("Error during logout:", error);
       Alert.alert("Lỗi", "Không thể đăng xuất. Vui lòng thử lại.");
     }
   };
-
   return (
     <ScrollView
-      style={{ top: -50, width: 420 }}
-      showsVerticalScrollIndicator={false}
+      style={{ top: -50, width: 415, paddingTop: 42, paddingHorizontal: 16 }}
     >
       <View
         style={{
-          backgroundColor: Colors.teal_dark,
-          borderRadius: 20,
           alignItems: "center",
           justifyContent: "center",
-          width: 420,
-          paddingTop: 50,
-          paddingBottom: 10,
-          borderWidth: 1,
-          borderColor: Colors.grey,
+          padding: 16,
         }}
       >
         <CircleStyle />
+
         {userData ? (
           <View
             style={{
-              alignSelf: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 8,
             }}
           >
             <View
               style={{
                 justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 50,
+                alignItems: "baseline",
+                flexDirection: "column",
               }}
             >
-              {userData.image && (
-                <Image
-                  source={{ uri: userData.image.imageUrl }}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    borderRadius: 100,
-                    marginBottom: 20,
-                  }}
-                />
-              )}
-              <Text
-                style={{
-                  ...text.h3,
-                  fontWeight: "500",
-                  color: Colors.teal_light,
-                }}
-              >
+              <Text style={text.h4}>Welcome</Text>
+              <Text style={{ ...text.h4, color: Colors.teal_dark }}>
                 {userData.firstname} {userData.lastname}
               </Text>
-              <TouchableOpacity
-                style={{ marginTop: 5, marginBottom: 20, flexDirection: "row" }}
-              >
-                <Text style={{ ...text.small, color: Colors.white }}>
-                  edit profile
-                </Text>
-                <Ionicons
-                  name="information-circle-outline"
-                  size={17}
-                  style={{ color: Colors.white }}
-                />
-              </TouchableOpacity>
-              <View
-                style={{
-                  justifyContent: "center",
-                  paddingVertical: 10,
-                  alignItems: "center",
-                  marginLeft: 12,
-                }}
-              >
-                <View style={{ flexDirection: "column" }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignSelf: "center",
-                      paddingBottom: 20,
-                    }}
-                  >
-                    <View
-                      style={{
-                        marginHorizontal: 15,
-                        backgroundColor: Colors.white,
-                        alignItems: "center",
-                        borderRadius: 10,
-                        padding: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Firstname
-                      </Text>
-                      <Text style={{ ...text.p, fontWeight: "500" }}>
-                        {userData.firstname}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        backgroundColor: Colors.white,
-                        marginHorizontal: 15,
-                        alignItems: "center",
-                        borderRadius: 10,
-                        padding: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Lastname
-                      </Text>
-                      <Text style={{ ...text.p, fontWeight: "500" }}>
-                        {userData.lastname}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        backgroundColor: Colors.white,
-                        marginHorizontal: 15,
-                        alignItems: "center",
-                        borderRadius: 10,
-                        padding: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Role
-                      </Text>
-                      <Text style={{ ...text.p, fontWeight: "500" }}>
-                        {userData.roles}
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignSelf: "center",
-                      marginBottom: 20,
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: 350,
-                        backgroundColor: Colors.white,
-                        alignItems: "center",
-                        borderRadius: 10,
-                        marginBottom: 20,
-                        marginHorizontal: 15,
-                        padding: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Email
-                      </Text>
-                      <Text style={{ ...text.p, fontWeight: "500" }}>
-                        {userData.email}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        backgroundColor: Colors.white,
-                        marginHorizontal: 15,
-                        alignItems: "center",
-                        borderRadius: 10,
-                        padding: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Birthday
-                      </Text>
-                      <Text style={{ ...text.p, fontWeight: "500" }}>
-                        {formatBirthDate(userData.userBirth)}
-                      </Text>
-                      {/* Hiển thị ngày sinh */}
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      width: 350,
-                      alignSelf: "center",
-                      alignItems: "center",
-                      backgroundColor: Colors.white,
-                      borderRadius: 10,
-                      padding: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...text.blackquote,
-                        color: Colors.teal_dark,
-                        marginBottom: 10,
-                        paddingHorizontal: 10,
-                      }}
-                    >
-                      Introduction
-                    </Text>
-                    <Text style={{ ...text.p, fontWeight: "500" }}>
-                      {userData.userBio}
-                    </Text>
-                  </View>
-                </View>
-              </View>
             </View>
+            {userData.image && (
+              <Image
+                source={{ uri: userData.image.imageUrl }}
+                style={{
+                  width: 75,
+                  height: 75,
+                  borderRadius: 35,
+                  justifyContent: "flex-end",
+                }}
+              />
+            )}
           </View>
         ) : (
           <View
             style={{
-              alignSelf: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 16,
             }}
           >
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                marginHorizontal: 50,
+                paddingBottom: 8,
               }}
             >
-              <View
+              <Image
                 style={{
-                  width: 200,
-                  height: 200,
-                  borderRadius: 100,
+                  width: 160,
+                  height: 160,
+                  borderRadius: 80,
                   backgroundColor: Colors.grey,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 20,
+                  marginBottom: 8,
                 }}
-              >
-                <Text style={{ ...text.large, fontWeight: "500" }}>Image</Text>
-              </View>
-              <Text style={{ ...text.h4, fontWeight: "500" }}>User</Text>
-              <TouchableOpacity
-                style={{ marginTop: 5, marginBottom: 20, flexDirection: "row" }}
-              >
-                <Text style={{ ...text.small, color: Colors.white }}>
-                  edit profile
-                </Text>
-                <Ionicons
-                  name="information-circle-outline"
-                  size={17}
-                  style={{ color: Colors.white }}
-                />
-              </TouchableOpacity>
-              <View
-                style={{
-                  justifyContent: "center",
-                  paddingVertical: 10,
-                  alignItems: "center",
-                  marginLeft: 12,
-                }}
-              >
-                <View style={{ flexDirection: "column" }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignSelf: "center",
-                      paddingBottom: 20,
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: 100,
-                        height: 60,
-                        marginHorizontal: 14,
-                        backgroundColor: Colors.white,
-                        alignItems: "center",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Firstname
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: 100,
-                        height: 60,
-                        backgroundColor: Colors.white,
-                        marginHorizontal: 14,
-                        alignItems: "center",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Lastname
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: 100,
-                        height: 60,
-                        backgroundColor: Colors.white,
-                        marginHorizontal: 14,
-                        alignItems: "center",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Role
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignSelf: "center",
-                      marginBottom: 20,
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: 230,
-                        height: 60,
-                        marginHorizontal: 14,
-                        backgroundColor: Colors.white,
-                        alignItems: "center",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Email
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: 100,
-                        height: 60,
-                        backgroundColor: Colors.white,
-                        marginHorizontal: 14,
-                        alignItems: "center",
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...text.blackquote,
-                          color: Colors.teal_dark,
-                          marginBottom: 10,
-                        }}
-                      >
-                        Birthday
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "flex-start",
-                      alignSelf: "baseline",
-                      width: 359,
-                      height: 208,
-                      backgroundColor: Colors.white,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...text.blackquote,
-                        color: Colors.teal_dark,
-                        marginBottom: 10,
-                        paddingHorizontal: 10,
-                      }}
-                    >
-                      Introduction
-                    </Text>
-                  </View>
-                </View>
-              </View>
+              />
+              <Text style={text.h4}>User</Text>
             </View>
           </View>
         )}
-      </View>
-      <View style={{ alignItems: "center", marginTop: 10 }}>
-        <TouchableOpacity
+        <View style={{ alignSelf: "baseline", paddingBottom: 8 }}>
+          <Text style={{ ...text.h3 }}>Account</Text>
+        </View>
+        <View
           style={{
-            width: 380,
-            height: 60,
-            backgroundColor: Colors.teal_light,
-            alignItems: "center",
-            justifyContent: "center",
             borderRadius: 20,
-            marginVertical: 5,
+            backgroundColor: Colors.white,
+            justifyContent: "space-between",
+            padding: 16,
+            width: 350,
+            alignSelf: "center",
           }}
         >
-          <Text
-            style={{ ...text.large, color: Colors.white, fontWeight: "500" }}
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              paddingBottom: 24,
+              width: 300,
+            }}
           >
-            Bank Account
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 380,
-            height: 60,
-            backgroundColor: Colors.teal_dark,
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 20,
-            marginVertical: 5,
-          }}
-          onPress={handleLogout}
+            <MaterialCommunityIcons
+              name="account-circle"
+              size={28}
+              color={Colors.teal_dark}
+              style={{ paddingRight: 24 }}
+            />
+            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+              My Profile
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ flexDirection: "row", width: 300 }}>
+            <AntDesign
+              name="eye"
+              size={28}
+              color={Colors.teal_dark}
+              style={{ paddingRight: 24 }}
+            />
+            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+              Password
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{ alignSelf: "baseline", paddingBottom: 8, paddingTop: 16 }}
         >
-          <Text
-            style={{ ...text.large, color: Colors.white, fontWeight: "500" }}
+          <Text style={{ ...text.h3 }}>Support & About</Text>
+        </View>
+        <View
+          style={{
+            borderRadius: 20,
+            backgroundColor: Colors.white,
+            justifyContent: "space-between",
+            padding: 16,
+            width: 350,
+            alignSelf: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={{ flexDirection: "row", width: 300, paddingBottom: 24 }}
           >
-            Log Out
-          </Text>
-        </TouchableOpacity>
+            <Ionicons
+              name="information-circle"
+              size={28}
+              color={Colors.teal_dark}
+              style={{ paddingRight: 24 }}
+            />
+            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+              Terms & Policies
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ flexDirection: "row", width: 300 }}>
+            <MaterialIcons
+              name="support-agent"
+              size={28}
+              color={Colors.teal_dark}
+              style={{ paddingRight: 24 }}
+            />
+            <Text style={{ ...text.h4, color: Colors.teal_dark }}>Support</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{ alignSelf: "baseline", paddingBottom: 8, paddingTop: 16 }}
+        >
+          <Text style={{ ...text.h3 }}>Services</Text>
+        </View>
+        <View
+          style={{
+            borderRadius: 20,
+            backgroundColor: Colors.white,
+            justifyContent: "space-between",
+            padding: 16,
+            width: 350,
+            alignSelf: "center",
+          }}
+        >
+          <TouchableOpacity style={{ flexDirection: "row", width: 300 }}>
+            <FontAwesome
+              name="bank"
+              size={24}
+              color={Colors.teal_dark}
+              style={{ paddingRight: 24 }}
+            />
+            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+              Bank Account
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            borderRadius: 20,
+            backgroundColor: Colors.white,
+            justifyContent: "space-between",
+            padding: 16,
+            width: 350,
+            alignSelf: "center",
+            marginTop: 16,
+          }}
+        >
+          <TouchableOpacity
+            style={{ flexDirection: "row" }}
+            onPress={handleLogout}
+          >
+            <MaterialCommunityIcons
+              name="logout"
+              size={28}
+              color={Colors.teal_dark}
+              style={{ paddingRight: 24 }}
+            />
+            <Text style={{ ...text.h4, color: Colors.super_teal_dark }}>
+              Log Out
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Rest of the component remains the same */}
       </View>
     </ScrollView>
   );
