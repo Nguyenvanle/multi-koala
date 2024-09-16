@@ -46,6 +46,7 @@ export default function CourseDetail({
           courseImage={course.image.imageUrl}
           courseName={course.courseName}
         />
+
         <DetailCard
           courseName={course.courseName}
           coursePrice={course.coursePrice}
@@ -57,10 +58,8 @@ export default function CourseDetail({
           courseDiscount={course.discountApprovedRate}
         />
       </div>
-      <div className="flex flex-col gap-4">
-        <LessonsCardPage lessons={lessons || []} />
-        {/* <StudentsCard courseId={params.courseId} /> */}
-      </div>
+
+      <LessonsCardPage lessons={lessons || []} />
     </div>
   );
 }

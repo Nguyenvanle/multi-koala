@@ -14,11 +14,11 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
   onLoadMore,
 }) => {
   return (
-    <Card className="flex flex-0 flex-col w-full rounded overflow-hidden hover:shadow-md">
+    <Card className="flex flex-0 flex-col w-full rounded overflow-hidden hover:shadow-md gap-2">
       <CardHeader className="flex flex-0 pb-0">
         <CardTitle>Lessons</CardTitle>
       </CardHeader>
-      <CardFooter className="flex flex-0 flex-col pr-4">
+      <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (
           <div>Loading...</div>
         ) : lessons.length > 0 ? (
