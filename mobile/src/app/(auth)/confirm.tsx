@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Modal,
   TextInput,
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";

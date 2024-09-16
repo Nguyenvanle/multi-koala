@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import axios, { AxiosError } from "axios";
 import CircleStyle from "@/src//components/common/CircleStyle";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";

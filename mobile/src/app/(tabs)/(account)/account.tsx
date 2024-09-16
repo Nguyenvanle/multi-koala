@@ -1,8 +1,7 @@
-import { View, Text, SafeAreaView, StatusBar } from "react-native";
+import { SafeAreaView, StatusBar } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
 import { Styles } from "@/src/constants/Styles";
-import UserAccount from "@/src/components/common/UserAccount";
+import UserAccount from "@/src/components/specific/user/UserAccount";
 
 const Account = () => {
   return (

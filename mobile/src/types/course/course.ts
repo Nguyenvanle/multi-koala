@@ -10,4 +10,16 @@ interface CourseData {
     firstname: string;
     lastname: string;
   };
+  courseLevel: string;
+  courseRating: number;
+  types: {
+    typeName: string;
+    typeDescription: string;
+  };
+  fields: {
+    fieldName: string;
+    fielDescription: string;
+  };
+  discountApprovedRate: number;
+  status: string;
 }

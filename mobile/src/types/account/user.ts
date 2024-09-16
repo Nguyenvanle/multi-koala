@@ -9,4 +9,7 @@ interface UserData {
   userBirth: string;
   token: string;
   userBio: string;
+  process: number;
+  userHometown: string;
+  firstlogin: boolean;
 }

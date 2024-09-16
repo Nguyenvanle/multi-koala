@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
-import CircleStyle from "./CircleStyle";
+import CircleStyle from "../../common/CircleStyle";
 import { text } from "@/src/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";

@@ -1,0 +1,3 @@
+interface TokenData {
+  Token: string;
+}

@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Styles, text } from "@/src/constants/Styles";
-import HeaderUser from "@/src/components/common/HeaderUser";
+import HeaderUser from "@/src/components/specific/user/HeaderUser";
 import { Colors } from "@/src/constants/Colors";
-import AllCourses from "@/src/components/common/AllCourses";
-import InProgressCourses from "@/src/components/common/InProgressCourses";
-import FinishedCourses from "@/src/components/common/FinishedCourses";
+import AllCourses from "@/src/components/specific/course/AllCourses";
+import InProgressCourses from "@/src/components/specific/course/InProgressCourses";
+import FinishedCourses from "@/src/components/specific/course/FinishedCourses";
 
 const CourseList = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -54,7 +54,15 @@ const CourseList = () => {
       <HeaderUser />
       <View style={styles.tabContainer}>
         {data.map((item, index) => (
-          <TouchableOpacity key={item.id} onPress={() => handlePress(index)}>
+          <TouchableOpacity
+            key={item.id}
+            onPress={() => handlePress(index)}
+            style={[
+              selectedIndex === index
+                ? styles.selectedBackground
+                : styles.defaultBackground,
+            ]}
+          >
             <Text
               style={[
                 text.p,
@@ -80,23 +88,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: 380,
+    width: 350,
     height: 60,
-    marginTop: -40,
-    paddingHorizontal: 30,
+    padding: 8,
     backgroundColor: Colors.white,
     borderRadius: 50,
     shadowOpacity: 0.05,
+    marginTop: 32,
   },
   contentContainer: {
-    marginTop: 20,
     height: 450,
   },
   defaultText: {
-    color: Colors.black,
+    color: Colors.dark_grey,
   },
   selectedText: {
-    color: Colors.teal_light,
+    color: Colors.white,
+  },
+  selectedBackground: {
+    backgroundColor: Colors.teal_dark,
+    padding: 12,
+    borderRadius: 50,
+  },
+  defaultBackground: {
+    backgroundColor: Colors.white,
+    padding: 12,
+    borderRadius: 50,
   },
 });
 

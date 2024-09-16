@@ -14,7 +14,7 @@ import {
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
 import CircleStyle from "@/src/components/common/CircleStyle";
-import { Redirect, router } from "expo-router";
+import { Redirect } from "expo-router";
 
 const Form: React.FC = () => {
   const [username, setUsername] = useState("");

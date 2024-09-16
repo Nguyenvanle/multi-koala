@@ -13,4 +13,6 @@ export const Colors = {
   red: "#C7253E",
   blue: "#3795BD",
   grey: "#E2DAD6",
+  dark_grey: "#758694",
+  super_teal_dark: "#36BA98",
 };

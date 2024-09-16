@@ -1,14 +1,15 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
-import CircleStyle from "./CircleStyle";
+import CircleStyle from "../../common/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
-import Button from "./Button";
+import Button from "../../common/Button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import { Ionicons } from "@expo/vector-icons";
 import * as Progress from "react-native-progress";
+import Feather from "@expo/vector-icons/Feather";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -60,17 +61,10 @@ const HeaderUser: React.FC = () => {
   return (
     <View
       style={{
-        backgroundColor: Colors.teal_dark,
-        borderRadius: 20,
         alignItems: "center",
         justifyContent: "center",
-        height: 302,
-        width: 420,
-        paddingTop: 50,
-        paddingBottom: 30,
-        top: -50,
-        borderWidth: 1,
-        borderColor: Colors.grey,
+        height: 200,
+        padding: 16,
       }}
     >
       <CircleStyle />
@@ -81,18 +75,19 @@ const HeaderUser: React.FC = () => {
             justifyContent: "space-between",
             alignItems: "center",
             flexDirection: "row",
-            top: -20,
+            padding: 8,
+            width: 364,
           }}
         >
           <View
             style={{
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "baseline",
               flexDirection: "column",
             }}
           >
             <Text style={text.h4}>Welcome</Text>
-            <Text style={{ ...text.h4, color: Colors.teal_light }}>
+            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
               {userData.firstname} {userData.lastname}
             </Text>
           </View>
@@ -103,7 +98,7 @@ const HeaderUser: React.FC = () => {
                 width: 75,
                 height: 75,
                 borderRadius: 35,
-                marginLeft: 180,
+                justifyContent: "flex-end",
               }}
             />
           )}
@@ -111,16 +106,18 @@ const HeaderUser: React.FC = () => {
       ) : (
         <View
           style={{
+            justifyContent: "space-between",
+            alignItems: "center",
             flexDirection: "row",
-            alignSelf: "center",
-            marginVertical: 20,
+            padding: 8,
           }}
         >
           <View
             style={{
               justifyContent: "center",
-              alignItems: "center",
-              marginHorizontal: 50,
+              alignItems: "baseline",
+              flexDirection: "column",
+              padding: 8,
             }}
           >
             <Text style={text.h4}>Welcome</Text>
@@ -129,7 +126,7 @@ const HeaderUser: React.FC = () => {
             style={{
               flexDirection: "row",
               alignSelf: "center",
-              paddingHorizontal: 10,
+              paddingLeft: 52,
             }}
           >
             <Button
@@ -139,8 +136,7 @@ const HeaderUser: React.FC = () => {
                 ...button.Authen,
                 backgroundColor: Colors.dark,
                 width: 100,
-                borderRadius: 15,
-                marginHorizontal: 5,
+                borderRadius: 10,
                 marginTop: 0,
               }}
               textStyle={{ ...text.p, color: Colors.white }}
@@ -152,8 +148,8 @@ const HeaderUser: React.FC = () => {
                 ...button.Authen,
                 backgroundColor: Colors.white,
                 width: 100,
-                borderRadius: 15,
-                marginHorizontal: 5,
+                borderRadius: 10,
+                marginHorizontal: 8,
                 marginTop: 0,
               }}
               textStyle={{ ...text.p, color: Colors.black }}
@@ -164,54 +160,46 @@ const HeaderUser: React.FC = () => {
       <TouchableOpacity
         style={{
           borderRadius: 10,
-          backgroundColor: Colors.teal_light,
-          justifyContent: "center",
+          backgroundColor: Colors.teal_dark,
+          justifyContent: "space-between",
+          padding: 16,
           alignItems: "center",
-          shadowColor: Colors.dark,
         }}
       >
         <View
           style={{
             alignSelf: "baseline",
-            margin: 10,
-            marginBottom: 0,
-            height: 20,
-            marginLeft: 20,
           }}
         >
-          <Text style={{ ...text.p, color: Colors.white }}>
+          <Text style={{ ...text.h4, color: Colors.white }}>
             Continue Learning
           </Text>
         </View>
         <View
           style={{
-            width: 350,
-            backgroundColor: Colors.white,
-            height: 1,
-            borderRadius: 20,
-            marginVertical: 10,
-            marginHorizontal: 20,
-          }}
-        />
-        <View
-          style={{
             flexDirection: "row",
             alignSelf: "baseline",
+            paddingVertical: 8,
+            justifyContent: "center",
           }}
         >
-          <View style={{ flexDirection: "column", alignSelf: "baseline" }}>
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingRight: 16,
+            }}
+          >
             <View
               style={{
                 flexDirection: "row",
-                alignSelf: "baseline",
-                marginLeft: 20,
+                paddingVertical: 8,
               }}
             >
               <Text
                 style={{
                   ...text.p,
-                  color: Colors.teal_dark,
-                  marginRight: 67,
+                  color: Colors.background,
                 }}
               >
                 Toeic 650+
@@ -219,9 +207,8 @@ const HeaderUser: React.FC = () => {
               <Text
                 style={{
                   ...text.small,
-                  color: Colors.teal_dark,
-                  paddingVertical: 1,
-                  marginLeft: 70,
+                  color: Colors.background,
+                  paddingLeft: 150,
                 }}
               >
                 10/12
@@ -230,25 +217,21 @@ const HeaderUser: React.FC = () => {
             <View
               style={{
                 backgroundColor: Colors.white,
-                marginLeft: 20,
-                marginTop: 5,
                 borderRadius: 20,
               }}
             >
               <Progress.Bar
                 width={280}
-                progress={0.7}
-                color={Colors.teal_dark}
+                progress={0.8}
+                color={Colors.teal_light}
               />
             </View>
           </View>
-          <Ionicons
-            name="chevron-forward-outline"
-            size={30}
-            style={{
-              marginHorizontal: 30,
-              color: Colors.white,
-            }}
+          <Feather
+            name="arrow-right-circle"
+            size={32}
+            color={Colors.background}
+            style={{ alignSelf: "flex-end" }}
           />
         </View>
       </TouchableOpacity>

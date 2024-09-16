@@ -1,7 +1,7 @@
 import { SafeAreaView, StatusBar } from "react-native";
 import React from "react";
 import { Styles } from "@/src/constants/Styles";
-import { IntroDetails } from "@/src/components/specific/IntroDetails";
+import { IntroDetails } from "@/src/components/specific/intro/IntroDetails";
 
 const IntroScreen = () => {
   const [selectedIndex, setIndex] = React.useState(0);
