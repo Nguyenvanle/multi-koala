@@ -12,16 +12,13 @@ import {
 import { TeacherLink } from "@/features/courses/components/molecules/teacher-link";
 import { Badge } from "@/components/ui/badge";
 import { CourseInfo } from "@/features/courses/components/molecules/course-info";
-import { P } from "@/components/ui/typography";
+import { H4, Lead, P } from "@/components/ui/typography";
 import PriceButton from "@/features/courses/components/atoms/price-button";
+import CourseBadges from "@/features/courses/components/molecules/course-badge";
+import { CourseCardProps } from "@/types/course/course";
+import CourseBadgeField from "@/features/courses/components/molecules/course-badge-fields";
 
-type DetailCardProps = {
-  courseName: string;
-  coursePrice: number;
-  courseRating: number;
-  courseDiscount: number;
-  courseDescription: string;
-  uploadByTeacher: string;
+type DetailCardProps = CourseCardProps & {
   totalDuration: number | null;
   totalLessons: number | null;
 };
@@ -35,6 +32,9 @@ export const DetailCard: React.FC<DetailCardProps> = ({
   uploadByTeacher,
   totalDuration,
   totalLessons,
+  courseCreateAt,
+  courseType,
+  courseFields,
 }) => {
   const discount = courseDiscount;
   const discountedPrice = coursePrice - coursePrice * discount;
@@ -61,7 +61,19 @@ export const DetailCard: React.FC<DetailCardProps> = ({
 
       <CardContent className="flex flex-1 flex-col space-y-4">
         <CardTitle className="line-clamp-2 text-2xl">{courseName}</CardTitle>
-        <CourseInfo totalDuration={totalDuration} totalLessons={totalLessons} />
+
+        <CourseInfo
+          totalDuration={totalDuration}
+          totalLessons={totalLessons}
+          createAt={courseCreateAt}
+        />
+
+        <H4>Course Fields</H4>
+        <CourseBadgeField fields={courseFields} limitDisable />
+
+        <H4>Course Types</H4>
+        <CourseBadges courseType={courseType} limitDisable />
+
         <P>{courseDescription}</P>
       </CardContent>
 

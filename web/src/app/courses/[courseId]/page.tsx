@@ -1,15 +1,11 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { LessonsCard } from "@/features/courses/components/layout/lesson-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
-import StudentsCard from "@/features/courses/components/molecules/students-card";
 import { DetailCard } from "@/features/courses/components/organisms/detail-card";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useCourses from "@/features/courses/hooks/useCourses";
 import useLessons from "@/features/lessons/hooks/useLessons";
-import dynamic from "next/dynamic";
-
 
 export default function CourseDetail({
   params,
@@ -17,7 +13,7 @@ export default function CourseDetail({
   params: { courseId: string };
 }) {
   const { courses, loading: coursesLoading } = useCourses();
-  const { lessons, duration, loading: lessonsLoading, } = useLessons({ params });
+  const { lessons, duration, loading: lessonsLoading } = useLessons({ params });
 
   // Only check for the course if loading is complete
   const isLoading = coursesLoading || lessonsLoading;
@@ -56,6 +52,16 @@ export default function CourseDetail({
           totalLessons={lessons?.length ?? 0}
           courseRating={course.courseRating}
           courseDiscount={course.discountApprovedRate}
+          courseId={course.courseId}
+          courseCreateAt={course.courseUploadedAt}
+          courseType={course.types}
+          courseFields={course.fields}
+          courseImage={course.image.imageUrl}
+          approvedByAdmin={
+            course.approvedByAdmin.firstname + course.approvedByAdmin.lastname
+          }
+          status={course.status}
+          courseLevel={course.courseLevel}
         />
       </div>
 
