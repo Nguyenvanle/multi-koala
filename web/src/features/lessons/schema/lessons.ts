@@ -13,6 +13,7 @@ export const LessonBodySchema = z.object({
     videoUrl: z.string(),
     videoDuration: z.number(),
   }),
+  lessonUploadedAt: z.string(),
   course: CourseBodyType,
   deleted: z.boolean(),
 });

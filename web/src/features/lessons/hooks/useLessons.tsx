@@ -4,7 +4,7 @@ import {
   LessonResponse,
   LessonsResult,
 } from "@/features/lessons/types/lessons-res";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface UseLessonsProps {
   params?: { courseId?: string };
@@ -38,16 +38,27 @@ export default function useLessons(params?: UseLessonsProps) {
     fetchLessons();
   }, [params]); // Chỉ phụ thuộc vào params
 
-  // Tính toán tổng duration khi lessons được cập nhật
+  const sortedLessons = useMemo(() => {
+    if (!lessons) return null;
+
+    return [...lessons].sort((a, b) => {
+      // Assuming there's an uploadDate field. Adjust the field name if it's different
+      return (
+        new Date(a.lessonUploadedAt).getTime() -
+        new Date(b.lessonUploadedAt).getTime()
+      );
+    });
+  }, [lessons]);
+
   useEffect(() => {
-    if (lessons) {
-      const totalDuration = lessons.reduce((total, lesson) => {
-        return total + (lesson.video.videoDuration || 0); // Cộng dồn videoDuration, đảm bảo nó có giá trị
+    if (sortedLessons) {
+      const totalDuration = sortedLessons.reduce((total, lesson) => {
+        return total + (lesson.video.videoDuration || 0);
       }, 0);
 
       setDuration(totalDuration);
     }
-  }, [lessons]); // Phụ thuộc vào lessons để cập nhật duration
+  }, [sortedLessons]);
 
-  return { lessons, loading, error, duration };
+  return { lessons: sortedLessons, loading, error, duration };
 }
