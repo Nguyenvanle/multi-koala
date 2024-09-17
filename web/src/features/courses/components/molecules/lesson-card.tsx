@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { P, Small } from "@/components/ui/typography";
+import { H4, P, Small } from "@/components/ui/typography";
 import { CirclePlay, Lock } from "lucide-react";
 import { LessonBody } from "@/features/lessons/schema/lessons";
 import { convertDuration } from "@/lib/utils";
@@ -11,6 +11,7 @@ import { useParams, usePathname } from "next/navigation";
 
 interface LessonCardProps extends LessonBody {
   isLocked: boolean;
+  lessonNumber: number; // Add this line
 }
 
 export default function LessonCard({
@@ -19,6 +20,7 @@ export default function LessonCard({
   image,
   video,
   isLocked,
+  lessonNumber,
 }: LessonCardProps) {
   const path = usePathname();
   const { courseId } = useParams();
@@ -77,12 +79,24 @@ export default function LessonCard({
   );
 
   if (isLocked) {
-    return cardContent;
+    return (
+      <div className="flex flex-1 flex-row items-center">
+        <Small className="mr-2 text-muted-foreground font-bold ">
+          {lessonNumber}
+        </Small>
+        {cardContent}
+      </div>
+    );
   }
 
   return (
     <Link href={`/courses/${courseId}/${lessonId}`} className="block">
-      {cardContent}
+      <div className="flex flex-1 flex-row items-center">
+        <Small className="mr-2 text-muted-foreground font-bold">
+          {lessonNumber}
+        </Small>
+        {cardContent}
+      </div>
     </Link>
   );
 }

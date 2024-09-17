@@ -59,6 +59,7 @@ export const LessonList: React.FC<LessonListProps> = ({
           key={lesson.lessonId}
           {...lesson}
           isLocked={index >= freeLessonsCount}
+          lessonNumber={index + 1}
         />
       ))}
       {visibleLessons < lessons.length && (
