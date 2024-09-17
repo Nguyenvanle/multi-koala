@@ -6,8 +6,8 @@ const CircleStyle = () => {
   return (
     <View style={styles.container}>
       <View style={{ top: -200, left: -200 }}>
-        <View style={styles.blueCircle}>
-          <View style={styles.blueHalf} />
+        <View style={styles.tealCircle}>
+          <View style={styles.tealHalf} />
         </View>
       </View>
       <View style={{ left: -350, top: -200 }}>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     backgroundColor: Colors.background,
   },
-  blueCircle: {
+  tealCircle: {
     width: 300,
     height: 300,
     backgroundColor: Colors.teal_light, // Màu xanh
@@ -37,8 +37,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0, // Đặt ở phía trên cùng
     left: 0, // Đặt ở phía bên trái
+    shadowOpacity: 1,
+    shadowColor: Colors.grey,
   },
-  blueHalf: {
+  tealHalf: {
     width: "100%",
     height: "50%", // Chỉ hiển thị nửa trên
     backgroundColor: Colors.teal_light,
@@ -55,6 +57,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 150, // Để nó nằm ở dưới hình tròn xanh
     left: 0,
+    shadowOpacity: 1,
+    shadowColor: Colors.grey,
   },
   whiteHalf: {
     width: "50%", // Chỉ hiển thị nửa bên trái

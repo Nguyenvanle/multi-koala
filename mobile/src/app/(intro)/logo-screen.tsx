@@ -1,10 +1,9 @@
 import { View, Text, Image, SafeAreaView, StatusBar } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { text } from "@/src/constants/Styles";
 import { StyleSheet } from "react-native";
 import { Colors } from "@/src/constants/Colors";
-import { Redirect, router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 const LogoScreen = () => {
   useEffect(() => {

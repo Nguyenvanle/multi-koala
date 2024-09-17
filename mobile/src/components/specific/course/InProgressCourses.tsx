@@ -1,25 +1,11 @@
-import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
+import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import API_MAIN from "@/src/feature/api/config";
 
-interface CourseData {
-  courseId: string;
-  courseName: string;
-  coursePrice: number;
-  image: {
-    imageUrl: string;
-  };
-  courseDescription: string;
-  uploadedByTeacher: {
-    firstname: string;
-    lastname: string;
-  };
-}
-
-const AllCourses = () => {
+const InProgressCourses = () => {
   const [courseData, setCourseData] = useState<CourseData[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,11 +17,11 @@ const AllCourses = () => {
 
         if (!token) {
           setErrorMessage("No token found. Please log in.");
-          console.error("Token not found");
+
           return;
         }
 
-        const response = await API_MAIN.get("/courses");
+        const response = await API_MAIN.get("/courses/my-enrolled-courses");
         console.log(response.data);
         if (response.data.code === 200) {
           setCourseData(response.data.result);
@@ -51,7 +37,6 @@ const AllCourses = () => {
     };
     fetchCourseData();
   }, []);
-
   const renderCourseItem = ({ item }: { item: CourseData }) => (
     <TouchableOpacity
       style={{
@@ -168,4 +153,4 @@ const AllCourses = () => {
   );
 };
 
-export default AllCourses;
+export default InProgressCourses;
