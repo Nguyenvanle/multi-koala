@@ -8,10 +8,22 @@ spring:
     url: "jdbc:mysql://localhost:3306/duokoala"
     username: root
     password: root
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL}
+    password: ${PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   jpa:
     hibernate:
 #      ddl-auto: update
-    show-sql: true
+#    show-sql: true
 
 jwt:
   signerKey: "9lg678a/5OweZHwtBKEjPfrwqe0wybmY0f67oNtqziI1UUSMM40iyrb481pdaf82"

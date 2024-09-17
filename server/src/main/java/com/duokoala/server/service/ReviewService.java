@@ -12,6 +12,7 @@ import com.duokoala.server.repository.ReviewRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,20 +34,22 @@ public class ReviewService {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
         var student = authenticationService.getAuthenticatedStudent();
-        if (Objects.nonNull(
-                reviewRepository
-                        .findByStudentIdAndCourseId(student.getUserId(), courseId)))
-            throw new AppException(ErrorCode.REVIEW_EXISTED);
         review.setStudent(student);
         review.setCourse(course);
         review.setReviewAt(LocalDateTime.now());
-        return reviewMapper.toReviewResponse(reviewRepository.save(review));
+
+        try {
+            reviewRepository.save(review);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.REVIEW_EXISTED);
+        }
+        return reviewMapper.toReviewResponse(review);
     }
 
     public ReviewResponse update(String reviewId, ReviewUpdateRequest request) {
         var review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
-        reviewMapper.updateReview(review,request);
+        reviewMapper.updateReview(review, request);
         review.setReviewAt(LocalDateTime.now());
         return reviewMapper.toReviewResponse(reviewRepository.save(review));
     }

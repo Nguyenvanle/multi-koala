@@ -144,7 +144,7 @@ public class CourseService {
 
     public List<CourseResponse> getMyEnrollCourse() {
         var courses = courseRepository
-                .findAllByUploadedByStudentId(authenticationService
+                .findAllEnrollCourseByStudentId(authenticationService
                         .getAuthenticatedStudent()
                         .getUserId());
         return courses.stream().map(course -> courseMapper

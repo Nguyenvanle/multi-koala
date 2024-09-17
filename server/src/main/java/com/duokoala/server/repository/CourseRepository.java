@@ -21,8 +21,9 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     @Query(nativeQuery = true,
             value ="SELECT c.* " +
                     "FROM course c JOIN enroll_course ec " +
+                    "ON c.course_id = ec.course_course_id " +
                     "WHERE ec.student_user_id = :studentId")
-    List<Course> findAllByUploadedByStudentId(@Param("studentId") String studentId);
+    List<Course> findAllEnrollCourseByStudentId(@Param("studentId") String studentId);
     List<Course> findAllByUploadedByTeacher(Teacher teacher);
     List<Course> findAllByStatus(Status status);
 }

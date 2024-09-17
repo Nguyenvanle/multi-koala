@@ -53,9 +53,7 @@ public enum ErrorCode {
     LEVEL_NOT_FOUND(404, "Not found: Level does not exist", HttpStatus.NOT_FOUND),
     FIELD_NOT_FOUND(404, "Not found: Field does not exist", HttpStatus.NOT_FOUND),
     REQUEST_DISCOUNT_NOT_FOUND(404, "Not found: Request discount does not exist", HttpStatus.NOT_FOUND),
-
-
-
+    EMAIL_NOT_FOUND(404, "Not Found: Email does not exist in Redis", HttpStatus.NOT_FOUND),
 
     UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     TOKEN_INVALID(401, "Invalid token", HttpStatus.UNAUTHORIZED),
@@ -65,7 +63,8 @@ public enum ErrorCode {
     INVALID_ANSWER_FORMAT(400, "Invalid format: Answers must be a Set of Strings", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN),
     INVALID_PASSWORD(401, "Invalid password: Password is incorrect", HttpStatus.UNAUTHORIZED),
-            ;
+    INVALID_OTP(400, "Invalid OTP: The provided OTP is incorrect", HttpStatus.BAD_REQUEST),
+    ;
     final int code;
     String message;
     private HttpStatusCode statusCode;

@@ -8,14 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, String> {
-    @Query(nativeQuery = true,
-            value = "SELECT * " +
-                    "FROM review " +
-                    "WHERE student_user_id = :studentId " +
-                    "AND course_course_id = :courseId")
-    Review findByStudentIdAndCourseId(
-            @Param("studentId") String studentId,
-            @Param("courseId") String courseId);
 
     @Query(nativeQuery = true,
             value = "SELECT AVG(rating) " +
