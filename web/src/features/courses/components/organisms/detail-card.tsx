@@ -43,7 +43,7 @@ const DetailCard = ({
 
   return (
     <Card className="flex flex-col w-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <CardHeader className="border-b">
+      <CardHeader className="flex flex-0 border-b">
         <div className="flex justify-between items-center">
           <TeacherLink className="text-sm font-medium text-secondary-foreground">
             {uploadByTeacher}
@@ -55,7 +55,7 @@ const DetailCard = ({
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col space-y-4 p-6">
+      <CardContent className="flex flex-col flex-1 space-y-4 p-6">
         <CardTitle className="text-2xl font-bold text-primary">
           {courseName}
         </CardTitle>
@@ -132,7 +132,7 @@ const DetailCard = ({
         </div>
       </CardContent>
 
-      <CardFooter className="border-t p-6">
+      <CardFooter className="border-t p-6 flex flex-0">
         <PriceButton
           discountedPrice={discountedPrice}
           originalPrice={coursePrice}

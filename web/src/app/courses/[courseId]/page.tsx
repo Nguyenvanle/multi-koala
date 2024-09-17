@@ -37,14 +37,15 @@ export default function CourseDetail({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
       {/* <CourseDetailCard course={course} totalDuration={duration} /> */}
-      <DisplayCard
-        courseImage={course.image.imageUrl}
-        courseName={course.courseName}
-      />
-
-      <LessonsCardPage lessons={lessons || []} />
+      <div className="flex flex-col gap-6">
+        <DisplayCard
+          courseImage={course.image.imageUrl}
+          courseName={course.courseName}
+        />
+        <LessonsCardPage lessons={lessons || []} />
+      </div>
 
       <DetailCard
         courseName={course.courseName}
