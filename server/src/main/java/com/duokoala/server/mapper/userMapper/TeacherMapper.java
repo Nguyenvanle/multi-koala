@@ -28,7 +28,6 @@ public abstract class TeacherMapper {
     @Mapping(target = "teacherRating",
             expression = "java(getAvgRatingTeacher(teacher.getUserId()))")
     public abstract TeacherResponse toTeacherResponse(Teacher teacher);
-//    public abstract TeacherResponse toTeacherResponse(Teacher teacher,float teacherRating);
 
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "roles", ignore = true)

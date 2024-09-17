@@ -30,33 +30,7 @@ public class CourseService {
     CourseMapper courseMapper;
     TypeRepository typeRepository;
     AuthenticationService authenticationService;
-    ReviewRepository reviewRepository;
     FieldRepository fieldRepository;
-    DiscountCourseRepository discountCourseRepository;
-    RequestDiscountRepository requestDiscountRepository;
-
-    float getAvgRatingCourse(String courseId) {
-        Float avgCourse = reviewRepository.getAvgCourse(courseId);
-        return avgCourse != null ? avgCourse : 0.0f;
-    }
-
-    float getAvgApprovedDiscountRate(String courseId) {
-        Float avgDiscountApproved = discountCourseRepository
-                .getAvgApprovedRatingDiscountByCourseId(courseId);
-        Float avgDiscountRequestApproved = requestDiscountRepository
-                .getAvgApprovedRatingRequestDiscountByCourseId(courseId);
-        if (avgDiscountApproved != null &&
-                avgDiscountRequestApproved != null)
-            return (avgDiscountApproved + avgDiscountRequestApproved) / 2;
-
-        else if (avgDiscountApproved != null)
-            return avgDiscountApproved;
-
-        else if (avgDiscountRequestApproved != null)
-            return avgDiscountRequestApproved;
-
-        else return 0.0f;
-    }
 
     public CourseResponse create(CourseCreateRequest request) {
         Course course = courseMapper.toCourse(request);
@@ -73,7 +47,7 @@ public class CourseService {
                 authenticationService.getAuthenticatedTeacher());
         course.setStatus(Status.PENDING_APPROVAL);
         course.setDeleted(false);
-        return courseMapper.toCourseResponse(courseRepository.save(course), 0.0f, 0.0f);
+        return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 
     public CourseResponse update(String courseId, CourseUpdateRequest request) {
@@ -86,59 +60,35 @@ public class CourseService {
         course.setFields(new HashSet<>(fields));
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.getImage().setImageUrl(request.getImageUrl());
-        return courseMapper.toCourseResponse(
-                courseRepository.save(course),
-                getAvgRatingCourse(courseId),
-                getAvgApprovedDiscountRate(course.getCourseId()));
+        return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 
     public CourseResponse get(String courseId) {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
-        return courseMapper.toCourseResponse(
-                course,
-                getAvgRatingCourse(courseId),
-                getAvgApprovedDiscountRate(course.getCourseId()));
+        return courseMapper.toCourseResponse(course);
     }
 
     public List<CourseResponse> getAll() {
         var courses = courseRepository.findAll();
-        return courses.stream().map(
-                        course -> courseMapper
-                                .toCourseResponse(course,
-                                        getAvgRatingCourse(course.getCourseId()),
-                                        getAvgApprovedDiscountRate(course.getCourseId())))
-                .toList();
+        return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
     public List<CourseResponse> getAvailableCourses() {
         var courses = courseRepository.findAllByStatus(Status.APPROVED);
-        return courses.stream().map(
-                        course -> courseMapper
-                                .toCourseResponse(course,
-                                        getAvgRatingCourse(course.getCourseId()),
-                                        getAvgApprovedDiscountRate(course.getCourseId())))
-                .toList();
+        return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
     public List<CourseResponse> getListByTeacherId(String teacherId) {
         var courses = courseRepository.getListByTeacherId(teacherId);
-        return courses.stream().map(course -> courseMapper
-                        .toCourseResponse(course,
-                                getAvgRatingCourse(course.getCourseId()),
-                                getAvgApprovedDiscountRate(course.getCourseId())))
-                .toList();
+        return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
     public List<CourseResponse> getMine() {
         var courses = courseRepository
                 .findAllByUploadedByTeacher
                         (authenticationService.getAuthenticatedTeacher());
-        return courses.stream().map(course -> courseMapper
-                        .toCourseResponse(course,
-                                getAvgRatingCourse(course.getCourseId()),
-                                getAvgApprovedDiscountRate(course.getCourseId())))
-                .toList();
+        return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
     public void delete(String courseId) {
@@ -156,7 +106,6 @@ public class CourseService {
             throw new AppException(ErrorCode.COURSE_ALREADY_APPROVED);
         course.setStatus(approvedStatus);
         course.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
-        return courseMapper.toCourseResponse(courseRepository.save(course),
-                0.0f, 0.0f);
+        return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 }

@@ -5,6 +5,9 @@ import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.CourseResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.mapper.userMapper.TeacherMapper;
+import com.duokoala.server.repository.DiscountCourseRepository;
+import com.duokoala.server.repository.RequestDiscountRepository;
+import com.duokoala.server.repository.ReviewRepository;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.mapstruct.Mapper;
@@ -17,6 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class CourseMapper {
     @Autowired
     protected TeacherMapper teacherMapper;
+    @Autowired
+    ReviewRepository reviewRepository;
+    @Autowired
+    DiscountCourseRepository discountCourseRepository;
+    @Autowired
+    RequestDiscountRepository requestDiscountRepository;
+
 
     @Mapping(target = "courseLevel", ignore = true)
     @Mapping(target = "types", ignore = true)
@@ -25,10 +35,34 @@ public abstract class CourseMapper {
 
     @Mapping(target = "uploadedByTeacher",
             expression = "java(teacherMapper.toTeacherResponse(course.getUploadedByTeacher()))")
-    public abstract CourseResponse toCourseResponse(Course course, float courseRating, float discountApprovedRate);
+    @Mapping(target = "courseRating",
+            expression = "java(getAvgRatingCourse(course.getCourseId()))")
+    @Mapping(target = "discountApprovedRate",
+            expression = "java(getAvgApprovedDiscountRate(course.getCourseId()))")
+    public abstract CourseResponse toCourseResponse(Course course);
 
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "courseLevel", ignore = true)
     @Mapping(target = "fields", ignore = true)
     public abstract void updateCourse(@MappingTarget Course course, CourseUpdateRequest request);
+
+    float getAvgRatingCourse(String courseId) {
+        Float avgCourse = reviewRepository.getAvgCourse(courseId);
+        return avgCourse != null ? avgCourse : 0.0f;
+    }
+
+    float getAvgApprovedDiscountRate(String courseId) {
+        Float avgDiscountApproved = discountCourseRepository
+                .getAvgApprovedRatingDiscountByCourseId(courseId);
+        Float avgDiscountRequestApproved = requestDiscountRepository
+                .getAvgApprovedRatingRequestDiscountByCourseId(courseId);
+        if (avgDiscountApproved != null &&
+                avgDiscountRequestApproved != null)
+            return (avgDiscountApproved + avgDiscountRequestApproved) / 2;
+        else if (avgDiscountApproved != null)
+            return avgDiscountApproved;
+        else if (avgDiscountRequestApproved != null)
+            return avgDiscountRequestApproved;
+        else return 0.0f;
+    }
 }
