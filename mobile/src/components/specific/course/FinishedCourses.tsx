@@ -16,8 +16,6 @@ const FinishedCourses = () => {
         const token = await AsyncStorage.getItem("token");
 
         if (!token) {
-          setErrorMessage("No token found. Please log in.");
-
           return;
         }
 
@@ -29,8 +27,7 @@ const FinishedCourses = () => {
           setErrorMessage(response.data.message);
         }
       } catch (error) {
-        console.error("Error fetching course data:", error);
-        setErrorMessage("Failed to fetch course data.");
+        setErrorMessage("Please sign in to fetch course data.");
       } finally {
         setLoading(false);
       }
@@ -139,7 +136,7 @@ const FinishedCourses = () => {
       }}
     >
       {loading ? (
-        <Text>Loading...</Text>
+        <Text style={{ ...text.p, color: Colors.teal_dark }}>Loading...</Text>
       ) : errorMessage ? (
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (

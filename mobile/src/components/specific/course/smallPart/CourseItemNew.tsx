@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   courseImage: {
     width: 110,
-    height: 90,
+    height: 100,
     borderRadius: 15,
     borderColor: Colors.grey,
     borderWidth: 1,

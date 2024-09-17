@@ -79,9 +79,10 @@ const UserAccount: React.FC = () => {
   const handleLogout = async () => {
     try {
       // Xóa token khỏi AsyncStorage
-      await AsyncStorage.removeItem("token", response.data.result.token);
+      await AsyncStorage.removeItem("token");
       // Xóa dữ liệu người dùng khỏi state
       setUserData(null);
+      console.log(setUserData);
       // Chuyển hướng đến màn hình đăng nhập
       router.replace("/(auth)/sign-in");
     } catch (error) {

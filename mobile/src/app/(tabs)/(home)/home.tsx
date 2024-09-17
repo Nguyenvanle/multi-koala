@@ -20,11 +20,9 @@ const Home = () => {
     <SafeAreaView
       style={{
         ...Styles.container,
-        top: -100,
       }}
     >
       <StatusBar barStyle={"dark-content"} />
-      <CircleStyle />
       <HeaderUser />
       <View
         style={{
@@ -52,7 +50,7 @@ const Home = () => {
           justifyContent: "space-between",
           alignItems: "center",
           width: 400,
-          paddingTop: 8,
+          top: -30,
           padding: 24,
           paddingBottom: 0,
         }}

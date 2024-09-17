@@ -1,40 +1,63 @@
-// app/courses/[id].tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import CourseDetails from "@/src/components/specific/course/CourseDetail";
-import { fetchCourseDetails } from "@/src/feature/api/course-details";
-import { Text, View } from "react-native";
+import { Styles, text } from "@/src/constants/Styles";
+import { Colors } from "@/src/constants/Colors";
 
-export default function CourseDetailsPage() {
+interface CourseDetails {
+  id: string;
+  title: string;
+  description: string;
+  // Thêm các trường khác theo cần thiết
+}
+
+const CourseDetailsScreen = () => {
   const { id } = useLocalSearchParams();
-  const [course, setCourse] = React.useState<CourseData | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState("");
+  const [courseDetails, setCourseDetails] = useState<CourseDetails | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    const loadCourseDetails = async () => {
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
       try {
-        setLoading(true);
-        const data = await fetchCourseDetails(id as string);
-        setCourse(data);
-      } catch (err) {
-        setError("Không thể tải thông tin khóa học. Vui lòng thử lại sau.");
-        console.error(err);
+        // Thay thế URL này bằng API thực tế của bạn
+        const response = await fetch(`https://your-api.com/courses/${id}`);
+        const data = await response.json();
+        setCourseDetails(data);
+      } catch (error) {
+        console.error("Error fetching course details:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    loadCourseDetails();
+    fetchCourseDetails();
   }, [id]);
 
   if (loading) {
-    return <Text>Đang tải...</Text>;
+    return (
+      <View style={Styles.container}>
+        <ActivityIndicator size="large" color={Colors.teal_dark} />
+      </View>
+    );
   }
 
-  if (error) {
-    return <Text>{error}</Text>;
+  if (!courseDetails) {
+    return (
+      <View style={Styles.container}>
+        <Text style={text.h4}>Course not found</Text>
+      </View>
+    );
   }
 
-  return course ? <CourseDetails course={course} /> : null;
-}
+  return (
+    <ScrollView style={Styles.container}>
+      <Text style={text.h2}>{courseDetails.title}</Text>
+      <Text style={text.p}>{courseDetails.description}</Text>
+      {/* Thêm các thông tin khác của khóa học ở đây */}
+    </ScrollView>
+  );
+};
+
+export default CourseDetailsScreen;

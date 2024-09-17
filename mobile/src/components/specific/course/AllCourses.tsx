@@ -11,7 +11,11 @@ const AllCourses = () => {
   const { courseData, errorMessage, loading } = useCourses();
 
   if (loading) {
-    return <Text>Đang tải...</Text>;
+    return (
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
+    );
   }
 
   if (errorMessage) {
@@ -125,6 +129,7 @@ const AllCourses = () => {
     <View
       style={{
         flex: 1,
+        paddingVertical: 10,
       }}
     >
       {loading ? (

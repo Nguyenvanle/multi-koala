@@ -10,13 +10,14 @@ import API_MAIN from "@/src/feature/api/config";
 import { Ionicons } from "@expo/vector-icons";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
+import { useCourses } from "@/src/hook/course/useCourse";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [progressCourses, setProgressCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { courseData, loading, error } = useCourses();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -195,19 +196,31 @@ const HeaderUser: React.FC = () => {
                 paddingVertical: 8,
               }}
             >
-              <Text
+              <View
                 style={{
-                  ...text.p,
-                  color: Colors.background,
+                  overflow: "hidden",
+                  alignItems: "center",
+                  width: 150,
+                  marginRight: 64,
                 }}
               >
-                Toeic 650+
-              </Text>
+                <Text
+                  style={{
+                    ...text.p,
+                    color: Colors.background,
+                  }}
+                  numberOfLines={1}
+                >
+                  {courseData && courseData.length > 0
+                    ? courseData[0].courseName
+                    : "No course available"}
+                </Text>
+              </View>
               <Text
                 style={{
                   ...text.small,
                   color: Colors.background,
-                  paddingLeft: 150,
+                  paddingTop: 2,
                 }}
               >
                 10/12
