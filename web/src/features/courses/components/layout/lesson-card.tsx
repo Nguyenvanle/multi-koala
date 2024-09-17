@@ -1,6 +1,7 @@
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
+import Link from "next/link";
 
 interface LessonsCardProps {
   lessons: LessonDetailResult[] | null;
