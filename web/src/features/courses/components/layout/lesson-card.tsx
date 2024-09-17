@@ -29,6 +29,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
             lessons={lessons}
             visibleLessons={visibleLessons}
             onLoadMore={onLoadMore}
+            freeLessonsCount={3}
           />
         ) : (
           <div className="h-[20vh] content-center">

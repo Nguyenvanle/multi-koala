@@ -16,12 +16,14 @@ interface LessonListProps {
   lessons: LessonDetailResult[];
   visibleLessons: number;
   onLoadMore: () => void;
+  freeLessonsCount: number; // New prop to determine how many lessons are free
 }
 
 export const LessonList: React.FC<LessonListProps> = ({
   lessons,
   visibleLessons,
   onLoadMore,
+  freeLessonsCount,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -51,9 +53,13 @@ export const LessonList: React.FC<LessonListProps> = ({
   }, [handleObserver]);
 
   return (
-    <ScrollArea className="min-h-[200px] max-h-[260px] lg:max-h-[56vh]  w-full items-start pr-4">
-      {lessons.slice(0, visibleLessons).map((lesson) => (
-        <LessonCard key={lesson.lessonId} {...lesson} />
+    <ScrollArea className="min-h-[200px] max-h-[260px] lg:max-h-[56vh] w-full items-start pr-4">
+      {lessons.slice(0, visibleLessons).map((lesson, index) => (
+        <LessonCard
+          key={lesson.lessonId}
+          {...lesson}
+          isLocked={index >= freeLessonsCount}
+        />
       ))}
       {visibleLessons < lessons.length && (
         <div ref={scrollRef} style={{ height: "20px" }} />
