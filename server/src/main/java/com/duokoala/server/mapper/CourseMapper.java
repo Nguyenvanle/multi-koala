@@ -27,7 +27,6 @@ public abstract class CourseMapper {
             expression = "java(teacherMapper.toTeacherResponse(course.getUploadedByTeacher()))")
     public abstract CourseResponse toCourseResponse(Course course, float courseRating, float discountApprovedRate);
 
-
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "courseLevel", ignore = true)
     @Mapping(target = "fields", ignore = true)
