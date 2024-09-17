@@ -16,10 +16,7 @@ const PriceButton: React.FC<PriceButtonProps> = ({
   onClick,
 }) => {
   return (
-    <Button
-      className="flex-1 flex-grow self-stretch space-x-1"
-      onClick={onClick}
-    >
+    <Button className="flex-1 flex-grow  space-x-1" onClick={onClick}>
       <span className={`font-bold ${className}`}>{`$${discountedPrice.toFixed(
         2
       )}`}</span>

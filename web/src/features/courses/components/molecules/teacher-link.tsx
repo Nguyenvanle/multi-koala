@@ -2,11 +2,18 @@
 import Link from "next/link";
 
 type TeacherLinkProps = {
-  teacherName: string;
+  children: React.ReactNode;
+  className?: string;
 };
 
-export const TeacherLink: React.FC<TeacherLinkProps> = ({ teacherName }) => (
-  <Link href="" className="hover:text-primary mt-1.5 font-medium">
-    {teacherName}
+export const TeacherLink: React.FC<TeacherLinkProps> = ({
+  children,
+  className,
+}) => (
+  <Link
+    href=""
+    className={"hover:text-primary mt-1.5 font-medium " + className}
+  >
+    {children}
   </Link>
 );

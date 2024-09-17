@@ -37,7 +37,7 @@ export default function CourseDetail({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-4">
       {/* <CourseDetailCard course={course} totalDuration={duration} /> */}
       <DisplayCard
         courseImage={course.image.imageUrl}

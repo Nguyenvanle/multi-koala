@@ -18,10 +18,10 @@ export const CoursesList: React.FC<CoursesListProps> = ({
   if (loading) {
     return (
       <div className="grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <Skeleton className="flex w-[94vw] h-[500px]" />
-        <Skeleton className="flex w-[94vw] h-[500px]" />
-        <Skeleton className="flex w-[94vw] h-[500px]" />
-        <Skeleton className="flex w-[94vw] h-[500px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
       </div>
     );
   }
