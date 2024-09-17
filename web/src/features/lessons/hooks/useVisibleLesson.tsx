@@ -7,6 +7,7 @@ export const useVisibleLessons = (initialLessons: LessonsResult) => {
   const loadMoreLessons = useCallback(() => {
     if (!initialLessons) return;
     setVisibleLessons((prev) => Math.min(prev + 10, initialLessons.length));
+    console.log("flag");
   }, [initialLessons]);
 
   return {

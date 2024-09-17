@@ -10,7 +10,7 @@ import { CirclePlay } from "lucide-react";
 import { LessonBody } from "@/features/lessons/schema/lessons";
 import { convertDuration } from "@/lib/utils";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 export default function LessonCard({
   lessonId,
@@ -18,14 +18,20 @@ export default function LessonCard({
   image,
   video,
 }: LessonBody) {
+  const path = usePathname();
   const { courseId } = useParams();
   const [imageLoading, setImageLoading] = useState(true);
 
   const { hours, minutes, seconds } = convertDuration(video.videoDuration);
+  const isSelectedLesson = path === `/courses/${courseId}/${lessonId}`;
 
   return (
     <Link href={`/courses/${courseId}/${lessonId}`} className="block">
-      <Card className="flex flex-row w-full rounded-sm overflow-hidden shadow-none mb-2 hover:shadow-md">
+      <Card
+        className={`flex flex-row w-full rounded-sm overflow-hidden shadow-none mb-2 hover:shadow-md ${
+          isSelectedLesson && "bg-accent"
+        }`}
+      >
         <CardContent className="p-0 relative">
           {imageLoading && (
             <Skeleton className="h-20 w-20 rounded-none absolute top-0 left-0 z-10" />

@@ -51,7 +51,7 @@ export const LessonList: React.FC<LessonListProps> = ({
   }, [handleObserver]);
 
   return (
-    <ScrollArea className="min-h-[260px] max-h-[50vh] w-full items-start pr-4">
+    <ScrollArea className="min-h-[200px] max-h-[260px] lg:max-h-[56vh]  w-full items-start pr-4">
       {lessons.slice(0, visibleLessons).map((lesson) => (
         <LessonCard key={lesson.lessonId} {...lesson} />
       ))}

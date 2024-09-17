@@ -1,3 +1,4 @@
+// Cập nhật mã TypeScript để đảm bảo rằng bạn có thể gọi useLessons mà không cần truyền tham số
 import { lessonService } from "@/features/lessons/services/lesson";
 import {
   LessonResponse,
@@ -9,7 +10,7 @@ interface UseLessonsProps {
   params?: { courseId?: string };
 }
 
-export default function useLessons({ params }: UseLessonsProps) {
+export default function useLessons(params?: UseLessonsProps) {
   const [lessons, setLessons] = useState<LessonsResult | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,8 +19,9 @@ export default function useLessons({ params }: UseLessonsProps) {
   useEffect(() => {
     const fetchLessons = async () => {
       try {
-        const { result } = params?.courseId
-          ? await lessonService.getAllByCourseId(params.courseId)
+        // Nếu không có courseId thì gọi API lấy toàn bộ bài học
+        const { result } = params?.params?.courseId
+          ? await lessonService.getAllByCourseId(params.params.courseId)
           : await lessonService.getAll();
 
         // Kiểm tra nếu res.result tồn tại
@@ -34,13 +36,18 @@ export default function useLessons({ params }: UseLessonsProps) {
     };
 
     fetchLessons();
+  }, [params]); // Chỉ phụ thuộc vào params
 
-    const totalDuration = lessons?.reduce((total, lesson) => {
-      return total + (lesson.video.videoDuration || 0); // Cộng dồn videoDuration, đảm bảo nó có giá trị
-    }, 0);
+  // Tính toán tổng duration khi lessons được cập nhật
+  useEffect(() => {
+    if (lessons) {
+      const totalDuration = lessons.reduce((total, lesson) => {
+        return total + (lesson.video.videoDuration || 0); // Cộng dồn videoDuration, đảm bảo nó có giá trị
+      }, 0);
 
-    if (totalDuration) setDuration(totalDuration);
-  }, [lessons, params]); // Thêm params vào dependency array
+      setDuration(totalDuration);
+    }
+  }, [lessons]); // Phụ thuộc vào lessons để cập nhật duration
 
   return { lessons, loading, error, duration };
 }
