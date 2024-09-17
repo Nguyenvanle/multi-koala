@@ -1,6 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { H1 } from "@/components/ui/typography";
 import { LessonDetailPage } from "@/features/lessons/components/organism/lesson-detail";
 import useLesson from "@/features/lessons/hooks/useLesson";
 
@@ -16,8 +17,19 @@ export default function LessonTemplate({
   // Kiểm tra trạng thái loading
   if (loading) {
     return (
-      <div className="grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+      <div className="flex flex-1 items-center justify-center">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-4 w-full">
+          <div className="xl:col-span-2">
+            <Skeleton className="w-full aspect-video" />
+          </div>
+          <div className="xl:col-span-1">
+            <Skeleton className="h-[500px] w-full" />
+          </div>
+          <div className="flex gap-6 flex-col xl:col-span-3">
+            <Skeleton className="h-[200px] w-full" />
+            <Skeleton className="h-[200px] w-full" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -25,8 +37,21 @@ export default function LessonTemplate({
   // Kiểm tra nếu không có khóa học
   if (!lesson) {
     return (
-      <div className="flex items-center justify-center w-full h-[500px]">
-        <p className="text-lg ">No courses found.</p>
+      <div className="flex flex-1 items-center justify-center">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-4 w-full">
+          <div className="xl:col-span-2 items-center">
+            <Skeleton className="w-full aspect-video justify-center items-center content-center">
+              <H1 className="text-center">NO COURSE FOUND</H1>
+            </Skeleton>
+          </div>
+          <div className="xl:col-span-1">
+            <Skeleton className="h-[500px] w-full" />
+          </div>
+          <div className="flex gap-6 flex-col xl:col-span-3">
+            <Skeleton className="h-[200px] w-full" />
+            <Skeleton className="h-[200px] w-full" />
+          </div>
+        </div>
       </div>
     );
   }

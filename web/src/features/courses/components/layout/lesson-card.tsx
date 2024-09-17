@@ -1,4 +1,5 @@
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import Link from "next/link";
@@ -21,7 +22,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
       </CardHeader>
       <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (
-          <div>Loading...</div>
+          <Skeleton className="w-[100vw] h-[100vh]"></Skeleton>
         ) : lessons.length > 0 ? (
           <LessonList
             lessons={lessons}
@@ -29,7 +30,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
             onLoadMore={onLoadMore}
           />
         ) : (
-          <div>No lessons found.</div>
+          <Skeleton className="w-[100vw] h-[100vh]"></Skeleton>
         )}
       </CardFooter>
     </Card>

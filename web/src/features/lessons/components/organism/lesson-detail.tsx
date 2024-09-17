@@ -1,6 +1,7 @@
 // Để xử lý lỗi Type 'LessonsResult | null' is not assignable to parameter of type 'LessonsResult',
 // bạn cần thêm một bước kiểm tra trước khi gọi hook useVisibleLessons.
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { LessonsCard } from "@/features/courses/components/layout/lesson-card";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import { LessonInfo } from "@/features/lessons/components/atoms/lesson-info";
@@ -34,7 +35,7 @@ export const LessonDetailPage: React.FC<LessonDetailPageProps> = ({
   const { visibleLessons, loadMoreLessons } = useVisibleLessons(lessons || []);
 
   if (loading) {
-    return <div>Loading lessons...</div>;
+    return <Skeleton className="w-[100vw] h-[100vw]" />;
   }
 
   if (error) {

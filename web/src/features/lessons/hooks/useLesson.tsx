@@ -5,12 +5,11 @@ import { useEffect, useState } from "react";
 
 export default function useLesson({ params }: { params: { lessonId: string } }) {
   const [lesson, setLesson] = useState<LessonDetailResult | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLesson = async () => {
-      setLoading(true);
       try {
         const { result } = await lessonService.getDetail(params.lessonId);
         setLesson(result?.result as any);
