@@ -49,7 +49,7 @@ const CourseList = () => {
   };
 
   return (
-    <SafeAreaView style={Styles.container}>
+    <SafeAreaView style={{ ...Styles.container, top: -62 }}>
       <StatusBar barStyle="dark-content" />
       <HeaderUser />
       <View style={styles.tabContainer}>

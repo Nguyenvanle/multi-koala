@@ -20,6 +20,7 @@ const Home = () => {
     <SafeAreaView
       style={{
         ...Styles.container,
+        top: -100,
       }}
     >
       <StatusBar barStyle={"dark-content"} />
@@ -32,8 +33,7 @@ const Home = () => {
           alignItems: "center",
           width: 400,
           paddingHorizontal: 24,
-          paddingTop: 32,
-          paddingBottom: 0,
+          paddingTop: 16,
         }}
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>My Courses</Text>
@@ -52,7 +52,7 @@ const Home = () => {
           justifyContent: "space-between",
           alignItems: "center",
           width: 400,
-          paddingTop: 24,
+          paddingTop: 8,
           padding: 24,
           paddingBottom: 0,
         }}

@@ -91,7 +91,7 @@ const UserAccount: React.FC = () => {
   };
   return (
     <ScrollView
-      style={{ top: -50, width: 415, paddingTop: 42, paddingHorizontal: 16 }}
+      style={{ top: -61, width: 415, paddingTop: 42, paddingHorizontal: 16 }}
     >
       <View
         style={{
@@ -107,32 +107,29 @@ const UserAccount: React.FC = () => {
             style={{
               justifyContent: "center",
               alignItems: "center",
-              padding: 8,
+              padding: 16,
             }}
           >
             <View
               style={{
                 justifyContent: "center",
-                alignItems: "baseline",
-                flexDirection: "column",
+                alignItems: "center",
+                paddingBottom: 8,
               }}
             >
-              <Text style={text.h4}>Welcome</Text>
-              <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+              <Image
+                style={{
+                  width: 160,
+                  height: 160,
+                  borderRadius: 80,
+                  marginBottom: 8,
+                }}
+                source={{ uri: userData.image.imageUrl }}
+              />
+              <Text style={{ ...text.h3, color: Colors.teal_dark }}>
                 {userData.firstname} {userData.lastname}
               </Text>
             </View>
-            {userData.image && (
-              <Image
-                source={{ uri: userData.image.imageUrl }}
-                style={{
-                  width: 75,
-                  height: 75,
-                  borderRadius: 35,
-                  justifyContent: "flex-end",
-                }}
-              />
-            )}
           </View>
         ) : (
           <View
@@ -158,7 +155,7 @@ const UserAccount: React.FC = () => {
                   marginBottom: 8,
                 }}
               />
-              <Text style={text.h4}>User</Text>
+              <Text style={text.h3}>User</Text>
             </View>
           </View>
         )}
@@ -188,9 +185,7 @@ const UserAccount: React.FC = () => {
               color={Colors.teal_dark}
               style={{ paddingRight: 24 }}
             />
-            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
-              My Profile
-            </Text>
+            <Text style={{ ...text.h4, color: Colors.black }}>My Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={{ flexDirection: "row", width: 300 }}>
@@ -200,9 +195,7 @@ const UserAccount: React.FC = () => {
               color={Colors.teal_dark}
               style={{ paddingRight: 24 }}
             />
-            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
-              Password
-            </Text>
+            <Text style={{ ...text.h4, color: Colors.black }}>Password</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -229,7 +222,7 @@ const UserAccount: React.FC = () => {
               color={Colors.teal_dark}
               style={{ paddingRight: 24 }}
             />
-            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+            <Text style={{ ...text.h4, color: Colors.black }}>
               Terms & Policies
             </Text>
           </TouchableOpacity>
@@ -240,7 +233,7 @@ const UserAccount: React.FC = () => {
               color={Colors.teal_dark}
               style={{ paddingRight: 24 }}
             />
-            <Text style={{ ...text.h4, color: Colors.teal_dark }}>Support</Text>
+            <Text style={{ ...text.h4, color: Colors.black }}>Support</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -265,7 +258,7 @@ const UserAccount: React.FC = () => {
               color={Colors.teal_dark}
               style={{ paddingRight: 24 }}
             />
-            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+            <Text style={{ ...text.h4, color: Colors.black }}>
               Bank Account
             </Text>
           </TouchableOpacity>
@@ -288,12 +281,10 @@ const UserAccount: React.FC = () => {
             <MaterialCommunityIcons
               name="logout"
               size={28}
-              color={Colors.teal_dark}
+              color={Colors.red}
               style={{ paddingRight: 24 }}
             />
-            <Text style={{ ...text.h4, color: Colors.super_teal_dark }}>
-              Log Out
-            </Text>
+            <Text style={{ ...text.h4, color: Colors.red }}>Log Out</Text>
           </TouchableOpacity>
         </View>
 

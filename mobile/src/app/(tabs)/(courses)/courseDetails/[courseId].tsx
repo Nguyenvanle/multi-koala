@@ -1,21 +1,40 @@
-import { View, Text, TouchableOpacity } from "react-native";
+// app/courses/[id].tsx
 import React from "react";
-import { router, useLocalSearchParams } from "expo-router";
-import { Styles } from "@/src/constants/Styles";
+import { useLocalSearchParams } from "expo-router";
+import CourseDetails from "@/src/components/specific/course/CourseDetail";
+import { fetchCourseDetails } from "@/src/feature/api/course-details";
+import { Text, View } from "react-native";
 
-const CourseDetails = () => {
-  const { courseId } = useLocalSearchParams();
+export default function CourseDetailsPage() {
+  const { id } = useLocalSearchParams();
+  const [course, setCourse] = React.useState<CourseData | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
 
-  return (
-    <View style={Styles.container}>
-      <TouchableOpacity onPress={() => router.push(`./lessons/abc`)}>
-        <Text>Course Details: {courseId}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text>Back</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+  React.useEffect(() => {
+    const loadCourseDetails = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchCourseDetails(id as string);
+        setCourse(data);
+      } catch (err) {
+        setError("Không thể tải thông tin khóa học. Vui lòng thử lại sau.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-export default CourseDetails;
+    loadCourseDetails();
+  }, [id]);
+
+  if (loading) {
+    return <Text>Đang tải...</Text>;
+  }
+
+  if (error) {
+    return <Text>{error}</Text>;
+  }
+
+  return course ? <CourseDetails course={course} /> : null;
+}

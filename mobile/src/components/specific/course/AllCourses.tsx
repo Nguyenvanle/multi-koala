@@ -5,39 +5,18 @@ import API_MAIN from "@/src/feature/api/config";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import * as Progress from "react-native-progress";
+import { useCourses } from "@/src/hook/course/useCourse";
 
 const AllCourses = () => {
-  const [courseData, setCourseData] = useState<CourseData[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const { courseData, errorMessage, loading } = useCourses();
 
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
+  if (loading) {
+    return <Text>Đang tải...</Text>;
+  }
 
-        if (!token) {
-          setErrorMessage("No token found. Please log in.");
-
-          return;
-        }
-
-        const response = await API_MAIN.get("/courses");
-        console.log(response.data);
-        if (response.data.code === 200) {
-          setCourseData(response.data.result);
-        } else {
-          setErrorMessage(response.data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching course data:", error);
-        setErrorMessage("Failed to fetch course data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourseData();
-  }, []);
+  if (errorMessage) {
+    return <Text>{errorMessage}</Text>;
+  }
 
   const renderCourseItem = ({ item }: { item: CourseData }) => (
     <View
@@ -45,6 +24,7 @@ const AllCourses = () => {
         justifyContent: "center",
         alignItems: "center",
         width: 350,
+        marginTop: 28,
       }}
     >
       <Image
@@ -122,7 +102,7 @@ const AllCourses = () => {
               height: 50,
               width: 330,
               marginTop: 8,
-              marginBottom: 24,
+              marginBottom: 8,
               justifyContent: "center",
             }}
           >
@@ -145,7 +125,6 @@ const AllCourses = () => {
     <View
       style={{
         flex: 1,
-        paddingVertical: 10,
       }}
     >
       {loading ? (
@@ -157,7 +136,7 @@ const AllCourses = () => {
           data={courseData}
           renderItem={renderCourseItem}
           keyExtractor={(item) => item.courseId}
-          contentContainerStyle={{ paddingBottom: 200 }}
+          style={{ marginBottom: -25 }}
         />
       )}
     </View>
