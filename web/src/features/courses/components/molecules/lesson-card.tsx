@@ -80,7 +80,10 @@ export default function LessonCard({
 
   if (isLocked) {
     return (
-      <div className="flex flex-1 flex-row items-center">
+      <div
+        className="flex flex-1 flex-row items-center"
+        title="Enroll in this course to unlock additional lessons and advanced content!"
+      >
         <Small className="mr-2 text-muted-foreground font-bold ">
           {lessonNumber}
         </Small>

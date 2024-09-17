@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { H2, H3, H4, P } from "@/components/ui/typography";
+import Link from "next/link";
 
 type PriceButtonProps = {
   discountedPrice: number;
@@ -31,7 +32,9 @@ const PriceButton: React.FC<PriceButtonProps> = ({
         </H4>
       </div>
 
-      <Button onClick={onClick}>Enroll Now</Button>
+      <Button onClick={onClick}>
+        <Link href={"/login"}>Enroll Now</Link>
+      </Button>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,6 +40,14 @@ const DetailCard = ({
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
   const { hours, minutes } = convertDuration(totalDuration || 0);
+
+  const enrollHandler = () => {
+    toast({
+      title: "Login Required",
+      description: "You need to be logged in to enroll in this course.",
+      duration: 3000,
+    });
+  };
 
   return (
     <Card className="flex flex-col w-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -137,7 +145,7 @@ const DetailCard = ({
           discountedPrice={discountedPrice}
           originalPrice={coursePrice}
           discount={discount}
-          onClick={() => {}}
+          onClick={enrollHandler}
         />
       </CardFooter>
     </Card>
