@@ -19,6 +19,7 @@ import { TeacherLink } from "@/features/courses/components/molecules/teacher-lin
 type DetailCardProps = CourseCardProps & {
   totalDuration: number | null;
   totalLessons: number | null;
+  teacherId: string;
 };
 
 const DetailCard = ({
@@ -34,6 +35,7 @@ const DetailCard = ({
   courseType,
   courseFields,
   courseLevel,
+  teacherId,
 }: DetailCardProps) => {
   const discount = courseDiscount;
   const discountedPrice = coursePrice - coursePrice * discount;
@@ -53,7 +55,10 @@ const DetailCard = ({
     <Card className="flex flex-col w-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="flex flex-0 border-b">
         <div className="flex justify-between items-center">
-          <TeacherLink className="text-sm font-medium text-secondary-foreground">
+          <TeacherLink
+            href={`/teachers/${teacherId}`}
+            className="text-sm font-medium text-secondary-foreground"
+          >
             {uploadByTeacher}
           </TeacherLink>
           <Badge className="bg-yellow-400 text-yellow-900">

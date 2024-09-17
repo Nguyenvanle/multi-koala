@@ -74,6 +74,7 @@ export default function CourseDetail({
         }
         status={course.status}
         courseLevel={course.courseLevel}
+        teacherId={course.uploadedByTeacher.userId}
       />
     </div>
   );
