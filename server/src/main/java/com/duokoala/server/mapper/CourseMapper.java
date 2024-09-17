@@ -27,7 +27,6 @@ public abstract class CourseMapper {
     @Autowired
     RequestDiscountRepository requestDiscountRepository;
 
-
     @Mapping(target = "courseLevel", ignore = true)
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "fields", ignore = true)

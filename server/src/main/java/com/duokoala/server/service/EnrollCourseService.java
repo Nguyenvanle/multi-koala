@@ -38,7 +38,6 @@ public class EnrollCourseService {
                 .enrollAt(LocalDateTime.now())
                 .process(0)
                 .build();
-
         try {
 
             enrollCourseRepository.save(enrollCourse);
@@ -71,10 +70,7 @@ public class EnrollCourseService {
 
     public List<MyEnrollCourseResponse> getMyEnrollCourse() {
         var enrollCourses = enrollCourseRepository
-                .findEnrollCoursesByStudentId(authenticationService
-                        .getAuthenticatedStudent()
-                        .getUserId());
-        return enrollCourses
-                .stream().map(enrollCourseMapper::toMyEnrollCourseResponse).toList();
+                .findAllByStudent(authenticationService.getAuthenticatedStudent());
+        return enrollCourses.stream().map(enrollCourseMapper::toMyEnrollCourseResponse).toList();
     }
 }

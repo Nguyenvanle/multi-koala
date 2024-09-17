@@ -63,16 +63,9 @@ public class CourseController {
     @GetMapping("/courses/my-uploaded-courses")
     ApiResponse<List<CourseResponse>> getMyCourses() {
         return ApiResponse.<List<CourseResponse>>builder()
-                .result(courseService.getMine())
+                .result(courseService.getMyUploadedCourses())
                 .build();
     }
-
-//    @GetMapping("/courses/my-enrolled-courses")
-//    ApiResponse<List<CourseResponse>> getMyEnrollCourses() {
-//        return ApiResponse.<List<CourseResponse>>builder()
-//                .result(courseService.getMyEnrollCourse())
-//                .build();
-//    }
 
     @GetMapping("teachers/{teacherId}/courses")
     ApiResponse<List<CourseResponse>> getListByTeacherId(@PathVariable String teacherId) {

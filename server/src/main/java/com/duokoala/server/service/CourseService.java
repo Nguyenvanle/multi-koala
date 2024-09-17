@@ -84,7 +84,7 @@ public class CourseService {
         return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
-    public List<CourseResponse> getMine() {
+    public List<CourseResponse> getMyUploadedCourses() {
         var courses = courseRepository
                 .findAllByUploadedByTeacher
                         (authenticationService.getAuthenticatedTeacher());

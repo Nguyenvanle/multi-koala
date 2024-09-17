@@ -3,6 +3,7 @@ package com.duokoala.server.controller;
 import com.duokoala.server.dto.request.EnrollCourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
+import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.service.EnrollCourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,13 @@ public class EnrollCourseController {
     ApiResponse<EnrollCourseResponse> get(@PathVariable String enrollCourseId) {
         return ApiResponse.<EnrollCourseResponse>builder()
                 .result(enrollCourseService.get(enrollCourseId))
+                .build();
+    }
+
+    @GetMapping("/enroll-courses/my-enrolled-courses")
+    ApiResponse<List<MyEnrollCourseResponse>> getMyEnrollCourses() {
+        return ApiResponse.<List<MyEnrollCourseResponse>>builder()
+                .result(enrollCourseService.getMyEnrollCourse())
                 .build();
     }
 
