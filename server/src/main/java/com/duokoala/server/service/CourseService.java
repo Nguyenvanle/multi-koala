@@ -121,7 +121,6 @@ public class CourseService {
                 .toList();
     }
 
-
     public List<CourseResponse> getListByTeacherId(String teacherId) {
         var courses = courseRepository.getListByTeacherId(teacherId);
         return courses.stream().map(course -> courseMapper
@@ -137,19 +136,6 @@ public class CourseService {
                         (authenticationService.getAuthenticatedTeacher());
         return courses.stream().map(course -> courseMapper
                         .toCourseResponse(course,
-                                getAvgRatingCourse(course.getCourseId()),
-                                getAvgApprovedDiscountRate(course.getCourseId())))
-                .toList();
-    }
-
-    public List<CourseResponse> getMyEnrollCourse() {
-        var courses = courseRepository
-                .findAllEnrollCourseByStudentId(authenticationService
-                        .getAuthenticatedStudent()
-                        .getUserId());
-        return courses.stream().map(course -> courseMapper
-                        .toCourseResponse(
-                                course,
                                 getAvgRatingCourse(course.getCourseId()),
                                 getAvgApprovedDiscountRate(course.getCourseId())))
                 .toList();

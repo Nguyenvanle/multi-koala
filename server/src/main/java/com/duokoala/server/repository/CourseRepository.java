@@ -25,5 +25,6 @@ public interface CourseRepository extends JpaRepository<Course, String> {
                     "WHERE ec.student_user_id = :studentId")
     List<Course> findAllEnrollCourseByStudentId(@Param("studentId") String studentId);
     List<Course> findAllByUploadedByTeacher(Teacher teacher);
+
     List<Course> findAllByStatus(Status status);
 }

@@ -2,7 +2,7 @@ package com.duokoala.server.controller;
 
 import com.duokoala.server.dto.request.EnrollCourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.EnrollCourseResponse;
+import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.service.EnrollCourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

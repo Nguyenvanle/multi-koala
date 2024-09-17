@@ -1,7 +1,8 @@
 package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.EnrollCourseUpdateRequest;
-import com.duokoala.server.dto.response.EnrollCourseResponse;
+import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
+import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.entity.EnrollCourse;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +67,14 @@ public class EnrollCourseService {
     public List<EnrollCourseResponse> getAll() {
         var enrollCourses = enrollCourseRepository.findAll();
         return enrollCourses.stream().map(enrollCourseMapper::toEnrollCourseResponse).toList();
+    }
+
+    public List<MyEnrollCourseResponse> getMyEnrollCourse() {
+        var enrollCourses = enrollCourseRepository
+                .findEnrollCoursesByStudentId(authenticationService
+                        .getAuthenticatedStudent()
+                        .getUserId());
+        return enrollCourses
+                .stream().map(enrollCourseMapper::toMyEnrollCourseResponse).toList();
     }
 }

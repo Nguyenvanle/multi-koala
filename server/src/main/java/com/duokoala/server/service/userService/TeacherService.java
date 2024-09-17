@@ -26,7 +26,6 @@ import java.util.List;
 public class TeacherService {
     TeacherRepository teacherRepository;
     TeacherMapper teacherMapper;
-    UserRepository userRepository;
     UserService userService;
     ReviewRepository reviewRepository;
     AuthenticationService authenticationService;
@@ -48,7 +47,7 @@ public class TeacherService {
         } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
-        return teacherMapper.toTeacherResponse(teacher, 0.0f);
+        return teacherMapper.toTeacherResponse(teacher/*, 0.0f*/);
     }
 
     public TeacherResponse updateTeacher(String teacherId, TeacherUpdateRequest request) {
@@ -58,24 +57,24 @@ public class TeacherService {
         userService.updateAvatarByUserId(teacher.getImage(), request.getImageUrl());
         teacher.setPassword(userService.encodePassword(request.getPassword()));
         return teacherMapper.toTeacherResponse(teacherRepository.save(teacher)
-                , getAvgRatingTeacher(teacherId));
+                /*,getAvgRatingTeacher(teacherId)*/);
     }
 
     public TeacherResponse getTeacher(String teacherId) {
         var teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
-        return teacherMapper.toTeacherResponse(teacher, getAvgRatingTeacher(teacherId));
+        return teacherMapper.toTeacherResponse(teacher);
     }
 
     public TeacherResponse getMyInfo() {
         var teacher = authenticationService.getAuthenticatedTeacher();
-        return teacherMapper.toTeacherResponse(teacher, getAvgRatingTeacher(teacher.getUserId()));
+        return teacherMapper.toTeacherResponse(teacher/*, getAvgRatingTeacher(teacher.getUserId())*/);
     }
 
     public List<TeacherResponse> getTeachers() {
         var teachers = teacherRepository.findAll();
-        return teachers.stream().map(teacher -> teacherMapper
-                .toTeacherResponse(teacher, getAvgRatingTeacher(teacher.getUserId()))
+        /*, getAvgRatingTeacher(teacher.getUserId())*/
+        return teachers.stream().map(teacherMapper::toTeacherResponse
         ).toList();
     }
 }

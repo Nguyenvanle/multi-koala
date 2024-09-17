@@ -67,12 +67,12 @@ public class CourseController {
                 .build();
     }
 
-    @GetMapping("/courses/my-enrolled-courses")
-    ApiResponse<List<CourseResponse>> getMyEnrollCourses() {
-        return ApiResponse.<List<CourseResponse>>builder()
-                .result(courseService.getMyEnrollCourse())
-                .build();
-    }
+//    @GetMapping("/courses/my-enrolled-courses")
+//    ApiResponse<List<CourseResponse>> getMyEnrollCourses() {
+//        return ApiResponse.<List<CourseResponse>>builder()
+//                .result(courseService.getMyEnrollCourse())
+//                .build();
+//    }
 
     @GetMapping("teachers/{teacherId}/courses")
     ApiResponse<List<CourseResponse>> getListByTeacherId(@PathVariable String teacherId) {
