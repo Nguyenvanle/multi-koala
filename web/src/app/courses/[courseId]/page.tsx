@@ -2,7 +2,8 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
-import { DetailCard } from "@/features/courses/components/organisms/detail-card";
+import DetailCard from "@/features/courses/components/organisms/detail-card";
+import CourseDetailCard from "@/features/courses/components/pages/course-detail-card";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useCourses from "@/features/courses/hooks/useCourses";
 import useLessons from "@/features/lessons/hooks/useLessons";
@@ -37,35 +38,34 @@ export default function CourseDetail({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
-      <div className="flex flex-col gap-4">
-        <DisplayCard
-          courseImage={course.image.imageUrl}
-          courseName={course.courseName}
-        />
-
-        <DetailCard
-          courseName={course.courseName}
-          coursePrice={course.coursePrice}
-          courseDescription={course.courseDescription}
-          uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
-          totalDuration={duration}
-          totalLessons={lessons?.length ?? 0}
-          courseRating={course.courseRating}
-          courseDiscount={course.discountApprovedRate}
-          courseId={course.courseId}
-          courseCreateAt={course.courseUploadedAt}
-          courseType={course.types}
-          courseFields={course.fields}
-          courseImage={course.image.imageUrl}
-          approvedByAdmin={
-            course.approvedByAdmin.firstname + course.approvedByAdmin.lastname
-          }
-          status={course.status}
-          courseLevel={course.courseLevel}
-        />
-      </div>
+      {/* <CourseDetailCard course={course} totalDuration={duration} /> */}
+      <DisplayCard
+        courseImage={course.image.imageUrl}
+        courseName={course.courseName}
+      />
 
       <LessonsCardPage lessons={lessons || []} />
+
+      <DetailCard
+        courseName={course.courseName}
+        coursePrice={course.coursePrice}
+        courseDescription={course.courseDescription}
+        uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
+        totalDuration={duration}
+        totalLessons={lessons?.length ?? 0}
+        courseRating={course.courseRating}
+        courseDiscount={course.discountApprovedRate}
+        courseId={course.courseId}
+        courseCreateAt={course.courseUploadedAt}
+        courseType={course.types}
+        courseFields={course.fields}
+        courseImage={course.image.imageUrl}
+        approvedByAdmin={
+          course.approvedByAdmin.firstname + course.approvedByAdmin.lastname
+        }
+        status={course.status}
+        courseLevel={course.courseLevel}
+      />
     </div>
   );
 }

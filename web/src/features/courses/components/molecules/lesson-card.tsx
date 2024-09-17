@@ -54,7 +54,7 @@ export default function LessonCard({
           </Small>
         </div>
 
-        <CirclePlay />
+        <CirclePlay className="text-primary" size={24} />
       </CardHeader>
     </Card>
   );

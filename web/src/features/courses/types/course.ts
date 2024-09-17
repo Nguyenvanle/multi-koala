@@ -53,3 +53,5 @@ export type CoursesResultResType = z.infer<typeof CoursesResultBodyType>;
 
 // Chi tiết khóa học
 export type CourseDetailResType = z.infer<typeof CourseDetailResponseBodyType>;
+
+export type CourseDetailResultResType = z.infer<typeof CourseBodyType>;

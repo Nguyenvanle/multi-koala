@@ -17,13 +17,15 @@ import PriceButton from "@/features/courses/components/atoms/price-button";
 import CourseBadges from "@/features/courses/components/molecules/course-badge";
 import { CourseCardProps } from "@/types/course/course";
 import CourseBadgeField from "@/features/courses/components/molecules/course-badge-fields";
+import { BarChart2, BookOpen, Calendar, Clock, Star } from "lucide-react";
+import { convertDuration } from "@/lib/utils";
 
 type DetailCardProps = CourseCardProps & {
   totalDuration: number | null;
   totalLessons: number | null;
 };
 
-export const DetailCard: React.FC<DetailCardProps> = ({
+const DetailCard = ({
   courseName,
   coursePrice,
   courseRating,
@@ -35,56 +37,96 @@ export const DetailCard: React.FC<DetailCardProps> = ({
   courseCreateAt,
   courseType,
   courseFields,
-}) => {
+  courseLevel,
+}: DetailCardProps) => {
   const discount = courseDiscount;
   const discountedPrice = coursePrice - coursePrice * discount;
-
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
-  const router = useRouter();
-
-  const handlePurchase = () => {
-    toast({
-      title: "Login Required",
-      description: "Please log in to your account to purchase courses.",
-      duration: 5000,
-    });
-    router.push("/login");
-  };
+  const { hours, minutes } = convertDuration(totalDuration || 0);
 
   return (
-    <Card className="flex flex-1 flex-col w-full rounded overflow-hidden hover:shadow-md">
-      <CardHeader className="flex-row justify-between pb-4 items-center">
-        <TeacherLink teacherName={uploadByTeacher} />
-        <Badge>⭐ {rating}</Badge>
+    <Card className="flex flex-col w-full  overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <CardHeader className="bg-gray-50 border-b">
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-medium text-gray-600">
+            {uploadByTeacher}
+          </span>
+          <Badge className="bg-yellow-400 text-yellow-900">
+            <Star className="w-4 h-4 mr-1" />
+            {rating}
+          </Badge>
+        </div>
       </CardHeader>
 
-      <CardContent className="flex flex-1 flex-col space-y-4">
-        <CardTitle className="line-clamp-2 text-2xl">{courseName}</CardTitle>
+      <CardContent className="flex flex-col space-y-4 p-6">
+        <CardTitle className="text-2xl font-bold text-gray-800">
+          {courseName}
+        </CardTitle>
 
-        <CourseInfo
-          totalDuration={totalDuration}
-          totalLessons={totalLessons}
-          createAt={courseCreateAt}
-        />
+        <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+          <div className="flex items-center">
+            <Clock className="w-4 h-4 mr-2" />
+            {hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`}
+          </div>
+          <div className="flex items-center">
+            <BookOpen className="w-4 h-4 mr-2" />
+            {totalLessons} lessons
+          </div>
+          <div className="flex items-center">
+            <Calendar className="w-4 h-4 mr-2" />
+            {new Date(courseCreateAt).toLocaleDateString()}
+          </div>
+          <div className="flex items-center">
+            <BarChart2 className="w-4 h-4 mr-2" />
+            {courseLevel}
+          </div>
+        </div>
 
-        <H4>Course Fields</H4>
-        <CourseBadgeField fields={courseFields} limitDisable />
+        <div className="space-y-3">
+          <H4 className="text-lg font-semibold text-gray-700">Course Fields</H4>
+          <div className="flex flex-wrap gap-2">
+            {courseFields.map((field) => (
+              <Badge
+                key={field.fieldName}
+                variant="outline"
+                className="bg-blue-50 text-blue-600 border-blue-200"
+              >
+                {field.fieldName}
+              </Badge>
+            ))}
+          </div>
+        </div>
 
-        <H4>Course Types</H4>
-        <CourseBadges courseType={courseType} limitDisable />
+        <div className="space-y-3">
+          <H4 className="text-lg font-semibold text-gray-700">Course Types</H4>
+          <div className="flex flex-wrap gap-2">
+            {courseType.map((type) => (
+              <Badge
+                key={type.typeName}
+                variant="outline"
+                className="bg-green-50 text-green-600 border-green-200"
+              >
+                {type.typeName}
+              </Badge>
+            ))}
+          </div>
+        </div>
 
-        <P>{courseDescription}</P>
+        <P className="text-gray-600">{courseDescription}</P>
       </CardContent>
 
-      <CardFooter className="flex flex-0">
+      <CardFooter className="bg-gray-50 border-t p-6">
         <PriceButton
           discountedPrice={discountedPrice}
           originalPrice={coursePrice}
           discount={discount}
-          onClick={handlePurchase}
+          onClick={() => {}}
+          className="w-full"
         />
       </CardFooter>
     </Card>
   );
 };
+
+export default DetailCard;
