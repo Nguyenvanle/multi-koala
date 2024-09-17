@@ -24,7 +24,15 @@ export default function CourseDetail({
 
   // Show a loading skeleton while courses or lessons are loading
   if (isLoading) {
-    return <Skeleton className="flex w-[96vw] h-[82vh]" />;
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
+        <div className="flex flex-col gap-6">
+          <Skeleton className="w-full aspect-video rounded-lg" />
+          <Skeleton className="w-full h-[300px] rounded-lg" />
+        </div>
+        <Skeleton className="w-full h-[800px] rounded-lg" />
+      </div>
+    );
   }
 
   // Handle case when course is not found after loading
