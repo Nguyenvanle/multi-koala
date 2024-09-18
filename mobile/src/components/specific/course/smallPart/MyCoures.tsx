@@ -5,10 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView,
   FlatList,
 } from "react-native";
-import CourseItem from "./CourseItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
@@ -17,6 +15,7 @@ import API_MAIN from "@/src/feature/api/config";
 
 const MyCourses = () => {
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -24,7 +23,6 @@ const MyCourses = () => {
     const fetchCourseData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log(token);
 
         if (token) {
           const response = await API_MAIN.get(
@@ -35,11 +33,15 @@ const MyCourses = () => {
               },
             }
           );
+          const user = await API_MAIN.get("/students/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           if (response.data.code === 200) {
             setCourseData(response.data.result);
-            console.log(courseData);
-            console.log(response.data.result[0].course.image);
+            setUserData(user.data.result);
           } else {
             setErrorMessage(response.data.message);
           }
@@ -60,6 +62,7 @@ const MyCourses = () => {
     );
   }
   const limitedCourses = courseData.slice(0, 5);
+  const getToken = AsyncStorage.getItem("token");
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
     <TouchableOpacity style={styles.courseContainer}>
       <Image
@@ -76,7 +79,7 @@ const MyCourses = () => {
   );
   return (
     <View style={styles.container}>
-      {courseData ? (
+      {userData ? (
         <FlatList
           horizontal={true}
           data={limitedCourses}
@@ -88,10 +91,9 @@ const MyCourses = () => {
         <TouchableOpacity
           onPress={() => router.replace("/(auth)/sign-in")}
           style={{
-            width: 300,
-            height: 221,
             justifyContent: "center",
             alignItems: "center",
+            width: 300,
           }}
         >
           <Text style={{ ...styles.clampedText, color: Colors.red }}>
@@ -113,6 +115,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 8,
+    width: 300,
+    height: 221,
   },
   courseContainer: {
     alignItems: "center",

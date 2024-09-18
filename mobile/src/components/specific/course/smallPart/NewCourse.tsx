@@ -58,7 +58,7 @@ const NewCourses = () => {
     </View>
   );
   return (
-    <View style={{ height: 220, top: -24 }}>
+    <View style={{ height: 240, top: -24 }}>
       {loading ? (
         <Text>Loading...</Text>
       ) : errorMessage ? (
