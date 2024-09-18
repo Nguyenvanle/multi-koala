@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import * as Progress from "react-native-progress";
@@ -138,10 +136,10 @@ const AllCourses = () => {
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={courseData}
           renderItem={renderCourseItem}
           keyExtractor={(item) => item.courseId}
-          style={{ marginBottom: -25 }}
         />
       )}
     </View>

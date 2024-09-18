@@ -4,118 +4,72 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ActivityIndicator,
+  FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import { text } from "@/src/constants/Styles";
 import { useCourses } from "@/src/hook/course/useCourse";
-import CourseItemNew from "./CourseItemNew";
-import { router } from "expo-router";
 
 const NewCourses = () => {
-  const { courseData, loading, error } = useCourses();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { courseData, loading, errorMessage } = useCourses();
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const user = await AsyncStorage.getItem("user");
-        setIsLoggedIn(!!user);
-      } catch (error) {
-        console.error("Error checking login status:", error);
-        setIsLoggedIn(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, []);
-
-  if (loading || error) {
-    return null; // Hoặc hiển thị loading/error state
+  if (loading) {
+    return (
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
+    );
+  }
+  if (errorMessage) {
+    return <Text>{errorMessage}</Text>;
   }
 
-  // Giả sử khóa học mới là 5 khóa học đầu tiên
-  const newCourses = courseData.slice(0, 2);
-  const handleCoursePress = (courseId: string) => {
-    router.push(`/(courses)/courseDetails/${courseId}`);
-  };
+  // Lấy 5 khóa học đầu tiên từ courseData
+  const limitedCourses = courseData.slice(0, 5);
 
-  return (
+  const renderCourseItem = ({ item }: { item: CourseData }) => (
     <View style={styles.container}>
-      {isLoggedIn ? (
-        <>
-          {newCourses.map((course) => (
-            <CourseItemNew key={course.courseId} course={course} />
-          ))}
-        </>
+      <TouchableOpacity style={styles.courseContainer}>
+        <Image
+          source={{ uri: item.image.imageUrl }}
+          style={styles.courseImage}
+        />
+        <View style={styles.containerText}>
+          <Text style={styles.clampedText} numberOfLines={1}>
+            {item.courseName}
+          </Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: 130,
+              paddingVertical: 8,
+            }}
+          >
+            <Text style={styles.duration}>1h 23m</Text>
+            <Text style={styles.duration}>12 lessons</Text>
+          </View>
+          <View style={{ paddingTop: 8 }}>
+            <Text style={styles.priceText}>${item.coursePrice}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+  return (
+    <View style={{ height: 220, top: -24 }}>
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : errorMessage ? (
+        <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (
-        <>
-          <TouchableOpacity
-            style={styles.courseContainer}
-            onPress={() => handleCoursePress(course.id)}
-          >
-            <Image
-              source={{
-                uri: "https://img.freepik.com/free-vector/cute-baby-koala-holding-branch-wood-balloon-cartoon-vector-icon-illustration-animal-nature-isolated_138676-12522.jpg?t=st=1726559345~exp=1726562945~hmac=82d5ee89d7fec0ddc0aaa90b04c6f43ff172481e6ba0dc3228fb910e63882009&w=826",
-              }}
-              style={styles.courseImage}
-            />
-            <View style={styles.containerText}>
-              <Text style={styles.clampedText} numberOfLines={1}>
-                English for Healthcare Professionals - Part 1
-              </Text>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: 130,
-                  paddingVertical: 8,
-                }}
-              >
-                <Text style={styles.duration}>1h 23m</Text>
-                <Text style={styles.duration}>12 lessons</Text>
-              </View>
-              <View style={{ paddingTop: 8 }}>
-                <Text style={styles.priceText}>$149.92</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.courseContainer}
-            onPress={() => handleCoursePress(course.id)}
-          >
-            <Image
-              source={{
-                uri: "https://img.freepik.com/free-vector/cute-koala-sitting-cartoon-vector-icon-illustration-animal-nature-icon-concept-isolated-flat_138676-7349.jpg?t=st=1726559704~exp=1726563304~hmac=37fbc0d73550b0d9c783eef8bbd63f7f826b5e686a982c7bfe3376474b967f64&w=826",
-              }}
-              style={styles.courseImage}
-            />
-            <View style={styles.containerText}>
-              <Text style={styles.clampedText} numberOfLines={1}>
-                Creative Writing in English
-              </Text>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: 130,
-                  paddingVertical: 8,
-                }}
-              >
-                <Text style={styles.duration}>1h 23m</Text>
-                <Text style={styles.duration}>12 lessons</Text>
-              </View>
-              <View style={{ paddingTop: 8 }}>
-                <Text style={styles.priceText}>$87.2</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </>
+        <FlatList
+          data={limitedCourses}
+          renderItem={renderCourseItem}
+          keyExtractor={(item) => item.courseId}
+          showsVerticalScrollIndicator={false}
+        />
       )}
     </View>
   );
@@ -134,7 +88,7 @@ const styles = StyleSheet.create({
     width: 350,
     borderRadius: 15,
     padding: 8,
-    marginTop: 12,
+    marginBottom: 16,
   },
   courseImage: {
     width: 110,
@@ -146,7 +100,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     justifyContent: "space-evenly",
-    top: -35,
+    paddingTop: 8,
   },
   containerText: {
     overflow: "hidden",

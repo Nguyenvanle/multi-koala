@@ -45,7 +45,6 @@ const CourseItemNew: React.FC<CourseItemProps> = ({ course }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   courseContainer: {
     justifyContent: "flex-start",
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
     width: 350,
     borderRadius: 15,
     padding: 8,
-    marginTop: 12,
+    marginVertical: 16,
   },
   courseImage: {
     width: 110,

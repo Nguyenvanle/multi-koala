@@ -7,7 +7,7 @@ import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
 
 const InProgressCourses = () => {
-  const [courseData, setCourseData] = useState<CourseData[]>([]);
+  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -17,38 +17,41 @@ const InProgressCourses = () => {
         const token = await AsyncStorage.getItem("token");
         console.log(token);
 
-        if (!token) {
-          return;
-        }
-        // Add the token to the request headers
-        const config = {
-          headers: { Authorization: `Bearer ${token}` },
-        };
-        const response = await API_MAIN.get(
-          "/courses/my-enrolled-courses",
-          config
-        );
-        console.log(response.data);
-        if (response.data.code === 200) {
-          setCourseData(response.data.result);
-        } else {
-          setErrorMessage(response.data.message);
+        if (token) {
+          const response = await API_MAIN.get(
+            "/enroll-courses/my-enrolled-courses",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.data.code === 200) {
+            setCourseData(response.data.result);
+            console.log(courseData);
+            console.log(response.data.result[0].course.image);
+          } else {
+            setErrorMessage(response.data.message);
+          }
         }
       } catch (error) {
-        setErrorMessage("Please sign in to fetch course data.");
+        setErrorMessage("Please sign in to connect course data.");
       } finally {
         setLoading(false);
       }
     };
     fetchCourseData();
   }, []);
-  const uniqueValidCourseData = Array.from(
-    new Set(courseData.map((course) => course.courseId))
-  )
-    .map((id) => courseData.find((course) => course.courseId === id))
-    .filter((course) => course && typeof course.courseId === "string");
+  if (loading) {
+    return (
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
+    );
+  }
 
-  const renderCourseItem = ({ item }: { item: CourseData }) => (
+  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
     <View
       style={{
         justifyContent: "center",
@@ -58,7 +61,7 @@ const InProgressCourses = () => {
       }}
     >
       <Image
-        source={{ uri: item.image.imageUrl }}
+        source={{ uri: item.course.image?.imageUrl }}
         style={{
           width: 350,
           height: 200,
@@ -89,7 +92,7 @@ const InProgressCourses = () => {
               fontWeight: "300",
             }}
           >
-            {item.courseName}
+            {item.course.courseName}
           </Text>
         </View>
         <View
@@ -122,7 +125,8 @@ const InProgressCourses = () => {
               color: Colors.dark,
             }}
           >
-            {item.uploadedByTeacher.firstname} {item.uploadedByTeacher.lastname}
+            {item.course.uploadedByTeacher?.firstname}{" "}
+            {item.course.uploadedByTeacher?.lastname}
           </Text>
           <TouchableOpacity
             style={{
@@ -143,7 +147,7 @@ const InProgressCourses = () => {
                 color: Colors.white,
               }}
             >
-              ${item.coursePrice}
+              ${item.course.coursePrice}
             </Text>
           </TouchableOpacity>
         </View>
@@ -164,10 +168,10 @@ const InProgressCourses = () => {
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (
         <FlatList
-          data={uniqueValidCourseData}
+          showsVerticalScrollIndicator={false}
+          data={courseData}
           renderItem={renderCourseItem}
-          keyExtractor={(item, index) => `${item.courseId}_${index}`}
-          style={{ marginBottom: -25 }}
+          keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
         />
       )}
     </View>

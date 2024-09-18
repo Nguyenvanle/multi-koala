@@ -4,6 +4,7 @@ interface CourseData {
   coursePrice: number;
   image: {
     imageUrl: string;
+    image: string;
   };
   courseDescription: string;
   uploadedByTeacher: {
