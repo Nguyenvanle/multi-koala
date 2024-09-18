@@ -13,7 +13,7 @@ export default function TeacherProfileTemplate() {
     error: teacherError,
   } = useTeacherProfile(teacherId as string);
   const {
-    courses,
+    approvedCourses: courses,
     loading: coursesLoading,
     error: coursesError,
   } = useTeacherCourses(teacherId as string);
@@ -23,5 +23,11 @@ export default function TeacherProfileTemplate() {
     return <div>Error: {teacherError || coursesError}</div>;
   if (!teacher) return <div>Teacher not found</div>;
 
-  return <TeacherProfile teacher={teacher} courses={courses || []} />;
+  return (
+    <TeacherProfile
+      teacher={teacher}
+      courses={courses || []}
+      courseLoading={coursesLoading}
+    />
+  );
 }
