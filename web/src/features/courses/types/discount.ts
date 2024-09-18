@@ -1,4 +1,4 @@
-import { AdminBodyType } from "@/features/users/schema/admin";
+import { AdminBodySchema, AdminBodyType } from "@/features/users/schema/admin";
 import { COURSE_VERIFY } from "@/types/course/verify";
 import { z } from "zod";
 
@@ -8,7 +8,7 @@ const DiscountBodyType = z.object({
   discountRate: z.number(),
   startDate: z.string().transform((date) => new Date(date)),
   endDate: z.string().transform((date) => new Date(date)),
-  createdByAdmin: AdminBodyType,
+  createdByAdmin: AdminBodySchema,
 });
 
 // Định nghĩa schema cho DiscountCourse
