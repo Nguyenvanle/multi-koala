@@ -4,6 +4,7 @@ interface CourseData {
   coursePrice: number;
   image: {
     imageUrl: string;
+    image: string;
   };
   courseDescription: string;
   uploadedByTeacher: {
@@ -22,4 +23,5 @@ interface CourseData {
   };
   discountApprovedRate: number;
   status: string;
+  process: number;
 }

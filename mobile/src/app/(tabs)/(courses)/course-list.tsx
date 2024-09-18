@@ -44,12 +44,12 @@ const CourseList = () => {
     }
   }, [tab]);
 
-  const handlePress = (index) => {
+  const handlePress = (index: any) => {
     setSelectedIndex(index);
   };
 
   return (
-    <SafeAreaView style={{ ...Styles.container, top: -62 }}>
+    <SafeAreaView style={{ ...Styles.container }}>
       <StatusBar barStyle="dark-content" />
       <HeaderUser />
       <View style={styles.tabContainer}>

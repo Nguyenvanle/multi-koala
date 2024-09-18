@@ -4,7 +4,6 @@ import { Styles } from "@/src/constants/Styles";
 import { IntroDetails } from "@/src/components/specific/intro/IntroDetails";
 
 const IntroScreen = () => {
-  const [selectedIndex, setIndex] = React.useState(0);
   return (
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle="dark-content"></StatusBar>

@@ -14,7 +14,7 @@ export const useCourses = () => {
         setCourseData(data);
       } catch (error) {
         console.error("Error fetching course data:", error);
-        setErrorMessage(error.message || "Failed to fetch course data.");
+        setErrorMessage(errorMessage || "Failed to fetch course data.");
       } finally {
         setLoading(false);
       }

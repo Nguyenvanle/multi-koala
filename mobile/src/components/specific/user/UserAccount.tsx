@@ -13,7 +13,6 @@ import { text } from "@/src/constants/Styles";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
-import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -79,9 +78,10 @@ const UserAccount: React.FC = () => {
   const handleLogout = async () => {
     try {
       // Xóa token khỏi AsyncStorage
-      await AsyncStorage.removeItem("token", response.data.result.token);
+      await AsyncStorage.removeItem("token");
       // Xóa dữ liệu người dùng khỏi state
       setUserData(null);
+      console.log(setUserData);
       // Chuyển hướng đến màn hình đăng nhập
       router.replace("/(auth)/sign-in");
     } catch (error) {
@@ -91,7 +91,7 @@ const UserAccount: React.FC = () => {
   };
   return (
     <ScrollView
-      style={{ top: -61, width: 415, paddingTop: 42, paddingHorizontal: 16 }}
+      style={{ top: -50, width: 415, paddingTop: 50, paddingHorizontal: 16 }}
     >
       <View
         style={{
@@ -145,18 +145,7 @@ const UserAccount: React.FC = () => {
                 alignItems: "center",
                 paddingBottom: 8,
               }}
-            >
-              <Image
-                style={{
-                  width: 160,
-                  height: 160,
-                  borderRadius: 80,
-                  backgroundColor: Colors.grey,
-                  marginBottom: 8,
-                }}
-              />
-              <Text style={text.h3}>User</Text>
-            </View>
+            ></View>
           </View>
         )}
         <View style={{ alignSelf: "baseline", paddingBottom: 8 }}>
