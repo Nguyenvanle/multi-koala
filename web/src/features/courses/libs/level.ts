@@ -2,7 +2,7 @@
 export const getLevelColor = (level: CourseLevel | string): string => {
   switch (level) {
     case "BEGINNER":
-      return "text-teal-500"; // Màu xanh cho BEGINNER
+      return "text-green-600"; // Màu xanh cho BEGINNER
     case "INTERMEDIATE":
       return "text-yellow-500"; // Màu vàng cho INTERMEDIATE
     case "ADVANCED":

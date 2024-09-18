@@ -47,13 +47,13 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
         <div className="flex w-full justify-between flex-row absolute bottom-0 left-0 p-4">
           <div className="px-2 bg-gray-700 rounded">
-            <Small className="font-medium text-background">{`⭐ ${rating}`}</Small>
+            <Small className="font-medium text-white">{`⭐ ${rating}`}</Small>
           </div>
 
           <div className="flex flex-row items-center pt-[1px] px-2 gap-1 bg-gray-700 rounded">
             <ListVideo className="w-4 h-4 text-white mb-[1px]" />
 
-            <Small className="text-background">{`${
+            <Small className="text-white">{`${
               lessons?.length ?? 0
             } lesson`}</Small>
           </div>

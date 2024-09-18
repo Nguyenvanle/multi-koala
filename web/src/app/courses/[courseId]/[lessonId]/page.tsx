@@ -1,12 +1,9 @@
+import LessonTemplate from "@/features/lessons/components/templates/lesson-template";
+
 export default function LessonDetail({
   params,
 }: {
   params: { lessonId: string; courseId: string };
 }) {
-  return (
-    <div>
-      <div>Course: {params.courseId}</div>
-      <div>LessonDetail: {params.lessonId}</div>
-    </div>
-  );
+  return <LessonTemplate params={params}></LessonTemplate>;
 }

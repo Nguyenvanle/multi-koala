@@ -14,7 +14,7 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
     (menuItems = [...menuItems, { href: "/dashboard", label: "Dashboard" }]);
 
   return (
-    <nav className="hidden md:flex space-x-4 flex-0">
+    <nav className="hidden md:flex space-x-4 flex-0 ">
       <Link href="/">
         <Logo />
       </Link>
@@ -22,12 +22,16 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
         <Link
           key={item.label}
           href={item.href}
-          className={`flex flex-col gap-1  mt-2 ${
+          className={`flex flex-col gap-1 mt-2 ${
             item.href === path && "text-primary"
           }`}
         >
           {item.label}
-          {item.href === path && <Badge className="p-[1px]" />}
+          {item.href === path ? (
+            <Badge className="p-[1px]" />
+          ) : (
+            <Badge className="bg-background hover:shadow-none" />
+          )}
         </Link>
       ))}
     </nav>

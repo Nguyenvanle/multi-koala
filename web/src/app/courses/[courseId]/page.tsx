@@ -1,19 +1,12 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import DetailCard from "@/features/courses/components/molecules/detail-card";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
-import StudentsCard from "@/features/courses/components/molecules/students-card";
+import DetailCard from "@/features/courses/components/organisms/detail-card";
+import CourseDetailCard from "@/features/courses/components/pages/course-detail-card";
+import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useCourses from "@/features/courses/hooks/useCourses";
 import useLessons from "@/features/lessons/hooks/useLessons";
-import dynamic from "next/dynamic";
-
-const LessonsCard = dynamic(
-  () => import("@/features/courses/components/molecules/lessons-card"),
-  {
-    loading: () => <Skeleton className="h-20 w-full" />,
-  }
-);
 
 export default function CourseDetail({
   params,
@@ -31,7 +24,15 @@ export default function CourseDetail({
 
   // Show a loading skeleton while courses or lessons are loading
   if (isLoading) {
-    return <Skeleton className="flex w-[96vw] h-[82vh]" />;
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
+        <div className="flex flex-col gap-6">
+          <Skeleton className="w-full aspect-video rounded-lg" />
+          <Skeleton className="w-full h-[300px] rounded-lg" />
+        </div>
+        <Skeleton className="w-full h-[800px] rounded-lg" />
+      </div>
+    );
   }
 
   // Handle case when course is not found after loading
@@ -44,25 +45,37 @@ export default function CourseDetail({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
-      <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
+      {/* <CourseDetailCard course={course} totalDuration={duration} /> */}
+      <div className="flex flex-col gap-6">
         <DisplayCard
           courseImage={course.image.imageUrl}
           courseName={course.courseName}
         />
-        <DetailCard
-          courseName={course.courseName}
-          coursePrice={course.coursePrice}
-          courseDescription={course.courseDescription}
-          uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
-          totalDuration={duration}
-          totalLessons={lessons?.length ?? 0}
-        />
+        <LessonsCardPage lessons={lessons || []} />
       </div>
-      <div className="flex flex-col gap-4">
-        <LessonsCard lessons={lessons || []} />
-        {/* <StudentsCard courseId={params.courseId} /> */}
-      </div>
+
+      <DetailCard
+        courseName={course.courseName}
+        coursePrice={course.coursePrice}
+        courseDescription={course.courseDescription}
+        uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
+        totalDuration={duration}
+        totalLessons={lessons?.length ?? 0}
+        courseRating={course.courseRating}
+        courseDiscount={course.discountApprovedRate}
+        courseId={course.courseId}
+        courseCreateAt={course.courseUploadedAt}
+        courseType={course.types}
+        courseFields={course.fields}
+        courseImage={course.image.imageUrl}
+        approvedByAdmin={
+          course.approvedByAdmin.firstname + course.approvedByAdmin.lastname
+        }
+        status={course.status}
+        courseLevel={course.courseLevel}
+        teacherId={course.uploadedByTeacher.userId}
+      />
     </div>
   );
 }
