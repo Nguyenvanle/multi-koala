@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CoursesResultResType } from "@/features/courses/types/course";
 import { TeacherBodyType } from "@/features/users/schema/teacher";
+import { CertificationsResult } from "@/features/certification/types/certification-res";
 import {
   Star,
   MapPin,
@@ -18,6 +19,7 @@ import {
   Calendar,
   Book,
   ArrowRight,
+  Award,
 } from "lucide-react";
 import { CoursesList } from "@/features/courses/components/organisms/courses-list";
 import { InfoItem } from "@/features/users/components/atoms/info-item";
@@ -28,7 +30,8 @@ const TeacherProfile: React.FC<{
   teacher: TeacherBodyType;
   courses: CoursesResultResType;
   courseLoading: boolean;
-}> = ({ teacher, courses, courseLoading }) => {
+  certifications: CertificationsResult;
+}> = ({ teacher, courses, courseLoading, certifications }) => {
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-8 bg-secondary">
@@ -94,9 +97,32 @@ const TeacherProfile: React.FC<{
         </Card>
       </div>
 
+      {/* Certifications Section */}
+      <div className="p-8 pt-4">
+        <h3 className="text-2xl font-bold flex items-center mb-4">
+          <Award className="mr-2 text-primary" size={24} /> Certifications
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {certifications.map((cert, index) => (
+            <Card key={index} className="shadow-md">
+              <CardHeader>
+                <CardTitle>{cert.certificateName}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="mt-2">Issued by: {cert.issuingOrganization}</p>
+                <p>Date: {formatDate(cert.issueDate.toString())}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Courses Section */}
       <div className="col-span-1 md:col-span-3  p-8 pt-4">
-        <h3 className="text-2xl font-bold flex items-center ">Courses</h3>
+        <h3 className="text-2xl font-bold flex items-center ">
+          <Book className="mr-2 text-primary" size={24} />
+          Courses
+        </h3>
         <P className="text-muted-foreground mb-4">
           Explore the courses offered by this teacher. You will find a variety
           of subjects tailored to enhance your knowledge and skills. Join now to

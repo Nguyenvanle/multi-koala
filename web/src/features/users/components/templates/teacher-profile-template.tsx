@@ -4,24 +4,35 @@ import TeacherProfileSkeleton from "@/features/users/components/atoms/teacher-pr
 import TeacherProfile from "@/features/users/components/organisms/teacher-profile";
 import useTeacherCourses from "@/features/users/hooks/useTeacherCourses";
 import useTeacherProfile from "@/features/users/hooks/useTeacherProfile";
+import useTeacherCertifications from "@/features/users/hooks/useTeacherCertifications";
 import { useParams } from "next/navigation";
 
 export default function TeacherProfileTemplate() {
   const { teacherId } = useParams();
+
   const {
     teacher,
     loading: teacherLoading,
     error: teacherError,
   } = useTeacherProfile(teacherId as string);
+
   const {
     approvedCourses: courses,
     loading: coursesLoading,
     error: coursesError,
   } = useTeacherCourses(teacherId as string);
 
-  if (teacherLoading || coursesLoading) return <TeacherProfileSkeleton />;
-  if (teacherError || coursesError)
-    return <div>Error: {teacherError || coursesError}</div>;
+  const {
+    certifications,
+    loading: certificationsLoading,
+    error: certificationsError,
+  } = useTeacherCertifications(teacherId as string);
+
+  if (teacherLoading || coursesLoading || certificationsLoading) return <TeacherProfileSkeleton />;
+
+  if (teacherError || coursesError || certificationsError)
+    return <div>Error: {teacherError || coursesError || certificationsError}</div>;
+
   if (!teacher) return <div>Teacher not found</div>;
 
   return (
@@ -29,6 +40,7 @@ export default function TeacherProfileTemplate() {
       teacher={teacher}
       courses={courses || []}
       courseLoading={coursesLoading}
+      certifications={certifications || []}
     />
   );
 }

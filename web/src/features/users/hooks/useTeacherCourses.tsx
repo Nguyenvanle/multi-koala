@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export default function useTeacherCourses(teacherId: string) {
     const [courses, setCourses] = useState<CoursesResultResType | null>(null);
     const [approvedCourses, setApprovedCourses] = useState<CoursesResultResType | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
   
     useEffect(() => {
