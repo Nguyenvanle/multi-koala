@@ -63,7 +63,7 @@ const MyCourses = () => {
   }
   const limitedCourses = courseData.slice(0, 5);
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
-    <Link href={`/courseDetails/${item.course.courseId}`} asChild push>
+    <Link href={`/${item.course.courseId}`} asChild>
       <TouchableOpacity style={styles.courseContainer}>
         <Image
           source={{ uri: item.course.image.imageUrl }}
@@ -87,7 +87,7 @@ const MyCourses = () => {
           horizontal={true}
           data={limitedCourses}
           renderItem={renderCourseItem}
-          keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
+          keyExtractor={(item, index) => item.course.courseId}
           style={{ paddingHorizontal: 16 }}
         />
       ) : (

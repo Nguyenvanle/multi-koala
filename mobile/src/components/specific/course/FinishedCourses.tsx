@@ -5,6 +5,7 @@ import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
+import { Link } from "expo-router";
 
 const FinishedCourses = () => {
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
@@ -55,107 +56,109 @@ const FinishedCourses = () => {
   }
 
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
-    <View
-      style={{
-        justifyContent: "center",
-        alignItems: "center",
-        width: 350,
-        marginTop: 28,
-      }}
-    >
-      <Image
-        source={{ uri: item.course.image?.imageUrl }}
-        style={{
-          width: 350,
-          height: 200,
-          borderRadius: 15,
-          borderColor: Colors.grey,
-          borderWidth: 1,
-        }}
-      />
+    <Link href={`/${item.course.courseId}`} asChild>
       <View
         style={{
-          flexDirection: "column",
-          alignSelf: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          width: 350,
+          marginTop: 28,
         }}
       >
-        <View
+        <Image
+          source={{ uri: item.course.image?.imageUrl }}
           style={{
-            flexDirection: "row",
-            alignSelf: "baseline",
-            width: 345,
-            padding: 8,
-            paddingBottom: 0,
+            width: 350,
+            height: 200,
+            borderRadius: 15,
+            borderColor: Colors.grey,
+            borderWidth: 1,
           }}
-        >
-          <Text
-            style={{
-              ...text.h4,
-              color: Colors.black,
-              fontWeight: "300",
-            }}
-          >
-            {item.course.courseName}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            paddingHorizontal: 8,
-          }}
-        >
-          <Text
-            style={{
-              ...text.small,
-              color: Colors.teal_dark,
-            }}
-          >
-            10/12
-          </Text>
-        </View>
-        <Progress
-          progress={0.8}
-          width={346}
-          color={Colors.teal_dark}
-          style={{ marginLeft: 8 }}
         />
-        <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
-          <Text
+        <View
+          style={{
+            flexDirection: "column",
+            alignSelf: "center",
+          }}
+        >
+          <View
             style={{
-              ...text.large,
-              fontWeight: "300",
-              color: Colors.dark,
-            }}
-          >
-            {item.course.uploadedByTeacher?.firstname}{" "}
-            {item.course.uploadedByTeacher?.lastname}
-          </Text>
-          <TouchableOpacity
-            style={{
-              borderRadius: 10,
-              backgroundColor: Colors.teal_dark,
-              alignItems: "center",
-              height: 50,
-              width: 330,
-              marginTop: 8,
-              marginBottom: 8,
-              justifyContent: "center",
+              flexDirection: "row",
+              alignSelf: "baseline",
+              width: 345,
+              padding: 8,
+              paddingBottom: 0,
             }}
           >
             <Text
               style={{
                 ...text.h4,
-                fontWeight: "500",
-                color: Colors.white,
+                color: Colors.black,
+                fontWeight: "300",
               }}
             >
-              ${item.course.coursePrice}
+              {item.course.courseName}
             </Text>
-          </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              paddingHorizontal: 8,
+            }}
+          >
+            <Text
+              style={{
+                ...text.small,
+                color: Colors.teal_dark,
+              }}
+            >
+              10/12
+            </Text>
+          </View>
+          <Progress
+            progress={0.8}
+            width={346}
+            color={Colors.teal_dark}
+            style={{ marginLeft: 8 }}
+          />
+          <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
+            <Text
+              style={{
+                ...text.large,
+                fontWeight: "300",
+                color: Colors.dark,
+              }}
+            >
+              {item.course.uploadedByTeacher?.firstname}{" "}
+              {item.course.uploadedByTeacher?.lastname}
+            </Text>
+            <TouchableOpacity
+              style={{
+                borderRadius: 10,
+                backgroundColor: Colors.teal_dark,
+                alignItems: "center",
+                height: 50,
+                width: 330,
+                marginTop: 8,
+                marginBottom: 8,
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...text.h4,
+                  fontWeight: "500",
+                  color: Colors.white,
+                }}
+              >
+                ${item.course.coursePrice}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </Link>
   );
 
   return (

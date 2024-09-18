@@ -22,7 +22,7 @@ const AllCourses = () => {
   }
 
   const renderCourseItem = ({ item }: { item: CourseData }) => (
-    <Link href={`/courseDetails/${item.courseId}`} asChild push>
+    <Link href={`/${item.courseId}`} asChild>
       <TouchableOpacity>
         <View
           style={{

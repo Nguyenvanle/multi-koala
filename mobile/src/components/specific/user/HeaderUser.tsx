@@ -64,6 +64,7 @@ const HeaderUser: React.FC = () => {
     );
   }
   const displayedCourses = courseData.slice(0, 1);
+
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
     <TouchableOpacity
       style={{
@@ -129,7 +130,7 @@ const HeaderUser: React.FC = () => {
                 paddingTop: 2,
               }}
             >
-              10/12
+              0/12
             </Text>
           </View>
           <View

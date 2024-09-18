@@ -30,7 +30,7 @@ const NewCourses = () => {
 
   const renderCourseItem = ({ item }: { item: CourseData }) => (
     <View style={styles.container}>
-      <Link href={`/courseDetails/${item.courseId}`} asChild>
+      <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>
           <Image
             source={{ uri: item.image.imageUrl }}

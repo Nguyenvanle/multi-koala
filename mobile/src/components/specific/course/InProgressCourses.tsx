@@ -52,7 +52,7 @@ const InProgressCourses = () => {
   }
 
   const renderCourseItem = ({ item }: { item: CourseDetails }) => (
-    <Link href={`/courseDetails/${item.course.courseId}`} asChild push>
+    <Link href={`/${item.course.courseId}`} asChild>
       <TouchableOpacity>
         <View
           style={{
@@ -62,7 +62,6 @@ const InProgressCourses = () => {
             marginTop: 28,
           }}
         >
-          <Text>h1: {item.course.courseId}</Text>
           <Image
             source={{ uri: item.course.image.imageUrl }}
             style={{

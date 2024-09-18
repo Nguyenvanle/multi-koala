@@ -40,30 +40,34 @@ const CourseDetails = () => {
   }
   return (
     <ScrollView style={styles.container}>
-      {/* <Image
-        source={{ uri: courseDetails.course.image.imageUrl }}
+      <Image
+        source={{ uri: courseDetails.image.imageUrl }}
         style={styles.image}
-      /> */}
+      />
       <View style={styles.content}>
-        <Text style={styles.instructor}>
-          Instructor | {courseDetails.uploadedByTeacher?.firstname}{" "}
-          {courseDetails.uploadedByTeacher?.lastname}
-        </Text>
-        <View style={styles.ratingContainer}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <AntDesign
-              key={star}
-              name={star <= courseDetails.courseRating ? "star" : "staro"}
-              size={16}
-              color={Colors.red}
-            />
-          ))}
-          <Text style={styles.ratingText}>
-            {courseDetails.courseRating.toFixed(1)}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.instructor}>
+            Author | {courseDetails.uploadedByTeacher?.firstname}{" "}
+            {courseDetails.uploadedByTeacher?.lastname}
           </Text>
+          <View style={styles.ratingContainer}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <AntDesign
+                key={star}
+                name={star <= courseDetails.courseRating ? "star" : "staro"}
+                size={20}
+                color={Colors.dark_grey}
+              />
+            ))}
+          </View>
         </View>
         <Text style={styles.title}>{courseDetails.courseName}</Text>
-        <Text style={styles.duration}>Lessons</Text>
+        {/* <Text style={styles.duration}>Lessons</Text> */}
         <Text style={styles.price}>
           ${courseDetails.coursePrice.toFixed(2)}
         </Text>
@@ -71,8 +75,6 @@ const CourseDetails = () => {
         <Text style={styles.description}>
           {courseDetails.courseDescription}
         </Text>
-        <Text style={styles.readMore}>Read More...</Text>
-        <Text style={styles.sectionTitle}>Course Content</Text>
         {/* {courseDetails..map((lesson, index) => (
           <View key={index} style={styles.lessonItem}>
             <Image
@@ -100,30 +102,28 @@ const CourseDetails = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.background,
+    padding: 24,
   },
   image: {
-    width: "100%",
-    height: 200,
+    borderWidth: 1,
+    borderColor: Colors.grey,
+    height: 400,
+    borderRadius: 20,
   },
   content: {
-    padding: 15,
+    gap: 8,
+    paddingVertical: 16,
   },
   instructor: {
-    ...text.small,
-    color: Colors.red,
+    ...text.h4,
+    color: Colors.teal_dark,
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 5,
   },
-  ratingText: {
-    ...text.small,
-    marginLeft: 5,
-    color: Colors.red,
-  },
+
   title: {
     ...text.h2,
     color: Colors.black,
@@ -135,24 +135,21 @@ const styles = StyleSheet.create({
   },
   price: {
     ...text.h3,
-    color: Colors.red,
+    color: Colors.teal_dark,
     marginVertical: 10,
   },
   sectionTitle: {
     ...text.h4,
     color: Colors.black,
-    marginTop: 15,
-    marginBottom: 10,
+    marginTop: 16,
+    marginBottom: 8,
+    fontWeight: "400",
   },
   description: {
     ...text.p,
-    color: Colors.red,
+    color: Colors.dark_grey,
   },
-  readMore: {
-    ...text.small,
-    color: Colors.red,
-    marginTop: 5,
-  },
+
   lessonItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -176,7 +173,7 @@ const styles = StyleSheet.create({
     color: Colors.red,
   },
   buyButton: {
-    backgroundColor: Colors.red,
+    backgroundColor: Colors.teal_dark,
     padding: 15,
     alignItems: "center",
     marginHorizontal: 15,
