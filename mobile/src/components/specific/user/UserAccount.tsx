@@ -13,7 +13,6 @@ import { text } from "@/src/constants/Styles";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
-import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -92,7 +91,7 @@ const UserAccount: React.FC = () => {
   };
   return (
     <ScrollView
-      style={{ top: -61, width: 415, paddingTop: 42, paddingHorizontal: 16 }}
+      style={{ top: -50, width: 415, paddingTop: 50, paddingHorizontal: 16 }}
     >
       <View
         style={{

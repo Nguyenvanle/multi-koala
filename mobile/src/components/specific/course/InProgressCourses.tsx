@@ -5,9 +5,11 @@ import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
+import { Link } from "expo-router";
+import { CourseDetails } from "@/src/feature/coursedetailsprogress";
 
 const InProgressCourses = () => {
-  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
+  const [courseData, setCourseData] = useState<CourseDetails[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -15,7 +17,6 @@ const InProgressCourses = () => {
     const fetchCourseData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log(token);
 
         if (token) {
           const response = await API_MAIN.get(
@@ -29,8 +30,6 @@ const InProgressCourses = () => {
 
           if (response.data.code === 200) {
             setCourseData(response.data.result);
-            console.log(courseData);
-            console.log(response.data.result[0].course.image);
           } else {
             setErrorMessage(response.data.message);
           }
@@ -43,6 +42,7 @@ const InProgressCourses = () => {
     };
     fetchCourseData();
   }, []);
+
   if (loading) {
     return (
       <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
@@ -51,114 +51,119 @@ const InProgressCourses = () => {
     );
   }
 
-  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
-    <View
-      style={{
-        justifyContent: "center",
-        alignItems: "center",
-        width: 350,
-        marginTop: 28,
-      }}
-    >
-      <Image
-        source={{ uri: item.course.image?.imageUrl }}
-        style={{
-          width: 350,
-          height: 200,
-          borderRadius: 15,
-          borderColor: Colors.grey,
-          borderWidth: 1,
-        }}
-      />
-      <View
-        style={{
-          flexDirection: "column",
-          alignSelf: "center",
-        }}
-      >
+  const renderCourseItem = ({ item }: { item: CourseDetails }) => (
+    <Link href={`/courseDetails/${item.course.courseId}`} asChild push>
+      <TouchableOpacity>
         <View
           style={{
-            flexDirection: "row",
-            alignSelf: "baseline",
-            width: 345,
-            padding: 8,
-            paddingBottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            width: 350,
+            marginTop: 28,
           }}
         >
-          <Text
+          <Text>h1: {item.course.courseId}</Text>
+          <Image
+            source={{ uri: item.course.image.imageUrl }}
             style={{
-              ...text.h4,
-              color: Colors.black,
-              fontWeight: "300",
+              width: 350,
+              height: 200,
+              borderRadius: 15,
+              borderColor: Colors.grey,
+              borderWidth: 1,
             }}
-          >
-            {item.course.courseName}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            paddingHorizontal: 8,
-          }}
-        >
-          <Text
-            style={{
-              ...text.small,
-              color: Colors.teal_dark,
-            }}
-          >
-            10/12
-          </Text>
-        </View>
-        <View
-          style={{
-            backgroundColor: Colors.white,
-            borderRadius: 20,
-          }}
-        >
-          <Progress.Bar
-            width={346}
-            progress={item.course.process}
-            color={Colors.teal_light}
           />
-        </View>
-        <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
-          <Text
+          <View
             style={{
-              ...text.large,
-              fontWeight: "300",
-              color: Colors.dark,
+              flexDirection: "column",
+              alignSelf: "center",
             }}
           >
-            {item.course.uploadedByTeacher?.firstname}{" "}
-            {item.course.uploadedByTeacher?.lastname}
-          </Text>
-          <TouchableOpacity
-            style={{
-              borderRadius: 10,
-              backgroundColor: Colors.teal_dark,
-              alignItems: "center",
-              height: 50,
-              width: 330,
-              marginTop: 8,
-              marginBottom: 8,
-              justifyContent: "center",
-            }}
-          >
-            <Text
+            <View
               style={{
-                ...text.h4,
-                fontWeight: "500",
-                color: Colors.white,
+                flexDirection: "row",
+                alignSelf: "baseline",
+                width: 345,
+                padding: 8,
+                paddingBottom: 0,
               }}
             >
-              ${item.course.coursePrice}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  ...text.h4,
+                  color: Colors.black,
+                  fontWeight: "300",
+                }}
+              >
+                {item.course.courseName}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                paddingHorizontal: 8,
+              }}
+            >
+              <Text
+                style={{
+                  ...text.small,
+                  color: Colors.teal_dark,
+                }}
+              >
+                10/12
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                borderRadius: 20,
+              }}
+            >
+              <Progress.Bar
+                width={346}
+                progress={item.course.process}
+                color={Colors.teal_light}
+              />
+            </View>
+            <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
+              <Text
+                style={{
+                  ...text.large,
+                  fontWeight: "300",
+                  color: Colors.dark,
+                }}
+              >
+                {item.course.uploadedByTeacher?.firstname}{" "}
+                {item.course.uploadedByTeacher?.lastname}
+              </Text>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 10,
+                  backgroundColor: Colors.teal_dark,
+                  alignItems: "center",
+                  height: 50,
+                  width: 330,
+                  marginTop: 8,
+                  marginBottom: 8,
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    ...text.h4,
+                    fontWeight: "500",
+                    color: Colors.white,
+                  }}
+                >
+                  ${item.course.coursePrice}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </TouchableOpacity>
+    </Link>
   );
 
   return (
@@ -177,7 +182,7 @@ const InProgressCourses = () => {
           showsVerticalScrollIndicator={false}
           data={courseData}
           renderItem={renderCourseItem}
-          keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
+          keyExtractor={(item) => item.course.courseId}
         />
       )}
     </View>

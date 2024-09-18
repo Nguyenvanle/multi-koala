@@ -116,7 +116,7 @@ const FinishedCourses = () => {
         </View>
         <Progress
           progress={0.8}
-          width={330}
+          width={346}
           color={Colors.teal_dark}
           style={{ marginLeft: 8 }}
         />

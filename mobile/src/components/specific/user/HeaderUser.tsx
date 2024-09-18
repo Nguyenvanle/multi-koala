@@ -7,16 +7,13 @@ import Button from "../../common/Button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
-import { Ionicons } from "@expo/vector-icons";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
-import { useCourses } from "@/src/hook/course/useCourse";
+import Routing from "../../common/RoutingDeatil";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [progressCourses, setProgressCourses] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

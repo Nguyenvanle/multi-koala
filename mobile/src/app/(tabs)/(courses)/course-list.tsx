@@ -44,7 +44,7 @@ const CourseList = () => {
     }
   }, [tab]);
 
-  const handlePress = (index) => {
+  const handlePress = (index: any) => {
     setSelectedIndex(index);
   };
 

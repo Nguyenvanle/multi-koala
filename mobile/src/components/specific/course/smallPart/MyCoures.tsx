@@ -10,7 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import API_MAIN from "@/src/feature/api/config";
 
 const MyCourses = () => {
@@ -63,18 +63,22 @@ const MyCourses = () => {
   }
   const limitedCourses = courseData.slice(0, 5);
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
-    <TouchableOpacity style={styles.courseContainer}>
-      <Image
-        source={{ uri: item.course.image.imageUrl }}
-        style={styles.image}
-      />
-      <View style={styles.containerText}>
-        <Text style={styles.clampedText} numberOfLines={1}>
-          {item.course.courseName}
-        </Text>
-        <Text style={styles.price}>${item.course.coursePrice.toFixed(2)}</Text>
-      </View>
-    </TouchableOpacity>
+    <Link href={`/courseDetails/${item.course.courseId}`} asChild push>
+      <TouchableOpacity style={styles.courseContainer}>
+        <Image
+          source={{ uri: item.course.image.imageUrl }}
+          style={styles.image}
+        />
+        <View style={styles.containerText}>
+          <Text style={styles.clampedText} numberOfLines={1}>
+            {item.course.courseName}
+          </Text>
+          <Text style={styles.price}>
+            ${item.course.coursePrice.toFixed(2)}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Link>
   );
   return (
     <View style={styles.container}>
@@ -114,6 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 8,
+    height: 221,
   },
   courseContainer: {
     alignItems: "center",

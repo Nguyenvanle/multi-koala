@@ -9,6 +9,7 @@ import {
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourses } from "@/src/hook/course/useCourse";
+import { Link } from "expo-router";
 
 const NewCourses = () => {
   const { courseData, loading, errorMessage } = useCourses();
@@ -29,36 +30,38 @@ const NewCourses = () => {
 
   const renderCourseItem = ({ item }: { item: CourseData }) => (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.courseContainer}>
-        <Image
-          source={{ uri: item.image.imageUrl }}
-          style={styles.courseImage}
-        />
-        <View style={styles.containerText}>
-          <Text style={styles.clampedText} numberOfLines={1}>
-            {item.courseName}
-          </Text>
+      <Link href={`/courseDetails/${item.courseId}`} asChild>
+        <TouchableOpacity style={styles.courseContainer}>
+          <Image
+            source={{ uri: item.image.imageUrl }}
+            style={styles.courseImage}
+          />
+          <View style={styles.containerText}>
+            <Text style={styles.clampedText} numberOfLines={1}>
+              {item.courseName}
+            </Text>
 
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: 130,
-              paddingVertical: 8,
-            }}
-          >
-            <Text style={styles.duration}>1h 23m</Text>
-            <Text style={styles.duration}>12 lessons</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: 130,
+                paddingVertical: 8,
+              }}
+            >
+              <Text style={styles.duration}>1h 23m</Text>
+              <Text style={styles.duration}>12 lessons</Text>
+            </View>
+            <View style={{ paddingTop: 8 }}>
+              <Text style={styles.priceText}>${item.coursePrice}</Text>
+            </View>
           </View>
-          <View style={{ paddingTop: 8 }}>
-            <Text style={styles.priceText}>${item.coursePrice}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Link>
     </View>
   );
   return (
-    <View style={{ height: 220, top: -24 }}>
+    <View style={{ height: 200 }}>
       {loading ? (
         <Text>Loading...</Text>
       ) : errorMessage ? (

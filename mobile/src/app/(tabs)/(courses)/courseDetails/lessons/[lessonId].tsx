@@ -9,7 +9,7 @@ const Lesson = () => {
     <View style={Styles.container}>
       <Text>Course: {courseId}</Text>
       <Text>Lesson: {lessonId}</Text>
-      <TouchableOpacity onPress={() => router.back()}>
+      <TouchableOpacity onPress={() => {}}>
         <Text>Back</Text>
       </TouchableOpacity>
     </View>
