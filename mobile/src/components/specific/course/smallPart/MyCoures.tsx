@@ -62,7 +62,6 @@ const MyCourses = () => {
     );
   }
   const limitedCourses = courseData.slice(0, 5);
-  const getToken = AsyncStorage.getItem("token");
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
     <TouchableOpacity style={styles.courseContainer}>
       <Image
@@ -89,7 +88,7 @@ const MyCourses = () => {
         />
       ) : (
         <TouchableOpacity
-          onPress={() => router.replace("/(auth)/sign-in")}
+          onPress={() => router.push("/(auth)/sign-in")}
           style={{
             justifyContent: "center",
             alignItems: "center",
@@ -115,8 +114,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 8,
-    width: 300,
-    height: 221,
   },
   courseContainer: {
     alignItems: "center",

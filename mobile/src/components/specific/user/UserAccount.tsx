@@ -146,18 +146,7 @@ const UserAccount: React.FC = () => {
                 alignItems: "center",
                 paddingBottom: 8,
               }}
-            >
-              <Image
-                style={{
-                  width: 160,
-                  height: 160,
-                  borderRadius: 80,
-                  backgroundColor: Colors.grey,
-                  marginBottom: 8,
-                }}
-              />
-              <Text style={text.h3}>User</Text>
-            </View>
+            ></View>
           </View>
         )}
         <View style={{ alignSelf: "baseline", paddingBottom: 8 }}>

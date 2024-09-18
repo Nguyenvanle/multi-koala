@@ -52,7 +52,7 @@ const Home = () => {
           width: 400,
           top: -30,
           padding: 24,
-          paddingBottom: 0,
+          paddingBottom: 8,
         }}
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>New Courses</Text>
