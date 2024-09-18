@@ -80,12 +80,18 @@ const AllCourses = () => {
             10/12
           </Text>
         </View>
-        <Progress.Bar
-          progress={0.8}
-          width={330}
-          color={Colors.teal_dark}
-          style={{ marginLeft: 8 }}
-        />
+        <View
+          style={{
+            backgroundColor: Colors.white,
+            borderRadius: 20,
+          }}
+        >
+          <Progress.Bar
+            width={346}
+            progress={item.process}
+            color={Colors.teal_light}
+          />
+        </View>
         <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
           <Text
             style={{

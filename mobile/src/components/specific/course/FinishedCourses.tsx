@@ -4,9 +4,10 @@ import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
+import * as Progress from "react-native-progress";
 
 const FinishedCourses = () => {
-  const [courseData, setCourseData] = useState<CourseData[]>([]);
+  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -14,44 +15,60 @@ const FinishedCourses = () => {
     const fetchCourseData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
+        console.log(token);
 
-        if (!token) {
-          return;
-        }
+        if (token) {
+          const response = await API_MAIN.get(
+            "/enroll-courses/my-enrolled-courses",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-        const response = await API_MAIN.get("/courses");
-        console.log(response.data);
-        if (response.data.code === 200) {
-          setCourseData(response.data.result);
-        } else {
-          setErrorMessage(response.data.message);
+          if (
+            response.data.code === 200 &&
+            response.data.result.process == 1.0
+          ) {
+            setCourseData(response.data.result);
+            console.log(courseData);
+            console.log(response.data.result[0].course.image);
+          } else {
+            setErrorMessage(response.data.message);
+          }
         }
       } catch (error) {
-        setErrorMessage("Please sign in to fetch course data.");
+        setErrorMessage("Please sign in to connect course data.");
       } finally {
         setLoading(false);
       }
     };
     fetchCourseData();
   }, []);
+  if (loading) {
+    return (
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
+    );
+  }
 
-  const renderCourseItem = ({ item }: { item: CourseData }) => (
-    <TouchableOpacity
+  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
+    <View
       style={{
         justifyContent: "center",
         alignItems: "center",
-        shadowColor: Colors.grey,
-        shadowOpacity: 1,
-        marginBottom: 20,
+        width: 350,
+        marginTop: 28,
       }}
     >
       <Image
-        source={{ uri: item.image.imageUrl }}
+        source={{ uri: item.course.image?.imageUrl }}
         style={{
-          width: 380,
+          width: 350,
           height: 200,
-          borderRadius: 20,
-          marginBottom: 10,
+          borderRadius: 15,
           borderColor: Colors.grey,
           borderWidth: 1,
         }}
@@ -65,67 +82,80 @@ const FinishedCourses = () => {
         <View
           style={{
             flexDirection: "row",
-            alignSelf: "center",
-            paddingBottom: 5,
+            alignSelf: "baseline",
+            width: 345,
+            padding: 8,
+            paddingBottom: 0,
           }}
         >
           <Text
             style={{
-              ...text.p,
+              ...text.h4,
               color: Colors.black,
+              fontWeight: "300",
             }}
           >
-            {item.courseName}
+            {item.course.courseName}
           </Text>
         </View>
-        <View style={{ flexDirection: "row", alignSelf: "center" }}>
-          <Text style={{ ...text.small, color: Colors.grey, marginRight: 10 }}>
-            1h 50m
-          </Text>
-          <Text style={{ ...text.small, color: Colors.grey }}>12 lessons</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            paddingHorizontal: 8,
+          }}
+        >
           <Text
             style={{
               ...text.small,
               color: Colors.teal_dark,
-              marginLeft: 180,
             }}
           >
             10/12
           </Text>
         </View>
-        <View
-          style={{
-            height: 8,
-            backgroundColor: Colors.white,
-            width: 350,
-            borderRadius: 20,
-            marginTop: 5,
-            alignSelf: "center",
-          }}
+        <Progress
+          progress={0.8}
+          width={330}
+          color={Colors.teal_dark}
+          style={{ marginLeft: 8 }}
         />
-        <View style={{ flexDirection: "row", marginVertical: 5 }}>
+        <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
           <Text
             style={{
               ...text.large,
-              fontWeight: "500",
-              color: Colors.teal_dark,
+              fontWeight: "300",
+              color: Colors.dark,
             }}
           >
-            {item.uploadedByTeacher.firstname} {item.uploadedByTeacher.lastname}
+            {item.course.uploadedByTeacher?.firstname}{" "}
+            {item.course.uploadedByTeacher?.lastname}
           </Text>
-          <Text
+          <TouchableOpacity
             style={{
-              ...text.large,
-              fontWeight: "500",
-              color: Colors.red,
-              marginLeft: 210,
+              borderRadius: 10,
+              backgroundColor: Colors.teal_dark,
+              alignItems: "center",
+              height: 50,
+              width: 330,
+              marginTop: 8,
+              marginBottom: 8,
+              justifyContent: "center",
             }}
           >
-            ${item.coursePrice}
-          </Text>
+            <Text
+              style={{
+                ...text.h4,
+                fontWeight: "500",
+                color: Colors.white,
+              }}
+            >
+              ${item.course.coursePrice}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -138,13 +168,13 @@ const FinishedCourses = () => {
       {loading ? (
         <Text style={{ ...text.p, color: Colors.teal_dark }}>Loading...</Text>
       ) : errorMessage ? (
-        <Text style={{ color: "red" }}>{errorMessage}</Text>
+        <Text style={{ color: "red" }}></Text>
       ) : (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={courseData}
           renderItem={renderCourseItem}
-          keyExtractor={(item) => item.courseId}
-          contentContainerStyle={{ paddingBottom: 200 }}
+          keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
         />
       )}
     </View>

@@ -143,7 +143,7 @@ const HeaderUser: React.FC = () => {
           >
             <Progress.Bar
               width={280}
-              progress={0.8}
+              progress={item.course.process}
               color={Colors.teal_light}
             />
           </View>

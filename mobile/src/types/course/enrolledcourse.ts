@@ -24,5 +24,6 @@ interface EnrolledCourseData {
     };
     discountApprovedRate: number;
     status: string;
+    process: number;
   };
 }

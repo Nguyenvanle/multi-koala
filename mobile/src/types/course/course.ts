@@ -23,4 +23,5 @@ interface CourseData {
   };
   discountApprovedRate: number;
   status: string;
+  process: number;
 }
