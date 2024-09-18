@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.response;
+package com.duokoala.server.dto.response.certificationResponse;
 
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.dto.response.userResponse.TeacherResponse;
