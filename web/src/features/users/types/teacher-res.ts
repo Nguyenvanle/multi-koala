@@ -1,4 +1,7 @@
-import { TeacherBodyType } from "@/features/users/schema/teacher";
+import {
+  TeacherBodySchema,
+  TeacherBodyType,
+} from "@/features/users/schema/teacher";
 import {
   TeacherDetailResponseSchema,
   TeachersResponseSchema,
@@ -8,5 +11,5 @@ import { z } from "zod";
 export type TeachersResponse = z.infer<typeof TeachersResponseSchema>;
 export type TeacherDetailResponse = z.infer<typeof TeacherDetailResponseSchema>;
 
-export type TeachersResult = z.infer<typeof TeacherBodyType>[];
-export type TeacherDetailResult = z.infer<typeof TeacherBodyType>;
+export type TeachersResult = z.infer<typeof TeacherBodySchema>[];
+export type TeacherDetailResult = z.infer<typeof TeacherBodySchema>;

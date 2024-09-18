@@ -1,17 +1,13 @@
 // src/features/lessons/types/responseSchema.ts
 
-import { TeacherBodyType } from "@/features/users/schema/teacher";
+import { TeacherBodySchema } from "@/features/users/schema/teacher";
+import { BaseResponseSchema } from "@/schemas/base-res";
 import { z } from "zod";
 
-export const BaseResponseSchema = z.object({
-  code: z.number(),
-  message: z.string(),
-});
-
 export const TeachersResponseSchema = BaseResponseSchema.extend({
-  result: z.array(TeacherBodyType),
+  result: z.array(TeacherBodySchema),
 });
 
 export const TeacherDetailResponseSchema = BaseResponseSchema.extend({
-  result: TeacherBodyType,
+  result: TeacherBodySchema,
 });
