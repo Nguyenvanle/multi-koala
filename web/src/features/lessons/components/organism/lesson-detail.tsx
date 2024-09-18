@@ -1,18 +1,11 @@
-// Để xử lý lỗi Type 'LessonsResult | null' is not assignable to parameter of type 'LessonsResult',
-// bạn cần thêm một bước kiểm tra trước khi gọi hook useVisibleLessons.
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { LessonsCard } from "@/features/courses/components/layout/lesson-card";
-import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import { LessonInfo } from "@/features/lessons/components/atoms/lesson-info";
 import { VideoPlayer } from "@/features/lessons/components/atoms/video-player";
 import { QuizSection } from "@/features/lessons/components/molecules/quiz-section";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useVisibleLessons } from "@/features/lessons/hooks/useVisibleLesson";
-import {
-  LessonDetailResult,
-  LessonsResult,
-} from "@/features/lessons/types/lessons-res";
+import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { useParams } from "next/navigation";
 
 interface LessonDetailPageProps {
@@ -22,7 +15,7 @@ interface LessonDetailPageProps {
 export const LessonDetailPage: React.FC<LessonDetailPageProps> = ({
   lesson,
 }) => {
-  const { courseId } = useParams<{ courseId?: string | string[] }>(); // Định nghĩa kiểu params
+  const { courseId } = useParams<{ courseId?: string | string[] }>();
 
   // Chuyển đổi courseId sang chuỗi nếu nó là một mảng
   const normalizedCourseId = Array.isArray(courseId) ? courseId[0] : courseId;

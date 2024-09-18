@@ -1,15 +1,8 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const QuizSection: React.FC = () => (
-  <Card>
+  <Card className="hidden">
     <CardHeader>
       <CardTitle>Lesson Quiz</CardTitle>
     </CardHeader>
