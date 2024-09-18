@@ -23,9 +23,9 @@ const PriceButton: React.FC<PriceButtonProps> = ({
         <H4>
           <span
             className={`font-bold text-destructive ${className}`}
-          >{`$ ${discountedPrice.toFixed(2)}`}</span>
+          >{`$ ${discountedPrice.toFixed(2)} `}</span>
           {discount !== 0 ? (
-            <span className="line-through text-foreground">{` /${originalPrice.toFixed(
+            <span className="line-through text-foreground">{`/${originalPrice.toFixed(
               2
             )}`}</span>
           ) : null}

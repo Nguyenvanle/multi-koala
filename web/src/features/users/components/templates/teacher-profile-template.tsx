@@ -1,5 +1,6 @@
 "use client";
 
+import TeacherProfileSkeleton from "@/features/users/components/atoms/teacher-profile-skeleton";
 import TeacherProfile from "@/features/users/components/organisms/teacher-profile";
 import useTeacherCourses from "@/features/users/hooks/useTeacherCourses";
 import useTeacherProfile from "@/features/users/hooks/useTeacherProfile";
@@ -18,7 +19,7 @@ export default function TeacherProfileTemplate() {
     error: coursesError,
   } = useTeacherCourses(teacherId as string);
 
-  if (teacherLoading || coursesLoading) return <div>Loading...</div>;
+  if (teacherLoading || coursesLoading) return <TeacherProfileSkeleton />;
   if (teacherError || coursesError)
     return <div>Error: {teacherError || coursesError}</div>;
   if (!teacher) return <div>Teacher not found</div>;
