@@ -1,4 +1,4 @@
-import { AdminBodyType } from "@/features/users/types/admin";
+import { AdminBodyType } from "@/features/users/schema/admin";
 import { COURSE_VERIFY } from "@/types/course/verify";
 import { z } from "zod";
 

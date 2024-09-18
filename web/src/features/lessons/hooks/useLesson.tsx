@@ -12,7 +12,7 @@ export default function useLesson({ params }: { params: { lessonId: string } }) 
     const fetchLesson = async () => {
       try {
         const { result } = await lessonService.getDetail(params.lessonId);
-        setLesson(result?.result as any);
+        setLesson(result?.result as LessonDetailResult);
       } catch (err: any) {
         setError(err.message);
       } finally {

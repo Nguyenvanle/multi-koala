@@ -1,7 +1,7 @@
 import { CourseFieldBodyType } from "@/features/courses/types/course-field";
 import { CourseTypeBodyType } from "@/features/courses/types/course-type";
 import { ImageBodyType } from "@/features/images/types/image";
-import { UserBodyType } from "@/features/users/types/user";
+import { UserBodyType } from "@/features/users/schema/user";
 import { COURSE_VERIFY } from "@/types/course/verify";
 import { z } from "zod";
 
