@@ -46,7 +46,7 @@ const TeacherProfile: React.FC<{
           </CardContent>
 
           <CardFooter className="flex flex-col">
-            <h2 className="mt-4 text-2xl font-bold text-gray-800">
+            <h2 className="mt-4 text-2xl font-bold ">
               {teacher.firstname} {teacher.lastname}
             </h2>
             <Badge className="mt-2 px-3 py-1 text-sm font-medium bg-primary text-white">
@@ -58,7 +58,7 @@ const TeacherProfile: React.FC<{
         {/* Teacher Details Section */}
         <Card className="col-span-1 md:col-span-2 shadow-lg">
           <CardHeader className="border-b pb-4">
-            <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
+            <CardTitle className="text-2xl font-bold  flex items-center">
               <User className="mr-2 text-primary" size={24} /> Teacher
               Information
             </CardTitle>
@@ -83,10 +83,10 @@ const TeacherProfile: React.FC<{
                 className="lg:col-span-1"
               />
               <div className="col-span-1 md:col-span-2 lg:col-span-4">
-                <h3 className="text-lg font-semibold text-gray-700 flex items-center mb-2">
+                <h3 className="text-lg font-semibold  flex items-center mb-2">
                   <Book className="mr-2 text-primary" size={20} /> Bio
                 </h3>
-                <p className="text-gray-600">{teacher.userBio}</p>
+                <p className="text-muted-foreground">{teacher.userBio}</p>
               </div>
             </div>
           </CardContent>
