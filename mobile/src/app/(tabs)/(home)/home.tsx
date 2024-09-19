@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   StatusBar,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import React from "react";
@@ -12,7 +11,6 @@ import { Colors } from "@/src/constants/Colors";
 import { router } from "expo-router";
 import HeaderUser from "@/src/components/specific/user/HeaderUser";
 import MyCoures from "@/src/components/specific/course/smallPart/MyCoures";
-import CircleStyle from "@/src/components/common/CircleStyle";
 import NewCoures from "./../../../components/specific/course/smallPart/NewCourse";
 
 const Home = () => {
@@ -20,11 +18,9 @@ const Home = () => {
     <SafeAreaView
       style={{
         ...Styles.container,
-        top: -100,
       }}
     >
       <StatusBar barStyle={"dark-content"} />
-      <CircleStyle />
       <HeaderUser />
       <View
         style={{
@@ -38,9 +34,7 @@ const Home = () => {
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>My Courses</Text>
         <TouchableOpacity
-          onPress={() =>
-            router.replace("/(courses)/course-list?tab=inprogress")
-          }
+          onPress={() => router.push("/(courses)/course-list?tab=inprogress")}
         >
           <Text style={{ ...text.p, color: Colors.teal_dark }}>See All</Text>
         </TouchableOpacity>
@@ -52,14 +46,13 @@ const Home = () => {
           justifyContent: "space-between",
           alignItems: "center",
           width: 400,
-          paddingTop: 8,
           padding: 24,
-          paddingBottom: 0,
+          paddingBottom: 8,
         }}
       >
         <Text style={{ ...text.h4, fontWeight: "500" }}>New Courses</Text>
         <TouchableOpacity
-          onPress={() => router.replace("/(courses)/course-list?tab=all")}
+          onPress={() => router.push("/(courses)/course-list?tab=all")}
         >
           <Text style={{ ...text.p, color: Colors.teal_dark }}>See All</Text>
         </TouchableOpacity>

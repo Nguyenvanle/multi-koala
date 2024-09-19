@@ -30,6 +30,8 @@ const CourseItem: React.FC<CourseItemProps> = ({ course }) => {
 const styles = StyleSheet.create({
   courseContainer: {
     alignItems: "center",
+    width: 186,
+    height: 221,
     padding: 8,
   },
   image: {

@@ -1,26 +1,60 @@
-// api/courses.ts
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
+// src/hook/course/useCourseDetails.ts
+import { useState, useEffect } from "react";
+import API_MAIN from "./config";
+import { CourseRes } from "@/src/types/course/course-res";
 
-export const fetchCourseDetails = async (courseId: string) => {
-  try {
-    const token = await AsyncStorage.getItem("token");
+export interface CourseNormal {
+  courseId: string;
+  courseName: string;
+  coursePrice: number;
+  image: {
+    imageUrl: string;
+    image: string;
+  };
+  courseDescription: string;
+  uploadedByTeacher: {
+    firstname: string;
+    lastname: string;
+  };
+  courseLevel: string;
+  courseRating: number;
+  types: {
+    typeName: string;
+    typeDescription: string;
+  };
+  fields: {
+    fieldName: string;
+    fielDescription: string;
+  };
+  discountApprovedRate: number;
+  status: string;
+  process: number;
+}
 
-    if (!token) {
-      throw new Error("Không tìm thấy token. Vui lòng đăng nhập.");
-    }
+export const useCourseDetails = (courseId: string) => {
+  const [courseDetails, setCourseDetails] = useState<CourseNormal | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const response = await API_MAIN.get(`/courses/{courseId}`);
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      try {
+        setLoading(true);
+        // Thay thế URL này bằng URL thực của API của bạn
+        const responseAll = await API_MAIN.get<CourseRes>(
+          `/courses/${courseId}`
+        );
 
-    if (response.data.code === 200) {
-      return response.data.result;
-    } else {
-      throw new Error(
-        response.data.message || "Không thể tải thông tin khóa học."
-      );
-    }
-  } catch (error) {
-    console.error("Lỗi khi tải thông tin khóa học:", error);
-    throw error;
-  }
+        setCourseDetails(responseAll.data.result as CourseNormal);
+      } catch (err) {
+        setError(error); // Lấy thông báo lỗi từ Axios
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourseDetails();
+  }, [courseId]);
+
+  return { courseDetails, loading, error };
 };

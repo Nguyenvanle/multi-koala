@@ -22,9 +22,6 @@ const SignIn = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [token, setToken] = useState();
-  const [firstname, setFirstName] = useState<string>("");
-  const [lastname, setLastName] = useState<string>("");
 
   const handleLogin = async () => {
     if (!username || !password) {

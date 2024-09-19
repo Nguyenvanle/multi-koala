@@ -5,6 +5,7 @@ const CourseDetailsLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="[courseId]" options={{ headerShown: false }} />
+
       <Stack.Screen name="lessons" options={{ headerShown: false }} />
     </Stack>
   );

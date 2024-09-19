@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../../common/CircleStyle";
@@ -7,192 +7,110 @@ import Button from "../../common/Button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
-import { Ionicons } from "@expo/vector-icons";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
+import Routing from "../../common/RoutingDeatil";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [progressCourses, setProgressCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
+        console.log(token);
 
-        if (!token) {
-          setErrorMessage("No token found. Please log in.");
-          return;
-        }
-
-        const response = await API_MAIN.get("/students/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.data.code === 200) {
-          setUserData({
-            firstname: response.data.result.firstname,
-            lastname: response.data.result.lastname,
-            image: response.data.result.image,
-            email: response.data.result.email,
-            roles: response.data.result.roles[0].roleName,
-            token: token,
-            userBirth: response.data.result.userBirth,
-            userBio: response.data.result.userBio,
+        if (token) {
+          const course = await API_MAIN.get(
+            "/enroll-courses/my-enrolled-courses",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const user = await API_MAIN.get("/students/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
-        } else {
-          setErrorMessage(response.data.message);
+
+          if (user.data.code === 200) {
+            setCourseData(course.data.result);
+            setUserData(user.data.result);
+          } else {
+            setErrorMessage(user.data.message);
+            setErrorMessage(course.data.message);
+          }
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        setErrorMessage("Failed to fetch user data.");
+        setErrorMessage("Please sign in to connect course data.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
 
-  return (
-    <View
+  if (loading) {
+    return (
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
+    );
+  }
+  const displayedCourses = courseData.slice(0, 1);
+
+  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
+    <TouchableOpacity
       style={{
-        alignItems: "center",
-        justifyContent: "center",
-        height: 200,
+        borderRadius: 10,
+        backgroundColor: Colors.teal_dark,
+        justifyContent: "space-between",
         padding: 16,
+        alignItems: "center",
       }}
     >
-      <CircleStyle />
-
-      {userData ? (
-        <View
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexDirection: "row",
-            padding: 8,
-            width: 364,
-          }}
-        >
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "baseline",
-              flexDirection: "column",
-            }}
-          >
-            <Text style={text.h4}>Welcome</Text>
-            <Text style={{ ...text.h4, color: Colors.teal_dark }}>
-              {userData.firstname} {userData.lastname}
-            </Text>
-          </View>
-          {userData.image && (
-            <Image
-              source={{ uri: userData.image.imageUrl }}
-              style={{
-                width: 75,
-                height: 75,
-                borderRadius: 35,
-                justifyContent: "flex-end",
-              }}
-            />
-          )}
-        </View>
-      ) : (
-        <View
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexDirection: "row",
-            padding: 8,
-          }}
-        >
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "baseline",
-              flexDirection: "column",
-              padding: 8,
-            }}
-          >
-            <Text style={text.h4}>Welcome</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignSelf: "center",
-              paddingLeft: 52,
-            }}
-          >
-            <Button
-              title="Sign In"
-              onPress={() => router.replace("/(auth)/sign-in")}
-              buttonStyle={{
-                ...button.Authen,
-                backgroundColor: Colors.dark,
-                width: 100,
-                borderRadius: 10,
-                marginTop: 0,
-              }}
-              textStyle={{ ...text.p, color: Colors.white }}
-            />
-            <Button
-              title="Sign Up"
-              onPress={() => router.replace("/(auth)/sign-up")}
-              buttonStyle={{
-                ...button.Authen,
-                backgroundColor: Colors.white,
-                width: 100,
-                borderRadius: 10,
-                marginHorizontal: 8,
-                marginTop: 0,
-              }}
-              textStyle={{ ...text.p, color: Colors.black }}
-            />
-          </View>
-        </View>
-      )}
-      <TouchableOpacity
+      <View
         style={{
-          borderRadius: 10,
-          backgroundColor: Colors.teal_dark,
-          justifyContent: "space-between",
-          padding: 16,
-          alignItems: "center",
+          alignSelf: "baseline",
+        }}
+      >
+        <Text style={{ ...text.h4, color: Colors.white }}>
+          Continue Learning
+        </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: "baseline",
+          paddingVertical: 8,
+          justifyContent: "center",
         }}
       >
         <View
           style={{
-            alignSelf: "baseline",
-          }}
-        >
-          <Text style={{ ...text.h4, color: Colors.white }}>
-            Continue Learning
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignSelf: "baseline",
-            paddingVertical: 8,
-            justifyContent: "center",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            paddingRight: 16,
           }}
         >
           <View
             style={{
-              flexDirection: "column",
-              justifyContent: "space-between",
-              paddingRight: 16,
+              flexDirection: "row",
+              paddingVertical: 8,
             }}
           >
             <View
               style={{
-                flexDirection: "row",
-                paddingVertical: 8,
+                overflow: "hidden",
+                alignItems: "center",
+                width: 150,
+                marginRight: 64,
               }}
             >
               <Text
@@ -200,40 +118,193 @@ const HeaderUser: React.FC = () => {
                   ...text.p,
                   color: Colors.background,
                 }}
+                numberOfLines={1}
               >
-                Toeic 650+
+                {item.course.courseName}
               </Text>
-              <Text
+            </View>
+            <Text
+              style={{
+                ...text.small,
+                color: Colors.background,
+                paddingTop: 2,
+              }}
+            >
+              0/12
+            </Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: Colors.white,
+              borderRadius: 20,
+            }}
+          >
+            <Progress.Bar
+              width={280}
+              progress={item.course.process}
+              color={Colors.teal_light}
+            />
+          </View>
+        </View>
+        <Feather
+          name="arrow-right-circle"
+          size={32}
+          color={Colors.background}
+          style={{ alignSelf: "flex-end" }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+  return (
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        height: 240,
+        padding: 16,
+      }}
+    >
+      <CircleStyle />
+      {userData && courseData ? (
+        <View style={{ flexDirection: "column" }}>
+          <View
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
+              padding: 8,
+              width: 364,
+            }}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "baseline",
+                flexDirection: "column",
+              }}
+            >
+              <Text style={text.h4}>Welcome</Text>
+              <Text style={{ ...text.h4, color: Colors.teal_dark }}>
+                {userData.firstname} {userData.lastname}
+              </Text>
+            </View>
+            {userData.image && (
+              <Image
+                source={{ uri: userData.image.imageUrl }}
                 style={{
-                  ...text.small,
-                  color: Colors.background,
-                  paddingLeft: 150,
+                  width: 75,
+                  height: 75,
+                  borderRadius: 35,
+                  justifyContent: "flex-end",
                 }}
-              >
-                10/12
+              />
+            )}
+          </View>
+          <FlatList
+            data={displayedCourses}
+            renderItem={renderCourseItem}
+            keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
+          />
+        </View>
+      ) : (
+        <View style={{ width: 364 }}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              padding: 8,
+            }}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "baseline",
+                flexDirection: "column",
+                padding: 8,
+              }}
+            >
+              <Text style={text.h4}>Welcome</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignSelf: "center",
+                paddingLeft: 52,
+              }}
+            >
+              <Button
+                title="Sign In"
+                onPress={() => router.push("/(auth)/sign-in")}
+                buttonStyle={{
+                  ...button.Authen,
+                  backgroundColor: Colors.dark,
+                  width: 100,
+                  borderRadius: 10,
+                  marginTop: 0,
+                }}
+                textStyle={{ ...text.p, color: Colors.white }}
+              />
+              <Button
+                title="Sign Up"
+                onPress={() => router.push("/(auth)/sign-up")}
+                buttonStyle={{
+                  ...button.Authen,
+                  backgroundColor: Colors.white,
+                  width: 100,
+                  borderRadius: 10,
+                  marginHorizontal: 8,
+                  marginTop: 0,
+                }}
+                textStyle={{ ...text.p, color: Colors.black }}
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={{
+              borderRadius: 10,
+              backgroundColor: Colors.teal_dark,
+              justifyContent: "space-between",
+              padding: 16,
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                alignSelf: "baseline",
+              }}
+            >
+              <Text style={{ ...text.h4, color: Colors.white }}>
+                Continue Learning
               </Text>
             </View>
             <View
               style={{
-                backgroundColor: Colors.white,
-                borderRadius: 20,
+                flexDirection: "row",
+                alignSelf: "baseline",
+                paddingVertical: 8,
+                justifyContent: "center",
               }}
             >
-              <Progress.Bar
-                width={280}
-                progress={0.8}
-                color={Colors.teal_light}
-              />
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  paddingRight: 16,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingVertical: 8,
+                  }}
+                ></View>
+              </View>
             </View>
-          </View>
-          <Feather
-            name="arrow-right-circle"
-            size={32}
-            color={Colors.background}
-            style={{ alignSelf: "flex-end" }}
-          />
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      )}
+
       {/* Rest of the component remains the same */}
     </View>
   );

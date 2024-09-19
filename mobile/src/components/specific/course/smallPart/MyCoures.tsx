@@ -2,39 +2,108 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
+  StyleSheet,
   TouchableOpacity,
   Image,
-  ActivityIndicator,
-  StyleSheet,
   FlatList,
 } from "react-native";
-import API_MAIN from "@/src/feature/api/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useCourses } from "@/src/hook/course/useCourse";
-import CourseItem from "./CourseItem";
+import { Link, router } from "expo-router";
+import API_MAIN from "@/src/feature/api/config";
 
-const MyCoures = () => {
-  const { courseData, loading, error } = useCourses();
+const MyCourses = () => {
+  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+
+        if (token) {
+          const response = await API_MAIN.get(
+            "/enroll-courses/my-enrolled-courses",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const user = await API_MAIN.get("/students/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.data.code === 200) {
+            setCourseData(response.data.result);
+            setUserData(user.data.result);
+          } else {
+            setErrorMessage(response.data.message);
+          }
+        }
+      } catch (error) {
+        setErrorMessage("Please sign in to connect course data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourseData();
+  }, []);
   if (loading) {
-    return <Text style={styles.statusText}>Đang tải...</Text>;
-  }
-
-  if (error) {
     return (
-      <Text style={styles.statusText}>Đã xảy ra lỗi khi tải khóa học.</Text>
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
     );
   }
-
-  // Lấy 2 khóa học đầu tiên
-  const displayedCourses = courseData.slice(0, 2);
-
+  const limitedCourses = courseData.slice(0, 5);
+  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
+    <Link href={`/${item.course.courseId}`} asChild>
+      <TouchableOpacity style={styles.courseContainer}>
+        <Image
+          source={{ uri: item.course.image.imageUrl }}
+          style={styles.image}
+        />
+        <View style={styles.containerText}>
+          <Text style={styles.clampedText} numberOfLines={1}>
+            {item.course.courseName}
+          </Text>
+          <Text style={styles.price}>
+            ${item.course.coursePrice.toFixed(2)}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Link>
+  );
   return (
     <View style={styles.container}>
-      {displayedCourses.map((course) => (
-        <CourseItem key={course.courseId} course={course} />
-      ))}
+      {userData ? (
+        <FlatList
+          horizontal={true}
+          data={limitedCourses}
+          renderItem={renderCourseItem}
+          keyExtractor={(item, index) => item.course.courseId}
+          style={{ paddingHorizontal: 16 }}
+        />
+      ) : (
+        <TouchableOpacity
+          onPress={() => router.push("/(auth)/sign-in")}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: 300,
+          }}
+        >
+          <Text style={{ ...styles.clampedText, color: Colors.red }}>
+            Please sign in to connect your courses
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -49,31 +118,50 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 8,
+    height: 221,
   },
   courseContainer: {
-    justifyContent: "center",
-    alignItems: "baseline",
+    alignItems: "center",
+    width: 186,
+    height: 221,
     padding: 8,
   },
-  courseImage: {
+  image: {
     width: 170,
     height: 140,
     borderRadius: 15,
     borderColor: Colors.grey,
     borderWidth: 1,
   },
-  courseTitle: {
-    ...text.h4,
-    color: Colors.black,
-    fontWeight: "400",
-    paddingTop: 8,
+  infoContainer: {
+    marginLeft: 10,
+    justifyContent: "center",
   },
-  coursePrice: {
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  instructor: {
+    fontSize: 14,
+    color: "#666",
+  },
+  price: {
     ...text.large,
     color: Colors.teal_dark,
-    fontWeight: "200",
+    fontWeight: "300",
     paddingTop: 8,
+  },
+  containerText: {
+    overflow: "hidden",
+    width: 170,
+    padding: 8,
+  },
+  clampedText: {
+    // Styles can be adjusted according to your needs
+    ...text.p,
+    color: Colors.black,
+    fontWeight: "400",
   },
 });
 
-export default MyCoures;
+export default MyCourses;

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
-import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import CircleStyle from "@/src/components/common/CircleStyle";
 import { forgot } from "./forgot";
 
