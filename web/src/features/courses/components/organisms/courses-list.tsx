@@ -1,4 +1,3 @@
-// src/features/courses/components/organisms/CoursesList.tsx
 import React from "react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,20 +7,22 @@ import { CoursesResultResType } from "@/features/courses/types/course";
 interface CoursesListProps {
   courses: CoursesResultResType | null;
   loading: boolean;
+  className?: string;
 }
 
 export const CoursesList: React.FC<CoursesListProps> = ({
   courses,
   loading,
+  className = "", // Đặt giá trị mặc định cho className
 }) => {
   // Kiểm tra trạng thái loading
   if (loading) {
     return (
       <div className="grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <Skeleton className="flex w-[94vw] h-[500px]" />
-        <Skeleton className="flex w-[94vw] h-[500px]" />
-        <Skeleton className="flex w-[94vw] h-[500px]" />
-        <Skeleton className="flex w-[94vw] h-[500px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
+        <Skeleton className="flex min-w-[180px] min-h-[460px]" />
       </div>
     );
   }
@@ -37,7 +38,9 @@ export const CoursesList: React.FC<CoursesListProps> = ({
 
   // Hiển thị danh sách khóa học
   return (
-    <div className="grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div
+      className={`grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${className}`} // Sử dụng template literal để kết hợp className
+    >
       {courses.map((course) => (
         <Link key={course.courseId} href={`/courses/${course.courseId}`}>
           <CourseCard

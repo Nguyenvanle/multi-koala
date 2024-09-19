@@ -14,9 +14,9 @@ export default function DisplayCard({
   const [error, setError] = useState(false);
 
   return (
-    <Card className="rounded overflow-hidden hover:shadow-md">
+    <Card className="rounded overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="p-0 ">
-        <div className="relative w-full h-[62vh] overflow-hidden">
+        <div className="relative w-full h-[52vh] aspect-video overflow-hidden">
           {loading && <Skeleton className="absolute inset-0 w-full h-full" />}
           {!courseImage.includes("https://img.freepik.com") ? (
             <Skeleton className="absolute inset-0 w-full h-full" />

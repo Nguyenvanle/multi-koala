@@ -1,27 +1,40 @@
-"use client";
-
-// LessonCard.tsx
 import Image from "next/image";
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { P, Small } from "@/components/ui/typography";
-import { CirclePlay } from "lucide-react";
+import { H4, P, Small } from "@/components/ui/typography";
+import { CirclePlay, Lock } from "lucide-react";
 import { LessonBody } from "@/features/lessons/schema/lessons";
 import { convertDuration } from "@/lib/utils";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+
+interface LessonCardProps extends LessonBody {
+  isLocked: boolean;
+  lessonNumber: number; // Add this line
+}
 
 export default function LessonCard({
   lessonId,
   lessonName,
   image,
   video,
-}: LessonBody) {
+  isLocked,
+  lessonNumber,
+}: LessonCardProps) {
+  const path = usePathname();
+  const { courseId } = useParams();
   const [imageLoading, setImageLoading] = useState(true);
 
   const { hours, minutes, seconds } = convertDuration(video.videoDuration);
+  const isSelectedLesson = path === `/courses/${courseId}/${lessonId}`;
 
-  return (
-    <Card className="flex flex-row w-full rounded-sm overflow-hidden shadow-none mb-2 hover:shadow-md">
+  const cardContent = (
+    <Card
+      className={`flex flex-row w-full rounded-sm overflow-hidden shadow-none mb-2 hover:shadow-md ${
+        isSelectedLesson && !isLocked ? "bg-accent" : ""
+      } ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
       <CardContent className="p-0 relative">
         {imageLoading && (
           <Skeleton className="h-20 w-20 rounded-none absolute top-0 left-0 z-10" />
@@ -49,13 +62,44 @@ export default function LessonCard({
           <P className="line-clamp-2">{lessonName}</P>
           <Small>
             {hours > 0
-              ? `${hours}h ${minutes}m ${seconds}'`
-              : `${minutes}m ${seconds}'`}
+              ? `${hours}h ${minutes}m ${seconds}s`
+              : minutes > 0
+              ? `${minutes}m ${seconds}s`
+              : ` ${seconds}s`}
           </Small>
         </div>
 
-        <CirclePlay />
+        {isLocked ? (
+          <Lock className="text-gray-400" size={24} />
+        ) : (
+          <CirclePlay className="text-primary" size={24} />
+        )}
       </CardHeader>
     </Card>
+  );
+
+  if (isLocked) {
+    return (
+      <div
+        className="flex flex-1 flex-row items-center"
+        title="Enroll in this course to unlock additional lessons and advanced content!"
+      >
+        <Small className="mr-2 text-muted-foreground font-bold ">
+          {lessonNumber}
+        </Small>
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link href={`/courses/${courseId}/${lessonId}`} className="block">
+      <div className="flex flex-1 flex-row items-center">
+        <Small className="mr-2 text-muted-foreground font-bold">
+          {lessonNumber}
+        </Small>
+        {cardContent}
+      </div>
+    </Link>
   );
 }

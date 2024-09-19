@@ -1,9 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/src/constants/Colors";
+import { Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import API_MAIN from "@/src/feature/api/config";
+import { text } from "@/src/constants/Styles";
 
 const TabsLayout = () => {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+
+        if (token) {
+          const user = await API_MAIN.get("/students/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (user.data.code === 200) {
+            setUserData(user.data.result);
+          } else {
+            setErrorMessage(user.data.message);
+          }
+        }
+      } catch (error) {
+        setErrorMessage("Please sign in to connect course data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourseData();
+  }, []);
+  if (loading) {
+    return (
+      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
+        Loading...
+      </Text>
+    );
+  }
   return (
     <Tabs
       screenOptions={{
@@ -53,20 +94,38 @@ const TabsLayout = () => {
           ),
         }}
       />
-      <Tabs.Screen
-        name="(account)"
-        options={{
-          headerShown: false,
-          title: "",
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name="person-outline"
-              size={35}
-              color={focused ? Colors.teal_dark : Colors.black} // Thay đổi màu sắc ở đây
-            />
-          ),
-        }}
-      />
+      {userData ? (
+        <Tabs.Screen
+          name="(account)"
+          options={{
+            headerShown: false,
+            title: "",
+            tabBarIcon: ({ focused }) => (
+              <Ionicons
+                name="person-outline"
+                size={35}
+                color={focused ? Colors.teal_dark : Colors.black} // Thay đổi màu sắc ở đây
+              />
+            ),
+          }}
+        />
+      ) : (
+        <Tabs.Screen
+          name="(account)"
+          options={{
+            href: null,
+            headerShown: false,
+            title: "",
+            tabBarIcon: ({ focused }) => (
+              <Ionicons
+                name="person-outline"
+                size={35}
+                color={focused ? Colors.teal_dark : Colors.black} // Thay đổi màu sắc ở đây
+              />
+            ),
+          }}
+        />
+      )}
     </Tabs>
   );
 };

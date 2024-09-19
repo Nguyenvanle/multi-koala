@@ -1,7 +1,7 @@
 import { CourseFieldBodyType } from "@/features/courses/types/course-field";
 import { CourseTypeBodyType } from "@/features/courses/types/course-type";
 import { ImageBodyType } from "@/features/images/types/image";
-import { UserBodyType } from "@/features/users/types/user";
+import { UserBodyType } from "@/features/users/schema/user";
 import { COURSE_VERIFY } from "@/types/course/verify";
 import { z } from "zod";
 
@@ -53,3 +53,5 @@ export type CoursesResultResType = z.infer<typeof CoursesResultBodyType>;
 
 // Chi tiết khóa học
 export type CourseDetailResType = z.infer<typeof CourseDetailResponseBodyType>;
+
+export type CourseDetailResultResType = z.infer<typeof CourseBodyType>;
