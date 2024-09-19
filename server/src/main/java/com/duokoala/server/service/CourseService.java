@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,22 @@ public class CourseService {
     TypeRepository typeRepository;
     AuthenticationService authenticationService;
     FieldRepository fieldRepository;
+    DiscountCourseRepository discountCourseRepository;
+    RequestDiscountRepository requestDiscountRepository;
+
+    float getMaxApprovedDiscountRate(String courseId) {
+        Float maxDiscountCourse = Optional.ofNullable(
+                discountCourseRepository
+                        .findMaxApprovedDiscountRateByCourseId(courseId)
+        ).orElse(0.0f);
+
+        Float maxRequestDiscount = Optional.ofNullable(
+                requestDiscountRepository
+                        .findMaxApprovedRequestDiscountRateByCourseId(courseId)
+        ).orElse(0.0f);
+
+        return Math.max(maxDiscountCourse, maxRequestDiscount);
+    }
 
     public CourseResponse create(CourseCreateRequest request) {
         Course course = courseMapper.toCourse(request);

@@ -21,13 +21,11 @@ public class CourseResponse {
     float coursePrice;
     String courseDescription;
     Level courseLevel;
-    float courseRating;
     Set<TypeResponse> types;
     Set<FieldResponse> fields;
     ImageResponse image;
     TeacherResponse uploadedByTeacher;
     AdminResponse approvedByAdmin;
     Status status;
-    float discountApprovedRate;
     boolean isDeleted;
 }

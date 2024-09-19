@@ -29,6 +29,16 @@ public class ReviewService {
     ReviewRepository reviewRepository;
     ReviewMapper reviewMapper;
 
+    public float getAvgRatingTeacher(String teacherId) {
+        Float avgRating = reviewRepository.getAvgTeacher(teacherId);
+        return avgRating != null ? avgRating : 0.0f;
+    }
+
+    float getAvgRatingCourse(String courseId) {
+        Float avgCourse = reviewRepository.getAvgCourse(courseId);
+        return avgCourse != null ? avgCourse : 0.0f;
+    }
+
     public ReviewResponse create(String courseId, ReviewCreateRequest request) {
         Review review = reviewMapper.toReview(request);
         var course = courseRepository.findById(courseId)
