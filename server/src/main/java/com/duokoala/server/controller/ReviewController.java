@@ -3,7 +3,9 @@ package com.duokoala.server.controller;
 import com.duokoala.server.dto.request.reviewRequest.ReviewCreateRequest;
 import com.duokoala.server.dto.request.reviewRequest.ReviewUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.ReviewResponse;
+import com.duokoala.server.dto.response.reviewResponse.AVGCourseRatingResponse;
+import com.duokoala.server.dto.response.reviewResponse.AVGTeacherRatingResponse;
+import com.duokoala.server.dto.response.reviewResponse.ReviewResponse;
 import com.duokoala.server.service.ReviewService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,20 @@ public class ReviewController {
     ApiResponse<ReviewResponse> get(@PathVariable String reviewId) {
         return ApiResponse.<ReviewResponse>builder()
                 .result(reviewService.get(reviewId))
+                .build();
+    }
+
+    @GetMapping("/teachers/{teacherId}/reviews/avg-rating")
+    ApiResponse<AVGTeacherRatingResponse> getAVGTeacherRating(@PathVariable String teacherId) {
+        return ApiResponse.<AVGTeacherRatingResponse>builder()
+                .result(reviewService.getAvgRatingTeacher(teacherId))
+                .build();
+    }
+
+    @GetMapping("/courses/{courseId}/reviews/avg-rating")
+    ApiResponse<AVGCourseRatingResponse> getAVGCourseRating(@PathVariable String courseId) {
+        return ApiResponse.<AVGCourseRatingResponse>builder()
+                .result(reviewService.getAvgRatingCourse(courseId))
                 .build();
     }
 
