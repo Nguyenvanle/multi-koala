@@ -3,7 +3,8 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
-import com.duokoala.server.dto.response.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.enums.Level;
@@ -35,7 +36,7 @@ public class CourseService {
     DiscountCourseRepository discountCourseRepository;
     RequestDiscountRepository requestDiscountRepository;
 
-    float getMaxApprovedDiscountRate(String courseId) {
+    public DiscountAppliedResponse getMaxApprovedDiscountRate(String courseId) {
         Float maxDiscountCourse = Optional.ofNullable(
                 discountCourseRepository
                         .findMaxApprovedDiscountRateByCourseId(courseId)
@@ -46,7 +47,9 @@ public class CourseService {
                         .findMaxApprovedRequestDiscountRateByCourseId(courseId)
         ).orElse(0.0f);
 
-        return Math.max(maxDiscountCourse, maxRequestDiscount);
+        return DiscountAppliedResponse.builder()
+                .discountApplied(Math.max(maxDiscountCourse, maxRequestDiscount))
+                .build();
     }
 
     public CourseResponse create(CourseCreateRequest request) {

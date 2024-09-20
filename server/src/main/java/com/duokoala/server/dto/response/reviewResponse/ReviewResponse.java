@@ -1,6 +1,6 @@
 package com.duokoala.server.dto.response.reviewResponse;
 
-import com.duokoala.server.dto.response.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

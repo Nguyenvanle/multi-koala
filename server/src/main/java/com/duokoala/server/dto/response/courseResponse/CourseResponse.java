@@ -1,5 +1,7 @@
-package com.duokoala.server.dto.response;
+package com.duokoala.server.dto.response.courseResponse;
 
+import com.duokoala.server.dto.response.FieldResponse;
+import com.duokoala.server.dto.response.TypeResponse;
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.dto.response.userResponse.TeacherResponse;

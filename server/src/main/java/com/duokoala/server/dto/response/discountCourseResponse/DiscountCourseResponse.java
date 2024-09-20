@@ -1,7 +1,7 @@
 package com.duokoala.server.dto.response.discountCourseResponse;
 
 
-import com.duokoala.server.dto.response.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.DiscountResponse;
 import com.duokoala.server.enums.Status;
 import lombok.AccessLevel;

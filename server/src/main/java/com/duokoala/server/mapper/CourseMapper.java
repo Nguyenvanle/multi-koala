@@ -2,9 +2,8 @@ package com.duokoala.server.mapper;
 
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
-import com.duokoala.server.dto.response.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.entity.Course;
-import com.duokoala.server.mapper.userMapper.TeacherMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
