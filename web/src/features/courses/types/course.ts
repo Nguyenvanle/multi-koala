@@ -26,6 +26,8 @@ export const CourseBodyType = z.object({
   deleted: z.boolean(),
 });
 
+export const CoursesResultBodyType = z.array(CourseBodyType);
+
 // Định nghĩa schema cho phản hồi
 
 // Mảng khóa học
@@ -47,7 +49,6 @@ export const CourseDetailResponseBodyType = z.object({
 // Mảng khóa học
 export type CourseResType = z.infer<typeof CourseResponseBodyType>;
 
-export const CoursesResultBodyType = z.array(CourseBodyType);
 
 export type CoursesResultResType = z.infer<typeof CoursesResultBodyType>;
 
