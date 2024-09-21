@@ -11,12 +11,17 @@ import {
   StyleSheet,
 } from "react-native";
 import CircleStyle from "@/src//components/common/CircleStyle";
-import { Styles, text } from "@/src/constants/Styles";
+import { button, Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
-import Button from "@/src/components/common/Button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
+import Label from "@/src/components/atoms/label";
+import FacebookButton from "@/src/feature/auth/components/atoms/facebook-button";
+import GoogleButton from "@/src/feature/auth/components/atoms/google-button";
+import InputLabel from "@/src/feature/auth/components/atoms/input-label";
+import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
+import Button from "@/src/components/atoms/button";
 
 const SignIn = () => {
   const [username, setUsername] = useState<string>("");
@@ -60,7 +65,7 @@ const SignIn = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={70} // Điều chỉnh khoảng cách nếu cần
       >
-        <Text
+        <Label
           style={{
             ...text.h1,
             fontWeight: "bold",
@@ -69,24 +74,19 @@ const SignIn = () => {
             paddingHorizontal: 20,
             height: 120,
           }}
-        >
-          Sign In
-        </Text>
+          title="Sign In"
+        />
 
         {/* Các button đăng nhập */}
-        <Button
+        <FacebookButton
           title="Continue with Facebook"
-          onPress={() => "openFacebook"}
-          buttonStyle={{ backgroundColor: Colors.dark }}
+          style={{ ...button.Authen, backgroundColor: Colors.dark }}
           textStyle={{ color: Colors.white }}
-          icon="logo-facebook"
         />
-        <Button
+        <GoogleButton
           title="Continue with Google"
-          onPress={() => "openGmail"}
-          buttonStyle={{ backgroundColor: Colors.teal_dark }}
+          style={{ ...button.Authen, backgroundColor: Colors.teal_dark }}
           textStyle={{ color: Colors.white }}
-          icon="logo-google"
         />
         {/* Nhập username */}
         <View
@@ -95,7 +95,7 @@ const SignIn = () => {
             paddingTop: 10,
           }}
         >
-          <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
+          <InputLabel title="Username" style={{ fontWeight: "500" }} />
         </View>
         <TextInput
           style={styles.input}
@@ -112,7 +112,7 @@ const SignIn = () => {
             paddingTop: 10,
           }}
         >
-          <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
+          <InputLabel title="Password" style={{ fontWeight: "500" }} />
         </View>
         <TextInput
           style={styles.input}
@@ -134,36 +134,32 @@ const SignIn = () => {
           onPress={() => router.push("/(auth)/forgot")}
           style={{ alignSelf: "baseline" }}
         >
-          <Text
-            style={{
-              ...text.link,
-              color: Colors.teal_dark,
-              fontWeight: "500",
-            }}
-          >
-            Forgot Password?
-          </Text>
+          <LinkLabel
+            title="Forgot Password?"
+            style={{ color: Colors.teal_dark, fontWeight: "500" }}
+          />
         </TouchableOpacity>
 
         {/* Nút đăng nhập */}
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={{ ...text.h4, color: Colors.white }}>Sign In</Text>
-        </TouchableOpacity>
+        <Button
+          title="Sign In"
+          style={styles.loginButton}
+          onPress={handleLogin}
+          textStyle={{ ...text.h4, color: Colors.white }}
+        />
 
         {/* Phần đăng ký tài khoản */}
         <View style={styles.registerContainer}>
-          <Text style={text.p}>Don't have an account yet?</Text>
+          <Label title="Don't have an account yet?" />
           <TouchableOpacity onPress={() => router.replace("./sign-up")}>
-            <Text
+            <LinkLabel
+              title=" Sign Up"
               style={{
                 ...text.link,
                 color: Colors.teal_dark,
                 fontWeight: "500",
               }}
-            >
-              {" "}
-              Sign Up
-            </Text>
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

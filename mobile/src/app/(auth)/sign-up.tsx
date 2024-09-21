@@ -10,12 +10,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import Button from "@/src/components/common/Button";
 import { Colors } from "@/src/constants/Colors";
-import { Styles, text } from "@/src/constants/Styles";
+import { button, Styles, text } from "@/src/constants/Styles";
 import { useRouter } from "expo-router";
 import { StatusBar } from "react-native";
 import CircleStyle from "@/src/components/common/CircleStyle";
+import FacebookButton from "@/src/feature/auth/components/atoms/facebook-button";
+import GoogleButton from "@/src/feature/auth/components/atoms/google-button";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -55,16 +56,14 @@ const SignUp: React.FC = () => {
       >
         <Text style={styles.title}>Sign Up</Text>
 
-        <Button
+        <FacebookButton
           title="Continue with Facebook"
-          onPress={() => Alert.alert("Facebook Login")}
-          buttonStyle={{ backgroundColor: Colors.dark }}
+          style={{ ...button.Authen, backgroundColor: Colors.dark }}
           textStyle={{ color: Colors.white }}
         />
-        <Button
+        <GoogleButton
           title="Continue with Google"
-          onPress={() => Alert.alert("Google Login")}
-          buttonStyle={{ backgroundColor: Colors.teal_dark, marginBottom: 30 }}
+          style={{ ...button.Authen, backgroundColor: Colors.teal_dark }}
           textStyle={{ color: Colors.white }}
         />
 

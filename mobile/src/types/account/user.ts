@@ -11,5 +11,5 @@ interface UserData {
   userBio: string;
   process: number;
   userHometown: string;
-  firstlogin: boolean;
+  isFirstLogin: boolean;
 }

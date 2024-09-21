@@ -53,7 +53,7 @@ const UserAccount: React.FC = () => {
             userBio: response.data.result.userBio,
             process: response.data.result,
             userHometown: response.data.result.userHometown,
-            firstlogin: response.data.result.firstlogin,
+            isFirstLogin: response.data.result.firstlogin,
           });
         } else {
           setErrorMessage(response.data.message);

@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../../common/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
-import Button from "../../common/Button";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
+import Button from "../../atoms/button";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -235,19 +235,19 @@ const HeaderUser: React.FC = () => {
               <Button
                 title="Sign In"
                 onPress={() => router.push("/(auth)/sign-in")}
-                buttonStyle={{
+                style={{
                   ...button.Authen,
                   backgroundColor: Colors.dark,
                   width: 100,
                   borderRadius: 10,
                   marginTop: 0,
                 }}
-                textStyle={{ ...text.p, color: Colors.white }}
+                textStyle={{ color: Colors.white }}
               />
               <Button
                 title="Sign Up"
                 onPress={() => router.push("/(auth)/sign-up")}
-                buttonStyle={{
+                style={{
                   ...button.Authen,
                   backgroundColor: Colors.white,
                   width: 100,
@@ -255,7 +255,7 @@ const HeaderUser: React.FC = () => {
                   marginHorizontal: 8,
                   marginTop: 0,
                 }}
-                textStyle={{ ...text.p, color: Colors.black }}
+                textStyle={{ color: Colors.black }}
               />
             </View>
           </View>
