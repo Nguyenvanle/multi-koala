@@ -9,7 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
-import Routing from "../../common/RoutingDeatil";
 
 const HeaderUser: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
