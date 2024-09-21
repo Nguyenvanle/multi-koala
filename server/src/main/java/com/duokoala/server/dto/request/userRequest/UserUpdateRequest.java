@@ -1,9 +1,7 @@
 package com.duokoala.server.dto.request.userRequest;
 
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 

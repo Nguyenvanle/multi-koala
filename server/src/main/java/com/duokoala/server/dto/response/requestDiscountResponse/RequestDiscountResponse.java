@@ -1,6 +1,6 @@
 package com.duokoala.server.dto.response.requestDiscountResponse;
 
-import com.duokoala.server.dto.response.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.dto.response.userResponse.TeacherResponse;
 import com.duokoala.server.enums.Status;

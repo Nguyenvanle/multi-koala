@@ -1,5 +1,6 @@
 package com.duokoala.server.dto.response;
 
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
 import com.duokoala.server.dto.response.mediaResponse.VideoResponse;
 import lombok.*;

@@ -2,7 +2,9 @@ package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.reviewRequest.ReviewCreateRequest;
 import com.duokoala.server.dto.request.reviewRequest.ReviewUpdateRequest;
-import com.duokoala.server.dto.response.ReviewResponse;
+import com.duokoala.server.dto.response.reviewResponse.AVGCourseRatingResponse;
+import com.duokoala.server.dto.response.reviewResponse.AVGTeacherRatingResponse;
+import com.duokoala.server.dto.response.reviewResponse.ReviewResponse;
 import com.duokoala.server.entity.Review;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -17,8 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +28,20 @@ public class ReviewService {
     AuthenticationService authenticationService;
     ReviewRepository reviewRepository;
     ReviewMapper reviewMapper;
+
+    public AVGTeacherRatingResponse getAvgRatingTeacher(String teacherId) {
+        Float avgRating = reviewRepository.getAvgTeacher(teacherId);
+        return AVGTeacherRatingResponse.builder()
+                .AVGTeacherRating(avgRating != null ? avgRating : 0.0f)
+                .build();
+    }
+
+    public AVGCourseRatingResponse getAvgRatingCourse(String courseId) {
+        Float avgCourse = reviewRepository.getAvgCourse(courseId);
+        return AVGCourseRatingResponse.builder()
+                .AVGCourseRating(avgCourse != null ? avgCourse : 0.0f)
+                .build();
+    }
 
     public ReviewResponse create(String courseId, ReviewCreateRequest request) {
         Review review = reviewMapper.toReview(request);

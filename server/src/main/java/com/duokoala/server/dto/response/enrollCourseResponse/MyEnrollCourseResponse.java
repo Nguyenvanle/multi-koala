@@ -1,6 +1,5 @@
 package com.duokoala.server.dto.response.enrollCourseResponse;
-import com.duokoala.server.dto.response.CourseResponse;
-import com.duokoala.server.dto.response.userResponse.StudentResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

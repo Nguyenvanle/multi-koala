@@ -13,9 +13,9 @@ import java.util.List;
 public interface RequestDiscountRepository extends JpaRepository<RequestDiscount, String> {
     List<RequestDiscount> findAllByCourse(Course course);
     @Query(nativeQuery = true,
-            value = "SELECT AVG(discount_rate) " +
+            value = "SELECT MAX(discount_rate) " +
                     "FROM request_discount " +
                     "WHERE course_course_id = :courseId " +
                     "AND status = 'APPROVED'")
-    Float getAvgApprovedRatingRequestDiscountByCourseId(@Param("courseId") String courseId);
+    Float findMaxApprovedRequestDiscountRateByCourseId(@Param("courseId") String courseId);
 }

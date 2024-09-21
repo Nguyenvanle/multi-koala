@@ -3,6 +3,7 @@ import { router, Stack } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Colors } from "@/src/constants/Colors";
+import { ThemeProvider } from "@/src/context/contextTheme";
 
 const CourseLayout = () => {
   return (

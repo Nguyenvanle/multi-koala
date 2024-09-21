@@ -1,12 +1,7 @@
-package com.duokoala.server.dto.response;
+package com.duokoala.server.dto.response.reviewResponse;
 
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
-import com.duokoala.server.entity.Course;
-import com.duokoala.server.entity.user.Student;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

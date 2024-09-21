@@ -4,7 +4,7 @@ import com.duokoala.server.dto.request.certificationRequest.CertificationApprove
 import com.duokoala.server.dto.request.certificationRequest.CertificationCreateRequest;
 import com.duokoala.server.dto.request.certificationRequest.CertificationUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.CertificationResponse;
+import com.duokoala.server.dto.response.certificationResponse.CertificationResponse;
 import com.duokoala.server.service.CertificationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/certifications")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class CertificationController {
     CertificationService certificationService;
 
-    @PostMapping
+    @PostMapping("/certifications")
     ApiResponse<CertificationResponse> uploadCertification(
             @RequestBody CertificationCreateRequest request) {
         return ApiResponse.<CertificationResponse>builder()
@@ -29,7 +28,7 @@ public class CertificationController {
                 .build();
     }
 
-    @PutMapping("/{certificationId}/approve")
+    @PutMapping("/certifications/{certificationId}/approve")
     ApiResponse<CertificationResponse> approveCertification(
             @PathVariable String certificationId ,@RequestBody CertificationApproveRequest request) {
         return ApiResponse.<CertificationResponse>builder()
@@ -38,7 +37,7 @@ public class CertificationController {
                 .build();
     }
 
-    @PutMapping("/{certificationId}")
+    @PutMapping("/certifications/{certificationId}")
     ApiResponse<CertificationResponse> updateCertification(
             @PathVariable String certificationId ,@RequestBody CertificationUpdateRequest request) {
         return ApiResponse.<CertificationResponse>builder()
@@ -47,21 +46,35 @@ public class CertificationController {
                 .build();
     }
 
-    @GetMapping("/{certificationId}")
+    @GetMapping("/certifications/{certificationId}")
     ApiResponse<CertificationResponse> getCertification(@PathVariable String certificationId) {
         return ApiResponse.<CertificationResponse>builder()
                 .result(certificationService.getCertification(certificationId))
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("/certifications/my-certifications")
+    ApiResponse<List<CertificationResponse>> getMyCertification() {
+        return ApiResponse.<List<CertificationResponse>>builder()
+                .result(certificationService.getMyCertifications())
+                .build();
+    }
+    @GetMapping("teachers/{teacherId}/certifications")
+    ApiResponse<List<CertificationResponse>> getCertificationsByTeacherId(@PathVariable String teacherId) {
+        return ApiResponse.<List<CertificationResponse>>builder()
+                .result(certificationService.getCertificationsByTeacherId(teacherId))
+                .build();
+    }
+
+
+    @GetMapping("/certifications")
     ApiResponse<List<CertificationResponse>> getCertifications() {
         return ApiResponse.<List<CertificationResponse>>builder()
                 .result(certificationService.getCertifications())
                 .build();
     }
 
-    @DeleteMapping("/{certificationId}")
+    @DeleteMapping("/certifications/{certificationId}")
     ApiResponse<Void> deleteCertification(@PathVariable String certificationId) {
         certificationService.deleteCertification(certificationId);
         return ApiResponse.<Void>builder()

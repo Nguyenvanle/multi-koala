@@ -19,10 +19,10 @@ public interface DiscountCourseRepository extends JpaRepository<DiscountCourse, 
     List<DiscountCourse> getListByCourseId(@Param("courseId") String courseId);
 
     @Query(nativeQuery = true,
-            value = "SELECT AVG(d.discount_rate) " +
+            value = "SELECT MAX(d.discount_rate) " +
                     "FROM discount_course dc JOIN discount d " +
                     "ON dc.discount_discount_id = d.discount_id " +
                     "WHERE course_course_id = :courseId " +
                     "AND dc.status = 'APPROVED'")
-    Float getAvgApprovedRatingDiscountByCourseId(@Param("courseId") String courseId);
+    Float findMaxApprovedDiscountRateByCourseId(@Param("courseId") String courseId);
 }
