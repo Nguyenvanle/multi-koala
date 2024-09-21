@@ -3,7 +3,10 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.testRequest.TestCreateRequest;
 import com.duokoala.server.dto.request.testRequest.TestUpdateRequest;
 import com.duokoala.server.dto.response.TestResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
+import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Test;
+import com.duokoala.server.enums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.TestMapper;
@@ -28,6 +31,7 @@ public class TestService {
     public TestResponse create(String lessonId, TestCreateRequest request) {
         Test test = testMapper.toTest(request);
         test.setTestUploadedAt(LocalDateTime.now());
+        test.setStatus(Status.IN_EDITING);
         test.setLesson(lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND)));
         return testMapper.toTestResponse(testRepository.save(test));
@@ -37,6 +41,13 @@ public class TestService {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
         testMapper.updateTest(test, request);
+        return testMapper.toTestResponse(testRepository.save(test));
+    }
+
+    public TestResponse Approve(String testId) {
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
+        test.setStatus(Status.APPROVED);
         return testMapper.toTestResponse(testRepository.save(test));
     }
 

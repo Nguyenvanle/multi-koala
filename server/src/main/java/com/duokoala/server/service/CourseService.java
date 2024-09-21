@@ -1,6 +1,6 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.courseRequest.CourseChangeStatusRequest;
+import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
@@ -131,7 +131,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public CourseResponse approve(String courseId, CourseChangeStatusRequest request) {
+    public CourseResponse approve(String courseId, CourseApproveRequest request) {
         Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));

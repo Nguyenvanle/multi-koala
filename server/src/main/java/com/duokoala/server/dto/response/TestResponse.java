@@ -1,5 +1,6 @@
 package com.duokoala.server.dto.response;
 
+import com.duokoala.server.enums.Status;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class TestResponse {
     String testDescription;
     LessonResponse lesson;
     LocalDateTime TestUploadedAt;
+    Status status;
     boolean isDeleted;
 }

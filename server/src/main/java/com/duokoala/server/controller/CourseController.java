@@ -1,6 +1,6 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.courseRequest.CourseChangeStatusRequest;
+import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
@@ -37,7 +37,7 @@ public class CourseController {
 
     @PutMapping("/courses/{courseId}/approve")
     ApiResponse<CourseResponse> approve(
-            @PathVariable String courseId, @RequestBody CourseChangeStatusRequest request) {
+            @PathVariable String courseId, @RequestBody CourseApproveRequest request) {
         return ApiResponse.<CourseResponse>builder()
                 .result(courseService.approve(courseId,request))
                 .build();

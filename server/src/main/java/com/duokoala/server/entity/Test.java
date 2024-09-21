@@ -1,4 +1,5 @@
 package com.duokoala.server.entity;
+import com.duokoala.server.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,5 +20,7 @@ public class Test {
     LocalDateTime TestUploadedAt;
     @ManyToOne
     Lesson lesson;
+    @Enumerated(EnumType.STRING)
+    Status status;
     boolean isDeleted;
 }
