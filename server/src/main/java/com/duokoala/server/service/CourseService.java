@@ -5,6 +5,7 @@ import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
+import com.duokoala.server.dto.response.courseResponse.MaxCoursePriceResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.enums.Level;
@@ -92,6 +93,13 @@ public class CourseService {
     public List<CourseResponse> getAll() {
         var courses = courseRepository.findAll();
         return courses.stream().map(courseMapper::toCourseResponse).toList();
+    }
+
+    public MaxCoursePriceResponse getMaxPrice() {
+        return MaxCoursePriceResponse.builder()
+                .maxCoursePrice(Optional.ofNullable(courseRepository.getMaxPrice()
+                ).orElse(0.0f))
+                .build();
     }
 
     public List<CourseResponse> getAvailableCourses() {
