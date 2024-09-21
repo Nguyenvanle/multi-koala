@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MaxCoursePriceResponse {
+public class CoursePriceResponse {
     float maxCoursePrice;
+    float minCoursePrice;
 }

@@ -22,6 +22,10 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     value = "SELECT MAX(course_price) FROM course")
     Float getMaxPrice();
 
+    @Query(nativeQuery = true,
+            value = "SELECT MIN(course_price) FROM course")
+    Float getMinPrice();
+
     List<Course> findAllByUploadedByTeacher(Teacher teacher);
 
     List<Course> findAllByStatus(Status status);
