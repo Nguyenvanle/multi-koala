@@ -22,7 +22,7 @@ spring:
             required: true
   jpa:
     hibernate:
-      ddl-auto: update
+#      ddl-auto: update
 #    show-sql: true
 
 jwt:
