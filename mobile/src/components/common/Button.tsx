@@ -37,7 +37,6 @@ const Button: React.FC<ButtonProps> = ({
       >
         {icon && (
           <Ionicons
-            name={icon}
             size={25}
             color={Colors.white}
             style={{

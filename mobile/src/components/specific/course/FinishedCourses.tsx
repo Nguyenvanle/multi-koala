@@ -4,7 +4,7 @@ import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_MAIN from "@/src/feature/api/config";
-import * as Progress from "react-native-progress";
+import Progress from "react-native-progress";
 import { Link } from "expo-router";
 
 const FinishedCourses = () => {
