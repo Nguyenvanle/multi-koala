@@ -1,6 +1,6 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
+import com.duokoala.server.dto.request.courseRequest.CourseChangeStatusRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
@@ -66,7 +66,7 @@ public class CourseService {
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
-        course.setStatus(Status.PENDING_APPROVAL);
+        course.setStatus(Status.IN_EDITING);
         course.setDeleted(false);
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
@@ -131,7 +131,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public CourseResponse approve(String courseId, CourseApproveRequest request) {
+    public CourseResponse approve(String courseId, CourseChangeStatusRequest request) {
         Status approvedStatus = Status.validateApprovedStatus(request.getStatus());
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
@@ -139,6 +139,13 @@ public class CourseService {
             throw new AppException(ErrorCode.COURSE_ALREADY_APPROVED);
         course.setStatus(approvedStatus);
         course.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
+        return courseMapper.toCourseResponse(courseRepository.save(course));
+    }
+
+    public CourseResponse sendToApprove(String courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
+        course.setStatus(Status.PENDING_APPROVAL);
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 }

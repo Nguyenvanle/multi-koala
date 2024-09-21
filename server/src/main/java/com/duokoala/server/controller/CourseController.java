@@ -1,6 +1,6 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
+import com.duokoala.server.dto.request.courseRequest.CourseChangeStatusRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
@@ -37,7 +37,7 @@ public class CourseController {
 
     @PutMapping("/courses/{courseId}/approve")
     ApiResponse<CourseResponse> approve(
-            @PathVariable String courseId, @RequestBody CourseApproveRequest request) {
+            @PathVariable String courseId, @RequestBody CourseChangeStatusRequest request) {
         return ApiResponse.<CourseResponse>builder()
                 .result(courseService.approve(courseId,request))
                 .build();
@@ -49,6 +49,14 @@ public class CourseController {
                 .result(courseService.get(courseId))
                 .build();
     }
+
+    @PutMapping("/courses/{courseId}/send-to-approve")
+    ApiResponse<CourseResponse> sendToApprove(@PathVariable String courseId) {
+        return ApiResponse.<CourseResponse>builder()
+                .result(courseService.sendToApprove(courseId))
+                .build();
+    }
+
     @GetMapping("/courses")
     ApiResponse<List<CourseResponse>> getAll() {
         return ApiResponse.<List<CourseResponse>>builder()
