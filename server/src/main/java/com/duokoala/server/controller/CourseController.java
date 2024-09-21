@@ -43,17 +43,17 @@ public class CourseController {
                 .build();
     }
 
-    @GetMapping("/courses/{courseId}")
-    ApiResponse<CourseResponse> get(@PathVariable String courseId) {
-        return ApiResponse.<CourseResponse>builder()
-                .result(courseService.get(courseId))
-                .build();
-    }
-
     @PutMapping("/courses/{courseId}/send-to-approve")
     ApiResponse<CourseResponse> sendToApprove(@PathVariable String courseId) {
         return ApiResponse.<CourseResponse>builder()
                 .result(courseService.sendToApprove(courseId))
+                .build();
+    }
+
+    @GetMapping("/courses/{courseId}")
+    ApiResponse<CourseResponse> get(@PathVariable String courseId) {
+        return ApiResponse.<CourseResponse>builder()
+                .result(courseService.get(courseId))
                 .build();
     }
 
