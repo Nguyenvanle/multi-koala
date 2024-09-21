@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CourseCard } from "../molecules/course-card";
 import { CoursesResultResType } from "@/features/courses/types/course";
+import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 
 interface CoursesListProps {
   courses: CoursesResultResType | null;
@@ -41,8 +42,10 @@ export const CoursesList: React.FC<CoursesListProps> = ({
     <div
       className={`grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${className}`} // Sử dụng template literal để kết hợp className
     >
-      {courses.map((course) => (
-        <Link key={course.courseId} href={`/courses/${course.courseId}`}>
+      {courses.map((course) => {
+         const discountedPrice = DiscountAdapter.getDiscountedPrice(course);
+
+        return <Link key={course.courseId} href={`/courses/${course.courseId}`}>
           <CourseCard
             courseId={course.courseId}
             courseName={course.courseName}
@@ -65,10 +68,10 @@ export const CoursesList: React.FC<CoursesListProps> = ({
             status={course.status}
             courseRating={course.courseRating}
             courseLevel={course.courseLevel}
-            courseDiscount={course.discountApprovedRate}
+            courseDiscount={discountedPrice}
           />
         </Link>
-      ))}
+})}
     </div>
   );
 };

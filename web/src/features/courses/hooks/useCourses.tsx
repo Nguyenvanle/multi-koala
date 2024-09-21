@@ -70,6 +70,7 @@ export default function useCourses() {
         const { result } = await courseService.getAll();
 
         if (result?.result) {
+          await DiscountAdapter.fetchDiscounts(result.result);
           const filteredCourses = applyFilters(result.result);
           const sortedCourses = sortCourses(filteredCourses, sortOrder);
 

@@ -27,9 +27,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   courseCreateAt,
 }) => {
   const { duration, lessons } = useLessons({ params: { courseId } });
-
+  
   const discount = courseDiscount;
-  const discountedPrice = coursePrice - coursePrice * discount;
+  const discountedPrice = courseDiscount;
 
   const { hours, minutes } = convertDuration(duration || 0);
   const formattedDate = new Date(courseCreateAt).toLocaleDateString();
