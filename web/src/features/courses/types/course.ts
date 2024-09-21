@@ -22,7 +22,6 @@ export const CourseBodyType = z.object({
     createByAdmin: z.string().nullable(),
   }),
   status: COURSE_VERIFY,
-  discountApprovedRate: z.number(),
   deleted: z.boolean(),
 });
 

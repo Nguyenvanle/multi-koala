@@ -4,6 +4,7 @@ import { CoursesResultResType } from "@/features/courses/types/course";
 import { SortOption } from "@/features/courses/components/molecules/select-sort";
 import { FilterFactory } from "@/features/filter/services/factory";
 import { useFilter } from "@/features/filter/hooks/useFilter";
+import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 
 export default function useCourses() {
   const [courses, setCourses] = useState<CoursesResultResType | null>(null);
@@ -12,26 +13,13 @@ export default function useCourses() {
   const [sortOrder, setSortOrder] = useState<SortOption>("rating_desc");
   const { filters } = useFilter();
 
-  // Hàm để tính giá trị sau khi áp dụng giảm giá
-  const getDiscountedPrice = useCallback(
-    (coursePrice: number, courseDiscount: number) => {
-      return coursePrice - coursePrice * courseDiscount;
-    },
-    []
-  );
-
   // Hàm để sắp xếp khóa học
   const sortCourses = useCallback(
     (courses: CoursesResultResType, order: SortOption) => {
       return [...courses].sort((a, b) => {
-        const aDiscountedPrice = getDiscountedPrice(
-          a.coursePrice,
-          a.discountApprovedRate
-        );
-        const bDiscountedPrice = getDiscountedPrice(
-          b.coursePrice,
-          b.discountApprovedRate
-        );
+        const aDiscountedPrice = DiscountAdapter.getDiscountedPrice(a);
+        const bDiscountedPrice = DiscountAdapter.getDiscountedPrice(b);
+
 
         switch (order) {
           case "courseName_asc":
@@ -54,7 +42,7 @@ export default function useCourses() {
         }
       });
     },
-    [getDiscountedPrice]
+    []
   );
 
   const applyFilters = useCallback(

@@ -1,3 +1,4 @@
+import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import { CoursesResultResType } from "@/features/courses/types/course";
 import { COURSE_VERIFY } from "@/types/course/verify";
 
@@ -24,8 +25,7 @@ class PriceRangeFilter implements FilterStrategy {
     value: { min: number; max: number }
   ): CoursesResultResType {
     return courses.filter((course) => {
-      const discountedPrice =
-        course.coursePrice * (1 - course.discountApprovedRate);
+      const discountedPrice = DiscountAdapter.getDiscountedPrice(course);
       return discountedPrice >= value.min && discountedPrice <= value.max;
     });
   }
@@ -96,4 +96,3 @@ export {
   LevelsFilter,
   CourseStatusFilter,
 };
-

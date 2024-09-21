@@ -2,7 +2,7 @@ import {
   CourseDetailResType,
   CourseResType,
 } from "@/features/courses/types/course";
-import { DiscountResType } from "@/features/courses/types/discount";
+import { DiscountResType } from "@/features/discount/types/discount";
 import { apiService } from "@/services/api";
 
 export const courseService = {
@@ -14,13 +14,14 @@ export const courseService = {
     return await apiService.get<CourseDetailResType>(`/courses/${courseId}`);
   },
 
+  // need refactor
   getAllStudent: async (courseId: string) => {
     return await apiService.get<any>(`/courses/${courseId}/students`);
   },
 
-  getAllDiscount: async (courseId: string) => {
+  getDiscount: async (courseId: string) => {
     return await apiService.get<DiscountResType>(
-      `/courses/${courseId}/discount-only`
+      `/courses/${courseId}/discount-applied`
     );
   },
 };
