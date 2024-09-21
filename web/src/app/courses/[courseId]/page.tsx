@@ -6,6 +6,7 @@ import DetailCard from "@/features/courses/components/organisms/detail-card";
 import CourseDetailCard from "@/features/courses/components/pages/course-detail-card";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useCourses from "@/features/courses/hooks/useCourses";
+import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import useLessons from "@/features/lessons/hooks/useLessons";
 
 export default function CourseDetail({
@@ -15,7 +16,6 @@ export default function CourseDetail({
 }) {
   const { courses, loading: coursesLoading } = useCourses();
   const { lessons, duration, loading: lessonsLoading } = useLessons({ params });
-
   // Only check for the course if loading is complete
   const isLoading = coursesLoading || lessonsLoading;
   const course = !isLoading
@@ -63,7 +63,7 @@ export default function CourseDetail({
         totalDuration={duration}
         totalLessons={lessons?.length ?? 0}
         courseRating={course.courseRating}
-        courseDiscount={course.discountApprovedRate}
+        courseDiscount={DiscountAdapter.getDiscountedPrice(course)}
         courseId={course.courseId}
         courseCreateAt={course.courseUploadedAt}
         courseType={course.types}

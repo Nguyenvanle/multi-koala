@@ -5,7 +5,6 @@ import Link from "next/link";
 type PriceButtonProps = {
   discountedPrice: number;
   originalPrice: number;
-  discount: number;
   className?: string;
   onClick: () => void;
 };
@@ -13,7 +12,6 @@ type PriceButtonProps = {
 const PriceButton: React.FC<PriceButtonProps> = ({
   discountedPrice,
   originalPrice,
-  discount,
   className,
   onClick,
 }) => {
@@ -24,7 +22,7 @@ const PriceButton: React.FC<PriceButtonProps> = ({
           <span
             className={`font-bold text-destructive ${className}`}
           >{`$ ${discountedPrice.toFixed(2)} `}</span>
-          {discount !== 0 ? (
+          {originalPrice !== discountedPrice ? (
             <span className="line-through text-foreground">{`/${originalPrice.toFixed(
               2
             )}`}</span>

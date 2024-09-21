@@ -37,8 +37,6 @@ const DetailCard = ({
   courseLevel,
   teacherId,
 }: DetailCardProps) => {
-  const discount = courseDiscount;
-  const discountedPrice = coursePrice - coursePrice * discount;
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
   const { hours, minutes } = convertDuration(totalDuration || 0);
@@ -147,9 +145,8 @@ const DetailCard = ({
 
       <CardFooter className="border-t p-6 flex flex-0">
         <PriceButton
-          discountedPrice={discountedPrice}
+          discountedPrice={courseDiscount}
           originalPrice={coursePrice}
-          discount={discount}
           onClick={enrollHandler}
         />
       </CardFooter>

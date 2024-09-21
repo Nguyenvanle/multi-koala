@@ -8,7 +8,14 @@ export const FilterTypes: React.FC = () => {
 
   if (loading) return <FieldSkeleton />;
   if (error) return <div>Error: {error}</div>;
-  if (!courseTypes) return <div>No fields found</div>;
+  if (!courseTypes)
+    return (
+      <div className="flex flex-1 flex-col">
+        <H4 className="pb-2">Course Types</H4>
+        <div>No types found</div>
+      </div>
+    );
+
 
   return (
     <div className="flex flex-1 flex-col">
