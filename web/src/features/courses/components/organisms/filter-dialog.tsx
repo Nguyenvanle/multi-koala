@@ -44,7 +44,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 min-h-[400px] pr-4">
             <FilterFields />
 
-            <FilterTypes />
+            <FilterTypes initialData={[]} />
 
             <FilterLevels />
 
