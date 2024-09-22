@@ -27,23 +27,25 @@ export default function About() {
   ];
 
   return (
-    <div className="flex flex-col px-6 py-4">
-      <div className="flex flex-col gap-4 items-center">
-        <H1 className="text-primary">What&apos;s in Duokoala?</H1>
+    <div className="flex flex-col px-4 py-4">
+      <div className="container px-auto flex flex-col">
+        <div className="flex flex-col gap-4 items-center">
+          <H1 className="text-primary">What&apos;s in Duokoala?</H1>
 
-        <Lead>Everything you need to build great courses on the web.</Lead>
-      </div>
+          <Lead>Everything you need to build great courses on the web.</Lead>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 my-4">
-        {ABOUT_MENUS.map((menu) => (
-          <AboutCard
-            key={menu.title}
-            title={menu.title}
-            description={menu.description}
-            link={menu.link}
-            image={menu.image}
-          />
-        ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 my-4">
+          {ABOUT_MENUS.map((menu) => (
+            <AboutCard
+              key={menu.title}
+              title={menu.title}
+              description={menu.description}
+              link={menu.link}
+              image={menu.image}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

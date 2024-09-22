@@ -55,7 +55,7 @@ const DetailCard = ({
         <div className="flex justify-between items-center">
           <TeacherLink
             href={`/teachers/${teacherId}`}
-            className="text-sm font-medium text-secondary-foreground"
+            className="text-lg font-semibold text-secondary-foreground"
           >
             {uploadByTeacher}
           </TeacherLink>

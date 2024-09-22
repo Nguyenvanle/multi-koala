@@ -5,5 +5,9 @@ export default function LessonDetail({
 }: {
   params: { lessonId: string; courseId: string };
 }) {
-  return <LessonTemplate params={params}></LessonTemplate>;
+  return (
+    <div className="container px-12 xl:px-8 py-9">
+      <LessonTemplate params={params}></LessonTemplate>
+    </div>
+  );
 }

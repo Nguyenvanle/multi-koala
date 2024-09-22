@@ -12,22 +12,24 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between p-4 bg-background shadow gap-4">
-      <div className=" flex flex-2 items-center ">
-        <DesktopNav menuItems={menuItems} />
-        <MobileNav menuItems={menuItems} />
-      </div>
+    <header className="sticky top-0 z-50 flex items-center justify-between p-4 bg-background shadow ">
+      <div className="container px-auto flex gap-4">
+        <div className=" flex flex-2 items-center ">
+          <DesktopNav menuItems={menuItems} />
+          <MobileNav menuItems={menuItems} />
+        </div>
 
-      <nav className="flex flex-1 justify-end">
-        <nav className="flex flex-row flex-grow justify-end md:flex-grow-0">
-          <SearchDialog />
+        <nav className="flex flex-1 justify-end">
+          <nav className="flex flex-row flex-grow justify-end md:flex-grow-0">
+            <SearchDialog />
+          </nav>
         </nav>
-      </nav>
 
-      <div className="flex flex-0 items-center space-x-2">
-        <AuthButtons />
-        <UserMenu />
-        <ModeToggle />
+        <div className=" flex flex-0 items-center space-x-2">
+          <AuthButtons />
+          <UserMenu />
+          <ModeToggle />
+        </div>
       </div>
     </header>
   );

@@ -36,8 +36,8 @@ export const LessonDetailPage: React.FC<LessonDetailPageProps> = ({
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-4">
+    <div className="flex flex-1 items-center justify-center w-full">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full">
         <div className="xl:col-span-2">
           <VideoPlayer videoUrl={lesson.video.videoUrl} />
         </div>
