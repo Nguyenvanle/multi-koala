@@ -42,41 +42,43 @@ export const CoursesList: React.FC<CoursesListProps> = ({
 
   // Hiển thị danh sách khóa học
   return (
-    <div
-      className={`grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${className}`} // Sử dụng template literal để kết hợp className
-    >
-      {courses.map((course) => {
-        const discountedPrice = DiscountAdapter.getDiscountedPrice(course);
+    <div className="container flex px-auto py-8">
+      <div
+        className={`grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${className}`} // Sử dụng template literal để kết hợp className
+      >
+        {courses.map((course) => {
+          const discountedPrice = DiscountAdapter.getDiscountedPrice(course);
 
-        return (
-          <Link key={course.courseId} href={`/courses/${course.courseId}`}>
-            <CourseCard
-              courseId={course.courseId}
-              courseName={course.courseName}
-              courseCreateAt={course.courseUploadedAt}
-              coursePrice={course.coursePrice}
-              courseDescription={course.courseDescription}
-              courseType={course.types}
-              courseFields={course.fields}
-              courseImage={course.image.imageUrl || ""}
-              uploadByTeacher={
-                course.uploadedByTeacher
-                  ? `${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`
-                  : ""
-              }
-              approvedByAdmin={
-                course.approvedByAdmin
-                  ? `${course.approvedByAdmin.firstname} ${course.approvedByAdmin.lastname}`
-                  : ""
-              }
-              status={course.status}
-              courseRating={RatingAdapter.getRating(course.courseId)}
-              courseLevel={course.courseLevel}
-              courseDiscount={discountedPrice}
-            />
-          </Link>
-        );
-      })}
+          return (
+            <Link key={course.courseId} href={`/courses/${course.courseId}`}>
+              <CourseCard
+                courseId={course.courseId}
+                courseName={course.courseName}
+                courseCreateAt={course.courseUploadedAt}
+                coursePrice={course.coursePrice}
+                courseDescription={course.courseDescription}
+                courseType={course.types}
+                courseFields={course.fields}
+                courseImage={course.image.imageUrl || ""}
+                uploadByTeacher={
+                  course.uploadedByTeacher
+                    ? `${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`
+                    : ""
+                }
+                approvedByAdmin={
+                  course.approvedByAdmin
+                    ? `${course.approvedByAdmin.firstname} ${course.approvedByAdmin.lastname}`
+                    : ""
+                }
+                status={course.status}
+                courseRating={RatingAdapter.getRating(course.courseId)}
+                courseLevel={course.courseLevel}
+                courseDiscount={discountedPrice}
+              />
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -46,7 +46,7 @@ export default function CourseDetail({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
+    <div className="container px-auto py-9 grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
       {/* <CourseDetailCard course={course} totalDuration={duration} /> */}
       <div className="flex flex-col gap-6">
         <DisplayCard

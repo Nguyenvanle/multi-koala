@@ -12,7 +12,7 @@ export const FilterButton: React.FC<FilterButtonProps> = ({ onClick }) => (
   <Button
     variant="outline"
     onClick={onClick}
-    className="flex items-center gap-1"
+    className="flex items-center gap-1 font-medium"
   >
     <Settings2Icon />
     Filters

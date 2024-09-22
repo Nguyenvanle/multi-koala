@@ -1,4 +1,5 @@
 // src/features/courses/components/templates/CoursesTemplate.tsx
+import { Separator } from "@/components/ui/separator";
 import { SortOption } from "@/features/courses/components/molecules/select-sort";
 import { CoursesHeader } from "@/features/courses/components/organisms/courses-header";
 import { CoursesList } from "@/features/courses/components/organisms/courses-list";
@@ -17,8 +18,11 @@ export const CoursesTemplate: React.FC<CoursesTemplateProps> = ({
   loading,
   setSortOrder,
 }) => (
-  <div className="flex flex-1 flex-col justify-center gap-4">
+  <div className="flex flex-1 flex-col justify-center">
     <CoursesHeader setSortOrder={setSortOrder} />
+    <div className="container px-auto ">
+      <Separator />
+    </div>
     <CoursesList courses={courses} loading={loading} />
   </div>
 );

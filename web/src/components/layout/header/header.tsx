@@ -12,7 +12,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between p-4 bg-background shadow-sm gap-4">
+    <header className="sticky top-0 z-50 flex items-center justify-between p-4 bg-background shadow gap-4">
       <div className=" flex flex-2 items-center ">
         <DesktopNav menuItems={menuItems} />
         <MobileNav menuItems={menuItems} />

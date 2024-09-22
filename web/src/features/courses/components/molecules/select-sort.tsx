@@ -56,7 +56,7 @@ export const SelectSort: React.FC<SelectSortProps> = ({ setSortOrder }) => {
 
   return (
     <Select defaultValue={defaultSortOrder} onValueChange={handleChange}>
-      <SelectTrigger className="hover:border-primary sm:w-44">
+      <SelectTrigger className="hover:border-primary sm:w-44 font-medium">
         <SelectValue placeholder="Select sort type" />
       </SelectTrigger>
 

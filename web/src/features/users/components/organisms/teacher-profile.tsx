@@ -34,7 +34,7 @@ const TeacherProfile: React.FC<{
 }> = ({ teacher, courses, courseLoading, certifications }) => {
   return (
     <div className="flex flex-col">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-8 bg-secondary">
+      <div className="grid grid-cols-1 space-y-6 lg:grid-cols-3 lg:space-x-6 lg:space-y-0 p-8 bg-secondary">
         {/* Avatar Section */}
         <Card className="col-span-1 shadow-lg ">
           <CardContent className="flex flex-col items-center justify-center border-b p-6">

@@ -7,7 +7,7 @@ interface IconProps {
 }
 
 const Icon: React.FC<IconProps> = ({ IconComponent, className }) => (
-  <IconComponent className={`w-4 h-4 ${className}`} />
+  <IconComponent className={`w-4 h-4 text-primary ${className}`} />
 );
 
 export const ArrowDownAZIcon: React.FC = () => <Icon IconComponent={ArrowDownAZ} />;

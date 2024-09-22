@@ -9,9 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <main className="flex flex-grow">
-        <div className="container flex mx-auto px-4 py-8">{children}</div>
-      </main>
+      <main className="flex flex-grow">{children}</main>
       <Footer />
     </>
   );

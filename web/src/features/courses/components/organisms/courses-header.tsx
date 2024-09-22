@@ -8,6 +8,7 @@ import { FilterButton } from "@/features/courses/components/molecules/filter-but
 import { FilterDialog } from "@/features/courses/components/organisms/filter-dialog";
 import { H4, P } from "@/components/ui/typography";
 import { useFilter } from "@/features/filter/hooks/useFilter";
+import { Book } from "lucide-react";
 
 interface CoursesHeaderProps {
   setSortOrder: React.Dispatch<React.SetStateAction<SortOption>>;
@@ -24,9 +25,12 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
   };
 
   return (
-    <div className="space-y-4 ">
+    <div className="container px-auto py-8 space-y-4 ">
       <div className="flex flex-1 flex-col justify-start">
-        <H4 className="mt-0">All Courses</H4>
+        <H4 className="flex flex-row mt-0 items-center text-primary">
+          <Book className="mr-1 text-primary" size={20} />
+          All Courses
+        </H4>
 
         <P>
           Explore our diverse range of courses designed to enhance your skills
