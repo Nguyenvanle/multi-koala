@@ -8,12 +8,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FilterFields } from "@/features/courses/components/molecules/filter-fields";
-import { FilterLevels } from "@/features/courses/components/molecules/filter-level";
-import { FilterPrice } from "@/features/courses/components/molecules/filter-price";
-import { FilterRating } from "@/features/courses/components/molecules/filter-rating";
-import { FilterStatus } from "@/features/courses/components/molecules/filter-status";
-import { FilterTypes } from "@/features/courses/components/molecules/filter-types";
+import {
+  FilterFields,
+  FilterTypes,
+  FilterLevels,
+  FilterPrice,
+  FilterRating,
+  FilterStatus,
+} from "@/features/courses/components/molecules";
 import { useFilterDialog } from "@/features/courses/hooks/useFilterDialog";
 
 interface FilterDialogProps {
@@ -42,7 +44,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
 
         <ScrollArea className="h-[50vh]">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 min-h-[400px] pr-4">
-            <FilterFields />
+            <FilterFields initialData={[]} />
 
             <FilterTypes initialData={[]} />
 
