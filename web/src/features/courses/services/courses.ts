@@ -3,6 +3,7 @@ import {
   CourseResType,
 } from "@/features/courses/types/course";
 import { DiscountResType } from "@/features/discount/types/discount";
+import { RatingResType } from "@/features/rating/types/rating";
 import { apiService } from "@/services/api";
 
 export const courseService = {
@@ -22,6 +23,12 @@ export const courseService = {
   getDiscount: async (courseId: string) => {
     return await apiService.get<DiscountResType>(
       `/courses/${courseId}/discount-applied`
+    );
+  },
+
+  getRating: async (courseId: string) => {
+    return await apiService.get<RatingResType>(
+      `/courses/${courseId}/reviews/avg-rating`
     );
   },
 };

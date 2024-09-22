@@ -10,6 +10,7 @@ import {
   CardFooter,
 } from "@/components/ui/card"; // Import các component Card từ shadcnui
 import { Button } from "@/components/ui/button";
+import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 
 interface CourseDetailCardProps {
   course: CourseDetailResultResType;
@@ -37,7 +38,7 @@ const CourseDetailCard: React.FC<CourseDetailCardProps> = ({
       </CardHeader>
       <CardContent>
         <CourseDetails
-          rating={course.courseRating}
+          rating={RatingAdapter.getRating(course.courseId)}
           duration={totalDuration || 0}
           types={course.types}
           fields={course.fields}

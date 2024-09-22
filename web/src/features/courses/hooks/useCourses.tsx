@@ -5,6 +5,7 @@ import { SortOption } from "@/features/courses/components/molecules/select-sort"
 import { FilterFactory } from "@/features/filter/services/factory";
 import { useFilter } from "@/features/filter/hooks/useFilter";
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
+import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 
 export default function useCourses() {
   const [courses, setCourses] = useState<CoursesResultResType | null>(null);
@@ -20,7 +21,9 @@ export default function useCourses() {
         const aDiscountedPrice = DiscountAdapter.getDiscountedPrice(a);
         const bDiscountedPrice = DiscountAdapter.getDiscountedPrice(b);
 
-
+        const aRating = RatingAdapter.getRating(a.courseId);
+        const bRating = RatingAdapter.getRating(b.courseId);
+        
         switch (order) {
           case "courseName_asc":
             return a.courseName.localeCompare(b.courseName);
@@ -31,7 +34,7 @@ export default function useCourses() {
           case "price_desc":
             return bDiscountedPrice - aDiscountedPrice;
           case "rating_desc":
-            return b.courseRating - a.courseRating;
+            return  bRating - aRating;
           case "uploadedAt_desc":
             return (
               new Date(b.courseUploadedAt).getTime() -
@@ -71,6 +74,7 @@ export default function useCourses() {
 
         if (result?.result) {
           await DiscountAdapter.fetchDiscounts(result.result);
+          await RatingAdapter.fetchRatings(result.result);
           const filteredCourses = applyFilters(result.result);
           const sortedCourses = sortCourses(filteredCourses, sortOrder);
 

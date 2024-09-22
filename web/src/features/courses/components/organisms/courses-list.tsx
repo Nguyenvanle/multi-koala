@@ -5,6 +5,7 @@ import { CourseCard } from "../molecules/course-card";
 import { CoursesResultResType } from "@/features/courses/types/course";
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import Image from "next/image";
+import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 
 interface CoursesListProps {
   courses: CoursesResultResType | null;
@@ -77,7 +78,7 @@ export const CoursesList: React.FC<CoursesListProps> = ({
                   : ""
               }
               status={course.status}
-              courseRating={course.courseRating}
+              courseRating={RatingAdapter.getRating(course.courseId)}
               courseLevel={course.courseLevel}
               courseDiscount={discountedPrice}
             />

@@ -1,4 +1,5 @@
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
+import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 import { CoursesResultResType } from "@/features/courses/types/course";
 import { COURSE_VERIFY } from "@/types/course/verify";
 
@@ -40,7 +41,10 @@ class RatingFilter implements FilterStrategy {
     if (value === undefined || value === 0) {
       return courses;
     }
-    return courses.filter((course) => course.courseRating >= value);
+    return courses.filter((course) => {
+      const avgRating = RatingAdapter.getRating(course.courseId);
+      return avgRating >= value;
+    });
   }
 }
 

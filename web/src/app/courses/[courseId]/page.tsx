@@ -7,6 +7,7 @@ import CourseDetailCard from "@/features/courses/components/pages/course-detail-
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useCourses from "@/features/courses/hooks/useCourses";
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
+import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 import useLessons from "@/features/lessons/hooks/useLessons";
 
 export default function CourseDetail({
@@ -62,7 +63,7 @@ export default function CourseDetail({
         uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
         totalDuration={duration}
         totalLessons={lessons?.length ?? 0}
-        courseRating={course.courseRating}
+        courseRating={RatingAdapter.getRating(course.courseId)}
         courseDiscount={DiscountAdapter.getDiscountedPrice(course)}
         courseId={course.courseId}
         courseCreateAt={course.courseUploadedAt}
