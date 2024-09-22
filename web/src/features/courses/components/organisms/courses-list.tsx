@@ -6,6 +6,7 @@ import { CoursesResultResType } from "@/features/courses/types/course";
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import Image from "next/image";
 import { RatingAdapter } from "@/features/courses/services/rating-adapter";
+import { H1 } from "@/components/ui/typography";
 
 interface CoursesListProps {
   courses: CoursesResultResType | null;
@@ -34,16 +35,7 @@ export const CoursesList: React.FC<CoursesListProps> = ({
   if (!courses || courses.length === 0) {
     return (
       <div className="flex items-center justify-center w-full h-[500px]">
-        <div className="flex flex-col h-[500px] w-[600px] mr-2 relative">
-          <Image
-            src="https://img.freepik.com/free-vector/404-error-template-flat-style_23-2147756470.jpg?t=st=1726920178~exp=1726923778~hmac=1fdf153f66ad19718e5efcf6871f230920cc963d8b5f88a2a118f53f5a5145bb&w=740"
-            alt="Image"
-            className="rounded-md object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
-            fill
-          />
-        </div>
+        <H1 className="text-center text-muted-foreground">NO COURSE FOUND</H1>
       </div>
     );
   }

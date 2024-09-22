@@ -5,8 +5,8 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <div className="flex flex-row  space-x-4 bg-accent py-16 px-8">
-      <div className="flex flex-1 flex-col space-y-4 justify-center">
+    <div className="flex flex-row space-x-4 bg-accent py-16 px-8">
+      <div className="flex flex-1 flex-col space-y-4 justify-center ">
         <H4 className="text-primary">Duokoala</H4>
         <H1>Course sharing platform for teachers</H1>
         <Lead>

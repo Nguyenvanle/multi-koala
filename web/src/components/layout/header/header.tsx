@@ -3,7 +3,6 @@ import MobileNav from "@/components/layout/header/mobile-nav";
 import AuthButtons from "@/features/auth/components/molecules/auth-buttons";
 import UserMenu from "@/components/layout/header/user-menu";
 import { ModeToggle } from "@/components/layout/header/mode-toggle";
-import LinkButton from "@/components/ui/link-button";
 import SearchDialog from "@/components/layout/header/search-dialog";
 
 export default function Header() {
@@ -14,7 +13,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between p-4 bg-background shadow-sm gap-4">
-      <div className="flex flex-2 items-center ">
+      <div className=" flex flex-2 items-center ">
         <DesktopNav menuItems={menuItems} />
         <MobileNav menuItems={menuItems} />
       </div>
