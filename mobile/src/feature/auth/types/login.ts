@@ -1,6 +1,6 @@
 import { UserBody } from "./user";
 
-export type LoginBody = {
+export type LoginBodyType = {
   token: string;
   user: UserBody;
   authenticated: boolean;
@@ -9,5 +9,10 @@ export type LoginBody = {
 export type LoginRes = {
   code: number;
   message: string;
-  result: LoginBody;
+  result: LoginBodyType;
+};
+
+export type LoginBody = {
+  username: string;
+  password: string;
 };

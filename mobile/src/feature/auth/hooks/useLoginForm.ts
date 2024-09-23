@@ -25,9 +25,10 @@ const useLoginForm = () => {
     }
     try {
       setLoading(true);
-      const { data } = await loginServices.login({ username, password });
-      if (data.result) {
-        await AsyncStorage.setItem("token", data.result.token);
+      const data = await loginServices.login({ username, password });
+
+      if (data.data.result) {
+        await AsyncStorage.setItem("token", data.data.result.token);
         router.replace("/(home)/home");
       } else {
         setError(error); // Thông báo lỗi nếu không thành công

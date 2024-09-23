@@ -53,7 +53,6 @@ const SignIn = () => {
           }}
           title="Sign In"
         />
-
         {/* Các button đăng nhập */}
         <FacebookButton
           title="Continue with Facebook"
@@ -81,7 +80,6 @@ const SignIn = () => {
           value={username}
           onChangeText={setUsername}
         />
-
         {/* Nhập password */}
         <View
           style={{
@@ -107,7 +105,6 @@ const SignIn = () => {
             {errorMessage || (error as any)?.message}
           </Text>
         )}
-
         {/* Liên kết quên mật khẩu */}
         <TouchableOpacity
           onPress={() => router.push("/(auth)/forgot")}
@@ -118,7 +115,6 @@ const SignIn = () => {
             style={{ color: Colors.teal_dark, fontWeight: "500" }}
           />
         </TouchableOpacity>
-
         {/* Nút đăng nhập */}
         <Button
           title={loading ? "Signing In..." : "Sign In"}
@@ -126,7 +122,6 @@ const SignIn = () => {
           onPress={onSubmit}
           textStyle={{ ...text.h4, color: Colors.white }}
         />
-
         {/* Phần đăng ký tài khoản */}
         <View style={styles.registerContainer}>
           <Label title="Don't have an account yet?" />

@@ -9,9 +9,10 @@ import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
+import { UserBody } from "@/src/feature/auth/types/user";
 
 const HeaderUser: React.FC = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserBody | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
