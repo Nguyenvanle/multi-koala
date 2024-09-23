@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const AvatarSkeleton = () => (
   <Card className="col-span-1 shadow-lg">
     <CardContent className="flex flex-col items-center justify-center border-b p-6">
-      <Skeleton className="w-40 h-40 lg:w-60 lg:h-60 rounded-full" />
+      <Skeleton className="w-60 h-60 rounded-full" />
     </CardContent>
     <CardFooter className="flex flex-col items-center">
       <Skeleton className="h-8 w-3/4 mt-4" />
@@ -64,7 +64,7 @@ const CoursesSkeleton = () => (
 const TeacherProfileSkeleton: React.FC = () => {
   return (
     <div className="flex flex-col w-full self-stretch">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-8 bg-secondary">
+      <div className="grid grid-cols-1 lg:grid-cols-3 space-y-6 lg:space-x-6 lg:space-y-0 p-8 bg-secondary">
         <AvatarSkeleton />
         <InfoSkeleton />
       </div>
