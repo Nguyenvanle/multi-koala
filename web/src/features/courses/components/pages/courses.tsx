@@ -40,13 +40,17 @@ export default function Courses({ initialCourses }: CoursesProps) {
   const [sortOrder, setSortOrder] = useState<SortOption>("rating_desc");
   const { filters } = useFilter();
 
-  const { data: courses, error } = useSWR(
+  const {
+    data: courses,
+    error,
+    isLoading: loading,
+  } = useSWR(
     ["/api/courses", sortOrder, filters],
     () => fetcher("/api/courses", sortOrder, filters),
     { fallbackData: initialCourses }
   );
 
-  const loading = !courses && !error;
+  if (error) return <div>ERROR: {error}</div>;
 
   return (
     <CoursesTemplate
