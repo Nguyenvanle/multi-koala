@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum Status {
     PENDING_APPROVAL,
     APPROVED,
-    REJECTED;
+    REJECTED,
+    IN_EDITING;
 
     public static Status fromString(String status) {
         try {
@@ -20,7 +21,7 @@ public enum Status {
 
     public static Status validateApprovedStatus(String status) {
         Status approvedStatus = fromString(status);
-        if (approvedStatus == PENDING_APPROVAL)
+        if (approvedStatus != APPROVED && approvedStatus != REJECTED)
             throw new AppException(ErrorCode.APPROVED_STATUS_NOT_FOUND);
         return approvedStatus;
     }

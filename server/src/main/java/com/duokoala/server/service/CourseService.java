@@ -5,6 +5,7 @@ import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
+import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.enums.Level;
@@ -65,7 +66,7 @@ public class CourseService {
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
-        course.setStatus(Status.PENDING_APPROVAL);
+        course.setStatus(Status.IN_EDITING);
         course.setDeleted(false);
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
@@ -92,6 +93,18 @@ public class CourseService {
     public List<CourseResponse> getAll() {
         var courses = courseRepository.findAll();
         return courses.stream().map(courseMapper::toCourseResponse).toList();
+    }
+
+    public CoursePriceResponse getCoursePrice() {
+        return CoursePriceResponse.builder()
+
+                .maxCoursePrice(Optional.ofNullable(courseRepository.getMaxPrice()
+                ).orElse(0.0f))
+
+                .minCoursePrice(Optional.ofNullable(courseRepository.getMinPrice()
+                ).orElse(0.0f))
+
+                .build();
     }
 
     public List<CourseResponse> getAvailableCourses() {
@@ -126,6 +139,13 @@ public class CourseService {
             throw new AppException(ErrorCode.COURSE_ALREADY_APPROVED);
         course.setStatus(approvedStatus);
         course.setApprovedByAdmin(authenticationService.getAuthenticatedAdmin());
+        return courseMapper.toCourseResponse(courseRepository.save(course));
+    }
+
+    public CourseResponse sendToApprove(String courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
+        course.setStatus(Status.PENDING_APPROVAL);
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 }

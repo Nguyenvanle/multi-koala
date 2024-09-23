@@ -1,5 +1,6 @@
 package com.duokoala.server.entity;
 
+import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.enums.Status;
@@ -8,7 +9,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,7 +30,8 @@ public class Certification {
     Teacher uploadedByTeacher;
     @ManyToOne
     Admin approvedByAdmin;
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Image> proofImages;
     @Enumerated(EnumType.STRING) //enum but save in db with string
     Status status;
 }

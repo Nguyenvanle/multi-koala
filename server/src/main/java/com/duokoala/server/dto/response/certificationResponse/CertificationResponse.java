@@ -2,10 +2,12 @@ package com.duokoala.server.dto.response.certificationResponse;
 
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.dto.response.userResponse.TeacherResponse;
+import com.duokoala.server.entity.media.Image;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,5 +22,6 @@ public class CertificationResponse {
     String issuingOrganization;
     TeacherResponse uploadedByTeacher;
     AdminResponse approvedByAdmin;
+    List<Image> proofImages;
     String status;
 }

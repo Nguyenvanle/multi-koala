@@ -4,6 +4,7 @@ import com.duokoala.server.dto.request.testRequest.TestCreateRequest;
 import com.duokoala.server.dto.request.testRequest.TestUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.TestResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.service.TestService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,13 @@ public class TestController {
             @RequestBody TestUpdateRequest request) {
         return ApiResponse.<TestResponse>builder()
                 .result(testService.update(testId,request))
+                .build();
+    }
+
+    @PutMapping("/tests/{testId}/approved")
+    ApiResponse<TestResponse> Approve(@PathVariable String testId) {
+        return ApiResponse.<TestResponse>builder()
+                .result(testService.Approve(testId))
                 .build();
     }
 

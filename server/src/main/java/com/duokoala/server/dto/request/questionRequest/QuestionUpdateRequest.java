@@ -12,7 +12,8 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionUpdateRequest {
-    String testDescription;
+    String questionDescription;
+    String imageUrl;
     List<String> answers;
     int correctIndex;
 }

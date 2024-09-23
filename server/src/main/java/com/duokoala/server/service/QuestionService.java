@@ -6,11 +6,13 @@ import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
 import com.duokoala.server.dto.response.QuestionResponse;
 import com.duokoala.server.entity.Answer;
 import com.duokoala.server.entity.Question;
+import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuestionMapper;
 import com.duokoala.server.repository.QuestionRepository;
 import com.duokoala.server.repository.TestRepository;
+import com.duokoala.server.repository.mediaRepository.ImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class QuestionService {
+    private final ImageRepository imageRepository;
     QuestionRepository questionRepository;
     QuestionMapper questionMapper;
     TestRepository testRepository;
@@ -35,6 +38,9 @@ public class QuestionService {
         Question question = questionMapper.toQuestion(request);
         question.setTest(testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
+        Image image = new Image();
+        image.setImageUrl(request.getImageUrl());
+        question.setImage(image);
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
         int indexAnswer = 0;
@@ -68,6 +74,7 @@ public class QuestionService {
             answers.add(answer);
             indexAnswer++;
         }
+        question.getImage().setImageUrl(request.getImageUrl());
         return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 

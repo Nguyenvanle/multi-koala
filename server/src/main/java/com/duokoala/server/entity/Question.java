@@ -1,4 +1,5 @@
 package com.duokoala.server.entity;
+import com.duokoala.server.entity.media.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -22,6 +23,8 @@ public class Question {
     String questionDescription;
     @ManyToOne
     Test test;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    Image image;
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Answer> answers;
 }
