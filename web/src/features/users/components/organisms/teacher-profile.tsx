@@ -25,6 +25,7 @@ import { CoursesList } from "@/features/courses/components/organisms/courses-lis
 import { InfoItem } from "@/features/users/components/atoms/info-item";
 import { P } from "@/components/ui/typography";
 import { formatDate } from "@/lib/utils";
+import TeacherRatingItem from "@/features/users/components/atoms/rating-item";
 
 const TeacherProfile: React.FC<{
   teacher: TeacherBodyType;
@@ -81,10 +82,9 @@ const TeacherProfile: React.FC<{
                 label="Hometown"
                 value={teacher.userHometown}
               />
-              <InfoItem
-                icon={Star}
-                label="Rating"
-                value={`${(teacher.teacherRating * 5).toFixed(1)} / 5`}
+              <TeacherRatingItem
+                initialData={{ avgteacherRating: 0 }}
+                teacherId={teacher.userId}
               />
               <div className="col-span-1  lg:col-span-2">
                 <h3 className="text-lg font-semibold  flex items-center mb-2">

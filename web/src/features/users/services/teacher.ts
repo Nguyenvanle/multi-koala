@@ -1,5 +1,6 @@
 import { CertificationsResponse } from "@/features/certification/types/certification-res";
 import { CourseResType } from "@/features/courses/types/course";
+import { TeacherRatingResType } from "@/features/rating/types/teacher-rating";
 import {
   TeacherDetailResponse,
   TeachersResponse,
@@ -26,6 +27,12 @@ export const teacherService = {
   getAllCertifications: async (teacherId: string) => {
     return await apiService.get<CertificationsResponse>(
       `/teachers/${teacherId}/certifications`
+    );
+  },
+
+  getRating: async (teacherId: string) => {
+    return await apiService.get<TeacherRatingResType>(
+      `/teachers/${teacherId}/reviews/avg-rating`
     );
   },
 };
