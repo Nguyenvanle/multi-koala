@@ -33,50 +33,50 @@ public class QuestionService {
     QuestionMapper questionMapper;
     TestRepository testRepository;
 
-    @Transactional
-    public QuestionResponse create(String testId, QuestionCreateRequest request) {
-        Question question = questionMapper.toQuestion(request);
-        question.setTest(testRepository.findById(testId)
-                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
-        Image image = new Image();
-        image.setImageUrl(request.getImageUrl());
-        question.setImage(image);
-        question = questionRepository.save(question);
-        List<Answer> answers = new ArrayList<>();
-        int indexAnswer = 0;
-        for(String answerDescription: request.getAnswers()) {
-            Answer answer = Answer.builder()
-                    .answerDescription(answerDescription)
-                    .question(question)
-                    .build();
-            answer.setCorrect(indexAnswer == request.getCorrectIndex());
-            log.info("answer: "+answerDescription +" / "+"index: "+indexAnswer+" / correct: "+request.getCorrectIndex());
-            answers.add(answer);
-            indexAnswer++;
+        @Transactional
+        public QuestionResponse create(String testId, QuestionCreateRequest request) {
+            Question question = questionMapper.toQuestion(request);
+            question.setTest(testRepository.findById(testId)
+                    .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
+            Image image = new Image();
+            image.setImageUrl(request.getImageUrl());
+            question.setImage(image);
+            question = questionRepository.save(question);
+            List<Answer> answers = new ArrayList<>();
+            int indexAnswer = 0;
+            for(String answerDescription: request.getAnswers()) {
+                Answer answer = Answer.builder()
+                        .answerDescription(answerDescription)
+                        .question(question)
+                        .build();
+                answer.setCorrect(indexAnswer == request.getCorrectIndex());
+                log.info("answer: "+answerDescription +" / "+"index: "+indexAnswer+" / correct: "+request.getCorrectIndex());
+                answers.add(answer);
+                indexAnswer++;
+            }
+            question.setAnswers(answers);
+            return questionMapper.toQuestionResponse(questionRepository.save(question));
         }
-        question.setAnswers(answers);
-        return questionMapper.toQuestionResponse(questionRepository.save(question));
-    }
 
-    public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-        questionMapper.updateQuestion(question,request);
-        List<Answer> answers = question.getAnswers();
-        answers.clear();
-        int indexAnswer = 0;
-        for(String answerDescription: request.getAnswers()) {
-            Answer answer = Answer.builder()
-                    .answerDescription(answerDescription)
-                    .question(question)
-                    .build();
-            answer.setCorrect(indexAnswer == request.getCorrectIndex());
-            answers.add(answer);
-            indexAnswer++;
+        public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+            questionMapper.updateQuestion(question,request);
+            List<Answer> answers = question.getAnswers();
+            answers.clear();
+            int indexAnswer = 0;
+            for(String answerDescription: request.getAnswers()) {
+                Answer answer = Answer.builder()
+                        .answerDescription(answerDescription)
+                        .question(question)
+                        .build();
+                answer.setCorrect(indexAnswer == request.getCorrectIndex());
+                answers.add(answer);
+                indexAnswer++;
+            }
+            question.getImage().setImageUrl(request.getImageUrl());
+            return questionMapper.toQuestionResponse(questionRepository.save(question));
         }
-        question.getImage().setImageUrl(request.getImageUrl());
-        return questionMapper.toQuestionResponse(questionRepository.save(question));
-    }
 
     public QuestionResponse get(String questionId) {
         return questionMapper.toQuestionResponse(questionRepository.findById(questionId)
