@@ -17,6 +17,7 @@ const EnterOTP = () => {
     handleSendOtp,
     setOtp,
   } = useOtp();
+
   return (
     <SafeAreaView style={Styles.container}>
       <View style={{ height: 80, marginTop: 40 }}>
@@ -55,6 +56,10 @@ const EnterOTP = () => {
                 // Nếu xóa ký tự, cập nhật giá trị
                 newOtp[index] = "";
                 setOtp(newOtp);
+                const prevInput = index - 1;
+                if (prevInput < otp.length) {
+                  otpRefs.current[prevInput]?.focus();
+                }
               }
             }}
             keyboardType="numeric"

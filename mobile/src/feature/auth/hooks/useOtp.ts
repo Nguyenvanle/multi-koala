@@ -1,5 +1,5 @@
-import { View, Text, TextInput } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { TextInput } from "react-native";
+import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 
 const useOtp = () => {
@@ -9,7 +9,6 @@ const useOtp = () => {
   const otpRefs = useRef<Array<TextInput | null>>([]);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const { email } = useLocalSearchParams();
-  const validOtp = "123456";
   useEffect(() => {
     if (email) {
       setIsOtpSent(true);
@@ -18,13 +17,12 @@ const useOtp = () => {
 
   const handleConfirmOtp = () => {
     const otpValue = otp.join("");
-    if (otpValue === validOtp) {
-      setOtpErrorMessage("");
-      router.replace("/(auth)/form");
-    } else {
-      setOtpErrorMessage("OTP code is incorrect. Please check again.");
-      setOtpSuccessMessage(""); // Đặt lại successMessage nếu OTP không đúng
-    }
+    // if (otpValue === validOtp) {
+    router.replace("/(auth)/form");
+    // } else {
+    setOtpErrorMessage("OTP code is incorrect. Please check again.");
+    setOtpSuccessMessage(""); // Đặt lại successMessage nếu OTP không đúng
+    // }
   };
 
   const handleSendOtp = () => {
