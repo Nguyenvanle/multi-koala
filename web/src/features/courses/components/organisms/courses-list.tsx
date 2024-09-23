@@ -17,7 +17,7 @@ interface CoursesListProps {
 export const CoursesList: React.FC<CoursesListProps> = ({
   courses,
   loading,
-  className = "", // Đặt giá trị mặc định cho className
+  className = "px-auto py-8 ", // Đặt giá trị mặc định cho className
 }) => {
   // Kiểm tra trạng thái loading
   if (loading) {
@@ -42,9 +42,9 @@ export const CoursesList: React.FC<CoursesListProps> = ({
 
   // Hiển thị danh sách khóa học
   return (
-    <div className="container flex px-auto py-8">
+    <div className={`container flex ${className}`}>
       <div
-        className={`grid grid-cols-1 min-[540px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${className}`} // Sử dụng template literal để kết hợp className
+        className={`grid grid-cols-1 min-[540px]:grid-cols-2 min-[800px]:grid-cols-3 lg:grid-cols-4 gap-6  `} // Sử dụng template literal để kết hợp className
       >
         {courses.map((course) => {
           const discountedPrice = DiscountAdapter.getDiscountedPrice(course);
