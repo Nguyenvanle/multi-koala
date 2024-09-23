@@ -235,7 +235,7 @@ const HeaderUser: React.FC = () => {
             >
               <Button
                 title="Sign In"
-                onPress={() => router.push("/(auth)/sign-in")}
+                onPress={() => router.replace("/(auth)/sign-in")}
                 style={{
                   ...button.Authen,
                   backgroundColor: Colors.dark,
@@ -247,7 +247,7 @@ const HeaderUser: React.FC = () => {
               />
               <Button
                 title="Sign Up"
-                onPress={() => router.push("/(auth)/sign-up")}
+                onPress={() => router.replace("/(auth)/sign-up")}
                 style={{
                   ...button.Authen,
                   backgroundColor: Colors.white,

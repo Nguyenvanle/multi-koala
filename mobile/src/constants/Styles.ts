@@ -41,12 +41,12 @@ export const text = StyleSheet.create({
     fontStyle: "italic",
   },
   link: {
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.dark,
     textDecorationLine: "underline",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.dark,
   },
   small: {

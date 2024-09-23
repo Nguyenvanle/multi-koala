@@ -2,12 +2,12 @@ import Label from "@/src/components/atoms/label";
 import { router } from "expo-router";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import LinkLabel from "../atoms/link-label";
+import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
 import { text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import { StyleSheet } from "react-native";
 
-export default function SignupRouter() {
+export default function SignUpRouter() {
   return (
     <View style={style.registerContainer}>
       <Label title="Don't have an account yet?" />
