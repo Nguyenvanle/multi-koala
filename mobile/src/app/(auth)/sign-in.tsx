@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -14,48 +14,25 @@ import CircleStyle from "@/src//components/common/CircleStyle";
 import { button, Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import Label from "@/src/components/atoms/label";
 import FacebookButton from "@/src/feature/auth/components/atoms/facebook-button";
 import GoogleButton from "@/src/feature/auth/components/atoms/google-button";
 import InputLabel from "@/src/feature/auth/components/atoms/input-label";
 import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
 import Button from "@/src/components/atoms/button";
+import useLoginForm from "@/src/feature/auth/hooks/useLoginForm";
 
 const SignIn = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const handleLogin = async () => {
-    if (!username || !password) {
-      setErrorMessage("Please enter your Username and Password");
-      return;
-    }
-    if (!username) {
-      setErrorMessage("Please enter your Username");
-      return;
-    }
-    if (!password) {
-      setErrorMessage("Please enter your Password");
-      return;
-    }
-    try {
-      const postAuth = await API_MAIN.post("/auth/login", {
-        username,
-        password,
-      });
-      if (postAuth.data.code == 200) {
-        await AsyncStorage.setItem("token", postAuth.data.result.token);
-        console.log(postAuth.data);
-        router.replace("/(home)/home");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  const {
+    loading,
+    error,
+    onSubmit,
+    username,
+    setUsername,
+    password,
+    setPassword,
+    errorMessage,
+  } = useLoginForm();
   return (
     <SafeAreaView style={Styles.container}>
       <StatusBar barStyle={"dark-content"} />
@@ -118,16 +95,18 @@ const SignIn = () => {
           style={styles.input}
           placeholder="Password"
           placeholderTextColor={Colors.grey}
-          value={password}
-          onChangeText={setPassword}
           secureTextEntry={true}
           autoComplete="password" // Tắt gợi ý mật khẩu
           autoCorrect={false} // Tắt sửa chính tả
+          value={password}
+          onChangeText={setPassword}
         />
         {/* Hiển thị thông báo lỗi nếu có */}
-        {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        ) : null}
+        {(errorMessage || error) && (
+          <Text style={styles.errorText}>
+            {errorMessage || (error as any)?.message}
+          </Text>
+        )}
 
         {/* Liên kết quên mật khẩu */}
         <TouchableOpacity
@@ -142,9 +121,9 @@ const SignIn = () => {
 
         {/* Nút đăng nhập */}
         <Button
-          title="Sign In"
+          title={loading ? "Signing In..." : "Sign In"}
           style={styles.loginButton}
-          onPress={handleLogin}
+          onPress={onSubmit}
           textStyle={{ ...text.h4, color: Colors.white }}
         />
 
