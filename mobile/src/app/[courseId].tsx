@@ -12,7 +12,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourseDetails } from "@/src/feature/api/course-details";
-import { useCourseDetailsProgress } from "@/src/feature/coursedetailsprogress";
 
 // Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
 

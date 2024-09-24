@@ -2,12 +2,12 @@ import React from "react";
 import { Text, StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
-import CircleStyle from "@/src/components/common/CircleStyle";
 import { forgot } from "./forgot";
 import useOtp from "@/src/feature/auth/hooks/useOtp";
 import ConfirmGmail from "@/src/feature/auth/components/molecules/confirm/confirm-gmail";
 import Button from "@/src/components/atoms/button";
 import EnterOTP from "@/src/feature/auth/components/molecules/confirm/enter-otp";
+import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
 
 const Confirm: React.FC = () => {
   const {

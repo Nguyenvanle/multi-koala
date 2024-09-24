@@ -9,7 +9,7 @@ import {
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
 import { StatusBar } from "react-native";
-import CircleStyle from "@/src/components/common/CircleStyle";
+import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
 import InputEmail from "@/src/feature/auth/components/molecules/signup/input-email";
 import OtherSignUp from "@/src/feature/auth/components/molecules/signup/other-signup";
 import Button from "@/src/components/atoms/button";

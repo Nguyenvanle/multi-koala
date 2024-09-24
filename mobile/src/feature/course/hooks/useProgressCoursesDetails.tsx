@@ -1,36 +1,6 @@
-// src/hook/course/useCourseDetails.ts
-import { useState, useEffect } from "react";
-import API_MAIN from "./api/config";
-
-export interface CourseDetails {
-  course: {
-    courseId: string;
-    courseName: string;
-    coursePrice: number;
-    image: {
-      imageUrl: string;
-      image: string;
-    };
-    courseDescription: string;
-    uploadedByTeacher: {
-      firstname: string;
-      lastname: string;
-    };
-    courseLevel: string;
-    courseRating: number;
-    types: {
-      typeName: string;
-      typeDescription: string;
-    };
-    fields: {
-      fieldName: string;
-      fielDescription: string;
-    };
-    discountApprovedRate: number;
-    status: string;
-    process: number;
-  };
-}
+import { useEffect, useState } from "react";
+import { CourseDetails } from "../types/progress-courses-details";
+import API_CONFIG from "@/src/types/api/config";
 
 export const useCourseDetailsProgress = (courseId: string) => {
   const [courseDetailsProgress, setCourseDetailsProgress] =
@@ -44,7 +14,7 @@ export const useCourseDetailsProgress = (courseId: string) => {
         setLoading(true);
         // Thay thế URL này bằng URL thực của API của bạn
 
-        const responseprogress = await API_MAIN.get<CourseDetails>(
+        const responseprogress = await API_CONFIG.get<CourseDetails>(
           `/courses/${courseId}`
         );
         setCourseDetailsProgress(responseprogress.data);

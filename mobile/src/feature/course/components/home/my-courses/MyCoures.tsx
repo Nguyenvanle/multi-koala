@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { Link, router } from "expo-router";
-import { UserBody } from "@/src/feature/auth/types/user";
+import { UserBody } from "@/src/feature/user/types/user";
 import API_CONFIG from "@/src/types/api/config";
 
 const MyCourses = () => {

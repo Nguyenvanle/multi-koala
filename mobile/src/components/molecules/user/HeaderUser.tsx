@@ -1,15 +1,15 @@
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
-import CircleStyle from "../../common/CircleStyle";
+import CircleStyle from "../front-end/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
-import { UserBody } from "@/src/feature/auth/types/user";
 import API_CONFIG from "@/src/types/api/config";
+import { UserBody } from "@/src/feature/user/types/user";
 
 const HeaderUser: React.FC = () => {
   const [user, setUser] = useState<UserBody | null>(null);

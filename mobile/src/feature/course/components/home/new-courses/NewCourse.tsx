@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useCourses } from "@/src/hook/course/useCourse";
 import { Link } from "expo-router";
+import { useCourses } from "../../../hooks/useCourse";
 
 const NewCourses = () => {
   const { courseData, loading, errorMessage } = useCourses();

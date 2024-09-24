@@ -1,4 +1,4 @@
-import { UserBody } from "./user";
+import { UserBody } from "../../user/types/user";
 
 export type LoginBodyType = {
   token: string;

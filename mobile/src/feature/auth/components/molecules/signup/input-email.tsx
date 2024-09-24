@@ -22,56 +22,10 @@ const InputEmail = () => {
       style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={80}
-    >
-      <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
-        <InputLabel title="Email" style={{ ...text.p, fontWeight: "500" }} />
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={Colors.grey}
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        textContentType="emailAddress"
-      />
-      <View style={styles.termsContainer}>
-        <Label
-          title="By signing up for Duokoala you acknowledge that you agree to Koala Team's"
-          style={{ ...text.subtitle }}
-        />
-        <LinkLabel
-          title="Terms of Service"
-          style={{ ...text.link, fontSize: 16, fontWeight: "500" }}
-        />
-        <Label title=" and" style={{ ...text.subtitle }} />
-        <LinkLabel
-          title=" Privacy Policy"
-          style={{ ...text.link, fontSize: 16, fontWeight: "500" }}
-        />
-      </View>
-    </KeyboardAvoidingView>
+    ></KeyboardAvoidingView>
   );
 };
 
 export default InputEmail;
 
-const styles = StyleSheet.create({
-  termsContainer: {
-    justifyContent: "flex-start",
-    width: 350,
-    marginTop: 5,
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  input: {
-    height: 45,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 10,
-    width: 350,
-    marginVertical: 10,
-    paddingLeft: 10,
-  },
-});
+const styles = StyleSheet.create({});

@@ -9,9 +9,9 @@ import React from "react";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import { router } from "expo-router";
-import HeaderUser from "@/src/components/specific/user/HeaderUser";
-import MyCoures from "@/src/components/specific/course/smallPart/MyCoures";
-import NewCoures from "./../../../components/specific/course/smallPart/NewCourse";
+import MyCoures from "@/src/feature/course/components/home/my-courses/MyCoures";
+import NewCoures from "../../../feature/course/components/home/new-courses/NewCourse";
+import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 
 const Home = () => {
   return (

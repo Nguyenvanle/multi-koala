@@ -5,7 +5,7 @@ import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Progress from "react-native-progress";
 import { Link } from "expo-router";
-import { CourseDetails } from "@/src/feature/coursedetailsprogress";
+import { CourseDetails } from "../../../types/progress-courses-details";
 import API_CONFIG from "@/src/types/api/config";
 
 const InProgressCourses = () => {

@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import React from "react";
 import { Colors } from "@/src/constants/Colors";
-import CircleStyle from "../../common/CircleStyle";
+import CircleStyle from "../../../components/molecules/front-end/CircleStyle";
 import { text } from "@/src/constants/Styles";
 import { router } from "expo-router";
-import useUser from "@/src/feature/auth/hooks/useUser";
+import useUser from "@/src/feature/user/hooks/useUser";
 
 const UserAccount: React.FC = () => {
   const { loading, user, setUser, errorMessage, setErrorMessage } = useUser();

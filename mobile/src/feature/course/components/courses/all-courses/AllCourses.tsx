@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import * as Progress from "react-native-progress";
-import { useCourses } from "@/src/hook/course/useCourse";
+import { useCourses } from "../../../hooks/useCourse";
 
 const AllCourses = () => {
   const { courseData, errorMessage, loading } = useCourses();

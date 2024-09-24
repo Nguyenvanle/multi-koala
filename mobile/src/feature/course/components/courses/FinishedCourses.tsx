@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Progress from "react-native-progress";
+import * as Progress from "react-native-progress";
 import { Link } from "expo-router";
 import API_CONFIG from "@/src/types/api/config";
 
@@ -115,7 +115,7 @@ const FinishedCourses = () => {
               10/12
             </Text>
           </View>
-          <Progress
+          <Progress.Bar
             progress={0.8}
             width={346}
             color={Colors.teal_dark}

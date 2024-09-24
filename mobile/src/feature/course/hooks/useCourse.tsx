@@ -1,6 +1,6 @@
 // hooks/useCourses.ts
 import { useState, useEffect } from "react";
-import CourseAPI from "@/src/feature/api/course";
+import CourseAPI from "./course";
 
 export const useCourses = () => {
   const [courseData, setCourseData] = useState<CourseData[]>([]);

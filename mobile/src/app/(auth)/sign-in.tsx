@@ -7,7 +7,7 @@ import {
   Platform,
   StyleSheet,
 } from "react-native";
-import CircleStyle from "@/src/components/common/CircleStyle";
+import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import Label from "@/src/components/atoms/label";

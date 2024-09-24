@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { UserBody } from "../types/user";
-import { userServices } from "../services/user";
+import { UserBody } from "../../user/types/user";
+import { userServices } from "../../user/services/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const useUser = () => {

@@ -1,4 +1,3 @@
-import CircleStyle from "@/src/components/common/CircleStyle";
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
 import React from "react";
@@ -19,6 +18,9 @@ import Button from "@/src/components/atoms/button";
 import InputEmail from "@/src/feature/auth/components/molecules/signup/input-email";
 import InputOtpForgotPassword from "@/src/feature/auth/components/molecules/forgot/inputotp-forgot";
 import InputNewPassword from "@/src/feature/auth/components/molecules/forgot/input-newpassword";
+import InputLabel from "@/src/feature/auth/components/atoms/input-label";
+import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
+import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
 
 const ForgotPasswordScreen = () => {
   const {
@@ -66,7 +68,37 @@ const ForgotPasswordScreen = () => {
                 height: 120,
               }}
             />
-            <InputEmail />
+            <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+              <InputLabel
+                title="Email"
+                style={{ ...text.p, fontWeight: "500" }}
+              />
+            </View>
+            <TextInput
+              style={forgot.input}
+              placeholder="Email"
+              placeholderTextColor={Colors.grey}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              textContentType="emailAddress"
+            />
+            <View style={forgot.termsContainer}>
+              <Label
+                title="By signing up for Duokoala you acknowledge that you agree to Koala Team's"
+                style={{ ...text.subtitle }}
+              />
+              <LinkLabel
+                title="Terms of Service"
+                style={{ ...text.link, fontSize: 16, fontWeight: "500" }}
+              />
+              <Label title=" and" style={{ ...text.subtitle }} />
+              <LinkLabel
+                title=" Privacy Policy"
+                style={{ ...text.link, fontSize: 16, fontWeight: "500" }}
+              />
+            </View>
             {errorMessage ? (
               <Text style={forgot.error}>{errorMessage}</Text>
             ) : null}
@@ -90,7 +122,39 @@ const ForgotPasswordScreen = () => {
                 }}
               />
             </View>
-            <InputOtpForgotPassword />
+            <View style={forgot.otpContainer}>
+              {otp.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  style={forgot.otpInput}
+                  value={digit}
+                  onChangeText={(text) => {
+                    const newOtp = [...otp];
+
+                    if (text.length <= 1 && /^[0-9]*$/.test(text)) {
+                      // Chỉ cho phép nhập 1 ký tự số
+                      newOtp[index] = text;
+                      setOtp(newOtp);
+
+                      // Chuyển đến ô tiếp theo nếu có giá trị nhập vào
+                      if (text) {
+                        const nextInput = index + 1;
+                        if (nextInput < otp.length) {
+                          otpRefs.current[nextInput]?.focus();
+                        }
+                      }
+                    } else if (text.length === 0) {
+                      // Nếu xóa ký tự, cập nhật giá trị
+                      newOtp[index] = "";
+                      setOtp(newOtp);
+                    }
+                  }}
+                  keyboardType="numeric"
+                  maxLength={1}
+                  ref={(ref) => (otpRefs.current[index] = ref)} // Gán ref cho ô
+                />
+              ))}
+            </View>
             {otpErrorMessage ? (
               <Label title={otpErrorMessage} style={forgot.error} />
             ) : null}
@@ -115,7 +179,44 @@ const ForgotPasswordScreen = () => {
                 marginVertical: 30,
               }}
             />
-            <InputNewPassword />
+            <View
+              style={{
+                alignSelf: "flex-start",
+                paddingTop: 10,
+              }}
+            >
+              <Label
+                title="New password"
+                style={{ ...text.p, fontWeight: "500" }}
+              ></Label>
+            </View>
+            <TextInput
+              style={forgot.input}
+              placeholder="Password"
+              placeholderTextColor={Colors.grey}
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+            />
+            <View
+              style={{
+                alignSelf: "flex-start",
+                paddingTop: 10,
+              }}
+            >
+              <Label
+                title="Confirm new password"
+                style={{ ...text.p, fontWeight: "500" }}
+              ></Label>
+            </View>
+            <TextInput
+              style={forgot.input}
+              placeholder="Confirm password"
+              placeholderTextColor={Colors.grey}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
             {passwordErrorMessage ? (
               <Label title={passwordErrorMessage} style={forgot.error}></Label>
             ) : null}
@@ -141,6 +242,13 @@ export const forgot = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
+  },
+  termsContainer: {
+    justifyContent: "flex-start",
+    width: 350,
+    marginTop: 5,
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   input: {
     height: 45,

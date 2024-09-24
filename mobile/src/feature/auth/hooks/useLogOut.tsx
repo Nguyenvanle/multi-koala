@@ -1,11 +1,9 @@
-import { useContext, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, useRouter } from "expo-router";
-import { UserBody } from "@/src/feature/auth/types/user";
+import { UserBody } from "@/src/feature/user/types/user";
+import { router } from "expo-router";
+import { useState } from "react";
 
 export const useLogout = () => {
-  const router = useRouter();
   const [userBody, setUserBody] = useState<UserBody | null>(null);
 
   const logout = async () => {

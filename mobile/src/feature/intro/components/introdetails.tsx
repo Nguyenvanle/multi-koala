@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { topics } from "@/src/types/intro/intro-info";
+import { topics } from "@/src/feature/intro/types/intro-info";
 
 export const IntroDetails = () => {
   const [selectedIndex, setIndex] = useState(0);

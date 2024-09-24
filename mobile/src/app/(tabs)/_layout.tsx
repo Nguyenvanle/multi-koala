@@ -5,8 +5,8 @@ import { Colors } from "@/src/constants/Colors";
 import { Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { text } from "@/src/constants/Styles";
-import { UserBody } from "@/src/feature/auth/types/user";
 import API_CONFIG from "@/src/types/api/config";
+import { UserBody } from "@/src/feature/user/types/user";
 
 const TabsLayout = () => {
   const [userData, setUserData] = useState<UserBody | null>(null);

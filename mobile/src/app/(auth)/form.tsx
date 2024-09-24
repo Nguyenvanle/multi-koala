@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { Styles, text } from "@/src/constants/Styles";
-import CircleStyle from "@/src/components/common/CircleStyle";
 import useRegisterForm from "@/src/feature/auth/hooks/useRegisterForm";
 import FormSigUp from "@/src/feature/auth/components/molecules/form/form-signup";
 import Button from "@/src/components/atoms/button";
+import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
 
 const Form: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
