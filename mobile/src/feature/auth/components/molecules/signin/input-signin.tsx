@@ -1,39 +1,34 @@
+import React from "react";
 import {
   View,
-  KeyboardAvoidingView,
-  Platform,
   TextInput,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import React from "react";
 import InputLabel from "../../atoms/input-label";
 import { Colors } from "@/src/constants/Colors";
-import useLoginForm from "../../../hooks/useLoginForm";
 
-const InputSignIn = () => {
-  const {
-    loading,
-    error,
-    onSubmit,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    errorMessage,
-  } = useLoginForm();
+interface InputSignInProps {
+  username: string;
+  password: string;
+  setUsername: (username: string) => void;
+  setPassword: (password: string) => void;
+}
+
+const InputSignIn: React.FC<InputSignInProps> = ({
+  username,
+  password,
+  setUsername,
+  setPassword,
+}) => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={70} // Điều chỉnh khoảng cách nếu cần
+      keyboardVerticalOffset={70}
     >
-      {/* Nhập username */}
-      <View
-        style={{
-          alignSelf: "flex-start",
-          paddingTop: 10,
-        }}
-      >
+      <View style={{ alignSelf: "flex-start", paddingTop: 10 }}>
         <InputLabel title="Username" style={{ fontWeight: "500" }} />
       </View>
       <TextInput
@@ -43,13 +38,7 @@ const InputSignIn = () => {
         value={username}
         onChangeText={setUsername}
       />
-      {/* Nhập password */}
-      <View
-        style={{
-          alignSelf: "flex-start",
-          paddingTop: 10,
-        }}
-      >
+      <View style={{ alignSelf: "flex-start", paddingTop: 10 }}>
         <InputLabel title="Password" style={{ fontWeight: "500" }} />
       </View>
       <TextInput
@@ -57,16 +46,14 @@ const InputSignIn = () => {
         placeholder="Password"
         placeholderTextColor={Colors.grey}
         secureTextEntry={true}
-        autoComplete="password" // Tắt gợi ý mật khẩu
-        autoCorrect={false} // Tắt sửa chính tả
+        autoComplete="password"
+        autoCorrect={false}
         value={password}
         onChangeText={setPassword}
       />
     </KeyboardAvoidingView>
   );
 };
-
-export default InputSignIn;
 
 const styles = StyleSheet.create({
   input: {
@@ -79,3 +66,5 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 });
+
+export default InputSignIn;

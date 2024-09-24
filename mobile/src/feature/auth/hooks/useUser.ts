@@ -5,39 +5,38 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const useUser = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [user, setUser] = useState<UserBody | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const getUser = async () => {
     try {
-      setLoading(true); // Bắt đầu loading
+      setLoading(true);
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         setErrorMessage("No token found. Please log in.");
         return;
       }
-      const data = await userServices.user(token); // Gọi API với token
-
-      if (data.data.result) {
-        setUser(data.data.result); // Cập nhật người dùng
+      const response = await userServices.user({ token }); // Truyền token vào hàm user
+      console.log(response.data.result);
+      console.log(response.data.result.token);
+      if (response.data.result) {
+        setUser(response.data.result);
       } else {
         setErrorMessage("User does not exist.");
       }
     } catch (error) {
       setErrorMessage("Failed to fetch user data.");
     } finally {
-      setLoading(false); // Kết thúc loading
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    getUser(); // Gọi hàm getUser khi hook khởi tạo
+    getUser();
   }, []);
 
   return {
     loading,
-    error,
     user,
     setUser,
     errorMessage,

@@ -1,31 +1,38 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { router } from "expo-router";
 import { loginServices } from "../services/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LoginBody, LoginRes } from "../types/login";
 
 const useLoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [username, setUsername] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const onSubmit = async () => {
+    if (!username || !password) {
+      setError("Please enter both username and password");
+      return;
+    }
+
     try {
       setLoading(true);
-      const form = { username, password };
-      console.log(form);
-      const data = await loginServices.login(form);
-      console.log(data.data.result);
-      if (data.data.result) {
-        await AsyncStorage.setItem("token", data.data.result.token);
-        console.log();
+      setError(null);
+      const loginData: LoginBody = { username, password };
+      const response = await loginServices.login(loginData);
+      const data: LoginRes = response.data;
+
+      if (data.code === 200 && data.result.token) {
+        await AsyncStorage.setItem("token", data.result.token);
         router.replace("/(home)/home");
       } else {
-        setErrorMessage("Login failed. Please check your credentials.");
+        setError(
+          data.message || "Login failed. Please check your credentials."
+        );
       }
-    } catch (error: any) {
-      setErrorMessage(error.message || "An error occurred");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }
@@ -34,12 +41,11 @@ const useLoginForm = () => {
   return {
     loading,
     error,
-    onSubmit,
     username,
     setUsername,
     password,
     setPassword,
-    errorMessage,
+    onSubmit,
   };
 };
 

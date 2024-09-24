@@ -4,22 +4,11 @@ import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../../common/CircleStyle";
 import { text } from "@/src/constants/Styles";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUser from "@/src/feature/auth/hooks/useUser";
 
 const UserAccount: React.FC = () => {
-  const { loading, error, user, setUser, errorMessage, setErrorMessage } =
-    useUser();
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem("token");
-      setUser(null);
-      router.replace("/(auth)/sign-in");
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
+  const { loading, user, setUser, errorMessage, setErrorMessage } = useUser();
+  const getToken = user?.token;
 
   return (
     <ScrollView
@@ -32,7 +21,7 @@ const UserAccount: React.FC = () => {
 
         {loading ? (
           <Text>Loading...</Text> // Hiển thị loading khi đang tải
-        ) : error ? (
+        ) : errorMessage ? (
           <Text style={{ color: Colors.red }}>{errorMessage}</Text> // Hiển thị thông báo lỗi
         ) : user ? (
           <View
@@ -49,7 +38,7 @@ const UserAccount: React.FC = () => {
                 borderRadius: 80,
                 marginBottom: 8,
               }}
-              source={{ uri: user.image?.imageUrl }}
+              source={{ uri: user.image.imageUrl }}
             />
             <Text style={{ ...text.h3, color: Colors.teal_dark }}>
               {user.firstname} {user.lastname}
@@ -60,7 +49,7 @@ const UserAccount: React.FC = () => {
         )}
 
         {/* Các mục khác của component vẫn giữ nguyên */}
-        <TouchableOpacity onPress={handleLogout}>
+        <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
           <Text style={{ ...text.h4, color: Colors.red }}>Log Out</Text>
         </TouchableOpacity>
       </View>
