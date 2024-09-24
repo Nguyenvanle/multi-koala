@@ -1,9 +1,9 @@
+import API_CONFIG from "@/src/types/api/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import API_MAIN from "./config";
 
 const CourseAPI = async () => {
-  const response = await API_MAIN.get("/courses");
+  const response = await API_CONFIG.get("/courses");
 
   if (response.data.code === 200) {
     return response.data.result;

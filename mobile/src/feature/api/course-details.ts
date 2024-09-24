@@ -1,7 +1,7 @@
 // src/hook/course/useCourseDetails.ts
 import { useState, useEffect } from "react";
-import API_MAIN from "./config";
 import { CourseRes } from "@/src/types/course/course-res";
+import API_CONFIG from "@/src/types/api/config";
 
 export interface CourseNormal {
   courseId: string;
@@ -41,7 +41,7 @@ export const useCourseDetails = (courseId: string) => {
       try {
         setLoading(true);
         // Thay thế URL này bằng URL thực của API của bạn
-        const responseAll = await API_MAIN.get<CourseRes>(
+        const responseAll = await API_CONFIG.get<CourseRes>(
           `/courses/${courseId}`
         );
 

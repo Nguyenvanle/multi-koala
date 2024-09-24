@@ -22,11 +22,11 @@ const SignIn = () => {
   const {
     loading,
     error,
-    onSubmit,
     username,
     setUsername,
     password,
     setPassword,
+    onSubmit,
     errorMessage,
   } = useLoginForm();
   return (

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
 import { Link } from "expo-router";
 import { CourseDetails } from "@/src/feature/coursedetailsprogress";
+import API_CONFIG from "@/src/types/api/config";
 
 const InProgressCourses = () => {
   const [courseData, setCourseData] = useState<CourseDetails[]>([]);
@@ -19,7 +19,7 @@ const InProgressCourses = () => {
         const token = await AsyncStorage.getItem("token");
 
         if (token) {
-          const response = await API_MAIN.get(
+          const response = await API_CONFIG.get(
             "/enroll-courses/my-enrolled-courses",
             {
               headers: {

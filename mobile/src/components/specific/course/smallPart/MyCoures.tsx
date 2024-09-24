@@ -11,11 +11,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { Link, router } from "expo-router";
-import API_MAIN from "@/src/feature/api/config";
+import { UserBody } from "@/src/feature/auth/types/user";
+import API_CONFIG from "@/src/types/api/config";
 
 const MyCourses = () => {
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserBody | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -25,7 +26,7 @@ const MyCourses = () => {
         const token = await AsyncStorage.getItem("token");
 
         if (token) {
-          const response = await API_MAIN.get(
+          const response = await API_CONFIG.get(
             "/enroll-courses/my-enrolled-courses",
             {
               headers: {
@@ -33,7 +34,7 @@ const MyCourses = () => {
               },
             }
           );
-          const user = await API_MAIN.get("/students/me", {
+          const user = await API_CONFIG.get("/students/me", {
             headers: {
               Authorization: `Bearer ${token}`,
             },

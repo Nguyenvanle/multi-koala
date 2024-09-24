@@ -5,14 +5,14 @@ import CircleStyle from "../../common/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
 import { UserBody } from "@/src/feature/auth/types/user";
+import API_CONFIG from "@/src/types/api/config";
 
 const HeaderUser: React.FC = () => {
-  const [userData, setUserData] = useState<UserBody | null>(null);
+  const [user, setUser] = useState<UserBody | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -21,10 +21,9 @@ const HeaderUser: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log(token);
 
         if (token) {
-          const course = await API_MAIN.get(
+          const course = await API_CONFIG.get(
             "/enroll-courses/my-enrolled-courses",
             {
               headers: {
@@ -32,7 +31,7 @@ const HeaderUser: React.FC = () => {
               },
             }
           );
-          const user = await API_MAIN.get("/students/me", {
+          const user = await API_CONFIG.get("/students/me", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -40,7 +39,7 @@ const HeaderUser: React.FC = () => {
 
           if (user.data.code === 200) {
             setCourseData(course.data.result);
-            setUserData(user.data.result);
+            setUser(user.data.result);
           } else {
             setErrorMessage(user.data.message);
             setErrorMessage(course.data.message);
@@ -165,7 +164,7 @@ const HeaderUser: React.FC = () => {
       }}
     >
       <CircleStyle />
-      {userData && courseData ? (
+      {user && courseData ? (
         <View style={{ flexDirection: "column" }}>
           <View
             style={{
@@ -185,12 +184,12 @@ const HeaderUser: React.FC = () => {
             >
               <Text style={text.h4}>Welcome</Text>
               <Text style={{ ...text.h4, color: Colors.teal_dark }}>
-                {userData.firstname} {userData.lastname}
+                {user.firstname} {user.lastname}
               </Text>
             </View>
-            {userData.image && (
+            {user.image && (
               <Image
-                source={{ uri: userData.image.imageUrl }}
+                source={{ uri: user.image.imageUrl }}
                 style={{
                   width: 75,
                   height: 75,

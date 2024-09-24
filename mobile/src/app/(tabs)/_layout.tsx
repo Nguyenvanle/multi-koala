@@ -4,11 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/src/constants/Colors";
 import { Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import { text } from "@/src/constants/Styles";
+import { UserBody } from "@/src/feature/auth/types/user";
+import API_CONFIG from "@/src/types/api/config";
 
 const TabsLayout = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserBody | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -18,7 +19,7 @@ const TabsLayout = () => {
         const token = await AsyncStorage.getItem("token");
 
         if (token) {
-          const user = await API_MAIN.get("/students/me", {
+          const user = await API_CONFIG.get("/students/me", {
             headers: {
               Authorization: `Bearer ${token}`,
             },

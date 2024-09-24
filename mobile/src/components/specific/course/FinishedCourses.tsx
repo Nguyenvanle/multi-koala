@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_MAIN from "@/src/feature/api/config";
 import Progress from "react-native-progress";
 import { Link } from "expo-router";
+import API_CONFIG from "@/src/types/api/config";
 
 const FinishedCourses = () => {
   const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
@@ -16,10 +16,9 @@ const FinishedCourses = () => {
     const fetchCourseData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log(token);
 
         if (token) {
-          const response = await API_MAIN.get(
+          const response = await API_CONFIG.get(
             "/enroll-courses/my-enrolled-courses",
             {
               headers: {
