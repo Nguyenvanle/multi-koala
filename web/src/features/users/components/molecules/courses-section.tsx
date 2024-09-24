@@ -27,6 +27,7 @@ export const CoursesSection: React.FC<{
           courses={courses}
           loading={courseLoading}
           className="lg:grid-cols-4 p-0 py-0"
+          forProfile
         />
       </CardFooter>
     </Card>
