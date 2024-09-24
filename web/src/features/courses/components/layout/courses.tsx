@@ -10,7 +10,6 @@ interface CoursesTemplateProps {
   courses: CoursesResultResType | null;
   loading: boolean;
   setSortOrder: Dispatch<SetStateAction<SortOption>>;
-  // xóa filter
 }
 
 export const CoursesTemplate: React.FC<CoursesTemplateProps> = ({

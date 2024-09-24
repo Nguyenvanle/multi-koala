@@ -60,7 +60,11 @@ export const CoursesListGrid: React.FC<CoursesListGridProps> = ({
 
   return (
     <div className={`container flex ${className}`}>
-      {forProfile ? content : <Card className="w-full">{content}</Card>}
+      {forProfile ? (
+        content
+      ) : (
+        <Card className="w-full shadow-lg">{content}</Card>
+      )}
     </div>
   );
 };

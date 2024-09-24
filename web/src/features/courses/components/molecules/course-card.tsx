@@ -37,7 +37,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
   return (
-    <Card className="flex flex-col justify-between gap-0 w-full md:max-w-sm min-w-60 marker:min-h-96 h-full rounded overflow-hidden hover:shadow-md hover:shadow-accent">
+    <Card className="flex flex-col justify-between gap-0 w-full md:max-w-sm min-w-60 marker:min-h-96 h-full rounded overflow-hidden ">
       <CardHeader className="p-0 space-y-0 relative">
         <CourseImage src={courseImage} alt={courseName} />
 
@@ -78,7 +78,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       <CardFooter className="flex flex-col px-4 gap-2 pb-4">
         <Button className="flex-1 flex-grow self-stretch space-x-1">
           <span className="font-bold">{`$${discountedPrice.toFixed(2)}`}</span>
-          {discount !== 0 ? (
+          {discount !== coursePrice ? (
             <span className="line-through text-foreground">{`/${coursePrice.toFixed(
               2
             )}`}</span>

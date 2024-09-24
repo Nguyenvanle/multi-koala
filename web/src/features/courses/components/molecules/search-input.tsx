@@ -18,7 +18,7 @@ export default function SearchInputCourse({
         placeholder="Search for course names..."
         value={value}
         onChange={onChange}
-        className="pl-8 focus:border-primary"
+        className="pl-8 focus:border-accent"
       />
     </div>
   );
