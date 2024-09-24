@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,4 +25,6 @@ public class QuizResult {
     Test test;
     @ManyToOne
     Student student;
+    @OneToMany(mappedBy = "quizResult")
+    List<StudentAnswer> studentAnswers;
 }

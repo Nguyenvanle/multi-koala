@@ -1,6 +1,7 @@
 package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
+import com.duokoala.server.dto.request.quizResultRequest.QuizResultSubmitRequest;
 import com.duokoala.server.dto.response.QuizResultResponse;
 import com.duokoala.server.entity.QuizResult;
 import com.duokoala.server.exception.AppException;
@@ -28,6 +29,28 @@ public class QuizResultService {
     TestRepository testRepository;
     QuestionRepository questionRepository;
     AuthenticationService authenticationService;
+    private final AnswerRepository answerRepository;
+
+    public QuizResultResponse submitQuiz(String testId, QuizResultSubmitRequest request) {
+        var test = testRepository.findById(testId)
+                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
+        var questionList  = request.getAnswerSubmitList();
+        int totalQuestion = questionList.size();
+        int answeredQuestion = (int) questionList
+                .stream()
+                .filter(question -> question.getSelectedAnswerId() != null)
+                .count();
+        int correctAnswers = (int) questionList
+                .stream()
+                .filter(question -> {
+                    var answerId = question.getSelectedAnswerId();
+                    var answer = answerRepository.findById(answerId)
+                            .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+                    return answer.isCorrect();
+                }).count();
+
+        QuizResultResponse quizResultResponse = quizResultMapper
+    }
 
     public QuizResultResponse create(
             String testId,
@@ -44,8 +67,8 @@ public class QuizResultService {
     public QuizResultResponse get(String quizResultId) {
         return quizResultMapper
                 .toQuizResultResponse(quizResultRepository
-                                .findById(quizResultId)
-                                .orElseThrow(() -> new AppException(ErrorCode.QUIZ_RESULT_NOT_FOUND)));
+                        .findById(quizResultId)
+                        .orElseThrow(() -> new AppException(ErrorCode.QUIZ_RESULT_NOT_FOUND)));
     }
 
     public List<QuizResultResponse> getAll() {

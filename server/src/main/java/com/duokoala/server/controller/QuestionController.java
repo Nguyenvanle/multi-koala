@@ -3,7 +3,7 @@ package com.duokoala.server.controller;
 import com.duokoala.server.dto.request.questionRequest.QuestionCreateRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.QuestionResponse;
+import com.duokoala.server.dto.response.questionResponse.QuestionResponse;
 import com.duokoala.server.service.QuestionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

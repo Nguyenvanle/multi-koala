@@ -1,9 +1,7 @@
 package com.duokoala.server.dto.response;
 
-import com.duokoala.server.entity.Question;
+import com.duokoala.server.dto.response.questionResponse.QuestionResponse;
 import com.duokoala.server.enums.Status;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,5 +22,5 @@ public class TestResponse {
     LocalDateTime TestUploadedAt;
     Status status;
     boolean isDeleted;
-    List<Question> questions;
+    List<QuestionResponse> questions;
 }
