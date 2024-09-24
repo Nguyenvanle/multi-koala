@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Styles, text } from "@/src/constants/Styles";
-import HeaderUser from "@/src/components/specific/user/HeaderUser";
 import { Colors } from "@/src/constants/Colors";
-import AllCourses from "@/src/components/specific/course/AllCourses";
-import InProgressCourses from "@/src/components/specific/course/InProgressCourses";
-import FinishedCourses from "@/src/components/specific/course/FinishedCourses";
+import AllCourses from "@/src/feature/course/components/courses/all-courses/AllCourses";
+import InProgressCourses from "@/src/feature/course/components/courses/progress-courses/InProgressCourses";
+import FinishedCourses from "@/src/feature/course/components/courses/FinishedCourses";
+import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 
 const CourseList = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);

@@ -1,7 +1,7 @@
 import { SafeAreaView, StatusBar } from "react-native";
 import React from "react";
 import { Styles } from "@/src/constants/Styles";
-import UserAccount from "@/src/components/specific/user/UserAccount";
+import UserAccount from "@/src/feature/user/components/UserAccount";
 
 const Account = () => {
   return (
