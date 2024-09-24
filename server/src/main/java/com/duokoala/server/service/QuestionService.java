@@ -57,7 +57,6 @@ public class QuestionService {
             question.setAnswers(answers);
             return questionMapper.toQuestionResponse(questionRepository.save(question));
         }
-
         public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
             Question question = questionRepository.findById(questionId)
                     .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
@@ -78,14 +77,15 @@ public class QuestionService {
             return questionMapper.toQuestionResponse(questionRepository.save(question));
         }
 
-    public QuestionResponse get(String questionId) {
+        public QuestionResponse get(String questionId) {
         return questionMapper.toQuestionResponse(questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND)));
     }
 
     public List<QuestionResponse> getAll() {
         var questions = questionRepository.findAll();
-        return questions.stream().map(questionMapper::toQuestionResponse).toList();
+        return questions.stream()
+                .map(questionMapper::toQuestionResponse).toList();
     }
 
     public void delete(String questionId) {

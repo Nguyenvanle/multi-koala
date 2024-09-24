@@ -30,4 +30,7 @@ public class Question {
     Image image;
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Answer> answers;
+    @Builder.Default
+    @JsonIgnore
+    boolean isActive = true;
 }
