@@ -56,9 +56,10 @@ const TeacherRatingItem: React.FC<{
     }
   );
 
-  if (isLoading) return <Skeleton className="w-full h-full" />;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!rating) return <div>No rating found</div>;
+  if (isLoading) return <InfoItem icon={Star} label="Rating" value={`0.0/5`} />;
+  if (error) return <InfoItem icon={Star} label="Rating" value={`${error}`} />;
+  if (!rating)
+    return <InfoItem icon={Star} label="Rating" value={`No rating found`} />;
 
   const teacherRating = rating.avgteacherRating || 0; // Lấy giá trị trung bình từ xếp hạng
 
