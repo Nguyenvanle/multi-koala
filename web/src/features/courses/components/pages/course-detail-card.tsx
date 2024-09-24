@@ -1,16 +1,15 @@
-import React from "react";
-import { Star, Clock, BookOpen, Tag, Users } from "lucide-react";
-import { CourseDetailResultResType } from "@/features/courses/types/course";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
+  CardContent,
   CardFooter,
-} from "@/components/ui/card"; // Import các component Card từ shadcnui
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/card";
+import { CourseDetails } from "@/features/courses/components/molecules/course-details";
 import { RatingAdapter } from "@/features/courses/services/rating-adapter";
+import { CourseDetailResultResType } from "@/features/courses/types/course";
 
 interface CourseDetailCardProps {
   course: CourseDetailResultResType;
@@ -52,51 +51,6 @@ const CourseDetailCard: React.FC<CourseDetailCardProps> = ({
         <Button className="w-1/3">Enroll Now</Button>
       </CardFooter>
     </Card>
-  );
-};
-
-const CourseDetails: React.FC<{
-  rating: number;
-  duration: number;
-  types: { typeName: string }[];
-  fields: { fieldName: string }[];
-  instructor: { firstname: string; lastname: string };
-}> = ({ rating, duration, types, fields, instructor }) => {
-  return (
-    <>
-      <DetailItem
-        icon={<Star className="h-5 w-5 text-yellow-400" />}
-        text={rating.toFixed(1)}
-      />
-      <DetailItem
-        icon={<Clock className="h-5 w-5 text-gray-400" />}
-        text={`Duration: ${duration}`}
-      />
-      <DetailItem
-        icon={<BookOpen className="h-5 w-5 text-gray-400" />}
-        text={fields.map((field) => field.fieldName).join(", ")}
-      />
-      <DetailItem
-        icon={<Tag className="h-5 w-5 text-gray-400" />}
-        text={types.map((type) => type.typeName).join(", ")}
-      />
-      <DetailItem
-        icon={<Users className="h-5 w-5 text-gray-400" />}
-        text={`Instructor: ${instructor.firstname} ${instructor.lastname}`}
-      />
-    </>
-  );
-};
-
-const DetailItem: React.FC<{ icon: React.ReactNode; text: string }> = ({
-  icon,
-  text,
-}) => {
-  return (
-    <div className="mt-4 flex items-center">
-      {icon}
-      <span className="ml-2 text-sm text-gray-600">{text}</span>
-    </div>
   );
 };
 
