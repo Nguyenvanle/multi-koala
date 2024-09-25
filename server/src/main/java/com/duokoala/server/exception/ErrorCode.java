@@ -54,9 +54,11 @@ public enum ErrorCode {
     FIELD_NOT_FOUND(404, "Not found: Field does not exist", HttpStatus.NOT_FOUND),
     REQUEST_DISCOUNT_NOT_FOUND(404, "Not found: Request discount does not exist", HttpStatus.NOT_FOUND),
     EMAIL_NOT_FOUND(404, "Not Found: Email does not exist in Redis", HttpStatus.NOT_FOUND),
+    ANSWER_NOT_FOUND(404, "Not Found: Answer does not exist", HttpStatus.NOT_FOUND),
 
     UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     TOKEN_INVALID(401, "Invalid token", HttpStatus.UNAUTHORIZED),
+    ANSWER_DOES_NOT_BELONG_TO_QUESTION(400, "Bad Request: The answer does not belong to the question", HttpStatus.BAD_REQUEST),
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
     INVALID_DATE_FORMAT(400, "Invalid date format: Failed to parse date. Expected format is yyyy-MM-dd.", HttpStatus.BAD_REQUEST),
     INVALID_ARGUMENT(400, "Invalid argument provided", HttpStatus.BAD_REQUEST),

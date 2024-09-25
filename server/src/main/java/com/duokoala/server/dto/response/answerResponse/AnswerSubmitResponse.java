@@ -1,12 +1,16 @@
-package com.duokoala.server.dto.response;
+package com.duokoala.server.dto.response.answerResponse;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AnswerResponse {
+public class AnswerSubmitResponse {
+    String answerId;
     String answerDescription;
     boolean isCorrect;
+    boolean isSelected;
 }

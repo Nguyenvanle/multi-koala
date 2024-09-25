@@ -1,15 +1,18 @@
 package com.duokoala.server.service;
 
-import ch.qos.logback.core.spi.ErrorCodes;
 import com.duokoala.server.dto.request.questionRequest.QuestionCreateRequest;
+import com.duokoala.server.dto.request.questionRequest.QuestionSubmitRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
-import com.duokoala.server.dto.response.QuestionResponse;
+import com.duokoala.server.dto.response.answerResponse.AnswerSubmitResponse;
+import com.duokoala.server.dto.response.questionResponse.QuestionResponse;
+import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import com.duokoala.server.entity.Answer;
 import com.duokoala.server.entity.Question;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuestionMapper;
+import com.duokoala.server.repository.AnswerRepository;
 import com.duokoala.server.repository.QuestionRepository;
 import com.duokoala.server.repository.TestRepository;
 import com.duokoala.server.repository.mediaRepository.ImageRepository;
@@ -28,10 +31,32 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class QuestionService {
+    private final AnswerRepository answerRepository;
     private final ImageRepository imageRepository;
     QuestionRepository questionRepository;
     QuestionMapper questionMapper;
     TestRepository testRepository;
+
+    @Transactional
+    public QuestionSubmitResponse convertToSubmitResponse(QuestionSubmitRequest request) {
+        var question = questionRepository.findById(request.getQuestionId())
+                .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+
+        var selectedAnswer = answerRepository.findById(request.getSelectedAnswerId())
+                .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+        if(!selectedAnswer.getQuestion().equals(question))
+            throw new AppException(ErrorCode.ANSWER_DOES_NOT_BELONG_TO_QUESTION);
+        var answerList = question.getAnswers();
+        List<AnswerSubmitResponse> answerSubmitResponses = answerList
+                .stream().map(answer -> {
+                    AnswerSubmitResponse responseAnswer = questionMapper.toAnswerSubmitResponse(answer);
+                    responseAnswer.setSelected(request.getSelectedAnswerId().equals(answer.getAnswerId()));
+                    return responseAnswer;
+                }).toList();
+        var questionSubmitResponse = questionMapper.toQuestionSubmitResponse(question);
+        questionSubmitResponse.setAnswers(answerSubmitResponses);
+        return questionSubmitResponse;
+    }
 
     @Transactional
     public QuestionResponse create(String testId, QuestionCreateRequest request) {
@@ -44,13 +69,12 @@ public class QuestionService {
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
         int indexAnswer = 0;
-        for(String answerDescription: request.getAnswers()) {
+        for (String answerDescription : request.getAnswers()) {
             Answer answer = Answer.builder()
                     .answerDescription(answerDescription)
                     .question(question)
                     .build();
             answer.setCorrect(indexAnswer == request.getCorrectIndex());
-            log.info("answer: "+answerDescription +" / "+"index: "+indexAnswer+" / correct: "+request.getCorrectIndex());
             answers.add(answer);
             indexAnswer++;
         }
@@ -61,11 +85,11 @@ public class QuestionService {
     public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-        questionMapper.updateQuestion(question,request);
+        questionMapper.updateQuestion(question, request);
         List<Answer> answers = question.getAnswers();
         answers.clear();
         int indexAnswer = 0;
-        for(String answerDescription: request.getAnswers()) {
+        for (String answerDescription : request.getAnswers()) {
             Answer answer = Answer.builder()
                     .answerDescription(answerDescription)
                     .question(question)
@@ -85,7 +109,8 @@ public class QuestionService {
 
     public List<QuestionResponse> getAll() {
         var questions = questionRepository.findAll();
-        return questions.stream().map(questionMapper::toQuestionResponse).toList();
+        return questions.stream()
+                .map(questionMapper::toQuestionResponse).toList();
     }
 
     public void delete(String questionId) {

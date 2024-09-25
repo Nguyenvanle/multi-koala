@@ -5,6 +5,7 @@ import com.duokoala.server.dto.request.testRequest.TestUpdateRequest;
 import com.duokoala.server.dto.response.TestResponse;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.entity.Course;
+import com.duokoala.server.entity.Question;
 import com.duokoala.server.entity.Test;
 import com.duokoala.server.enums.Status;
 import com.duokoala.server.exception.AppException;
@@ -51,9 +52,15 @@ public class TestService {
         return testMapper.toTestResponse(testRepository.save(test));
     }
 
-    public TestResponse get(String testId) {
-        return testMapper.toTestResponse(testRepository.findById(testId)
-                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
+    public TestResponse getAvailableTest(String testId) {
+        var test = testRepository.findById(testId)
+                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
+        var activeQuestions = test.getQuestions()
+                .stream()
+                .filter(Question::isActive)
+                .toList();
+        test.setQuestions(activeQuestions);
+        return testMapper.toTestResponse(test);
     }
 
     public List<TestResponse> getAll() {

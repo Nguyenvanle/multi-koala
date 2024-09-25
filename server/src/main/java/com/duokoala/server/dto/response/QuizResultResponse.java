@@ -1,4 +1,5 @@
 package com.duokoala.server.dto.response;
+import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
 import com.duokoala.server.entity.Test;
 import com.duokoala.server.entity.user.Student;
@@ -6,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class QuizResultResponse {
     int answeredQuestions;
     int correctAnswers;
     LocalDateTime dateTaken;
-    TestResponse test;
-    StudentResponse student;
+    List<QuestionSubmitResponse> questions;
+//    TestResponse test;
+//    StudentResponse student;
 }

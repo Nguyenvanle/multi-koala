@@ -47,7 +47,7 @@ public class TestController {
     @GetMapping("/tests/{testId}")
     ApiResponse<TestResponse> get(@PathVariable String testId) {
         return ApiResponse.<TestResponse>builder()
-                .result(testService.get(testId))
+                .result(testService.getAvailableTest(testId))
                 .build();
     }
 
