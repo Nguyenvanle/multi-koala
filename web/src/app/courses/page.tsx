@@ -1,7 +1,5 @@
-import CoursesPage, {
-  CoursesProps,
-} from "@/features/courses/components/pages/courses";
+import CoursesPage from "@/features/courses/components/pages/courses";
 
-export default function Courses({ initialCourses }: CoursesProps) {
-  return <CoursesPage initialCourses={initialCourses} />;
+export default function Courses() {
+  return <CoursesPage />;
 }
