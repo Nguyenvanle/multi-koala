@@ -9,6 +9,7 @@ const useLoginForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onSubmit = async () => {
     if (!username || !password) {
@@ -27,12 +28,10 @@ const useLoginForm = () => {
         await AsyncStorage.setItem("token", data.result.token);
         router.replace("/(home)/home");
       } else {
-        setError(
-          data.message || "Login failed. Please check your credentials."
-        );
+        setError(error);
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred during login");
+      setError("User not found! Please try again.");
     } finally {
       setLoading(false);
     }

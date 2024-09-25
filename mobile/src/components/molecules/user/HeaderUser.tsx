@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../front-end/CircleStyle";
@@ -57,11 +64,12 @@ const HeaderUser: React.FC = () => {
 
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
+
   const displayedCourses = courseData.slice(0, 1);
 
   const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
@@ -74,11 +82,7 @@ const HeaderUser: React.FC = () => {
         alignItems: "center",
       }}
     >
-      <View
-        style={{
-          alignSelf: "baseline",
-        }}
-      >
+      <View style={{ alignSelf: "baseline" }}>
         <Text style={{ ...text.h4, color: Colors.white }}>
           Continue Learning
         </Text>
@@ -98,12 +102,7 @@ const HeaderUser: React.FC = () => {
             paddingRight: 16,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              paddingVertical: 8,
-            }}
-          >
+          <View style={{ flexDirection: "row", paddingVertical: 8 }}>
             <View
               style={{
                 overflow: "hidden",
@@ -113,31 +112,19 @@ const HeaderUser: React.FC = () => {
               }}
             >
               <Text
-                style={{
-                  ...text.p,
-                  color: Colors.background,
-                }}
+                style={{ ...text.p, color: Colors.background }}
                 numberOfLines={1}
               >
                 {item.course.courseName}
               </Text>
             </View>
             <Text
-              style={{
-                ...text.small,
-                color: Colors.background,
-                paddingTop: 2,
-              }}
+              style={{ ...text.small, color: Colors.background, paddingTop: 2 }}
             >
               0/12
             </Text>
           </View>
-          <View
-            style={{
-              backgroundColor: Colors.white,
-              borderRadius: 20,
-            }}
-          >
+          <View style={{ backgroundColor: Colors.white, borderRadius: 20 }}>
             <Progress.Bar
               width={280}
               progress={item.course.process}
@@ -154,6 +141,7 @@ const HeaderUser: React.FC = () => {
       </View>
     </TouchableOpacity>
   );
+
   return (
     <View
       style={{
@@ -164,7 +152,7 @@ const HeaderUser: React.FC = () => {
       }}
     >
       <CircleStyle />
-      {user && courseData ? (
+      {user ? (
         <View style={{ flexDirection: "column" }}>
           <View
             style={{
@@ -209,7 +197,7 @@ const HeaderUser: React.FC = () => {
         <View style={{ width: 364 }}>
           <View
             style={{
-              justifyContent: "center",
+              justifyContent: "flex-end",
               alignItems: "center",
               flexDirection: "row",
               padding: 8,
@@ -217,19 +205,8 @@ const HeaderUser: React.FC = () => {
           >
             <View
               style={{
-                justifyContent: "center",
-                alignItems: "baseline",
-                flexDirection: "column",
-                padding: 8,
-              }}
-            >
-              <Text style={text.h4}>Welcome</Text>
-            </View>
-            <View
-              style={{
                 flexDirection: "row",
                 alignSelf: "center",
-                paddingLeft: 52,
               }}
             >
               <Button
@@ -259,52 +236,8 @@ const HeaderUser: React.FC = () => {
               />
             </View>
           </View>
-          <TouchableOpacity
-            style={{
-              borderRadius: 10,
-              backgroundColor: Colors.teal_dark,
-              justifyContent: "space-between",
-              padding: 16,
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                alignSelf: "baseline",
-              }}
-            >
-              <Text style={{ ...text.h4, color: Colors.white }}>
-                Continue Learning
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignSelf: "baseline",
-                paddingVertical: 8,
-                justifyContent: "center",
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  paddingRight: 16,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingVertical: 8,
-                  }}
-                ></View>
-              </View>
-            </View>
-          </TouchableOpacity>
         </View>
       )}
-
-      {/* Rest of the component remains the same */}
     </View>
   );
 };

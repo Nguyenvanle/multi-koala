@@ -1,27 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserBody } from "@/src/feature/user/types/user";
 import { router } from "expo-router";
-import { useState } from "react";
+import { Alert } from "react-native";
 
-export const useLogout = () => {
-  const [userBody, setUserBody] = useState<UserBody | null>(null);
-
-  const logout = async () => {
+const useLogOut = () => {
+  const handleLogout = async () => {
     try {
-      // Xóa token và dữ liệu user
-      await AsyncStorage.multiRemove(["token", "userPreferences"]);
-
-      // Reset user state
-      setUserBody(null);
-
-      // Hủy các kết nối và tasks (nếu có)
-
-      // Chuyển hướng về màn hình đăng nhập
-      router.replace("/(auth)/sign-in");
+      // Xóa token khỏi AsyncStorage
+      await AsyncStorage.removeItem("token");
+      // Điều hướng đến màn hình đăng nhập
+      router.replace("/(auth)/sign-in"); // Giả sử màn hình đăng nhập có đường dẫn là "/login"
     } catch (error) {
-      // console.error("Error during logout:", error);
+      Alert.alert("Error", "Failed to log out. Please try again.");
     }
   };
-
-  return logout;
+  return {
+    handleLogout,
+  };
 };
+export default useLogOut;

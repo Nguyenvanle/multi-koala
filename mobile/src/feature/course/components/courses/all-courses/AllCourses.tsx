@@ -1,19 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { Link } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import * as Progress from "react-native-progress";
 import { useCourses } from "../../../hooks/useCourse";
+import useUser from "@/src/feature/user/hooks/useUser";
 
 const AllCourses = () => {
   const { courseData, errorMessage, loading } = useCourses();
+  const { user } = useUser();
 
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
 
@@ -136,18 +145,38 @@ const AllCourses = () => {
   );
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingVertical: 10,
-      }}
-    >
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={courseData}
-        renderItem={renderCourseItem}
-        keyExtractor={(item) => item.courseId}
-      />
+    <View>
+      {user ? (
+        <View
+          style={{
+            flex: 1,
+            paddingVertical: 10,
+          }}
+        >
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={courseData}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+          />
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 0,
+            paddingVertical: 10,
+            height: 530,
+          }}
+        >
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={courseData}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+            style={{ height: 450 }}
+          />
+        </View>
+      )}
     </View>
   );
 };
