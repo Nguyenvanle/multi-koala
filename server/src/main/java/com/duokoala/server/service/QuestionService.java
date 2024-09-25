@@ -35,6 +35,7 @@ public class QuestionService {
     QuestionMapper questionMapper;
     TestRepository testRepository;
 
+    @Transactional
     public QuestionSubmitResponse convertToSubmitResponse(QuestionSubmitRequest request) {
         var question = questionRepository.findById(request.getQuestionId())
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));

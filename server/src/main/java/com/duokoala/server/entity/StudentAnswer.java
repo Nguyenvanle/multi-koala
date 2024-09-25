@@ -18,6 +18,7 @@ public class StudentAnswer {
     @ManyToOne
     QuizResult quizResult;
     @ManyToOne
+    @JsonIgnore
     Question question;
     @ManyToOne
     Answer selectedAnswer;

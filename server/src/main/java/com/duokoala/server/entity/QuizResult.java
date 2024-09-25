@@ -25,6 +25,6 @@ public class QuizResult {
     Test test;
     @ManyToOne
     Student student;
-    @OneToMany(mappedBy = "quizResult")
+    @OneToMany(mappedBy = "quizResult", cascade = CascadeType.ALL)
     List<StudentAnswer> studentAnswers;
 }

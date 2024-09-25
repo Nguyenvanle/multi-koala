@@ -1,24 +1,25 @@
 package com.duokoala.server.service;
 
+import com.duokoala.server.dto.request.questionRequest.QuestionSubmitRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultSubmitRequest;
 import com.duokoala.server.dto.response.QuizResultResponse;
-import com.duokoala.server.entity.QuizResult;
+import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
+import com.duokoala.server.entity.*;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuizResultMapper;
-import com.duokoala.server.repository.AnswerRepository;
-import com.duokoala.server.repository.QuestionRepository;
-import com.duokoala.server.repository.QuizResultRepository;
-import com.duokoala.server.repository.TestRepository;
+import com.duokoala.server.repository.*;
+import com.duokoala.server.repository.userRepository.StudentRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,27 +30,88 @@ public class QuizResultService {
     TestRepository testRepository;
     QuestionRepository questionRepository;
     AuthenticationService authenticationService;
-    private final AnswerRepository answerRepository;
+    AnswerRepository answerRepository;
+    QuestionService questionService;
+    StudentAnswerRepository studentAnswerRepository;
 
+    @Transactional
     public QuizResultResponse submitQuiz(String testId, QuizResultSubmitRequest request) {
-        var test = testRepository.findById(testId)
-                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
-        var questionList  = request.getAnswerSubmitList();
-        int totalQuestion = questionList.size();
-        int answeredQuestion = (int) questionList
-                .stream()
-                .filter(question -> question.getSelectedAnswerId() != null)
-                .count();
-        int correctAnswers = (int) questionList
-                .stream()
-                .filter(question -> {
-                    var answerId = question.getSelectedAnswerId();
-                    var answer = answerRepository.findById(answerId)
-                            .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
-                    return answer.isCorrect();
-                }).count();
+        Test test = testRepository.findById(testId).orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
+        List<QuestionSubmitRequest> questionList = request.getAnswerSubmitList();
+        QuizResult quizResult = createQuizResult(test, questionList);
+        List<StudentAnswer> studentAnswers = createStudentAnswers(quizResult, questionList);
+        saveQuizResultAndAnswers(quizResult, studentAnswers);
+        List<QuestionSubmitResponse> questionResponses = createQuestionResponses(questionList);
+        return createQuizResultResponse(quizResult, questionResponses);
+    }
 
-        QuizResultResponse quizResultResponse = quizResultMapper
+    private QuizResult createQuizResult(Test test, List<QuestionSubmitRequest> questionList) {
+        int totalQuestion = questionList.size();
+        int answeredQuestion = countAnsweredQuestions(questionList);
+        int correctAnswers = countCorrectAnswers(questionList);
+        QuizResult quizResult = QuizResult.builder()
+                .totalQuestion(totalQuestion)
+                .answeredQuestions(answeredQuestion)
+                .correctAnswers(correctAnswers)
+                .test(test)
+                .dateTaken(LocalDateTime.now())
+                .build();
+        try {
+            quizResult.setStudent(authenticationService.getAuthenticatedStudent());
+        } catch (Exception e) {
+            // Handle exception or log it
+        }
+        return quizResult;
+    }
+
+    private int countAnsweredQuestions(List<QuestionSubmitRequest> questionList) {
+        return (int) questionList.stream()
+                .filter(question -> question.getSelectedAnswerId() != null).count();
+    }
+
+    private int countCorrectAnswers(List<QuestionSubmitRequest> questionList) {
+        return (int) questionList.stream()
+                .filter(this::isCorrectAnswer).count();
+    }
+
+    private boolean isCorrectAnswer(QuestionSubmitRequest question) {
+        return answerRepository.findById(question.getSelectedAnswerId())
+                .map(Answer::isCorrect)
+                .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+    }
+
+    private List<StudentAnswer> createStudentAnswers(QuizResult quizResult, List<QuestionSubmitRequest> questionList) {
+        return questionList.stream().map(questionAnswer -> createStudentAnswer(quizResult, questionAnswer)).toList();
+    }
+
+    private StudentAnswer createStudentAnswer(QuizResult quizResult, QuestionSubmitRequest questionAnswer) {
+        Answer answer = answerRepository.findById(questionAnswer.getSelectedAnswerId())
+                .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+        Question question = questionRepository.findById(questionAnswer.getQuestionId())
+                .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+        return StudentAnswer.builder()
+                .quizResult(quizResult)
+                .question(question)
+                .selectedAnswer(answer)
+                .isCorrect(answer.isCorrect())
+                .build();
+    }
+
+    private void saveQuizResultAndAnswers(QuizResult quizResult, List<StudentAnswer> studentAnswers) {
+        if (quizResult.getStudent() != null) {
+            quizResultRepository.save(quizResult);
+            studentAnswerRepository.saveAll(studentAnswers);
+        }
+    }
+
+    private List<QuestionSubmitResponse> createQuestionResponses(List<QuestionSubmitRequest> questionList) {
+        return questionList.stream().map(questionService::convertToSubmitResponse).toList();
+    }
+
+    private QuizResultResponse createQuizResultResponse(QuizResult quizResult, List<QuestionSubmitResponse> questionResponses) {
+        QuizResultResponse response = quizResultMapper.toQuizResultResponse(quizResult);
+        response.setQuestions(questionResponses);
+        return response;
     }
 
     public QuizResultResponse create(
