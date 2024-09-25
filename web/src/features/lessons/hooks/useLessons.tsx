@@ -6,11 +6,7 @@ import {
 } from "@/features/lessons/types/lessons-res";
 import { useEffect, useMemo, useState } from "react";
 
-interface UseLessonsProps {
-  params?: { courseId?: string };
-}
-
-export default function useLessons(params?: UseLessonsProps) {
+export default function useLessons(courseId: string) {
   const [lessons, setLessons] = useState<LessonsResult | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +16,8 @@ export default function useLessons(params?: UseLessonsProps) {
     const fetchLessons = async () => {
       try {
         // Nếu không có courseId thì gọi API lấy toàn bộ bài học
-        const { result } = params?.params?.courseId
-          ? await lessonService.getAllByCourseId(params.params.courseId)
+        const { result } = courseId
+          ? await lessonService.getAllByCourseId(courseId)
           : await lessonService.getAll();
 
         // Kiểm tra nếu res.result tồn tại
@@ -36,7 +32,7 @@ export default function useLessons(params?: UseLessonsProps) {
     };
 
     fetchLessons();
-  }, [params]); // Chỉ phụ thuộc vào params
+  }, [courseId]); // Chỉ phụ thuộc vào params
 
   const sortedLessons = useMemo(() => {
     if (!lessons) return null;

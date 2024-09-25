@@ -26,7 +26,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   courseDiscount,
   courseCreateAt,
 }) => {
-  const { duration, lessons } = useLessons({ params: { courseId } });
+  const { duration, lessons } = useLessons(courseId);
   
   const discount = courseDiscount;
   const discountedPrice = courseDiscount;
