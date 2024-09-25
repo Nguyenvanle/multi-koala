@@ -15,14 +15,9 @@ interface LessonDetailPageProps {
 export const LessonDetailPage: React.FC<LessonDetailPageProps> = ({
   lesson,
 }) => {
-  const { courseId } = useParams<{ courseId?: string | string[] }>();
+  const { courseId } = useParams();
 
-  // Chuyển đổi courseId sang chuỗi nếu nó là một mảng
-  const normalizedCourseId = Array.isArray(courseId) ? courseId[0] : courseId;
-
-  const { lessons, loading, error } = useLessons({
-    params: { courseId: normalizedCourseId },
-  });
+  const { lessons, loading, error } = useLessons(courseId as string);
 
   // Kiểm tra nếu lessons không phải là null trước khi truyền vào useVisibleLessons
   const { visibleLessons, loadMoreLessons } = useVisibleLessons(lessons || []);

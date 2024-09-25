@@ -10,7 +10,6 @@ interface CoursesTemplateProps {
   courses: CoursesResultResType | null;
   loading: boolean;
   setSortOrder: Dispatch<SetStateAction<SortOption>>;
-  // xóa filter
 }
 
 export const CoursesTemplate: React.FC<CoursesTemplateProps> = ({
@@ -18,11 +17,8 @@ export const CoursesTemplate: React.FC<CoursesTemplateProps> = ({
   loading,
   setSortOrder,
 }) => (
-  <div className="flex flex-1 flex-col justify-center">
+  <div className="flex flex-1 flex-col justify-center bg-secondary">
     <CoursesHeader setSortOrder={setSortOrder} />
-    <div className="container px-auto ">
-      <Separator />
-    </div>
-    <CoursesList courses={courses} loading={loading} />
+    <CoursesList courses={courses} loading={loading} className="pt-0 pb-6" />
   </div>
 );

@@ -28,9 +28,11 @@ export const FilterPrice: React.FC = () => {
 
   const handleInputChange = (type: "min" | "max", value: string) => {
     const numValue = value === "" ? undefined : parseInt(value, 10);
-    // Cho phép người dùng xóa số 0 hoặc nhập giá trị không âm
     if (numValue === undefined || (numValue >= 0 && !isNaN(numValue))) {
-      const newRange = { ...priceRange, [type]: numValue !== undefined ? numValue : 0 };
+      const newRange = {
+        ...priceRange,
+        [type]: numValue !== undefined ? numValue : 0,
+      };
       if (newRange.min <= newRange.max) {
         setPriceRange(newRange);
         updateFilter("priceRange", newRange);
@@ -38,8 +40,12 @@ export const FilterPrice: React.FC = () => {
     }
   };
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select(); // Tự động chọn toàn bộ văn bản trong ô input khi có focus
+  };
+
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-2">
       <Label
         htmlFor="price-range"
         className="scroll-m-20 text-xl font-semibold tracking-tight pb-2"
@@ -57,13 +63,19 @@ export const FilterPrice: React.FC = () => {
       />
 
       <div className="flex justify-between items-center">
+        <p className="text-sm text-muted-foreground">0</p>
+        <p className="text-sm text-muted-foreground">1000+</p>
+      </div>
+
+      <div className="flex justify-between items-center">
         <div className="relative flex items-center">
           <Input
             type="number"
-            value={priceRange.min === 0 ? "" : priceRange.min} // Hiển thị rỗng khi giá trị là 0
+            value={priceRange.min}
             onChange={(e) => handleInputChange("min", e.target.value)}
+            onFocus={handleFocus} // Gọi hàm handleFocus khi input được focus
             className="w-24 pl-6"
-            min={0} // Ngăn không cho nhập số âm
+            min={0}
           />
           <DollarSign className="absolute left-2 text-gray-500 w-4 h-4" />
         </div>
@@ -73,10 +85,11 @@ export const FilterPrice: React.FC = () => {
         <div className="relative flex items-center">
           <Input
             type="number"
-            value={priceRange.max === 0 ? "" : priceRange.max} // Hiển thị rỗng khi giá trị là 0
+            value={priceRange.max}
             onChange={(e) => handleInputChange("max", e.target.value)}
+            onFocus={handleFocus} // Gọi hàm handleFocus khi input được focus
             className="w-24 pl-6"
-            min={0} // Ngăn không cho nhập số âm
+            min={0}
           />
           <DollarSign className="absolute left-2 text-gray-500 w-4 h-4" />
         </div>

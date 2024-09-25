@@ -23,8 +23,8 @@ export default function AboutCard({
   link,
 }: AboutCardProps) {
   return (
-    <Link href={link} className="flex flex-0">
-      <Card className="flex flex-1 flex-col border rounded hover:shadow-md overflow-hidden">
+    <Link href={link} className="flex flex-0 ">
+      <Card className="flex flex-1 flex-col border rounded shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
         <CardContent className="px-0">
           <AspectRatio ratio={16 / 9} className=" overflow-hidden">
             <Image

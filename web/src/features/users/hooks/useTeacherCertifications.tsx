@@ -1,28 +1,15 @@
 import { CertificationsResult } from "@/features/certification/types/certification-res";
 import { teacherService } from "@/features/users/services/teacher";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 
-export default function useTeacherCertifications(teacherId: string) {
-  const [certifications, setCertifications] =
-    useState<CertificationsResult | null>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export function useTeacherCertifications(teacherId: string) {
+  const { data, error } = useSWR(`teacher-certifications-${teacherId}`, () =>
+    teacherService.getAllCertifications(teacherId)
+  );
 
-  useEffect(() => {
-    async function fetchTeacherCertifications() {
-      try {
-        const { result } = await teacherService.getAllCertifications(teacherId);
-
-        setCertifications(result?.result as CertificationsResult);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchTeacherCertifications();
-  }, [teacherId]);
-
-  return { certifications, error, loading };
+  return {
+    certifications: data?.result?.result as CertificationsResult,
+    loading: !error && !data,
+    error: error?.message,
+  };
 }

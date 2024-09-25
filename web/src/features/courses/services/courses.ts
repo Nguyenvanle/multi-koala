@@ -1,3 +1,4 @@
+import { CoursePricesResType } from "@/features/course-prices/types/course-prices";
 import {
   CourseDetailResType,
   CourseResType,
@@ -9,6 +10,10 @@ import { apiService } from "@/services/api";
 export const courseService = {
   getAll: async () => {
     return await apiService.get<CourseResType>("/courses");
+  },
+
+  getPriceRange: async () => {
+    return await apiService.get<CoursePricesResType>(`/courses/course-price`);
   },
 
   getDetail: async (courseId: string) => {

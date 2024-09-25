@@ -1,3 +1,4 @@
+// Filter
 import FilterFields from "@/features/courses/components/molecules/filter-fields";
 import { FilterLevels } from "@/features/courses/components/molecules/filter-level";
 import { FilterPrice } from "@/features/courses/components/molecules/filter-price";
@@ -13,3 +14,10 @@ export {
   FilterStatus,
   FilterTypes,
 };
+
+// CourseList
+import { CoursesListLoading } from "@/features/courses/components/molecules/courses-list-loading";
+import { CoursesListEmpty } from "@/features/courses/components/molecules/courses-list-empty";
+import { CoursesListGrid } from "@/features/courses/components/molecules/courses-list-grid";
+
+export { CoursesListLoading, CoursesListEmpty, CoursesListGrid };

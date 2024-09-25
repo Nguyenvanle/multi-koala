@@ -30,7 +30,7 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
           {item.href === path ? (
             <Badge className="p-[1px]" />
           ) : (
-            <Badge className="bg-background hover:shadow-none" />
+            <Badge className="bg-background hover:shadow-none hover:bg-background" />
           )}
         </Link>
       ))}
