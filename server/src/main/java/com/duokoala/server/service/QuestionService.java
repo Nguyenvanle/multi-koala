@@ -12,6 +12,7 @@ import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuestionMapper;
+import com.duokoala.server.repository.AnswerRepository;
 import com.duokoala.server.repository.QuestionRepository;
 import com.duokoala.server.repository.TestRepository;
 import com.duokoala.server.repository.mediaRepository.ImageRepository;
@@ -30,6 +31,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class QuestionService {
+    private final AnswerRepository answerRepository;
     private final ImageRepository imageRepository;
     QuestionRepository questionRepository;
     QuestionMapper questionMapper;
@@ -39,6 +41,11 @@ public class QuestionService {
     public QuestionSubmitResponse convertToSubmitResponse(QuestionSubmitRequest request) {
         var question = questionRepository.findById(request.getQuestionId())
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+
+        var selectedAnswer = answerRepository.findById(request.getSelectedAnswerId())
+                .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+        if(!selectedAnswer.getQuestion().equals(question))
+            throw new AppException(ErrorCode.ANSWER_DOES_NOT_BELONG_TO_QUESTION);
         var answerList = question.getAnswers();
         List<AnswerSubmitResponse> answerSubmitResponses = answerList
                 .stream().map(answer -> {

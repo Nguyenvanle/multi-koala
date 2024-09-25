@@ -39,7 +39,14 @@ public class QuizResultController {
     @GetMapping("/quiz-results/{quizResultId}")
     ApiResponse<QuizResultResponse> get(@PathVariable String quizResultId) {
         return ApiResponse.<QuizResultResponse>builder()
-                .result(quizResultService.get(quizResultId))
+                .result(quizResultService.getQuizResultResponse(quizResultId))
+                .build();
+    }
+
+    @GetMapping("/quiz-results/my-quiz-result")
+    ApiResponse<List<QuizResultResponse>> getMine() {
+        return ApiResponse.<List<QuizResultResponse>>builder()
+                .result(quizResultService.getMine())
                 .build();
     }
 

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -126,11 +127,27 @@ public class QuizResultService {
         return quizResultMapper.toQuizResultResponse(quizResultRepository.save(quizResult));
     }
 
-    public QuizResultResponse get(String quizResultId) {
-        return quizResultMapper
-                .toQuizResultResponse(quizResultRepository
-                        .findById(quizResultId)
-                        .orElseThrow(() -> new AppException(ErrorCode.QUIZ_RESULT_NOT_FOUND)));
+    public QuizResultResponse getQuizResultResponse(String quizResultId) {
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new AppException(ErrorCode.QUIZ_RESULT_NOT_FOUND));
+        List<QuestionSubmitResponse> questionSubmitResponses = studentAnswerRepository
+                .findAllByQuizResult(quizResult)
+                .stream()
+                .map(studentAnswer -> questionService.convertToSubmitResponse(QuestionSubmitRequest.builder()
+                        .questionId(studentAnswer.getQuestion().getQuestionId())
+                        .selectedAnswerId(studentAnswer.getSelectedAnswer().getAnswerId())
+                        .build()))
+                .toList();
+        return createQuizResultResponse(quizResult, questionSubmitResponses);
+    }
+
+    public List<QuizResultResponse> getMine() {
+        var quizResults = quizResultRepository.findAllByStudent(authenticationService.getAuthenticatedStudent());
+        return quizResults
+                .stream()
+                .map(quizResult ->
+                        getQuizResultResponse(quizResult.getQuizResultId()))
+                .toList();
     }
 
     public List<QuizResultResponse> getAll() {
