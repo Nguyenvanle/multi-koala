@@ -21,7 +21,7 @@ export const useCourseDetailsProgress = (courseId: string) => {
       } catch (err: any) {
         setError(err); // Lấy thông báo lỗi từ Axios
 
-        console.error(err);
+        // console.error(err);
       } finally {
         setLoading(false);
       }

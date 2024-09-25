@@ -19,7 +19,7 @@ export const useLogout = () => {
       // Chuyển hướng về màn hình đăng nhập
       router.replace("/(auth)/sign-in");
     } catch (error) {
-      console.error("Error during logout:", error);
+      // console.error("Error during logout:", error);
     }
   };
 

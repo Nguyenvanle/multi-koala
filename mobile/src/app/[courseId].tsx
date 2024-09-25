@@ -11,7 +11,7 @@ import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useCourseDetails } from "@/src/feature/api/course-details";
+import { useCourseDetails } from "../feature/course/types/course-details";
 
 // Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
 

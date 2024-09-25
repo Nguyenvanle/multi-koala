@@ -13,7 +13,7 @@ export const useCourses = () => {
         const data = await CourseAPI();
         setCourseData(data);
       } catch (error) {
-        console.error("Error fetching course data:", error);
+        // console.error("Error fetching course data:", error);
         setErrorMessage(errorMessage || "Failed to fetch course data.");
       } finally {
         setLoading(false);
