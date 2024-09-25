@@ -1,4 +1,3 @@
-// hooks/useCourses.ts
 import { useState, useEffect } from "react";
 import CourseAPI from "./course";
 

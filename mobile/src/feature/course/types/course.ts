@@ -12,7 +12,6 @@ interface CourseData {
     lastname: string;
   };
   courseLevel: string;
-  courseRating: number;
   types: {
     typeName: string;
     typeDescription: string;
@@ -21,7 +20,6 @@ interface CourseData {
     fieldName: string;
     fielDescription: string;
   };
-  discountApprovedRate: number;
   status: string;
   process: number;
 }

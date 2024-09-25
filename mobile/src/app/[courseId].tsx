@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,28 +6,33 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+import { AirbnbRating } from "react-native-ratings";
+
+import { useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourseDetails } from "../feature/course/types/course-details";
+import { useCourseRating } from "./../feature/course/hooks/useCourseRating";
 
 // Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
 
 const CourseDetails = () => {
   const { courseId } = useGlobalSearchParams();
-  const { courseDetails, loading, error } = useCourseDetails(
-    courseId as string
-  );
-  // const {
-  //   courseDetailsProgress: courseDetails,
-  //   loading,
-  //   error,
-  // } = useCourseDetailsProgress(courseId as string);
+
+  // Chuyển đổi courseId thành chuỗi nếu cần
+  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+
+  const { courseDetails, loading, error } = useCourseDetails(courseIdString);
+  const { courseRating, errorMessage } = useCourseRating(courseIdString);
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
+    );
   }
 
   if (error) {
@@ -37,6 +42,7 @@ const CourseDetails = () => {
   if (!courseDetails) {
     return <Text>No course</Text>;
   }
+
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -54,19 +60,18 @@ const CourseDetails = () => {
             Author | {courseDetails.uploadedByTeacher?.firstname}{" "}
             {courseDetails.uploadedByTeacher?.lastname}
           </Text>
-          <View style={styles.ratingContainer}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <AntDesign
-                key={star}
-                name={star <= courseDetails.courseRating ? "star" : "staro"}
-                size={20}
-                color={Colors.dark_grey}
-              />
-            ))}
-          </View>
+          <Text></Text>
+          {/* Sử dụng ?? để đảm bảo có giá trị */}
+          <AirbnbRating
+            count={5}
+            size={20}
+            ratingContainerStyle={{ padding: 0 }}
+            showRating={false}
+            defaultRating={(courseRating?.avgcourseRating ?? 0) * 5} // Không làm tròn, giữ nguyên giá trị thập phân            showRating={true} // Đặt showRating thành false để ẩn phần đánh giá
+            isDisabled={true} // Thiết lập isDisabled để không cho phép đánh giá
+          />
         </View>
         <Text style={styles.title}>{courseDetails.courseName}</Text>
-        {/* <Text style={styles.duration}>Lessons</Text> */}
         <Text style={styles.price}>
           ${courseDetails.coursePrice.toFixed(2)}
         </Text>
@@ -74,21 +79,6 @@ const CourseDetails = () => {
         <Text style={styles.description}>
           {courseDetails.courseDescription}
         </Text>
-        {/* {courseDetails..map((lesson, index) => (
-          <View key={index} style={styles.lessonItem}>
-            <Image
-              source={{ uri: lesson.thumbnailUrl }}
-              style={styles.lessonThumbnail}
-            />
-            <View style={styles.lessonInfo}>
-              <Text style={styles.lessonTitle}>{lesson.title}</Text>
-              <Text style={styles.lessonDuration}>{lesson.duration}</Text>
-            </View>
-            <TouchableOpacity>
-              <AntDesign name="playcircleo" size={24} color={Colors.primary} />
-            </TouchableOpacity>
-          </View>
-        ))} */}
       </View>
       <TouchableOpacity style={styles.buyButton}>
         <Text style={styles.buyButtonText}>

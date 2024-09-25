@@ -18,7 +18,7 @@ const useUser = () => {
           return;
         }
 
-        const response = await userServices.user({ token });
+        const response = await userServices.getuser({ token });
         // Kiểm tra dữ liệu trả về
         if (response.data.result) {
           setUser(response.data.result);

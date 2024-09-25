@@ -4,14 +4,12 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import React from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../../../components/molecules/front-end/CircleStyle";
 import { text } from "@/src/constants/Styles";
-import { router } from "expo-router";
 import useUser from "@/src/feature/user/hooks/useUser";
 import {
   AntDesign,

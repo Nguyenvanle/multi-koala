@@ -149,7 +149,6 @@ const AllCourses = () => {
       {user ? (
         <View
           style={{
-            flex: 1,
             paddingVertical: 10,
           }}
         >
