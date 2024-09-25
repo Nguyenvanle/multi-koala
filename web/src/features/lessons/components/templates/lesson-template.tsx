@@ -4,15 +4,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { H1 } from "@/components/ui/typography";
 import { LessonDetailPage } from "@/features/lessons/components/organism/lesson-detail";
 import useLesson from "@/features/lessons/hooks/useLesson";
+import { useParams } from "next/navigation";
 
-export default function LessonTemplate({
-  params,
-}: {
-  params: {
-    lessonId: string;
-  };
-}) {
-  const { lesson, loading } = useLesson({ params });
+export default function LessonTemplate() {
+  const { lessonId } = useParams();
+  const { lesson, loading } = useLesson(lessonId as string);
 
   // Kiểm tra trạng thái loading
   if (loading) {
