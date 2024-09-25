@@ -218,8 +218,10 @@ const HeaderUser: React.FC = () => {
                   width: 100,
                   borderRadius: 10,
                   marginTop: 0,
+                  borderWidth: 1,
+                  borderColor: Colors.grey,
                 }}
-                textStyle={{ color: Colors.white }}
+                textStyle={{ color: Colors.white, fontWeight: "500" }}
               />
               <Button
                 title="Sign Up"
@@ -231,8 +233,10 @@ const HeaderUser: React.FC = () => {
                   borderRadius: 10,
                   marginHorizontal: 8,
                   marginTop: 0,
+                  borderWidth: 1,
+                  borderColor: Colors.grey,
                 }}
-                textStyle={{ color: Colors.black }}
+                textStyle={{ color: Colors.black, fontWeight: "500" }}
               />
             </View>
           </View>

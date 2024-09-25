@@ -27,7 +27,11 @@ const AllCourses = () => {
   }
 
   if (errorMessage) {
-    return <Text>{errorMessage}</Text>;
+    return (
+      <Text style={{ ...text.large, color: Colors.red, fontWeight: "400" }}>
+        {errorMessage}
+      </Text>
+    );
   }
 
   const renderCourseItem = ({ item }: { item: CourseData }) => (

@@ -8,8 +8,8 @@ import { router } from "expo-router";
 const LogoScreen = () => {
   useEffect(() => {
     setTimeout(() => {
-      router.replace("/(home)/home");
-    }, 2000);
+      router.replace("/(intro)/intro-screen");
+    }, 1500);
   }, []);
 
   return (
