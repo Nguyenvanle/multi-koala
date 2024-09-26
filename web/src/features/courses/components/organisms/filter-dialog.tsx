@@ -43,20 +43,20 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
         </DialogHeader>
 
         <ScrollArea className="h-[50vh]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 min-h-[400px] pr-4">
-            <FilterFields initialData={[]} />
-
-            <FilterTypes initialData={[]} />
-
-            <FilterLevels />
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 min-h-[400px] pr-4">
             <div className="flex flex-col gap-4">
               <FilterPrice />
 
               <FilterRating />
 
               <FilterStatus />
+
+              <FilterLevels />
             </div>
+
+            <FilterFields initialData={[]} />
+
+            <FilterTypes initialData={[]} />
           </div>
         </ScrollArea>
 
