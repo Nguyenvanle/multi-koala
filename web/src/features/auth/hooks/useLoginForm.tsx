@@ -4,15 +4,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
-import {} from "@/types/auth/schema/register";
 import { LoginBody, LoginBodyType } from "@/types/auth/schema/login";
 import { DURATION } from "@/types/layout/toast";
-import { loginService } from "@/features/auth/services/login";
 import { handlerAuth } from "@/features/auth/services/handler-auth";
 
 export default function useLoginForm() {
   const router = useRouter();
-  const form = useForm<LoginBodyType>({
+  const form = useForm({
     resolver: zodResolver(LoginBody),
     defaultValues: {
       username: "",
@@ -21,25 +19,40 @@ export default function useLoginForm() {
   });
 
   const onSubmit = async (values: LoginBodyType) => {
-    // Proceed with registration
-    const { result, error, code } = await loginService.login(values);
-
-    if (error) {
-      // Sử dụng handlerAuth để xử lý lỗi từ API
-      handlerAuth({
-        code,
-        error,
-        setError: form.setError, // Thiết lập hàm setError từ react-hook-form
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
-    } else if (result) {
-      // Proceed with registration
+
+      const data = await response.json();
+      console.log(data);
+
+      if (response.ok) {
+        toast({
+          title: "Login Successful!",
+          description: "Welcome back",
+          duration: DURATION,
+        });
+        router.push("/dashboard");
+      } else {
+        // Sử dụng handlerAuth để xử lý lỗi từ API
+        handlerAuth({
+          code: data.code,
+          error: data.message,
+          setError: form.setError,
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
       toast({
-        title: "Login Successful!",
-        description: "Welcome back",
+        title: "Login Error",
+        description: "An unexpected error occurred. Please try again.",
         duration: DURATION,
       });
-
-      router.push("/dashboard");
     }
   };
 
