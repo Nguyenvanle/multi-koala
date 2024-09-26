@@ -79,12 +79,13 @@ export const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 16,
   },
   errorText: {
     color: Colors.red,
     textAlign: "center",
-    marginVertical: 10,
+    fontWeight: "bold",
+    paddingTop: 16,
   },
 });
 

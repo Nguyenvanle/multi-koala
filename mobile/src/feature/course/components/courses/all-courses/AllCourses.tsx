@@ -1,27 +1,31 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { Link } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import * as Progress from "react-native-progress";
-import { useCourses } from "../../../hooks/useCourse";
+import { useCourse } from "../../../hooks/useCourse";
+import useUser from "@/src/feature/user/hooks/useUser";
+import { CourseBody } from "../../../types/course";
 
 const AllCourses = () => {
-  const { courseData, errorMessage, loading } = useCourses();
+  const { course, errorMessage, loading } = useCourse();
+  const { user } = useUser();
 
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
 
-  if (errorMessage) {
-    return <Text>{errorMessage}</Text>;
-  }
-
-  const renderCourseItem = ({ item }: { item: CourseData }) => (
+  const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <Link href={`/${item.courseId}`} asChild>
       <TouchableOpacity>
         <View
@@ -67,34 +71,6 @@ const AllCourses = () => {
                 {item.courseName}
               </Text>
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                paddingHorizontal: 8,
-              }}
-            >
-              <Text
-                style={{
-                  ...text.small,
-                  color: Colors.teal_dark,
-                }}
-              >
-                10/12
-              </Text>
-            </View>
-            <View
-              style={{
-                backgroundColor: Colors.white,
-                borderRadius: 20,
-              }}
-            >
-              <Progress.Bar
-                width={346}
-                progress={item.process}
-                color={Colors.teal_light}
-              />
-            </View>
             <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
               <Text
                 style={{
@@ -136,18 +112,37 @@ const AllCourses = () => {
   );
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingVertical: 10,
-      }}
-    >
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={courseData}
-        renderItem={renderCourseItem}
-        keyExtractor={(item) => item.courseId}
-      />
+    <View>
+      {user ? (
+        <View
+          style={{
+            paddingVertical: 10,
+          }}
+        >
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={course}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+          />
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 0,
+            paddingVertical: 10,
+            height: 530,
+          }}
+        >
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={course}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+            style={{ height: 450 }}
+          />
+        </View>
+      )}
     </View>
   );
 };

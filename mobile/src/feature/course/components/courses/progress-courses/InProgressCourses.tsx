@@ -1,57 +1,30 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Progress from "react-native-progress";
 import { Link } from "expo-router";
-import { CourseDetails } from "../../../types/progress-courses-details";
-import API_CONFIG from "@/src/types/api/config";
+import { useEnrolled } from "../../../hooks/useEnrrolled";
+import { EnrolledBody } from "../../../types/course-enrolled";
 
 const InProgressCourses = () => {
-  const [courseData, setCourseData] = useState<CourseDetails[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-
-        if (token) {
-          const response = await API_CONFIG.get(
-            "/enroll-courses/my-enrolled-courses",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          if (response.data.code === 200) {
-            setCourseData(response.data.result);
-          } else {
-            setErrorMessage(response.data.message);
-          }
-        }
-      } catch (error) {
-        setErrorMessage("Please sign in to connect course data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourseData();
-  }, []);
+  const { enrolled, errorMessage, loading } = useEnrolled();
 
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
 
-  const renderCourseItem = ({ item }: { item: CourseDetails }) => (
+  const renderCourseItem = ({ item }: { item: EnrolledBody }) => (
     <Link href={`/${item.course.courseId}`} asChild>
       <TouchableOpacity>
         <View
@@ -110,7 +83,7 @@ const InProgressCourses = () => {
                   color: Colors.teal_dark,
                 }}
               >
-                10/12
+                {item.process}%
               </Text>
             </View>
             <View
@@ -121,7 +94,7 @@ const InProgressCourses = () => {
             >
               <Progress.Bar
                 width={346}
-                progress={item.course.process}
+                progress={item.process}
                 color={Colors.teal_light}
               />
             </View>
@@ -179,7 +152,7 @@ const InProgressCourses = () => {
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={courseData}
+          data={enrolled}
           renderItem={renderCourseItem}
           keyExtractor={(item) => item.course.courseId}
         />

@@ -6,18 +6,23 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import AllCourses from "@/src/feature/course/components/courses/all-courses/AllCourses";
 import InProgressCourses from "@/src/feature/course/components/courses/progress-courses/InProgressCourses";
-import FinishedCourses from "@/src/feature/course/components/courses/FinishedCourses";
+import FinishedCourses from "@/src/feature/course/components/courses/finished-courses/FinishedCourses";
 import HeaderUser from "@/src/components/molecules/user/HeaderUser";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useUser from "@/src/feature/user/hooks/useUser";
 
 const CourseList = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tab } = useLocalSearchParams();
+  const [loading, setLoading] = useState(true); // State để theo dõi trạng thái tải
+  const { user, setUser } = useUser();
 
   const data = [
     { id: 1, label: "See All", component: <AllCourses />, param: "all" },
@@ -36,6 +41,19 @@ const CourseList = () => {
   ];
 
   useEffect(() => {
+    // Hàm để lấy dữ liệu người dùng từ AsyncStorage
+    const fetchUserData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        // Nếu có token, giả định người dùng đã đăng nhập
+      }
+      setLoading(false); // Đặt trạng thái tải về false khi hoàn tất
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
     if (tab) {
       const index = data.findIndex((item) => item.param === tab);
       if (index !== -1) {
@@ -48,37 +66,55 @@ const CourseList = () => {
     setSelectedIndex(index);
   };
 
+  if (loading) {
+    return (
+      <SafeAreaView style={{ ...Styles.container }}>
+        <StatusBar barStyle="dark-content" />
+        <HeaderUser />
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ ...Styles.container }}>
       <StatusBar barStyle="dark-content" />
       <HeaderUser />
-      <View style={styles.tabContainer}>
-        {data.map((item, index) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => handlePress(index)}
-            style={[
-              selectedIndex === index
-                ? styles.selectedBackground
-                : styles.defaultBackground,
-            ]}
-          >
-            <Text
-              style={[
-                text.p,
-                selectedIndex === index
-                  ? styles.selectedText
-                  : styles.defaultText,
-              ]}
-            >
-              {item.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.contentContainer}>
-        {data[selectedIndex].component}
-      </View>
+      {user ? (
+        <View>
+          <View style={styles.tabContainer}>
+            {data.map((item, index) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => handlePress(index)}
+                style={[
+                  selectedIndex === index
+                    ? styles.selectedBackground
+                    : styles.defaultBackground,
+                ]}
+              >
+                <Text
+                  style={[
+                    text.p,
+                    selectedIndex === index
+                      ? styles.selectedText
+                      : styles.defaultText,
+                  ]}
+                >
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View style={styles.contentContainer}>
+            {data[selectedIndex].component}
+          </View>
+        </View>
+      ) : (
+        <View style={styles.contentContainer}>
+          {data[selectedIndex].component}
+        </View>
+      )}
     </SafeAreaView>
   );
 };

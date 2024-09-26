@@ -8,8 +8,8 @@ import { router } from "expo-router";
 const LogoScreen = () => {
   useEffect(() => {
     setTimeout(() => {
-      router.replace("/(home)/home");
-    }, 2000);
+      router.replace("/(intro)/intro-screen");
+    }, 1500);
   }, []);
 
   return (
@@ -17,7 +17,9 @@ const LogoScreen = () => {
       <StatusBar barStyle="dark-content"></StatusBar>
       <View style={logoscreen.Logo}>
         <Image source={require("@/src/assets/images/Logo.png")} />
-        <Text style={{ ...text.h3, fontWeight: "bold", color: Colors.blue }}>
+        <Text
+          style={{ ...text.h3, fontWeight: "bold", color: Colors.teal_dark }}
+        >
           Small steps - big progress
         </Text>
       </View>

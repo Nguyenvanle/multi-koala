@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CheckBox } from "react-native-elements";
-import { Redirect, router } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
+import { router } from "expo-router"; // Thay thế bằng thư viện bạn đang sử dụng
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import {
@@ -21,36 +21,37 @@ export const IntroDetails = () => {
     setIndex(index);
   };
 
-  useEffect(() => {
-    const checkFirstLaunch = async () => {
-      const hasLaunchedValue = await AsyncStorage.getItem("hasLaunched");
-      if (hasLaunchedValue !== null) {
-        setHasLaunched(false); // Đã xem intro, không cần hiển thị
-      }
-    };
+  // useEffect(() => {
+  //   const checkFirstLaunch = async () => {
+  //     const hasLaunchedValue = await AsyncStorage.getItem("hasLaunched");
+  //     if (hasLaunchedValue !== null) {
+  //       setHasLaunched(false); // Đã xem intro, không cần hiển thị
+  //     }
+  //   };
 
-    checkFirstLaunch();
-  }, []);
+  //   checkFirstLaunch();
+  // }, []);
 
   const handleGetStarted = async () => {
-    await AsyncStorage.setItem("hasLaunched", "true"); // Đánh dấu đã xem intro
+    // await AsyncStorage.setItem("hasLaunched", "true"); // Đánh dấu đã xem intro
     router.replace("/(home)/home"); // Chuyển sang trang chính
   };
 
   // Nếu đã xem intro, chuyển hướng đến trang chính
-  if (hasLaunched) {
-    return <Redirect href={"/(home)/home"} />;
-  }
 
   return (
     <View style={Styles.container}>
-      <Text style={text.h3}>{topics[selectedIndex].title}</Text>
+      <Text style={{ ...text.h3, color: Colors.teal_dark, fontWeight: "bold" }}>
+        {topics[selectedIndex].title}
+      </Text>
       <Image
         source={topics[selectedIndex].image}
         style={{ height: 550, marginVertical: 20, width: 450 }}
       />
       <View style={{ marginHorizontal: 25 }}>
-        <Text style={text.blackquote}>{topics[selectedIndex].description}</Text>
+        <Text style={{ ...text.blackquote, color: Colors.black }}>
+          {topics[selectedIndex].description}
+        </Text>
       </View>
       <View style={styles.checkboxContainer}>
         {topics.map((topic, index) => (

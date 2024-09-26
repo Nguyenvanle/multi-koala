@@ -5,30 +5,41 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { Link } from "expo-router";
-import { useCourses } from "../../../hooks/useCourse";
+import { useCourse } from "../../../hooks/useCourse";
+import useUser from "@/src/feature/user/hooks/useUser";
+import { CourseBody } from "../../../types/course";
 
 const NewCourses = () => {
-  const { courseData, loading, errorMessage } = useCourses();
+  const { course, loading, errorMessage } = useCourse();
+  const { user } = useUser();
 
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
   if (errorMessage) {
-    return <Text>{errorMessage}</Text>;
+    return (
+      <Text style={{ ...text.large, color: Colors.red, fontWeight: "400" }}>
+        {errorMessage}
+      </Text>
+    );
   }
 
-  // Lấy 5 khóa học đầu tiên từ courseData
-  const limitedCourses = courseData.slice(0, 5);
+  // Số lượng khóa học hiển thị dựa trên việc người dùng có tồn tại hay không
+  const numberOfCoursesToShow = user ? 10 : 5; // Nếu có người dùng, hiển thị 10 khóa học, ngược lại hiển thị 5 khóa học
 
-  const renderCourseItem = ({ item }: { item: CourseData }) => (
+  // Lấy khóa học theo số lượng đã xác định
+  const limitedCourses = course?.slice(1, numberOfCoursesToShow);
+
+  const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <View style={styles.container}>
       <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>
@@ -60,24 +71,34 @@ const NewCourses = () => {
       </Link>
     </View>
   );
+
   return (
-    <View style={{ height: 200 }}>
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : errorMessage ? (
-        <Text style={{ color: "red" }}>{errorMessage}</Text>
+    <View>
+      {user ? (
+        <View style={{ height: 200 }}>
+          <FlatList
+            data={limitedCourses}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       ) : (
-        <FlatList
-          data={limitedCourses}
-          renderItem={renderCourseItem}
-          keyExtractor={(item) => item.courseId}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={{ height: 450 }}>
+          <FlatList
+            data={limitedCourses}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       )}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
+  // Các style đã được giữ nguyên
   price: {
     ...text.large,
     color: Colors.teal_dark,
@@ -101,6 +122,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   container: {
+    alignItems: "center",
     flexDirection: "column",
     justifyContent: "space-evenly",
     paddingTop: 8,
@@ -111,14 +133,13 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   clampedText: {
-    // Styles can be adjusted according to your needs
     ...text.p,
     color: Colors.black,
     fontWeight: "400",
   },
   priceText: {
     ...text.p,
-    color: Colors.teal_dark, // Có thể thay đổi màu sắc theo ý thích
+    color: Colors.teal_dark,
     fontWeight: "300",
   },
   duration: {
@@ -133,4 +154,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
 export default NewCourses;

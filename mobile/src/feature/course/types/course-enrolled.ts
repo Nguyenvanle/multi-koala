@@ -1,4 +1,4 @@
-export interface CourseDetails {
+export type EnrolledBody = {
   course: {
     courseId: string;
     courseName: string;
@@ -22,8 +22,21 @@ export interface CourseDetails {
       fieldName: string;
       fielDescription: string;
     };
-    discountApprovedRate: number;
     status: string;
-    process: number;
   };
-}
+  process: number;
+};
+
+export type EnrolledRes = {
+  code: number;
+  message: string;
+  result: EnrolledBody;
+};
+
+export type EnrolledBodyList = EnrolledBody[];
+
+export type EnrolledResList = {
+  code: number;
+  message: string;
+  result: EnrolledBodyList;
+};

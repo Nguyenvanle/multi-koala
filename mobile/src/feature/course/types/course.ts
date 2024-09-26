@@ -1,4 +1,4 @@
-interface CourseData {
+export type CourseBody = {
   courseId: string;
   courseName: string;
   coursePrice: number;
@@ -12,7 +12,6 @@ interface CourseData {
     lastname: string;
   };
   courseLevel: string;
-  courseRating: number;
   types: {
     typeName: string;
     typeDescription: string;
@@ -21,7 +20,18 @@ interface CourseData {
     fieldName: string;
     fielDescription: string;
   };
-  discountApprovedRate: number;
-  status: string;
-  process: number;
-}
+};
+
+export type CourseRes = {
+  code: number;
+  message: string;
+  result: CourseBody;
+};
+
+export type CourseBodyList = CourseBody[];
+
+export type CourseResList = {
+  code: number;
+  message: string;
+  result: CourseBodyList;
+};

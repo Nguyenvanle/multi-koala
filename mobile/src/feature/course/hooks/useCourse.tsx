@@ -1,27 +1,29 @@
-// hooks/useCourses.ts
-import { useState, useEffect } from "react";
-import CourseAPI from "./course";
+import { useEffect, useState } from "react";
+import { CourseBodyList } from "../types/course";
+import { courseServices } from "../services/course";
 
-export const useCourses = () => {
-  const [courseData, setCourseData] = useState<CourseData[]>([]);
+export const useCourse = () => {
+  const [course, setCourse] = useState<CourseBodyList>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const loadCourses = async () => {
+    const getCourse = async () => {
       try {
-        const data = await CourseAPI();
-        setCourseData(data);
-      } catch (error) {
-        // console.error("Error fetching course data:", error);
-        setErrorMessage(errorMessage || "Failed to fetch course data.");
+        setLoading(true);
+        const course = await courseServices.getcourse(); // Sửa dòng này
+        if (course.data.result) {
+          setCourse(course.data.result);
+        } else {
+          setErrorMessage("Get course failed.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    loadCourses();
-  }, []);
+    getCourse(); // Gọi hàm getRating
+  }, []); // Thêm courseId vào dependency array
 
-  return { courseData, errorMessage, loading };
+  return { course, errorMessage, loading }; // Trả về giá trị
 };

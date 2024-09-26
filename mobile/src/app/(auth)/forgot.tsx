@@ -15,9 +15,6 @@ import { styles } from "./sign-in";
 import userForgotPassword from "@/src/feature/auth/hooks/userForgotPassword";
 import Label from "@/src/components/atoms/label";
 import Button from "@/src/components/atoms/button";
-import InputEmail from "@/src/feature/auth/components/molecules/signup/input-email";
-import InputOtpForgotPassword from "@/src/feature/auth/components/molecules/forgot/inputotp-forgot";
-import InputNewPassword from "@/src/feature/auth/components/molecules/forgot/input-newpassword";
 import InputLabel from "@/src/feature/auth/components/atoms/input-label";
 import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
 import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
@@ -68,7 +65,7 @@ const ForgotPasswordScreen = () => {
                 height: 120,
               }}
             />
-            <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
+            <View style={{ alignSelf: "baseline", paddingTop: 16 }}>
               <InputLabel
                 title="Email"
                 style={{ ...text.p, fontWeight: "500" }}
@@ -105,7 +102,7 @@ const ForgotPasswordScreen = () => {
             <Button
               title="Send OTP"
               textStyle={{ ...text.h4, color: Colors.white }}
-              style={{ ...styles.loginButton, marginTop: 10 }}
+              style={{ ...styles.loginButton, marginTop: 8 }}
               onPress={handleSendOtp}
             />
           </>
@@ -162,7 +159,7 @@ const ForgotPasswordScreen = () => {
             <Button
               title="Confirm OTP"
               textStyle={{ ...text.h4, color: Colors.white }}
-              style={{ ...styles.loginButton, marginTop: 10, marginBottom: 30 }}
+              style={{ ...styles.loginButton, marginTop: 8, marginBottom: 30 }}
               onPress={handleConfirmOtp}
             />
           </>
@@ -181,14 +178,14 @@ const ForgotPasswordScreen = () => {
             />
             <View
               style={{
-                alignSelf: "flex-start",
-                paddingTop: 10,
+                alignSelf: "baseline",
+                paddingTop: 8,
               }}
             >
-              <Label
+              <InputLabel
                 title="New password"
                 style={{ ...text.p, fontWeight: "500" }}
-              ></Label>
+              />
             </View>
             <TextInput
               style={forgot.input}
@@ -200,14 +197,14 @@ const ForgotPasswordScreen = () => {
             />
             <View
               style={{
-                alignSelf: "flex-start",
-                paddingTop: 10,
+                alignSelf: "baseline",
+                paddingTop: 8,
               }}
             >
-              <Label
+              <InputLabel
                 title="Confirm new password"
                 style={{ ...text.p, fontWeight: "500" }}
-              ></Label>
+              />
             </View>
             <TextInput
               style={forgot.input}
@@ -224,7 +221,7 @@ const ForgotPasswordScreen = () => {
               title="Reset Password"
               style={{
                 ...styles.loginButton,
-                marginTop: 10,
+                marginTop: 8,
                 marginBottom: 30,
               }}
               textStyle={{ ...text.h4, color: Colors.white }}
@@ -246,8 +243,9 @@ export const forgot = StyleSheet.create({
   termsContainer: {
     justifyContent: "flex-start",
     width: 350,
-    marginTop: 5,
     flexDirection: "row",
+    paddingTop: 8,
+    gap: 6,
     flexWrap: "wrap",
   },
   input: {
@@ -262,7 +260,7 @@ export const forgot = StyleSheet.create({
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 16,
   },
   otpInput: {
     height: 50,
@@ -281,6 +279,7 @@ export const forgot = StyleSheet.create({
     fontSize: 16,
     color: Colors.red,
     fontWeight: "bold",
+    paddingVertical: 8,
   },
   success: {
     color: Colors.teal_dark,

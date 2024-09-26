@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
@@ -13,57 +14,21 @@ import { text } from "@/src/constants/Styles";
 import { Link, router } from "expo-router";
 import { UserBody } from "@/src/feature/user/types/user";
 import API_CONFIG from "@/src/types/api/config";
+import { useEnrolled } from "../../../hooks/useEnrrolled";
+import { EnrolledBody } from "../../../types/course-enrolled";
+import useUser from "@/src/feature/user/hooks/useUser";
 
 const MyCourses = () => {
-  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
-  const [userData, setUserData] = useState<UserBody | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-
-        if (token) {
-          const response = await API_CONFIG.get(
-            "/enroll-courses/my-enrolled-courses",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const user = await API_CONFIG.get("/students/me", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.data.code === 200) {
-            setCourseData(response.data.result);
-            setUserData(user.data.result);
-          } else {
-            setErrorMessage(response.data.message);
-          }
-        }
-      } catch (error) {
-        setErrorMessage("Please sign in to connect course data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourseData();
-  }, []);
+  const { enrolled, errorMessage, loading } = useEnrolled();
+  const { user, setUser, setErrorMessage } = useUser();
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
-  const limitedCourses = courseData.slice(0, 5);
-  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
+  const renderCourseItem = ({ item }: { item: EnrolledBody }) => (
     <Link href={`/${item.course.courseId}`} asChild>
       <TouchableOpacity style={styles.courseContainer}>
         <Image
@@ -83,10 +48,10 @@ const MyCourses = () => {
   );
   return (
     <View style={styles.container}>
-      {userData ? (
+      {user ? (
         <FlatList
           horizontal={true}
-          data={limitedCourses}
+          data={enrolled}
           renderItem={renderCourseItem}
           keyExtractor={(item, index) => item.course.courseId}
           style={{ paddingHorizontal: 16 }}

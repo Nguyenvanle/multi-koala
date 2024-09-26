@@ -11,7 +11,7 @@ interface CourseItemProps {
 
 const CourseItemNew: React.FC<CourseItemProps> = ({ course }) => {
   const handlePress = () => {
-    router.push("/(courses)/courseDetails");
+    router.push("/(course-details)/course-details");
   };
 
   return (

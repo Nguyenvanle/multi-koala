@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
@@ -32,8 +39,6 @@ const FinishedCourses = () => {
             response.data.result.process == 1.0
           ) {
             setCourseData(response.data.result);
-            // console.log(courseData);
-            // console.log(response.data.result[0].course.image);
           } else {
             setErrorMessage(response.data.message);
           }
@@ -48,9 +53,9 @@ const FinishedCourses = () => {
   }, []);
   if (loading) {
     return (
-      <Text style={{ ...text.p, color: Colors.teal_dark, paddingVertical: 10 }}>
-        Loading...
-      </Text>
+      <View style={{ paddingTop: 16, justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      </View>
     );
   }
 

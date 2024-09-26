@@ -1,9 +1,15 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../../../components/molecules/front-end/CircleStyle";
 import { text } from "@/src/constants/Styles";
-import { router } from "expo-router";
 import useUser from "@/src/feature/user/hooks/useUser";
 import {
   AntDesign,
@@ -12,9 +18,12 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import useLogOut from "../../auth/hooks/useLogOut";
 
 const UserAccount = () => {
   const { loading, user, setUser, errorMessage, setErrorMessage } = useUser();
+  const { handleLogout } = useLogOut();
+
   return (
     <ScrollView
       style={{ top: -50, width: 415, paddingTop: 50, paddingHorizontal: 16 }}
@@ -25,7 +34,9 @@ const UserAccount = () => {
         <CircleStyle />
 
         {loading ? (
-          <Text>Loading...</Text> // Hiển thị loading khi đang tải
+          <View style={{ paddingTop: 16, justifyContent: "center" }}>
+            <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+          </View>
         ) : errorMessage ? (
           <Text style={{ color: Colors.red }}>{errorMessage}</Text> // Hiển thị thông báo lỗi
         ) : user ? (
@@ -184,7 +195,7 @@ const UserAccount = () => {
         >
           <TouchableOpacity
             style={{ flexDirection: "row" }}
-            onPress={() => router.replace("/(auth)/sign-in")}
+            onPress={handleLogout}
           >
             <MaterialCommunityIcons
               name="logout"
