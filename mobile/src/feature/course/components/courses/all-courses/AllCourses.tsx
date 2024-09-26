@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Text,
@@ -10,12 +9,12 @@ import {
 import { Link } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import * as Progress from "react-native-progress";
-import { useCourses } from "../../../hooks/useCourse";
+import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
+import { CourseBody } from "../../../types/course";
 
 const AllCourses = () => {
-  const { courseData, errorMessage, loading } = useCourses();
+  const { course, errorMessage, loading } = useCourse();
   const { user } = useUser();
 
   if (loading) {
@@ -26,15 +25,7 @@ const AllCourses = () => {
     );
   }
 
-  if (errorMessage) {
-    return (
-      <Text style={{ ...text.large, color: Colors.red, fontWeight: "400" }}>
-        {errorMessage}
-      </Text>
-    );
-  }
-
-  const renderCourseItem = ({ item }: { item: CourseData }) => (
+  const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <Link href={`/${item.courseId}`} asChild>
       <TouchableOpacity>
         <View
@@ -79,34 +70,6 @@ const AllCourses = () => {
               >
                 {item.courseName}
               </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                paddingHorizontal: 8,
-              }}
-            >
-              <Text
-                style={{
-                  ...text.small,
-                  color: Colors.teal_dark,
-                }}
-              >
-                10/12
-              </Text>
-            </View>
-            <View
-              style={{
-                backgroundColor: Colors.white,
-                borderRadius: 20,
-              }}
-            >
-              <Progress.Bar
-                width={346}
-                progress={item.process}
-                color={Colors.teal_light}
-              />
             </View>
             <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
               <Text
@@ -158,7 +121,7 @@ const AllCourses = () => {
         >
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={courseData}
+            data={course}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
           />
@@ -173,7 +136,7 @@ const AllCourses = () => {
         >
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={courseData}
+            data={course}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
             style={{ height: 450 }}

@@ -17,6 +17,7 @@ const useUser = () => {
           setErrorMessage("No token found. Please log in.");
           return;
         }
+        console.log(token);
 
         const response = await userServices.getuser({ token });
         // Kiểm tra dữ liệu trả về

@@ -10,11 +10,12 @@ import {
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { Link } from "expo-router";
-import { useCourses } from "../../../hooks/useCourse";
+import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
+import { CourseBody } from "../../../types/course";
 
 const NewCourses = () => {
-  const { courseData, loading, errorMessage } = useCourses();
+  const { course, loading, errorMessage } = useCourse();
   const { user } = useUser();
 
   if (loading) {
@@ -36,9 +37,9 @@ const NewCourses = () => {
   const numberOfCoursesToShow = user ? 10 : 5; // Nếu có người dùng, hiển thị 10 khóa học, ngược lại hiển thị 5 khóa học
 
   // Lấy khóa học theo số lượng đã xác định
-  const limitedCourses = courseData.slice(1, numberOfCoursesToShow);
+  const limitedCourses = course?.slice(1, numberOfCoursesToShow);
 
-  const renderCourseItem = ({ item }: { item: CourseData }) => (
+  const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <View style={styles.container}>
       <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>

@@ -39,8 +39,6 @@ const FinishedCourses = () => {
             response.data.result.process == 1.0
           ) {
             setCourseData(response.data.result);
-            // console.log(courseData);
-            // console.log(response.data.result[0].course.image);
           } else {
             setErrorMessage(response.data.message);
           }

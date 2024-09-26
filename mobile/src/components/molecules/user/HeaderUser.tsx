@@ -10,57 +10,19 @@ import React, { useState, useEffect } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../front-end/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
 import API_CONFIG from "@/src/types/api/config";
-import { UserBody } from "@/src/feature/user/types/user";
+import useUser from "@/src/feature/user/hooks/useUser";
+import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
+import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
 
 const HeaderUser: React.FC = () => {
-  const [user, setUser] = useState<UserBody | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [courseData, setCourseData] = useState<EnrolledCourseData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-
-        if (token) {
-          const course = await API_CONFIG.get(
-            "/enroll-courses/my-enrolled-courses",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const user = await API_CONFIG.get("/students/me", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (user.data.code === 200) {
-            setCourseData(course.data.result);
-            setUser(user.data.result);
-          } else {
-            setErrorMessage(user.data.message);
-            setErrorMessage(course.data.message);
-          }
-        }
-      } catch (error) {
-        setErrorMessage("Please sign in to connect course data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const { user, setUser, setErrorMessage } = useUser();
+  const { enrolled, errorMessage, loading } = useEnrolled();
 
   if (loading) {
     return (
@@ -70,76 +32,80 @@ const HeaderUser: React.FC = () => {
     );
   }
 
-  const displayedCourses = courseData.slice(0, 1);
-
-  const renderCourseItem = ({ item }: { item: EnrolledCourseData }) => (
-    <TouchableOpacity
-      style={{
-        borderRadius: 10,
-        backgroundColor: Colors.teal_dark,
-        justifyContent: "space-between",
-        padding: 16,
-        alignItems: "center",
-      }}
-    >
-      <View style={{ alignSelf: "baseline" }}>
-        <Text style={{ ...text.h4, color: Colors.white }}>
-          Continue Learning
-        </Text>
-      </View>
-      <View
+  const renderCourseItem = ({ item }: { item: EnrolledBody }) => (
+    <Link href={`/${item.course.courseId}`} asChild>
+      <TouchableOpacity
         style={{
-          flexDirection: "row",
-          alignSelf: "baseline",
-          paddingVertical: 8,
-          justifyContent: "center",
+          borderRadius: 10,
+          backgroundColor: Colors.teal_dark,
+          justifyContent: "space-between",
+          padding: 16,
+          alignItems: "center",
         }}
       >
+        <View style={{ alignSelf: "baseline" }}>
+          <Text style={{ ...text.h4, color: Colors.white }}>
+            Continue Learning
+          </Text>
+        </View>
         <View
           style={{
-            flexDirection: "column",
-            justifyContent: "space-between",
-            paddingRight: 16,
+            flexDirection: "row",
+            alignSelf: "baseline",
+            paddingVertical: 8,
+            justifyContent: "center",
           }}
         >
-          <View style={{ flexDirection: "row", paddingVertical: 8 }}>
-            <View
-              style={{
-                overflow: "hidden",
-                alignItems: "center",
-                width: 150,
-                marginRight: 64,
-              }}
-            >
-              <Text
-                style={{ ...text.p, color: Colors.background }}
-                numberOfLines={1}
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingRight: 16,
+            }}
+          >
+            <View style={{ flexDirection: "row", paddingVertical: 8 }}>
+              <View
+                style={{
+                  overflow: "hidden",
+                  alignItems: "center",
+                  width: 150,
+                  marginRight: 90,
+                }}
               >
-                {item.course.courseName}
+                <Text
+                  style={{ ...text.p, color: Colors.background }}
+                  numberOfLines={1}
+                >
+                  {item.course.courseName}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  ...text.small,
+                  color: Colors.background,
+                  paddingTop: 2,
+                }}
+              >
+                {item.process}%
               </Text>
             </View>
-            <Text
-              style={{ ...text.small, color: Colors.background, paddingTop: 2 }}
-            >
-              0/12
-            </Text>
+            <View style={{ backgroundColor: Colors.white, borderRadius: 20 }}>
+              <Progress.Bar
+                width={270}
+                progress={item.process}
+                color={Colors.teal_light}
+              />
+            </View>
           </View>
-          <View style={{ backgroundColor: Colors.white, borderRadius: 20 }}>
-            <Progress.Bar
-              width={280}
-              progress={item.course.process}
-              color={Colors.teal_light}
-            />
-          </View>
+          <Feather
+            name="arrow-right-circle"
+            size={32}
+            color={Colors.background}
+            style={{ alignSelf: "flex-end" }}
+          />
         </View>
-        <Feather
-          name="arrow-right-circle"
-          size={32}
-          color={Colors.background}
-          style={{ alignSelf: "flex-end" }}
-        />
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Link>
   );
 
   return (
@@ -188,7 +154,7 @@ const HeaderUser: React.FC = () => {
             )}
           </View>
           <FlatList
-            data={displayedCourses}
+            data={enrolled}
             renderItem={renderCourseItem}
             keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
           />
