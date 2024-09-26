@@ -1,6 +1,6 @@
 "use client";
 import { useRoles } from "@/hooks/useRoles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -15,12 +15,11 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/contexts/auth-context";
 
 const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { hasRole } = useRoles();
-  const { user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const MENU_ITEMS = [
     { icon: <User size={20} />, label: "Your Profile", href: "/" },
@@ -29,11 +28,11 @@ const UserMenu: React.FC = () => {
   ];
 
   return (
-    !hasRole("guest") && (
+    isAuthenticated && (
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Avatar className="cursor-pointer">
-            <AvatarImage src={user?.imageUrl || "/images/smile.png"} />
+            <AvatarImage src={user?.image.imageUrl || "/images/smile.png"} />
             <AvatarFallback>
               <Skeleton />
             </AvatarFallback>

@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Toaster } from "@/components/ui/toaster";
 import { FilterProvider } from "@/features/filter/context/provider";
+import { AuthProvider } from "@/features/auth/contexts/auth-context";
 
 const inter = Roboto_Flex({
   subsets: ["latin"],
@@ -32,10 +33,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <FilterProvider>
-            <Toaster />
-            {children}
-          </FilterProvider>
+          <AuthProvider>
+            <FilterProvider>
+              <Toaster />
+              {children}
+            </FilterProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

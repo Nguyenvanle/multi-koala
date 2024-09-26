@@ -7,10 +7,12 @@ import { toast } from "@/components/ui/use-toast";
 import { LoginBody, LoginBodyType } from "@/types/auth/schema/login";
 import { DURATION } from "@/types/layout/toast";
 import { handlerAuth } from "@/features/auth/services/handler-auth";
-import { LoginResBody, LoginResType } from "@/features/auth/types/login";
+import { LoginResType } from "@/features/auth/types/login";
+import { useAuth } from "@/features/auth/contexts/auth-context";
 
 export default function useLoginForm() {
   const router = useRouter();
+  const { login } = useAuth();
   const form = useForm({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -28,11 +30,12 @@ export default function useLoginForm() {
         },
         body: JSON.stringify(values),
       });
-
       const data: LoginResType = await response.json();
-      console.log(data);
 
       if (response.ok) {
+        // Lưu thông tin user vào context
+        login(data.result.user);
+
         toast({
           title: "Login Successful!",
           description: "Welcome back",
@@ -40,7 +43,6 @@ export default function useLoginForm() {
         });
         router.push("/dashboard");
       } else {
-        // Sử dụng handlerAuth để xử lý lỗi từ API
         handlerAuth({
           code: data.code,
           error: data.message,
