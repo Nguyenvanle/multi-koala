@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         const { token, user } = response.result.result;
 
         // Tính toán thời gian hết hạn (ví dụ: 7 ngày từ hiện tại)
-        const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        const expirationDate = new Date(Date.now() + 60 * 60 * 1000);
         const expires = expirationDate.toUTCString();
         // Tạo cookie string
         const cookieString = `token=${token}; Path=/; HttpOnly; Expires=${expires}; SameSite=Lax; Secure`;

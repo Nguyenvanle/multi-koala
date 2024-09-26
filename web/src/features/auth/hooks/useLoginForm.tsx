@@ -7,6 +7,7 @@ import { toast } from "@/components/ui/use-toast";
 import { LoginBody, LoginBodyType } from "@/types/auth/schema/login";
 import { DURATION } from "@/types/layout/toast";
 import { handlerAuth } from "@/features/auth/services/handler-auth";
+import { LoginResBody, LoginResType } from "@/features/auth/types/login";
 
 export default function useLoginForm() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function useLoginForm() {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
+      const data: LoginResType = await response.json();
       console.log(data);
 
       if (response.ok) {
