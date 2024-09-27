@@ -1,7 +1,7 @@
 "use client";
+import { logoutService } from "@/features/auth/services/logout";
 import { UserResType } from "@/features/users/schema/user";
 import { createContext, useContext, useEffect, useState } from "react";
-import { boolean } from "zod";
 
 interface AuthContextType {
   user: UserResType | null;
@@ -38,14 +38,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await logoutService.nextLogout();
 
-      if (response.ok) {
+      if (response.code === 200) {
         setUser(null);
         setIsAuthenticated(false);
         localStorage.removeItem("user");

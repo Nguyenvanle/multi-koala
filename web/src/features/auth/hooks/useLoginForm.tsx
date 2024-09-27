@@ -9,6 +9,7 @@ import { DURATION } from "@/types/layout/toast";
 import { handlerAuth } from "@/features/auth/services/handler-auth";
 import { LoginResType } from "@/features/auth/types/login";
 import { useAuth } from "@/features/auth/contexts/auth-context";
+import { loginService } from "@/features/auth/services/login";
 
 export default function useLoginForm() {
   const router = useRouter();
@@ -23,18 +24,10 @@ export default function useLoginForm() {
 
   const onSubmit = async (values: LoginBodyType) => {
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      const data: LoginResType = await response.json();
+      const {result: response} = await loginService.nextLogin(values);
 
-      if (response.ok) {
-        // Lưu thông tin user vào context
-        login(data.result.user);
+      if (response?.code === 200 && response.result) {
+        login(response.result.user);
 
         toast({
           title: "Login Successful!",
@@ -44,8 +37,8 @@ export default function useLoginForm() {
         router.push("/dashboard");
       } else {
         handlerAuth({
-          code: data.code,
-          error: data.message,
+          code: response?.code,
+          error: response?.message,
           setError: form.setError,
         });
       }
