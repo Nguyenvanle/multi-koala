@@ -1,4 +1,5 @@
 import { loginService } from "@/features/auth/services/login";
+import { setCookie } from "@/lib/set-cookie";
 import { LoginBodyType } from "@/types/auth/schema/login";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,12 +11,6 @@ export async function POST(request: NextRequest) {
     if (response.code === 200) {
       if (response?.result) {
         const { token, user } = response.result.result;
-
-        // Tính toán thời gian hết hạn (ví dụ: 7 ngày từ hiện tại)
-        const expirationDate = new Date(Date.now() + 60 * 60 * 1000);
-        const expires = expirationDate.toUTCString();
-        // Tạo cookie string
-        const cookieString = `token=${token}; Path=/; HttpOnly; Expires=${expires}; SameSite=Lax; Secure`;
 
         // Tạo response với user data
         const jsonResponse = NextResponse.json(
@@ -30,8 +25,7 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         );
 
-        // Thêm Set-Cookie header vào response
-        jsonResponse.headers.set("Set-Cookie", cookieString);
+        setCookie(jsonResponse, token, 60 * 60 * 1000); // 1 giờ
 
         return jsonResponse;
       } else {
