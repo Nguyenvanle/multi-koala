@@ -5,14 +5,17 @@ import { useAuth } from "@/features/auth/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+let isLogout = false;
+
 export default function Logout() {
   const { push } = useRouter();
   const { logout } = useAuth();
 
   useEffect(() => {
-    push("/login?from=logout");
+    if (!isLogout) logout();
+    isLogout = true;
 
-    logout();
+    push("/login?from=logout");
   }, [logout, push]);
 
   return (

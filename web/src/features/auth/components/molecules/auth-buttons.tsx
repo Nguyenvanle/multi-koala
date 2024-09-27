@@ -4,9 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/contexts/auth-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AuthButtons() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return <Skeleton className="w-10 h-10 rounded-full" />;
 
   return (
     !isAuthenticated && (

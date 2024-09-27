@@ -1,11 +1,12 @@
 "use client";
 import { UserResType } from "@/features/users/schema/user";
-import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import { boolean } from "zod";
 
 interface AuthContextType {
   user: UserResType | null;
   isAuthenticated: boolean;
+  loading: boolean;
   login: (userData: UserResType) => void;
   logout: () => void;
 }
@@ -15,8 +16,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { push } = useRouter();
   const [user, setUser] = useState<UserResType | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
@@ -25,12 +26,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
+    setLoading(false);
   }, []);
 
   const login = (userData: UserResType) => {
     setUser(userData);
     setIsAuthenticated(true);
     localStorage.setItem("user", JSON.stringify(userData));
+    setLoading(false);
   };
 
   const logout = async () => {
@@ -51,11 +54,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     } catch (error) {
       console.error("Logout error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, loading, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
