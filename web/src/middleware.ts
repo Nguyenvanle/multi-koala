@@ -1,69 +1,53 @@
-import { introspectServices } from "@/features/auth/services/introspect";
-import { refreshServices } from "@/features/auth/services/refresh";
-import { setCookie } from "@/lib/set-cookie";
+import {
+  SECURE_PATHS,
+  TOKEN_COOKIE_NAME,
+  LOGIN_PATH,
+} from "@/features/auth/enum/auth";
+import { validateToken } from "@/lib/token-handler";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export const TOKEN_EXPIRY = 4 * 24 * 60 * 60 * 1000; // 4 day
-
-const TOKEN_COOKIE_NAME = "token";
-const SECURE_PATHS = ["/dashboard"];
-const CLEAR_LOCAL_STORAGE_PATH = "/logout";
-
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
   const token = request.cookies.get(TOKEN_COOKIE_NAME);
   const path = request.nextUrl.pathname;
-
   const isSecurePath = SECURE_PATHS.some((securePath) =>
     path.startsWith(securePath)
   );
 
-  if (token) {
-    try {
-      const tokenValue = token.value;
-      const isTokenValid = await validateToken(tokenValue);
-
-      if (!isTokenValid) {
-        const newToken = await refreshToken(tokenValue);
-
-        if (newToken) {
-          setCookie(response, newToken, TOKEN_EXPIRY);
-        } else {
-          // Token is invalid and can't be refreshed, clear it and redirect to clear localStorage
-          return handleInvalidToken(response, request);
-        }
-      }
-    } catch (error) {
-      console.error("Error in auth middleware:", error);
-      return handleInvalidToken(response, request);
-    }
-  } else if (isSecurePath) {
-    // No token and trying to access a secure path
-    return NextResponse.redirect(
-      new URL(CLEAR_LOCAL_STORAGE_PATH, request.url)
-    );
+  // Kiểm tra nếu đã xử lý xác thực (tránh vòng lặp)
+  if (request.nextUrl.searchParams.has("auth_processed")) {
+    return NextResponse.next();
   }
 
-  return response;
-}
+  if (!token && isSecurePath) {
+    // Chuyển hướng đến trang đăng nhập với flag xử lý xác thực
+    const loginUrl = new URL(LOGIN_PATH, request.url);
+    loginUrl.searchParams.set("auth_processed", "true");
+    return NextResponse.redirect(loginUrl);
+  }
 
-async function validateToken(token: string): Promise<boolean> {
-  const { result } = await introspectServices.checkValid({ token });
-  return result?.result.valid ?? false;
-}
+  if (token) {
+    try {
+      // Thực hiện kiểm tra token ở đây
+      const isValid = await validateToken(token.value);
+      if (!isValid) {
+        // Token không hợp lệ, chuyển hướng đến đăng nhập và xóa token
+        const response = NextResponse.redirect(
+          new URL(LOGIN_PATH, request.url)
+        );
+        response.cookies.delete(TOKEN_COOKIE_NAME);
+        return response;
+      }
+    } catch (error) {
+      console.error("Error validating token:", error);
+      // Xử lý lỗi, chuyển hướng đến đăng nhập
+      const response = NextResponse.redirect(new URL(LOGIN_PATH, request.url));
+      response.cookies.delete(TOKEN_COOKIE_NAME);
+      return response;
+    }
+  }
 
-async function refreshToken(token: string): Promise<string | null> {
-  const { result } = await refreshServices.refresh({ token });
-  return result?.code === 200 ? result.result.token : null;
-}
-
-function handleInvalidToken(
-  response: NextResponse,
-  request: NextRequest
-): NextResponse {
-  response.cookies.delete(TOKEN_COOKIE_NAME);
-  return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
+  return NextResponse.next();
 }
 
 export const config = {

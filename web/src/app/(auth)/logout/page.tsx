@@ -3,20 +3,19 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/features/auth/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-let isLogout = false;
+import { useEffect, useState } from "react";
 
 export default function Logout() {
   const { push } = useRouter();
   const { logout } = useAuth();
+  const [isLogout, setIsLogout] = useState(false);
 
   useEffect(() => {
     if (!isLogout) logout();
-    isLogout = true;
+    setIsLogout(true);
 
     push("/login?from=logout");
-  }, [logout, push]);
+  }, [isLogout, logout, push]);
 
   return (
     <div className="flex container px-auto py-6">

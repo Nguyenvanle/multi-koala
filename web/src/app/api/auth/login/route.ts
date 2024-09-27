@@ -1,6 +1,6 @@
+import { TOKEN_EXPIRY } from "@/features/auth/enum/auth";
 import { loginService } from "@/features/auth/services/login";
 import { setCookie } from "@/lib/set-cookie";
-import { TOKEN_EXPIRY } from "@/middleware";
 import { LoginBodyType } from "@/types/auth/schema/login";
 import { NextRequest, NextResponse } from "next/server";
 
