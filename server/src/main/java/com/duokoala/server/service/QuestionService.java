@@ -66,6 +66,7 @@ public class QuestionService {
         Image image = new Image();
         image.setImageUrl(request.getImageUrl());
         question.setImage(image);
+        question.setActive(true);
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
         int indexAnswer = 0;
@@ -82,24 +83,29 @@ public class QuestionService {
         return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 
+    @Transactional//create new quest and disable old question
     public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-        questionMapper.updateQuestion(question, request);
-        List<Answer> answers = question.getAnswers();
-        answers.clear();
-        int indexAnswer = 0;
-        for (String answerDescription : request.getAnswers()) {
-            Answer answer = Answer.builder()
-                    .answerDescription(answerDescription)
-                    .question(question)
-                    .build();
-            answer.setCorrect(indexAnswer == request.getCorrectIndex());
-            answers.add(answer);
-            indexAnswer++;
-        }
-        question.getImage().setImageUrl(request.getImageUrl());
-        return questionMapper.toQuestionResponse(questionRepository.save(question));
+        question.setActive(false);
+        questionRepository.save(question);
+        return create(question.getTest().getTestId(),
+                questionMapper.toQuestionCreateRequest(request));
+//        questionMapper.updateQuestion(question, request);
+//        List<Answer> answers = question.getAnswers();
+//        answers.clear();
+//        int indexAnswer = 0;
+//        for (String answerDescription : request.getAnswers()) {
+//            Answer answer = Answer.builder()
+//                    .answerDescription(answerDescription)
+//                    .question(question)
+//                    .build();
+//            answer.setCorrect(indexAnswer == request.getCorrectIndex());
+//            answers.add(answer);
+//            indexAnswer++;
+//        }
+//        question.getImage().setImageUrl(request.getImageUrl());
+//        return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 
     public QuestionResponse get(String questionId) {
@@ -114,6 +120,9 @@ public class QuestionService {
     }
 
     public void delete(String questionId) {
-        questionRepository.deleteById(questionId);
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+        question.setActive(false);
+        questionRepository.save(question);
     }
 }

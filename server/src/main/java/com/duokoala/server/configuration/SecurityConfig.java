@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -28,19 +29,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests(request ->
+                .authorizeHttpRequests(request -> //config endpoint
                 request.requestMatchers(/*HttpMethod.POST,*/PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
-
-        httpSecurity.oauth2ResourceServer(oauth2 ->
+        httpSecurity.oauth2ResourceServer(oauth2 ->//config jwt
                 oauth2.jwt(jwtConfigurer ->
                         jwtConfigurer.decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                                ));
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);//avoid attacked web
 
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
-        httpSecurity.cors(cors -> cors.
+        httpSecurity.cors(cors -> cors. //config cors //allow access to sources
                 configurationSource(request ->
                         new CorsConfiguration().applyPermitDefaultValues()));
 
@@ -55,6 +53,11 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
+
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {//skip check token if -> public path
+//        return (web) -> web.ignoring().requestMatchers(PUBLIC_ENDPOINTS);
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder() {

@@ -27,4 +27,5 @@ public interface QuestionMapper {
     QuestionSubmitResponse toQuestionSubmitResponse(Question question);
     @Mapping(target = "answers", ignore = true)
     void updateQuestion(@MappingTarget Question question, QuestionUpdateRequest request);
+    QuestionCreateRequest toQuestionCreateRequest(QuestionUpdateRequest questionUpdateRequest);
 }
