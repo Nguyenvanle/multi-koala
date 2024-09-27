@@ -15,6 +15,7 @@ import { CourseCardProps } from "@/types/course/course";
 import { BarChart2, BookOpen, Calendar, Clock, Star } from "lucide-react";
 import { convertDuration } from "@/lib/utils";
 import { TeacherLink } from "@/features/courses/components/molecules/teacher-link";
+import { enrollHandler } from "@/features/courses/libs/enroll-handler";
 
 type DetailCardProps = CourseCardProps & {
   totalDuration: number | null;
@@ -40,14 +41,6 @@ const DetailCard = ({
   const rating = (Math.round(courseRating * 5 * 10) / 10).toFixed(1);
 
   const { hours, minutes } = convertDuration(totalDuration || 0);
-
-  const enrollHandler = () => {
-    toast({
-      title: "Login Required",
-      description: "You need to be logged in to enroll in this course.",
-      duration: 3000,
-    });
-  };
 
   return (
     <Card className="flex flex-col w-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">

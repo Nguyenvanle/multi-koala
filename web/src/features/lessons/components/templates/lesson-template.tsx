@@ -37,7 +37,7 @@ export default function LessonTemplate() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-4 w-full">
           <div className="xl:col-span-2 items-center">
             <Skeleton className="w-full aspect-video justify-center items-center content-center">
-              <H1 className="text-center">NO COURSE FOUND</H1>
+              <H1 className="text-center">NO LESSONS FOUND</H1>
             </Skeleton>
           </div>
           <div className="xl:col-span-1">
