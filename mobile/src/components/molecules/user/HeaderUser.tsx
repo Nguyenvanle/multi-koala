@@ -166,7 +166,7 @@ const HeaderUser: React.FC = () => {
               justifyContent: "flex-end",
               alignItems: "center",
               flexDirection: "row",
-              padding: 8,
+              top: -160,
             }}
           >
             <View
@@ -197,7 +197,7 @@ const HeaderUser: React.FC = () => {
                   backgroundColor: Colors.white,
                   width: 100,
                   borderRadius: 10,
-                  marginHorizontal: 8,
+                  marginLeft: 8,
                   marginTop: 0,
                   borderWidth: 1,
                   borderColor: Colors.grey,

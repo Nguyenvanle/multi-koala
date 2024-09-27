@@ -33,7 +33,6 @@ const AllCourses = () => {
             justifyContent: "center",
             alignItems: "center",
             width: 350,
-            marginTop: 28,
           }}
         >
           <Image
@@ -131,7 +130,8 @@ const AllCourses = () => {
           style={{
             flex: 0,
             paddingVertical: 10,
-            height: 530,
+            height: 700,
+            top: -160,
           }}
         >
           <FlatList
@@ -139,7 +139,7 @@ const AllCourses = () => {
             data={course}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
-            style={{ height: 450 }}
+            style={{ height: 630 }}
           />
         </View>
       )}
