@@ -9,6 +9,6 @@ export const loginService = {
   },
 
   nextLogin: async (data: LoginBodyType) => {
-    return await nextjsApiService.post<LoginResType>("api/auth/login", data);
+    return await nextjsApiService.post<LoginResType>("/api/auth/login", data);
   },
 };

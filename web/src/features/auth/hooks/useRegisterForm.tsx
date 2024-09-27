@@ -34,24 +34,26 @@ export default function useRegisterForm() {
       return;
     }
 
-    // Proceed with registration
-    const { result, error, code } = await registerService.register(values);
+    
+    console.log('Verify di may')
+    // // Proceed with registration
+    // const { result, error, code } = await registerService.register(values);
 
-    if (error) {
-      // Sử dụng handlerAuth để xử lý lỗi từ API
-      handlerAuth({
-        code,
-        error,
-        setError: form.setError, // Thiết lập hàm setError từ react-hook-form
-      });
-    } else if (result) {
-      showToast(
-        "Registration Successful!",
-        "Your account has been created successfully."
-      );
+    // if (error) {
+    //   // Sử dụng handlerAuth để xử lý lỗi từ API
+    //   handlerAuth({
+    //     code,
+    //     error,
+    //     setError: form.setError, // Thiết lập hàm setError từ react-hook-form
+    //   });
+    // } else if (result) {
+    //   showToast(
+    //     "Registration Successful!",
+    //     "Your account has been created successfully."
+    //   );
 
-      router.push("/verify");
-    }
+    //   router.push(`/verify?mailto=${form.getValues(`email`)}`);
+    // }
   };
 
   useEffect(() => {
