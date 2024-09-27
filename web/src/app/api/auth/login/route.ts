@@ -1,5 +1,6 @@
 import { loginService } from "@/features/auth/services/login";
 import { setCookie } from "@/lib/set-cookie";
+import { TOKEN_EXPIRY } from "@/middleware";
 import { LoginBodyType } from "@/types/auth/schema/login";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         );
 
-        setCookie(jsonResponse, token, 60 * 60 * 1000); // 1 giờ
+        setCookie(jsonResponse, token, TOKEN_EXPIRY);
 
         return jsonResponse;
       } else {

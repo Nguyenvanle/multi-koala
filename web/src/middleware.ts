@@ -4,38 +4,48 @@ import { setCookie } from "@/lib/set-cookie";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+export const TOKEN_EXPIRY = 4 * 24 * 60 * 60 * 1000; // 4 day
+
 const TOKEN_COOKIE_NAME = "token";
-const LOGIN_URL = "/login";
-const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
+const SECURE_PATHS = ["/dashboard"];
+const CLEAR_LOCAL_STORAGE_PATH = "/logout";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const token = request.cookies.get(TOKEN_COOKIE_NAME);
+  const path = request.nextUrl.pathname;
 
-  if (!token) {
-    return redirectToLogin(request);
+  const isSecurePath = SECURE_PATHS.some((securePath) =>
+    path.startsWith(securePath)
+  );
+
+  if (token) {
+    try {
+      const tokenValue = token.value;
+      const isTokenValid = await validateToken(tokenValue);
+
+      if (!isTokenValid) {
+        const newToken = await refreshToken(tokenValue);
+
+        if (newToken) {
+          setCookie(response, newToken, TOKEN_EXPIRY);
+        } else {
+          // Token is invalid and can't be refreshed, clear it and redirect to clear localStorage
+          return handleInvalidToken(response, request);
+        }
+      }
+    } catch (error) {
+      console.error("Error in auth middleware:", error);
+      return handleInvalidToken(response, request);
+    }
+  } else if (isSecurePath) {
+    // No token and trying to access a secure path
+    return NextResponse.redirect(
+      new URL(CLEAR_LOCAL_STORAGE_PATH, request.url)
+    );
   }
 
-  try {
-    const tokenValue = token.value;
-    const isTokenValid = await validateToken(tokenValue);
-
-    if (isTokenValid) {
-      return response;
-    }
-
-    const newToken = await refreshToken(tokenValue);
-
-    if (newToken) {
-      setCookie(response, newToken, TOKEN_EXPIRY);
-      return response;
-    }
-
-    return handleInvalidToken(response, request);
-  } catch (error) {
-    console.error("Error in auth middleware:", error);
-    return handleInvalidToken(response, request);
-  }
+  return response;
 }
 
 async function validateToken(token: string): Promise<boolean> {
@@ -48,18 +58,14 @@ async function refreshToken(token: string): Promise<string | null> {
   return result?.code === 200 ? result.result.token : null;
 }
 
-function redirectToLogin(request: NextRequest): NextResponse {
-  return NextResponse.redirect(new URL(LOGIN_URL, request.url));
-}
-
 function handleInvalidToken(
   response: NextResponse,
   request: NextRequest
 ): NextResponse {
   response.cookies.delete(TOKEN_COOKIE_NAME);
-  return redirectToLogin(request);
+  return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
 }
 
 export const config = {
-  matcher: "/dashboard/:path*",
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

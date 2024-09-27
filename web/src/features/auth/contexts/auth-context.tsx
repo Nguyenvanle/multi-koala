@@ -1,6 +1,8 @@
 "use client";
+import { toast } from "@/components/ui/use-toast";
 import { logoutService } from "@/features/auth/services/logout";
 import { UserResType } from "@/features/users/schema/user";
+import { DURATION } from "@/types/layout/toast";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
@@ -40,17 +42,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await logoutService.nextLogout();
 
-      if (response.code === 200) {
-        setUser(null);
-        setIsAuthenticated(false);
-        localStorage.removeItem("user");
-      } else {
-        console.error("Logout failed");
-      }
+      if (response.code === 401) toast({
+        title: "Session Expired",
+        description: "Your session has expired, please log in again.",
+        variant: "destructive",
+        duration: 3000,
+      })
+      
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
       setLoading(false);
+      setUser(null);
+      setIsAuthenticated(false);
+      localStorage.removeItem("user");
     }
   };
 

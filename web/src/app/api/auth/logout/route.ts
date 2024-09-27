@@ -5,16 +5,18 @@ export async function POST(request: NextRequest) {
   try {
     // Lấy cookie từ request
     const cookieHeader = request.headers.get("cookie");
-    
+
     // Tách token từ cookie
-    const token = cookieHeader?.split('; ').find(row => row.startsWith('token='));
+    const token = cookieHeader
+      ?.split("; ")
+      .find((row) => row.startsWith("token="));
 
     if (token) {
-      const tokenValue = token.split('=')[1];
+      const tokenValue = token.split("=")[1];
 
       // Gọi API logout với token
       const response = await logoutService.logout({
-        token: tokenValue
+        token: tokenValue,
       });
 
       // Tạo một cookie mới với thời gian hết hạn trong quá khứ để xóa cookie hiện tại
@@ -35,10 +37,13 @@ export async function POST(request: NextRequest) {
       return jsonResponse;
     }
 
-    // Nếu không tìm thấy token, trả về mã lỗi 400
+    // Nếu không tìm thấy token, trả về mã lỗi 401 với thông điệp cụ thể
     return NextResponse.json(
-      { code: 400, message: "Token not found" },
-      { status: 400 }
+      {
+        code: 401,
+        message: "Token has expired or is invalid. Please log in again.",
+      },
+      { status: 401 }
     );
   } catch (error) {
     console.error("Logout error:", error);
