@@ -55,6 +55,7 @@ const Home = () => {
               alignItems: "center",
               width: 400,
               padding: 24,
+              paddingTop: 0,
               paddingBottom: 8,
             }}
           >

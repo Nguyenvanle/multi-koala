@@ -101,7 +101,7 @@ const AllCourses = () => {
                     color: Colors.white,
                   }}
                 >
-                  ${item.coursePrice}
+                  Buy Now
                 </Text>
               </View>
             </View>

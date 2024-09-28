@@ -1,12 +1,16 @@
-import React from "react";
 import { Stack } from "expo-router";
+import React from "react";
 
-const LessonsLayout = () => {
+const LessonLayout = () => {
   return (
     <Stack>
-      <Stack.Screen name="[lessonId]" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="lesson-list"
+        options={{ headerShown: false, presentation: "modal" }}
+      />
+      <Stack.Screen name="lesson-details" options={{ headerShown: false }} />
     </Stack>
   );
 };
 
-export default LessonsLayout;
+export default LessonLayout;

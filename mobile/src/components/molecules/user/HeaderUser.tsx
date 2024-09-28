@@ -80,7 +80,7 @@ const HeaderUser: React.FC = () => {
           </View>
 
           {latestCourse ? (
-            <Link href={`/${latestCourse.course.courseId}`} asChild>
+            <Link href={`/(courses)/courses-details`} asChild>
               <TouchableOpacity
                 style={{
                   borderRadius: 10,

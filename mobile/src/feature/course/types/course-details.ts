@@ -1,6 +1,6 @@
 // src/hook/course/useCourseDetails.ts
 import { useState, useEffect } from "react";
-import { CourseRes } from "./course-res";
+import { CourseRes } from "./course";
 import API_CONFIG from "@/src/types/api/config";
 
 export interface CourseNormal {

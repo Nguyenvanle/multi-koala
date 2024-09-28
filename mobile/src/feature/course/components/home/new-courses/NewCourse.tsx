@@ -64,7 +64,7 @@ const NewCourses = () => {
               <Text style={styles.duration}>12 lessons</Text>
             </View>
             <View style={{ paddingTop: 8 }}>
-              <Text style={styles.priceText}>${item.coursePrice}</Text>
+              <Text style={styles.priceText}>Buy Now</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -75,7 +75,7 @@ const NewCourses = () => {
   return (
     <View>
       {user ? (
-        <View style={{ height: 200 }}>
+        <View style={{ height: 250 }}>
           <FlatList
             data={limitedCourses}
             renderItem={renderCourseItem}

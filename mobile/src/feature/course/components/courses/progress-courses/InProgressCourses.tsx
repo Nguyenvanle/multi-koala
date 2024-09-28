@@ -28,12 +28,11 @@ const InProgressCourses = () => {
     );
   }
 
+  const finalPrice = 1 - (discount?.discountApplied || 0);
+
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
-    const priceDiscount = item.course.coursePrice; // Giá gốc
-    const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
-    console.log(discount?.discountApplied); // Giá đã giảm
     return (
-      <Link href={`/${item.course.courseId}`} asChild>
+      <Link href={`/(courses)/courses-details`} asChild>
         <TouchableOpacity>
           <View
             style={{
@@ -105,7 +104,7 @@ const InProgressCourses = () => {
                   color={Colors.teal_light}
                 />
               </View>
-              <View style={{ marginVertical: 5, paddingTop: 8 }}>
+              <View style={{ marginVertical: 5 }}>
                 <Text
                   style={{
                     ...text.large,
@@ -116,29 +115,6 @@ const InProgressCourses = () => {
                   {item.course.uploadedByTeacher?.firstname}{" "}
                   {item.course.uploadedByTeacher?.lastname}
                 </Text>
-                <View
-                  style={{
-                    borderRadius: 10,
-                    backgroundColor: Colors.teal_dark,
-                    alignItems: "center",
-                    height: 50,
-                    width: 350,
-                    marginTop: 8,
-                    marginBottom: 8,
-                    justifyContent: "center",
-                  }}
-                >
-                  {/* Hiển thị giá đã giảm */}
-                  <Text
-                    style={{
-                      ...text.h4,
-                      fontWeight: "500",
-                      color: Colors.white,
-                    }}
-                  >
-                    ${finalPrice.toFixed(2)}
-                  </Text>
-                </View>
               </View>
             </View>
           </View>
