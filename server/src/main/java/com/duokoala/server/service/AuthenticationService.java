@@ -223,4 +223,8 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
     }
 
+    public User getAuthenticatedUser() {
+        return userRepository.findByUsername(getAuthenticatedUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
 }
