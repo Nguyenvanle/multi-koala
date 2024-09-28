@@ -27,7 +27,7 @@ const AllCourses = () => {
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <Link href={`/${item.courseId}`} asChild>
-      <TouchableOpacity>
+      <TouchableOpacity style={{ marginTop: 16 }}>
         <View
           style={{
             justifyContent: "center",
@@ -56,7 +56,8 @@ const AllCourses = () => {
                 flexDirection: "row",
                 alignSelf: "baseline",
                 width: 345,
-                padding: 8,
+
+                paddingTop: 8,
                 paddingBottom: 0,
               }}
             >
@@ -70,7 +71,7 @@ const AllCourses = () => {
                 {item.courseName}
               </Text>
             </View>
-            <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
+            <View style={{ marginVertical: 5, paddingTop: 0 }}>
               <Text
                 style={{
                   ...text.large,
@@ -87,7 +88,7 @@ const AllCourses = () => {
                   backgroundColor: Colors.teal_dark,
                   alignItems: "center",
                   height: 50,
-                  width: 330,
+                  width: 350,
                   marginTop: 8,
                   marginBottom: 8,
                   justifyContent: "center",

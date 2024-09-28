@@ -9,12 +9,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
-
 import { useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourseDetails } from "../feature/course/types/course-details";
 import { useCourseRating } from "./../feature/course/hooks/useCourseRating";
+import { useCourseDiscount } from "../feature/discount/hooks/useCourseDiscount";
 
 // Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
 
@@ -25,7 +25,8 @@ const CourseDetails = () => {
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
 
   const { courseDetails, loading, error } = useCourseDetails(courseIdString);
-  const { courseRating, errorMessage } = useCourseRating(courseIdString);
+  const { courseRating } = useCourseRating(courseIdString);
+  const { discount } = useCourseDiscount(courseIdString);
 
   if (loading) {
     return (
@@ -42,6 +43,10 @@ const CourseDetails = () => {
   if (!courseDetails) {
     return <Text>No course</Text>;
   }
+  const priceDiscount = courseDetails.coursePrice;
+  const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
+
+  const shouldShowOriginalPrice = priceDiscount !== finalPrice;
 
   return (
     <ScrollView style={styles.container}>
@@ -57,7 +62,7 @@ const CourseDetails = () => {
           }}
         >
           <Text style={styles.instructor}>
-            Author | {courseDetails.uploadedByTeacher?.firstname}{" "}
+            {courseDetails.uploadedByTeacher?.firstname}{" "}
             {courseDetails.uploadedByTeacher?.lastname}
           </Text>
           <Text></Text>
@@ -72,9 +77,20 @@ const CourseDetails = () => {
           />
         </View>
         <Text style={styles.title}>{courseDetails.courseName}</Text>
-        <Text style={styles.price}>
-          ${courseDetails.coursePrice.toFixed(2)}
-        </Text>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
+          {shouldShowOriginalPrice && (
+            <Text
+              style={{
+                ...styles.price,
+                textDecorationLine: "line-through",
+                color: Colors.dark_grey,
+              }}
+            >
+              ${courseDetails.coursePrice.toFixed(2)}
+            </Text>
+          )}
+        </View>
         <Text style={styles.sectionTitle}>About This Course</Text>
         <Text style={styles.description}>
           {courseDetails.courseDescription}
@@ -82,7 +98,7 @@ const CourseDetails = () => {
       </View>
       <TouchableOpacity style={styles.buyButton}>
         <Text style={styles.buyButtonText}>
-          Buy Now | ${courseDetails.coursePrice.toFixed(2)}
+          Buy Now | ${finalPrice.toFixed(2)}
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -105,7 +121,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   instructor: {
-    ...text.h4,
+    ...text.h3,
     color: Colors.teal_dark,
   },
   ratingContainer: {
@@ -116,7 +132,7 @@ const styles = StyleSheet.create({
   title: {
     ...text.h2,
     color: Colors.black,
-    marginVertical: 5,
+    marginTop: 8,
   },
   duration: {
     ...text.small,
@@ -125,13 +141,11 @@ const styles = StyleSheet.create({
   price: {
     ...text.h3,
     color: Colors.teal_dark,
-    marginVertical: 10,
   },
   sectionTitle: {
     ...text.h4,
     color: Colors.black,
-    marginTop: 16,
-    marginBottom: 8,
+    marginTop: 8,
     fontWeight: "400",
   },
   description: {
