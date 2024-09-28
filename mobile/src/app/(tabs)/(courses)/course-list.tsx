@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 50,
     shadowOpacity: 0.05,
-    marginTop: 32,
+    marginTop: 16,
   },
   contentContainer: {
     height: 450,
