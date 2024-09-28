@@ -26,6 +26,7 @@ public class Test {
     Lesson lesson;
     @Enumerated(EnumType.STRING)
     Status status;
+    int passingScore;
     boolean isDeleted;
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

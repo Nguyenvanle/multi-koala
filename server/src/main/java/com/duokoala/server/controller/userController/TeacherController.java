@@ -3,7 +3,8 @@ package com.duokoala.server.controller.userController;
 import com.duokoala.server.dto.request.userRequest.TeacherCreationRequest;
 import com.duokoala.server.dto.request.userRequest.TeacherUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.userResponse.TeacherResponse;
+import com.duokoala.server.dto.response.userResponse.teacherResponse.StatisticTeacherResponse;
+import com.duokoala.server.dto.response.userResponse.teacherResponse.TeacherResponse;
 import com.duokoala.server.service.userService.TeacherService;
 import com.duokoala.server.service.userService.UserService;
 import lombok.AccessLevel;
@@ -57,6 +58,12 @@ public class TeacherController {
     ApiResponse<List<TeacherResponse>> getTeachers() {
         return ApiResponse.<List<TeacherResponse>>builder()
                 .result(teacherService.getTeachers())
+                .build();
+    }
+    @GetMapping("/my-statistic")
+    ApiResponse<StatisticTeacherResponse> getStatisticTeacher() {
+        return ApiResponse.<StatisticTeacherResponse>builder()
+                .result(teacherService.getStatisticTeacher())
                 .build();
     }
 

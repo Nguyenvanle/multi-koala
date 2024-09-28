@@ -2,7 +2,8 @@ package com.duokoala.server.service.userService;
 
 import com.duokoala.server.dto.request.userRequest.TeacherCreationRequest;
 import com.duokoala.server.dto.request.userRequest.TeacherUpdateRequest;
-import com.duokoala.server.dto.response.userResponse.TeacherResponse;
+import com.duokoala.server.dto.response.userResponse.teacherResponse.StatisticTeacherResponse;
+import com.duokoala.server.dto.response.userResponse.teacherResponse.TeacherResponse;
 import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.enums.Role;
 import com.duokoala.server.exception.AppException;
@@ -10,19 +11,22 @@ import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.TeacherMapper;
 import com.duokoala.server.repository.ReviewRepository;
 import com.duokoala.server.repository.userRepository.TeacherRepository;
-import com.duokoala.server.repository.userRepository.UserRepository;
 import com.duokoala.server.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class TeacherService {
     TeacherRepository teacherRepository;
     TeacherMapper teacherMapper;
@@ -76,5 +80,19 @@ public class TeacherService {
         /*, getAvgRatingTeacher(teacher.getUserId())*/
         return teachers.stream().map(teacherMapper::toTeacherResponse
         ).toList();
+    }
+
+    public StatisticTeacherResponse getStatisticTeacher() {
+        var teacherId = authenticationService.getAuthenticatedTeacher().getUserId();
+        return StatisticTeacherResponse.builder()
+                .totalCourses(teacherRepository.countTotalCourses(teacherId))
+                .totalApprovedCourses(teacherRepository.countTotalApprovedCourses(teacherId))
+                .totalEnrollments(teacherRepository.countTotalEnrollments(teacherId))
+                .totalStudents(teacherRepository.countTotalStudents(teacherId))
+                .totalCompletedCourses(teacherRepository.countTotalCompletedCourses(teacherId))
+                .totalPrices(teacherRepository.sumTotalPrices(teacherId))
+                .passRatingPerTest(teacherRepository.calculatePassRatingPerTest(teacherId))
+                .correctRatingPerQuestion(teacherRepository.calculateCorrectRatingPerQuestion(teacherId))
+                .build();
     }
 }

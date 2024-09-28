@@ -1,7 +1,7 @@
 package com.duokoala.server.dto.response.certificationResponse;
 
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
-import com.duokoala.server.dto.response.userResponse.TeacherResponse;
+import com.duokoala.server.dto.response.userResponse.teacherResponse.TeacherResponse;
 import com.duokoala.server.entity.media.Image;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

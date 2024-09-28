@@ -20,6 +20,7 @@ public class TestResponse {
     String testDescription;
 //    LessonResponse lesson;
     LocalDateTime TestUploadedAt;
+    int passingScore;
     Status status;
     boolean isDeleted;
     List<QuestionResponse> questions;
