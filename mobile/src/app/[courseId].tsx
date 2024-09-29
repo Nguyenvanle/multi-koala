@@ -14,7 +14,7 @@ import { AirbnbRating } from "react-native-ratings";
 import { useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useCourseDetails } from "@/src/feature/course/types/course-details";
+import { useDetails } from "../feature/course/hooks/useDetails";
 import { useCourseRating } from "@/src/feature/course/hooks/useCourseRating";
 import { useCourseDiscount } from "@/src/feature/discount/hooks/useCourseDiscount";
 import { useLesson } from "../feature/lesson/hooks/useLesson";
@@ -31,7 +31,8 @@ const CourseDetails = () => {
   // Chuyển đổi courseId thành chuỗi nếu cần
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
-  const { courseDetails, loading, error } = useCourseDetails(courseIdString);
+  const { courseDetails, loading, errorMessageDetails } =
+    useDetails(courseIdString);
   const { courseRating } = useCourseRating(courseIdString);
   const { discount } = useCourseDiscount(courseIdString);
 
@@ -43,12 +44,12 @@ const CourseDetails = () => {
     );
   }
 
-  if (error) {
-    return <Text>Error: {error}</Text>;
+  if (errorMessageDetails) {
+    return <Text>Error: {errorMessageDetails}</Text>;
   }
 
   if (!courseDetails) {
-    return <Text>No course</Text>;
+    return <Text>No course detail</Text>;
   }
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
@@ -104,39 +105,41 @@ const CourseDetails = () => {
           <Text style={styles.title}>{courseDetails.courseName}</Text>
           {/* Hiển thị tất cả typeName */}
           <View style={{ flexDirection: "row" }}>
-            {courseDetails.types.map((type: any) => (
-              <TouchableOpacity
-                style={{
-                  borderRadius: 20,
-                  backgroundColor: "#BDE8CA",
-                  padding: 8,
-                  marginRight: 8,
-                }}
-              >
-                <Text key={type.typeName} style={styles.typeName}>
-                  {type.typeName}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {Array.isArray(courseDetails.types) &&
+              courseDetails.types.map((type: any) => (
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 20,
+                    backgroundColor: "#BDE8CA",
+                    padding: 8,
+                    marginRight: 8,
+                  }}
+                >
+                  <Text key={type.typeName} style={styles.typeName}>
+                    {type.typeName}
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </View>
           <View style={{ flexDirection: "row", marginBottom: 8 }}>
-            {courseDetails.fields.map((field: any) => (
-              <TouchableOpacity
-                style={{
-                  borderRadius: 20,
-                  backgroundColor: "#41B3A2",
-                  padding: 8,
-                  marginRight: 8,
-                }}
-              >
-                <Text
-                  key={field.fieldName}
-                  style={{ ...styles.typeName, color: Colors.grey }}
+            {Array.isArray(courseDetails.fields) &&
+              courseDetails.fields.map((field: any) => (
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 20,
+                    backgroundColor: "#41B3A2",
+                    padding: 8,
+                    marginRight: 8,
+                  }}
                 >
-                  {field.fieldName}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    key={field.fieldName}
+                    style={{ ...styles.typeName, color: Colors.grey }}
+                  >
+                    {field.fieldName}
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </View>
           <Text
             style={{

@@ -4,7 +4,7 @@ import { EnrolledBodyList } from "../types/course-enrolled";
 import { enrolledServices } from "../services/course-enrolled";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useEnrolled = () => {
+export const useEnrolled = (courseId: string) => {
   const [enrolled, setEnrolled] = useState<EnrolledBodyList>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
