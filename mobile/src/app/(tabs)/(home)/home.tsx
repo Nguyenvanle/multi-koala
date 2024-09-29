@@ -55,6 +55,7 @@ const Home = () => {
               alignItems: "center",
               width: 400,
               padding: 24,
+              paddingTop: 0,
               paddingBottom: 8,
             }}
           >
@@ -78,6 +79,7 @@ const Home = () => {
               alignItems: "center",
               width: 400,
               padding: 24,
+              top: -190,
             }}
           >
             <Text style={{ ...text.h4, fontWeight: "500" }}>New Courses</Text>

@@ -3,15 +3,13 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  FlatList,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../front-end/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
 import { Link, router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
@@ -21,7 +19,7 @@ import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
 
 const HeaderUser: React.FC = () => {
-  const { user, setUser, setErrorMessage } = useUser();
+  const { user } = useUser();
   const { enrolled, errorMessage, loading } = useEnrolled();
 
   if (loading) {
@@ -32,81 +30,8 @@ const HeaderUser: React.FC = () => {
     );
   }
 
-  const renderCourseItem = ({ item }: { item: EnrolledBody }) => (
-    <Link href={`/${item.course.courseId}`} asChild>
-      <TouchableOpacity
-        style={{
-          borderRadius: 10,
-          backgroundColor: Colors.teal_dark,
-          justifyContent: "space-between",
-          padding: 16,
-          alignItems: "center",
-        }}
-      >
-        <View style={{ alignSelf: "baseline" }}>
-          <Text style={{ ...text.h4, color: Colors.white }}>
-            Continue Learning
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignSelf: "baseline",
-            paddingVertical: 8,
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              justifyContent: "space-between",
-              paddingRight: 16,
-            }}
-          >
-            <View style={{ flexDirection: "row", paddingVertical: 8 }}>
-              <View
-                style={{
-                  overflow: "hidden",
-                  alignItems: "center",
-                  width: 150,
-                  marginRight: 90,
-                }}
-              >
-                <Text
-                  style={{ ...text.p, color: Colors.background }}
-                  numberOfLines={1}
-                >
-                  {item.course.courseName}
-                </Text>
-              </View>
-              <Text
-                style={{
-                  ...text.small,
-                  color: Colors.background,
-                  paddingTop: 2,
-                }}
-              >
-                {item.process}%
-              </Text>
-            </View>
-            <View style={{ backgroundColor: Colors.white, borderRadius: 20 }}>
-              <Progress.Bar
-                width={270}
-                progress={item.process}
-                color={Colors.teal_light}
-              />
-            </View>
-          </View>
-          <Feather
-            name="arrow-right-circle"
-            size={32}
-            color={Colors.background}
-            style={{ alignSelf: "flex-end" }}
-          />
-        </View>
-      </TouchableOpacity>
-    </Link>
-  );
+  // Lấy khóa học đầu tiên từ mảng enrolled
+  const latestCourse = enrolled?.[0];
 
   return (
     <View
@@ -153,11 +78,93 @@ const HeaderUser: React.FC = () => {
               />
             )}
           </View>
-          <FlatList
-            data={enrolled}
-            renderItem={renderCourseItem}
-            keyExtractor={(item, index) => `${item.course.courseId}_${index}`}
-          />
+
+          {latestCourse ? (
+            <Link href={`/(courses)/courses-details`} asChild>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 10,
+                  backgroundColor: Colors.teal_dark,
+                  justifyContent: "space-between",
+                  padding: 16,
+                  alignItems: "center",
+                  marginTop: 16,
+                }}
+              >
+                <View style={{ alignSelf: "baseline" }}>
+                  <Text style={{ ...text.h4, color: Colors.white }}>
+                    Continue Learning
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignSelf: "baseline",
+                    paddingVertical: 8,
+                    justifyContent: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      paddingRight: 16,
+                    }}
+                  >
+                    <View style={{ flexDirection: "row", paddingVertical: 8 }}>
+                      <View
+                        style={{
+                          overflow: "hidden",
+                          alignItems: "center",
+                          width: 150,
+                          marginRight: 90,
+                        }}
+                      >
+                        <Text
+                          style={{ ...text.p, color: Colors.background }}
+                          numberOfLines={1}
+                        >
+                          {latestCourse.course.courseName}
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          ...text.small,
+                          color: Colors.background,
+                          paddingTop: 2,
+                        }}
+                      >
+                        {latestCourse.process}%
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        backgroundColor: Colors.white,
+                        borderRadius: 20,
+                        width: 260,
+                      }}
+                    >
+                      <Progress.Bar
+                        progress={latestCourse.process * 0.01}
+                        color={Colors.teal_light}
+                        width={260}
+                      />
+                    </View>
+                  </View>
+                  <Feather
+                    name="arrow-right-circle"
+                    size={32}
+                    color={Colors.background}
+                    style={{ alignSelf: "flex-end" }}
+                  />
+                </View>
+              </TouchableOpacity>
+            </Link>
+          ) : (
+            <Text style={{ ...text.h4, color: Colors.black, marginTop: 16 }}>
+              No courses enrolled.
+            </Text>
+          )}
         </View>
       ) : (
         <View style={{ width: 364 }}>
@@ -166,7 +173,7 @@ const HeaderUser: React.FC = () => {
               justifyContent: "flex-end",
               alignItems: "center",
               flexDirection: "row",
-              padding: 8,
+              top: -160,
             }}
           >
             <View
@@ -197,7 +204,7 @@ const HeaderUser: React.FC = () => {
                   backgroundColor: Colors.white,
                   width: 100,
                   borderRadius: 10,
-                  marginHorizontal: 8,
+                  marginLeft: 8,
                   marginTop: 0,
                   borderWidth: 1,
                   borderColor: Colors.grey,

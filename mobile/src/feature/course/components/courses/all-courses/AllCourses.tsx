@@ -27,13 +27,12 @@ const AllCourses = () => {
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <Link href={`/${item.courseId}`} asChild>
-      <TouchableOpacity>
+      <TouchableOpacity style={{ marginTop: 16 }}>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             width: 350,
-            marginTop: 28,
           }}
         >
           <Image
@@ -57,7 +56,8 @@ const AllCourses = () => {
                 flexDirection: "row",
                 alignSelf: "baseline",
                 width: 345,
-                padding: 8,
+
+                paddingTop: 8,
                 paddingBottom: 0,
               }}
             >
@@ -71,7 +71,7 @@ const AllCourses = () => {
                 {item.courseName}
               </Text>
             </View>
-            <View style={{ marginVertical: 5, padding: 8, paddingTop: 0 }}>
+            <View style={{ marginVertical: 5, paddingTop: 0 }}>
               <Text
                 style={{
                   ...text.large,
@@ -88,7 +88,7 @@ const AllCourses = () => {
                   backgroundColor: Colors.teal_dark,
                   alignItems: "center",
                   height: 50,
-                  width: 330,
+                  width: 350,
                   marginTop: 8,
                   marginBottom: 8,
                   justifyContent: "center",
@@ -101,7 +101,7 @@ const AllCourses = () => {
                     color: Colors.white,
                   }}
                 >
-                  ${item.coursePrice}
+                  Buy Now
                 </Text>
               </View>
             </View>
@@ -131,7 +131,8 @@ const AllCourses = () => {
           style={{
             flex: 0,
             paddingVertical: 10,
-            height: 530,
+            height: 700,
+            top: -160,
           }}
         >
           <FlatList
@@ -139,7 +140,7 @@ const AllCourses = () => {
             data={course}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
-            style={{ height: 450 }}
+            style={{ height: 630 }}
           />
         </View>
       )}

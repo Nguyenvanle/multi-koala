@@ -1,9 +1,10 @@
 // src/hook/course/useCourseDetails.ts
 import { useState, useEffect } from "react";
-import { CourseRes } from "./course-res";
+import { CourseRes } from "./course";
 import API_CONFIG from "@/src/types/api/config";
+import { detailsServices } from "../services/course-details";
 
-export interface CourseNormal {
+export type CourseDetailsBody = {
   courseId: string;
   courseName: string;
   coursePrice: number;
@@ -29,32 +30,9 @@ export interface CourseNormal {
   discountApprovedRate: number;
   status: string;
   process: number;
-}
-
-export const useCourseDetails = (courseId: string) => {
-  const [courseDetails, setCourseDetails] = useState<CourseNormal | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchCourseDetails = async () => {
-      try {
-        setLoading(true);
-        // Thay thế URL này bằng URL thực của API của bạn
-        const responseAll = await API_CONFIG.get<CourseRes>(
-          `/courses/${courseId}`
-        );
-
-        setCourseDetails(responseAll.data.result as CourseNormal);
-      } catch (err) {
-        setError(error); // Lấy thông báo lỗi từ Axios
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourseDetails();
-  }, [courseId]);
-
-  return { courseDetails, loading, error };
+};
+export type CourseDetailsRes = {
+  code: string;
+  message: string;
+  result: CourseDetailsBody;
 };

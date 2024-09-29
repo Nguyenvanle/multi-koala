@@ -8,12 +8,9 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { Link, router } from "expo-router";
-import { UserBody } from "@/src/feature/user/types/user";
-import API_CONFIG from "@/src/types/api/config";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
 import useUser from "@/src/feature/user/hooks/useUser";
@@ -21,6 +18,7 @@ import useUser from "@/src/feature/user/hooks/useUser";
 const MyCourses = () => {
   const { enrolled, errorMessage, loading } = useEnrolled();
   const { user, setUser, setErrorMessage } = useUser();
+
   if (loading) {
     return (
       <View style={{ paddingTop: 16, justifyContent: "center" }}>

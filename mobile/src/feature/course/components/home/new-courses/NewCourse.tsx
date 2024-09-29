@@ -64,7 +64,7 @@ const NewCourses = () => {
               <Text style={styles.duration}>12 lessons</Text>
             </View>
             <View style={{ paddingTop: 8 }}>
-              <Text style={styles.priceText}>${item.coursePrice}</Text>
+              <Text style={styles.priceText}>Buy Now</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -75,7 +75,7 @@ const NewCourses = () => {
   return (
     <View>
       {user ? (
-        <View style={{ height: 200 }}>
+        <View style={{ height: 250 }}>
           <FlatList
             data={limitedCourses}
             renderItem={renderCourseItem}
@@ -84,12 +84,13 @@ const NewCourses = () => {
           />
         </View>
       ) : (
-        <View style={{ height: 450 }}>
+        <View style={{ height: 450, top: -195 }}>
           <FlatList
             data={limitedCourses}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
             showsVerticalScrollIndicator={false}
+            style={{ minHeight: 640 }}
           />
         </View>
       )}
@@ -125,7 +126,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "space-evenly",
-    paddingTop: 8,
   },
   containerText: {
     overflow: "hidden",
