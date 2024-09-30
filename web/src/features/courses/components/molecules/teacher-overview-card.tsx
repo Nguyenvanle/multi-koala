@@ -45,12 +45,12 @@ const OverviewCard: React.FC<{
   correctRatingPerQuestion,
 }) => {
   return (
-    <Card className="col-span-full">
+    <Card className="col-span-full md:col-span-1 ">
       <CardHeader>
         <CardTitle>Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <OverviewItem
             title="Total Courses"
             value={totalCourses}
@@ -61,43 +61,43 @@ const OverviewCard: React.FC<{
             title="Approved Courses"
             value={totalApprovedCourses}
             icon="CheckCheck"
-            colorIndex={1}
+            colorIndex={0}
           />
           <OverviewItem
             title="Total Enrollments"
             value={totalEnrollments}
             icon="UserPlus"
-            colorIndex={2}
+            colorIndex={1}
           />
           <OverviewItem
             title="Total Students"
             value={totalStudents}
             icon="Users"
-            colorIndex={3}
+            colorIndex={1}
           />
           <OverviewItem
             title="Completed Courses"
             value={totalCompletedCourses}
             icon="Award"
-            colorIndex={4}
+            colorIndex={2}
           />
           <OverviewItem
             title="Total Revenue"
-            value={`$ ${totalPrices.toFixed(2)}`}
+            value={`$${totalPrices.toFixed(0)}`}
             icon="DollarSign"
-            colorIndex={5}
+            colorIndex={2}
           />
           <OverviewItem
             title="Pass Rate per Test"
             value={`${(passRatingPerTest * 100).toFixed(2)}%`}
             icon="ChartBar"
-            colorIndex={6}
+            colorIndex={3}
           />
           <OverviewItem
             title="Correct Rate per Question"
             value={`${(correctRatingPerQuestion * 100).toFixed(2)}%`}
             icon="ChartPie"
-            colorIndex={7}
+            colorIndex={3}
           />
         </div>
       </CardContent>

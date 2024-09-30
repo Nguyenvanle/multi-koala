@@ -39,11 +39,12 @@ export async function middleware(request: NextRequest) {
           // Refresh thành công, cập nhật token mới
           response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV !== 'development',
-            sameSite: 'strict',
+            secure: process.env.NODE_ENV !== "development",
+            sameSite: "strict",
             maxAge: TOKEN_EXPIRY, // 4 ngày
-            path: '/',
+            path: "/",
           });
+
           return response;
         } else {
           // Refresh thất bại, xử lý như token không hợp lệ

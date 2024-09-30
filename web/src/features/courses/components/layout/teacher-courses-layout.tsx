@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import OverviewCard from "@/features/courses/components/molecules/teacher-overview-card";
-import { CourseStatusDonutChart } from "@/features/courses/components/atoms/course-status-pie-chart";
+
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+// Dynamic import cho CourseStatusDonutChart
+const CourseStatusDonutChart = dynamic(
+  () =>
+    import("@/features/courses/components/atoms/course-status-pie-chart").then(
+      (mod) => mod.CourseStatusDonutChart
+    ),
+  {
+    loading: () => (
+      <Skeleton className="h-full bg-background animate-pulse rounded-lg" />
+    ),
+    ssr: false, // Nếu bạn không cần render phía server
+  }
+);
 
 const courseData = [
   { id: 1, name: "Course 1", status: "Ongoing", students: 25 },
@@ -51,7 +65,7 @@ const TeacherCourseTemplate = () => {
         <h1 className="text-3xl font-bold mb-6">Course Management</h1>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Overview Statistics */}
           <OverviewCard {...overviewData} />
 
@@ -59,7 +73,7 @@ const TeacherCourseTemplate = () => {
           <CourseStatusDonutChart />
 
           {/* Course List */}
-          <Card>
+          <Card className="col-span-full">
             <CardHeader>
               <CardTitle>Course List</CardTitle>
             </CardHeader>

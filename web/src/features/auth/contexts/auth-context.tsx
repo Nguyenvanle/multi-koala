@@ -10,7 +10,10 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   login: (userData: UserResType) => void;
-  logout: () => void;
+  logout: () => Promise<{
+    code: number;
+    message: string;
+  }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,20 +45,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await logoutService.nextLogout();
 
-      if (response.code === 401) toast({
-        title: "Session Expired",
-        description: "Your session has expired, please log in again.",
-        variant: "destructive",
-        duration: 3000,
-      })
-      
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setLoading(false);
+      if (response.code === 401) {
+        toast({
+          title: "Session Expired",
+          description: "Your session has expired, please log in again.",
+          variant: "destructive",
+          duration: 3000,
+        });
+      }
+
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem("user");
+      return response;
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
