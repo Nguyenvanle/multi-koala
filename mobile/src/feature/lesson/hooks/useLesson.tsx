@@ -14,7 +14,6 @@ export const useLesson = (courseId: string) => {
         const data = await lessonServices.getLesson(courseId);
         if (data.data.result) {
           setLesson(data.data.result);
-          console.log(data.data.result);
         } else {
           setErrorMessage("Get lesson failed.");
         }

@@ -14,7 +14,6 @@ export const useDetails = (courseId: string) => {
         const getCourseDetails = await detailsServices.getdetails({ courseId });
         if (getCourseDetails.data.result) {
           setCourseDetails(getCourseDetails.data.result);
-          console.log(getCourseDetails.data.result);
         } else {
           setErrorMessageDetails("Get course detail failed.");
         }

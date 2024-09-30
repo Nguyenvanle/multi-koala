@@ -2,31 +2,26 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  Image,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import Video from "react-native-video"; // Import thư viện video
+import { Video } from "expo-av";
+import * as ScreenOrientation from "expo-screen-orientation";
 import { useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useLesson } from "../../feature/lesson/hooks/useLesson";
-import useUser from "../../feature/user/hooks/useUser";
 import { useLessonDetails } from "@/src/feature/lesson/hooks/useLessonDetails";
 
 // Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
 
 const LessonDetails = () => {
   const { lessonId } = useGlobalSearchParams();
-  const [showAllLessons, setShowAllLessons] = useState(false);
-  const { user } = useUser();
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
-  const { lesson, errorMessage, loadinglesson } = useLesson(lessonIdString);
-
+  console.log(lessonDetails?.video.videoUrl);
   if (loadingLessonDetails) {
     return (
       <View style={{ paddingTop: 16, justifyContent: "center" }}>
@@ -43,15 +38,28 @@ const LessonDetails = () => {
     return <Text>No lesson detail</Text>;
   }
 
+  const video = React.useRef(null);
+  const [status, setStatus] = useState({});
+  const [orientationIsLandscape, setOrientation] = useState(true);
+
+  async function changeScreenOrientation() {
+    if (orientationIsLandscape == true) {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    } else if (orientationIsLandscape == false) {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    }
+  }
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, paddingBottom: 80 }}>
         <Video
-          source={{ uri: lessonDetails.video.videoUrl }} // Đường dẫn video
+          ref={video}
           style={styles.video}
-          resizeMode="cover"
-          controls={true} // Hiển thị các điều khiển video
-          repeat={true} // Lặp lại video
+          source={{ uri: lessonDetails.video.videoUrl }}
+          useNativeControls
+          resizeMode="contain"
+          isLooping
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
         <Text style={styles.title}>{lessonDetails.lessonName}</Text>
 
