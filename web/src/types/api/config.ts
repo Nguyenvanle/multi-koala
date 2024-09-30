@@ -4,4 +4,5 @@ export const API_CONFIG = {
   cacheDuration: 5 * 60 * 1000, // 5 minutes in milliseconds
   cachableEndpoints: ["/courses", "/lessons", "/students", "/types", "/fields"],
   cacheLog: false,
+  JWT_SECRET: process.env.JWT_SECRET!,
 };

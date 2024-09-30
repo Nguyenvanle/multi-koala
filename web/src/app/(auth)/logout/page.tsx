@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/features/auth/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "@/components/ui/use-toast";
 
 export default function Logout() {
   const { push } = useRouter();
@@ -13,24 +12,20 @@ export default function Logout() {
 
   useEffect(() => {
     const performLogout = async () => {
-      try {
-        await logout();
-        push("/login");
-      } catch (error) {
-        console.error("Logout failed:", error);
-        toast({
-          title: "Logout Failed",
-          description: "An error occurred during logout. Please try again.",
-          variant: "destructive",
-          duration: 3000,
-        });
-      } finally {
-        setIsLoading(false);
+      if (isLoading) {
+        try {
+          await logout();
+          push("/login?auth_processed");
+        } catch (error) {
+          console.error("Logout failed:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
     };
 
     performLogout();
-  }, [logout, push]);
+  }, [isLoading, logout, push]);
 
   if (isLoading) {
     return (

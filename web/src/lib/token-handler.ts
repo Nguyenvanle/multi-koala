@@ -9,14 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
 export async function validateToken(token: string): Promise<boolean> {
   const { result, error } = await introspectServices.checkValid({ token });
   console.log("validate:", result);
-  console.log("error:", error);
   return result?.result.valid ?? false;
 }
 
 export async function refreshToken(token: string): Promise<string | null> {
   const { result, error } = await refreshServices.refresh({ token });
   console.log("refresh: ", result);
-  console.log("error: ", error);
   return result?.code === 200 ? result.result.token : null;
 }
 
