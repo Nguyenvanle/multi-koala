@@ -2,12 +2,15 @@ import {
   SECURE_PATHS,
   TOKEN_COOKIE_NAME,
   LOGIN_PATH,
+  CLEAR_LOCAL_STORAGE_PATH,
+  TOKEN_EXPIRY,
 } from "@/features/auth/enum/auth";
-import { validateToken } from "@/lib/token-handler";
+import { validateToken, refreshToken, handleInvalidToken } from "@/lib/token-handler";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
   const token = request.cookies.get(TOKEN_COOKIE_NAME);
   const path = request.nextUrl.pathname;
   const isSecurePath = SECURE_PATHS.some((securePath) =>
@@ -20,34 +23,42 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!token && isSecurePath) {
-    // Chuyển hướng đến trang đăng nhập với flag xử lý xác thực
-    const loginUrl = new URL(LOGIN_PATH, request.url);
-    loginUrl.searchParams.set("auth_processed", "true");
-    return NextResponse.redirect(loginUrl);
+    // Chuyển hướng đến trang xóa localStorage
+    return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
   }
 
   if (token) {
     try {
-      // Thực hiện kiểm tra token ở đây
+      // Thực hiện kiểm tra token
       const isValid = await validateToken(token.value);
       if (!isValid) {
-        // Token không hợp lệ, chuyển hướng đến đăng nhập và xóa token
-        const response = NextResponse.redirect(
-          new URL(LOGIN_PATH, request.url)
-        );
-        response.cookies.delete(TOKEN_COOKIE_NAME);
-        return response;
+        // Token không hợp lệ, thử refresh
+        const newToken = await refreshToken(token.value);
+
+        if (newToken) {
+          // Refresh thành công, cập nhật token mới
+          response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'development',
+            sameSite: 'strict',
+            maxAge: TOKEN_EXPIRY, // 4 ngày
+            path: '/',
+          });
+          return response;
+        } else {
+          // Refresh thất bại, xử lý như token không hợp lệ
+          console.log('Không hợp lệ')
+          return handleInvalidToken(response, request);
+        }
       }
     } catch (error) {
-      console.error("Error validating token:", error);
-      // Xử lý lỗi, chuyển hướng đến đăng nhập
-      const response = NextResponse.redirect(new URL(LOGIN_PATH, request.url));
-      response.cookies.delete(TOKEN_COOKIE_NAME);
-      return response;
+      console.error("Error validating/refreshing token:", error);
+      // Xử lý lỗi, chuyển hướng đến trang xóa localStorage
+      return handleInvalidToken(response, request);
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

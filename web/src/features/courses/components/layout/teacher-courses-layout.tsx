@@ -1,8 +1,7 @@
+"use client";
 import React from "react";
-// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -11,98 +10,69 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import OverviewCard from "@/features/courses/components/molecules/teacher-overview-card";
+import { CourseStatusDonutChart } from "@/features/courses/components/atoms/course-status-pie-chart";
 
 const courseData = [
-  { id: 1, name: "Khóa học 1", status: "Đang diễn ra", students: 25 },
-  { id: 2, name: "Khóa học 2", status: "Sắp khai giảng", students: 15 },
-  { id: 3, name: "Khóa học 3", status: "Đã kết thúc", students: 30 },
+  { id: 1, name: "Course 1", status: "Ongoing", students: 25 },
+  { id: 2, name: "Course 2", status: "Upcoming", students: 15 },
+  { id: 3, name: "Course 3", status: "Completed", students: 30 },
+  { id: 4, name: "Course 4", status: "Completed", students: 45 },
+  { id: 5, name: "Course 5", status: "Completed", students: 20 },
 ];
 
 const revenueData = [
-  { name: "T1", revenue: 4000 },
-  { name: "T2", revenue: 3000 },
-  { name: "T3", revenue: 5000 },
-  { name: "T4", revenue: 4500 },
-  { name: "T5", revenue: 6000 },
-  { name: "T6", revenue: 5500 },
+  { name: "Jan", revenue: 4000 },
+  { name: "Feb", revenue: 3000 },
+  { name: "Mar", revenue: 5000 },
+  { name: "Apr", revenue: 4500 },
+  { name: "May", revenue: 6000 },
+  { name: "Jun", revenue: 5500 },
 ];
 
-const Dashboard = () => {
+const overviewData = {
+  totalCourses: 10,
+  totalApprovedCourses: 8,
+  totalEnrollments: 150,
+  totalStudents: 120,
+  totalCompletedCourses: 5,
+  totalPrices: 28000.0,
+  passRatingPerTest: 0.0,
+  correctRatingPerQuestion: 0.0,
+};
+
+export const colors = ["#15A89E", "#FFB347", "#FF6B6B", "#4E9AF1"];
+
+const TeacherCourseTemplate = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex flex-grow">
       {/* Main Content */}
-      <div className="flex-1 p-8 overflow-auto">
-        <h1 className="text-3xl font-bold mb-6">Quản lý khóa học</h1>
+      <div className="flex-1 py-8 px-4 overflow-auto">
+        <h1 className="text-3xl font-bold mb-6">Course Management</h1>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Thống kê tổng quan */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Overview Statistics */}
+          <OverviewCard {...overviewData} />
+
+          {/* Revenue Chart */}
+          <CourseStatusDonutChart />
+
+          {/* Course List */}
           <Card>
             <CardHeader>
-              <CardTitle>Tổng quan</CardTitle>
+              <CardTitle>Course List</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl font-bold">3</p>
-                  <p className="text-sm text-gray-500">Khóa học</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">70</p>
-                  <p className="text-sm text-gray-500">Học viên</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">$28,000</p>
-                  <p className="text-sm text-gray-500">Doanh thu</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Thêm khóa học mới */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Thêm khóa học mới</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Input className="mb-2" placeholder="Tên khóa học" />
-              <Button className="w-full">Thêm khóa học</Button>
-            </CardContent>
-          </Card>
-
-          {/* Biểu đồ doanh thu */}
-          {/* <Card className="col-span-full">
-            <CardHeader>
-              <CardTitle>Doanh thu theo tháng</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="revenue" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card> */}
-
-          {/* Danh sách khóa học */}
-          <Card className="col-span-full">
-            <CardHeader>
-              <CardTitle>Danh sách khóa học</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-y-auto pr-4 max-h-[320px]">
+              {" "}
+              {/* Thêm lớp overflow */}
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Tên khóa học</TableHead>
-                    <TableHead>Trạng thái</TableHead>
-                    <TableHead>Số học viên</TableHead>
-                    <TableHead>Hành động</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Students</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -113,7 +83,7 @@ const Dashboard = () => {
                       <TableCell>{course.students}</TableCell>
                       <TableCell>
                         <Button variant="outline" size="sm">
-                          Chỉnh sửa
+                          Edit
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -128,4 +98,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default TeacherCourseTemplate;

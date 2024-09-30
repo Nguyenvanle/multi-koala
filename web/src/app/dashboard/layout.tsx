@@ -17,8 +17,8 @@ export default function MainLayout({
     <div>
       <Header />
       <main className="flex flex-grow">
-        <div className="w-64 bg-white shadow-md">
-          <div className="p-4">
+        <div className="container w-fit bg-white shadow-md hidden sm:flex">
+          <div className="py-8">
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
             <nav>
               {sidebarItems.map((item, index) => (
@@ -34,7 +34,9 @@ export default function MainLayout({
             </nav>
           </div>
         </div>
-        <div className="container flex mx-auto px-4 py-8">{children}</div>
+        <div className="container px-4 flex flex-1 bg-secondary">
+          {children}
+        </div>
       </main>
     </div>
   );
