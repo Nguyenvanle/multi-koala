@@ -6,6 +6,7 @@ import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
 import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
+import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.enums.Level;
@@ -17,6 +18,7 @@ import com.duokoala.server.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,9 +26,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseService {
     CourseRepository courseRepository;
@@ -36,6 +40,7 @@ public class CourseService {
     FieldRepository fieldRepository;
     DiscountCourseRepository discountCourseRepository;
     RequestDiscountRepository requestDiscountRepository;
+    EnrollCourseRepository enrollCourseRepository;
 
     public DiscountAppliedResponse getMaxApprovedDiscountRate(String courseId) {
         Float maxDiscountCourse = Optional.ofNullable(
@@ -147,5 +152,19 @@ public class CourseService {
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
         course.setStatus(Status.PENDING_APPROVAL);
         return courseMapper.toCourseResponse(courseRepository.save(course));
+    }
+
+    private StatisticCourseResponse getStatisticCourse(Course course) {
+        var statistic = courseMapper.toStatisticCourseResponse(course);
+        statistic.setTotalEnrollments(enrollCourseRepository.countByCourse(course));
+        statistic.setTotalCompleted(enrollCourseRepository.countByCourseAndProcess(course,1.0f));
+        statistic.setIncome(courseRepository.sumIncomeCourse(course.getCourseId()));
+        return statistic;
+    }
+
+    public List<StatisticCourseResponse> getMyListStatisticCourses() {
+        var courses = courseRepository.findAllByUploadedByTeacher
+                (authenticationService.getAuthenticatedTeacher());
+        return courses.stream().map(this::getStatisticCourse).toList();
     }
 }

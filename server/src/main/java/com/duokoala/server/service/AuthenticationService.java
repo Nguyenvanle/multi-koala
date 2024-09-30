@@ -97,7 +97,6 @@ public class AuthenticationService {
     public AuthenticationResponse refreshToken(RefreshRequest request)
             throws ParseException, JOSEException {
         SignedJWT signedJWT = verifyToken(request.getToken(), true);
-
         String jit = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
         String username = signedJWT.getJWTClaimsSet().getSubject();

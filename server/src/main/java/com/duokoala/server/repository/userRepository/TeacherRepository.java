@@ -45,7 +45,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, String> {
     int countTotalCompletedCourses(@Param("teacherId") String teacherId);
 
     @Query(nativeQuery = true,
-            value = "SELECT SUM(c.course_price) " +
+            value = "SELECT COALESCE(SUM(c.course_price),0.0) " +
                     "FROM enroll_course ec " +
                     "JOIN course c ON c.course_id = ec.course_course_id " +
                     "WHERE c.uploaded_by_teacher_user_id = :teacherId")

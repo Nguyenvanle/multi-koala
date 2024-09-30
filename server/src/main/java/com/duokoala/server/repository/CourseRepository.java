@@ -27,6 +27,12 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     Float getMinPrice();
 
     List<Course> findAllByUploadedByTeacher(Teacher teacher);
-
     List<Course> findAllByStatus(Status status);
+
+    @Query(nativeQuery = true,
+            value = "SELECT COALESCE(SUM(c.course_price),0.0) " +
+                    "FROM enroll_course ec " +
+                    "JOIN course c ON c.course_id = ec.course_course_id " +
+                    "WHERE c.course_id = :courseId")
+    Double sumIncomeCourse(@Param("courseId") String courseId);
 }
