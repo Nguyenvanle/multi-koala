@@ -17,7 +17,7 @@ import { useCourseDiscount } from "@/src/feature/discount/hooks/useCourseDiscoun
 const InProgressCourses = () => {
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-  const { enrolled, errorMessage, loading } = useEnrolled();
+  const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);
   const { discount } = useCourseDiscount(courseIdString);
 
   if (loading) {
