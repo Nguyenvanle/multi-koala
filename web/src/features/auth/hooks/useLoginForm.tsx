@@ -7,7 +7,6 @@ import { toast } from "@/components/ui/use-toast";
 import { LoginBody, LoginBodyType } from "@/types/auth/schema/login";
 import { DURATION } from "@/types/layout/toast";
 import { handlerAuth } from "@/features/auth/services/handler-auth";
-import { LoginResType } from "@/features/auth/types/login";
 import { useAuth } from "@/features/auth/contexts/auth-context";
 import { loginService } from "@/features/auth/services/login";
 
@@ -34,6 +33,7 @@ export default function useLoginForm() {
           description: "Welcome back",
           duration: DURATION,
         });
+
         router.push("/dashboard");
       } else {
         handlerAuth({
