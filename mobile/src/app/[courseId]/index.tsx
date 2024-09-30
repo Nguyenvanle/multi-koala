@@ -11,19 +11,19 @@ import {
   Alert,
 } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
-import { useGlobalSearchParams } from "expo-router";
+import { Link, router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useDetails } from "../feature/course/hooks/useDetails";
+import { useDetails } from "../../feature/course/hooks/useDetails";
 import { useCourseRating } from "@/src/feature/course/hooks/useCourseRating";
 import { useCourseDiscount } from "@/src/feature/discount/hooks/useCourseDiscount";
-import { useLesson } from "../feature/lesson/hooks/useLesson";
-import { LessonBody } from "../feature/lesson/types/lesson";
-import useUser from "../feature/user/hooks/useUser";
+import { useLesson } from "../../feature/lesson/hooks/useLesson";
+import { LessonBody } from "../../feature/lesson/types/lesson";
+import useUser from "../../feature/user/hooks/useUser";
 
 // Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
 
-const CourseDetails = () => {
+const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
   const { courseId } = useGlobalSearchParams();
   const [showAllLessons, setShowAllLessons] = useState(false);
   const { user } = useUser();
@@ -54,21 +54,38 @@ const CourseDetails = () => {
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
   const shouldShowOriginalPrice = priceDiscount !== finalPrice;
-  const renderLessonItem = ({ item }: { item: LessonBody }) => (
-    <TouchableOpacity style={styles.lessonItem}>
-      <Image
-        source={{ uri: item.image.imageUrl }}
-        style={styles.lessonThumbnail}
-      />
-      <View style={styles.lessonInfo}>
-        <Text style={styles.lessonTitle}>{item.lessonName}</Text>
-        <Text style={styles.lessonDuration}>
-          {Math.floor(item.video.videoDuration / 60)}:
-          {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderLessonItem = ({
+    item,
+    index,
+  }: {
+    item: LessonBody;
+    index: number;
+  }) => {
+    const isFirstThree = index < 3; // Kiểm tra nếu là một trong ba bài học đầu tiên
+
+    return (
+      <TouchableOpacity
+        style={[styles.lessonItem, !isFirstThree && { opacity: 0.5 }]} // Giảm độ mờ cho các bài học không được phép nhấp
+        onPress={() => {
+          if (isFirstThree) {
+            router.push(`/${courseIdString}/${item.lessonId}`);
+          }
+        }}
+      >
+        <Image
+          source={{ uri: item.image.imageUrl }}
+          style={styles.lessonThumbnail}
+        />
+        <View style={styles.lessonInfo}>
+          <Text style={styles.lessonTitle}>{item.lessonName}</Text>
+          <Text style={styles.lessonDuration}>
+            {Math.floor(item.video.videoDuration / 60)}:
+            {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   const isLoggedIn = !!user;
   const displayedLessons =
@@ -104,7 +121,7 @@ const CourseDetails = () => {
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
           {/* Hiển thị tất cả typeName */}
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
                 <TouchableOpacity
@@ -113,6 +130,7 @@ const CourseDetails = () => {
                     backgroundColor: "#BDE8CA",
                     padding: 8,
                     marginRight: 8,
+                    marginBottom: 8,
                   }}
                 >
                   <Text key={type.typeName} style={styles.typeName}>
@@ -121,7 +139,9 @@ const CourseDetails = () => {
                 </TouchableOpacity>
               ))}
           </View>
-          <View style={{ flexDirection: "row", marginBottom: 8 }}>
+          <View
+            style={{ flexDirection: "row", marginBottom: 8, flexWrap: "wrap" }}
+          >
             {Array.isArray(courseDetails.fields) &&
               courseDetails.fields.map((field: any) => (
                 <TouchableOpacity
@@ -130,6 +150,7 @@ const CourseDetails = () => {
                     backgroundColor: "#41B3A2",
                     padding: 8,
                     marginRight: 8,
+                    marginBottom: 8,
                   }}
                 >
                   <Text
