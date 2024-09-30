@@ -61,11 +61,11 @@ const TeacherCourseTemplate = () => {
   return (
     <div className="flex flex-grow">
       {/* Main Content */}
-      <div className="flex-1 py-8 px-4 overflow-auto">
+      <div className="flex flex-col flex-1 overflow-auto">
         <h1 className="text-3xl font-bold mb-6">Course Management</h1>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-8">
           {/* Overview Statistics */}
           <OverviewCard {...overviewData} />
 

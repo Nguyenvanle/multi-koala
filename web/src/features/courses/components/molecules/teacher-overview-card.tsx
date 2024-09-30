@@ -18,8 +18,8 @@ const OverviewItem: React.FC<{
         <IconComponent className="h-6 w-6 text-background" />
       </div>
       <div>
-        <p className="text-2xl font-bold">{value}</p>
-        <p className="text-sm text-gray-500">{title}</p>
+        <p className="text-2xl font-bold line-clamp-1">{value}</p>
+        <p className="text-sm text-gray-500 line-clamp-2">{title}</p>
       </div>
     </div>
   );
@@ -89,13 +89,13 @@ const OverviewCard: React.FC<{
           />
           <OverviewItem
             title="Pass Rate per Test"
-            value={`${(passRatingPerTest * 100).toFixed(2)}%`}
+            value={`${(passRatingPerTest * 100).toFixed(0)}%`}
             icon="ChartBar"
             colorIndex={3}
           />
           <OverviewItem
             title="Correct Rate per Question"
-            value={`${(correctRatingPerQuestion * 100).toFixed(2)}%`}
+            value={`${(correctRatingPerQuestion * 100).toFixed(0)}%`}
             icon="ChartPie"
             colorIndex={3}
           />

@@ -11,13 +11,18 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
   const path = usePathname();
 
   // Kiểm tra nếu user có role là "TEACHER" hoặc "ADMIN"
-  const hasTeacherOrAdminRole = user?.roles.some(role => 
-    role.roleName === "TEACHER" || role.roleName === "ADMIN"
+  const hasTeacherOrAdminRole = user?.roles.some(
+    (role) => role.roleName === "TEACHER" || role.roleName === "ADMIN"
   );
 
   if (hasTeacherOrAdminRole) {
     menuItems = [...menuItems, { href: "/dashboard", label: "Dashboard" }];
   }
+
+  // Hàm kiểm tra xem đường dẫn hiện tại có bắt đầu bằng href của menu item không
+  const isActive = (href: string) => {
+    return path.startsWith(href);
+  };
 
   return (
     <nav className="hidden md:flex space-x-4 flex-0 ">
@@ -29,11 +34,11 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
           key={item.label}
           href={item.href}
           className={`flex flex-col gap-1 mt-2 ${
-            item.href === path && "text-primary"
+            isActive(item.href) ? "text-primary" : ""
           }`}
         >
           {item.label}
-          {item.href === path ? (
+          {isActive(item.href) ? (
             <Badge className="p-[1px]" />
           ) : (
             <Badge className="bg-background hover:shadow-none hover:bg-background" />

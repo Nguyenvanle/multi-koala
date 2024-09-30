@@ -8,6 +8,9 @@ import { validateToken, refreshToken, handleInvalidToken } from "@/lib/token-han
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// Tạo một Set từ SECURE_PATHS để tăng tốc độ kiểm tra
+const securePathSet = new Set(SECURE_PATHS);
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
@@ -16,24 +19,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isSecurePath = SECURE_PATHS.some((securePath) => path.startsWith(securePath));
-  const token = request.cookies.get(TOKEN_COOKIE_NAME);
-
-  if (!token && isSecurePath) {
-    return redirectToClearLocalStorage(request);
-  }
+  const isSecurePath = securePathSet.has(path) || Array.from(securePathSet).some(prefix => path.startsWith(prefix));
+  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
 
   if (!token) {
-    return NextResponse.next();
+    return isSecurePath ? redirectToClearLocalStorage(request) : NextResponse.next();
   }
 
   try {
-    const isValid = await validateToken(token.value);
-    if (isValid) {
+    if (await validateToken(token)) {
       return NextResponse.next();
     }
 
-    const newToken = await refreshToken(token.value);
+    const newToken = await refreshToken(token);
     if (newToken) {
       return setNewTokenAndContinue(newToken);
     }

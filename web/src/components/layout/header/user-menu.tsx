@@ -1,6 +1,6 @@
 "use client";
-import { useRoles } from "@/hooks/useRoles";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -16,6 +16,7 @@ import Link from "next/link";
 import { User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/features/auth/contexts/auth-context";
+import { Muted } from "@/components/ui/typography";
 
 const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,9 +28,17 @@ const UserMenu: React.FC = () => {
     { icon: <User size={20} />, label: "Logout", href: "/logout" },
   ];
 
+  const formatRoleName = (roleName: string) => {
+    return roleName.charAt(0).toUpperCase() + roleName.slice(1).toLowerCase();
+  };
+
   return (
     isAuthenticated && (
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <div className="flex flex-col">
+          <p className="font-medium">{`${user?.firstname} ${user?.lastname}`}</p>
+          <Muted>{`${formatRoleName(user?.roles[0]?.roleName || "")}`}</Muted>
+        </div>
         <SheetTrigger asChild>
           <Avatar className="cursor-pointer">
             <AvatarImage src={user?.image.imageUrl || "/images/smile.png"} />
