@@ -3,13 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useRoles } from "@/hooks/useRoles";
+import { useAuth } from "@/features/auth/contexts/auth-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AuthButtons() {
-  const { hasRole } = useRoles();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return <Skeleton className="w-10 h-10 rounded-full" />;
 
   return (
-    hasRole("guest") && (
+    !isAuthenticated && (
       <div className="flex flex-row space-x-2">
         <Link href={"/login"}>
           <Button>Sign In</Button>

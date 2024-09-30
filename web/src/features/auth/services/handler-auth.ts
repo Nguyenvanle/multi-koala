@@ -12,7 +12,7 @@ export const handlerAuth = ({
   setError?: UseFormSetError<any>;
   duration?: number;
 }) => {
-  if ((error as ErrorResponse) && setError) {
+  if (setError) {
     switch (code) {
       case 401:
         setError("password", {
@@ -40,7 +40,7 @@ export const handlerAuth = ({
   } else {
     toast({
       title: "UNCATEGORIZED_EXCEPTION",
-      description: error ?? "Internal server error",
+      description: error || "Internal server error",
       variant: "destructive",
       duration: DURATION,
     });

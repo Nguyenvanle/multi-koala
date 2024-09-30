@@ -1,3 +1,4 @@
+import { UserBodyType } from "@/features/users/schema/user";
 import { z } from "zod";
 
 export const LoginResBody = z.object({
@@ -5,6 +6,7 @@ export const LoginResBody = z.object({
   message: z.string(),
   result: z.object({
     token: z.string(),
+    user: UserBodyType,
     authenticated: z.boolean(),
   }),
 });

@@ -21,7 +21,10 @@ export default function OTPField() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 flex items-center flex-col"
+      >
         <FormField
           control={form.control}
           name="pin"
@@ -35,7 +38,10 @@ export default function OTPField() {
                     <InputOTPSlot index={2} className="border-primary ring-0" />
                     <InputOTPSlot index={3} className="border-primary ring-0" />
                     <InputOTPSlot index={4} className="border-primary ring-0" />
-                    <InputOTPSlot index={5} className="border-primary ring-0" />
+                    <InputOTPSlot
+                      index={5}
+                      className="border-primary ring-0 "
+                    />
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>

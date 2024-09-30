@@ -5,8 +5,13 @@ import { LessonBody } from "@/features/lessons/schema/lessons";
 import { Clock, Calendar, Bookmark, PlayCircle } from "lucide-react";
 import Image from "next/image";
 import { P } from "@/components/ui/typography";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { enrollHandler } from "@/features/courses/libs/enroll-handler";
 
-export const LessonInfo: React.FC<{ lesson: LessonBody }> = ({ lesson }) => {
+export const LessonInfo: React.FC<{
+  lesson: LessonBody;
+}> = ({ lesson }) => {
   // Calculate hours, minutes, and seconds
   const totalSeconds = lesson.video.videoDuration;
   const hours = Math.floor(totalSeconds / 3600);
@@ -63,15 +68,23 @@ export const LessonInfo: React.FC<{ lesson: LessonBody }> = ({ lesson }) => {
             <span>Video Lesson</span>
           </div>
         </div>
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Badge variant="secondary">
-            Duration: {hours > 0 ? `${hours}h ` : ""}
-            {minutes}m {seconds}s
-          </Badge>
-          <Badge variant="outline">Course: {lesson.course.courseName}</Badge>
-          <Badge variant="outline" className="capitalize">
-            Level: {lesson.course.courseLevel.toLowerCase()}
-          </Badge>
+        <div className="mt-2 flex flex-1 justify-between items-center">
+          <div className="flex flex-wrap gap-2 flex-0">
+            <Badge variant="secondary" className="self-baseline">
+              Duration: {hours > 0 ? `${hours}h ` : ""}
+              {minutes}m {seconds}s
+            </Badge>
+            <Badge variant="outline" className="self-baseline">
+              Course: {lesson.course.courseName}
+            </Badge>
+            <Badge variant="outline" className="capitalize self-baseline">
+              Level: {lesson.course.courseLevel.toLowerCase()}
+            </Badge>
+          </div>
+
+          <Button onClick={enrollHandler}>
+            <Link href={"/login"}>Enroll Now</Link>
+          </Button>
         </div>
       </CardContent>
     </Card>
