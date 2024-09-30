@@ -3,25 +3,49 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Alert,
 } from "react-native";
-import { Video } from "expo-av";
-import * as ScreenOrientation from "expo-screen-orientation";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useLessonDetails } from "@/src/feature/lesson/hooks/useLessonDetails";
-
-// Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
+import YoutubePlayer from "react-native-youtube-iframe";
+import { Video, ResizeMode } from "expo-av";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { useLesson } from "@/src/feature/lesson/hooks/useLesson";
+import useUser from "@/src/feature/user/hooks/useUser";
+import { LessonBody } from "@/src/feature/lesson/types/lesson";
 
 const LessonDetails = () => {
+  const { user } = useUser();
+  const { courseId } = useGlobalSearchParams();
+  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { lessonId } = useGlobalSearchParams();
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
-  console.log(lessonDetails?.video.videoUrl);
+  const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
+  const [showAllLessons, setShowAllLessons] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const handleFullScreenChange = async (status: any) => {
+    setIsFullScreen(status);
+    if (status) {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE
+      );
+    } else {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT
+      );
+    }
+  };
+
   if (loadingLessonDetails) {
     return (
       <View style={{ paddingTop: 16, justifyContent: "center" }}>
@@ -38,120 +62,185 @@ const LessonDetails = () => {
     return <Text>No lesson detail</Text>;
   }
 
-  const video = React.useRef(null);
-  const [status, setStatus] = useState({});
-  const [orientationIsLandscape, setOrientation] = useState(true);
-
-  async function changeScreenOrientation() {
-    if (orientationIsLandscape == true) {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    } else if (orientationIsLandscape == false) {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+  const renderVideo = () => {
+    if (!lessonDetails) return null;
+    if (
+      lessonDetails.video.videoUrl.includes("youtube.com") ||
+      lessonDetails.video.videoUrl.includes("youtu.be")
+    ) {
+      const videoId =
+        lessonDetails.video.videoUrl.split("v=")[1]?.split("&")[0] ||
+        lessonDetails.video.videoUrl.split("/").pop();
+      return (
+        <YoutubePlayer
+          height={230}
+          videoId={videoId}
+          onFullScreenChange={handleFullScreenChange}
+        />
+      );
+    } else {
+      return (
+        <Video
+          source={{ uri: lessonDetails.video.videoUrl }}
+          style={styles.video}
+          useNativeControls
+          videoStyle={{ borderRadius: 10 }}
+          isLooping
+          resizeMode={ResizeMode.CONTAIN}
+        />
+      );
     }
-  }
+  };
+
+  const renderLessonItem = ({
+    item,
+    index,
+  }: {
+    item: LessonBody;
+    index: number;
+  }) => {
+    const isFirstThree = index < 3;
+
+    return (
+      <TouchableOpacity
+        style={[styles.lessonItem, !isFirstThree && { opacity: 0.5 }]}
+        onPress={() => {
+          if (isFirstThree) {
+            router.replace(`/${courseIdString}/${item.lessonId}`);
+          }
+        }}
+      >
+        <Image
+          source={{ uri: item.image.imageUrl }}
+          style={styles.lessonThumbnail}
+        />
+        <View style={styles.lessonInfo}>
+          <Text style={styles.lessonTitle}>{item.lessonName}</Text>
+          <Text style={styles.lessonDuration}>
+            {Math.floor(item.video.videoDuration / 60)}:
+            {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const isLoggedIn = !!user;
+  const displayedLessons =
+    isLoggedIn && showAllLessons ? lesson : lesson?.slice(0, 3);
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, paddingBottom: 80 }}>
-        <Video
-          ref={video}
-          style={styles.video}
-          source={{ uri: lessonDetails.video.videoUrl }}
-          useNativeControls
-          resizeMode="contain"
-          isLooping
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
-        <Text style={styles.title}>{lessonDetails.lessonName}</Text>
-
-        {/* {loadinglesson ? (
-          <View style={{ paddingTop: 16, justifyContent: "center" }}>
-            <ActivityIndicator size={"large"} color={Colors.teal_dark} />
-          </View>
-        ) : lesson && lesson.length > 0 ? (
-          <>
-            <FlatList
-              data={displayedLessons}
-              renderItem={renderLessonItem}
-              keyExtractor={(item) => item.lessonId}
-              scrollEnabled={false}
-            />
-            {lesson.length > 3 && !showAllLessons && (
-              <TouchableOpacity
-                style={styles.showMoreButton}
-                onPress={() => {
-                  if (isLoggedIn) {
-                    setShowAllLessons(true);
-                  } else {
-                    Alert.alert(
-                      "Notification",
-                      "Please sign in to view more lessons"
-                    );
-                  }
-                }}
-              >
-                <Text style={styles.showMoreButtonText}>
-                  {isLoggedIn ? "Show More" : "Sign in to view more"}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </>
-        ) : (
-          <Text style={{ ...text.p, color: Colors.red }}>
-            No lessons available
+        {renderVideo()}
+        <View style={styles.content}>
+          <Text style={styles.title}>{lessonDetails.lessonName}</Text>
+          <Text style={styles.duration}>
+            {Math.floor(lessonDetails.video.videoDuration / 60)}:
+            {(lessonDetails.video.videoDuration % 60)
+              .toString()
+              .padStart(2, "0")}{" "}
+            mins
           </Text>
-        )} */}
-        <TouchableOpacity style={styles.buyButton}>
-          <Text style={styles.buyButtonText}>Buy Now</Text>
-        </TouchableOpacity>
+          <Text style={styles.sectionTitle}>About This Lesson</Text>
+          <Text style={styles.description}>
+            {lessonDetails.lessonDescription}
+          </Text>
+          {loadinglesson ? (
+            <View style={{ paddingTop: 16, justifyContent: "center" }}>
+              <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+            </View>
+          ) : lesson && lesson.length > 0 ? (
+            <>
+              <FlatList
+                data={displayedLessons}
+                renderItem={renderLessonItem}
+                keyExtractor={(item) => item.lessonId}
+                scrollEnabled={false}
+              />
+              {lesson.length > 3 && (
+                <TouchableOpacity
+                  style={styles.showMoreButton}
+                  onPress={() => {
+                    if (isLoggedIn) {
+                      setShowAllLessons(!showAllLessons);
+                    } else {
+                      Alert.alert(
+                        "Notification",
+                        "Please sign in to view more lessons"
+                      );
+                    }
+                  }}
+                >
+                  <Text style={styles.showMoreButtonText}>
+                    {isLoggedIn
+                      ? showAllLessons
+                        ? "Show Less"
+                        : "Show More"
+                      : "Sign in to view more"}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </>
+          ) : (
+            <Text style={{ ...text.p, color: Colors.red }}>
+              No lessons available
+            </Text>
+          )}
+          <TouchableOpacity
+            style={styles.buyButton}
+            onPress={() => {
+              if (isLoggedIn) {
+              } else {
+                Alert.alert(
+                  "Notification",
+                  "Please sign in to view more lessons"
+                );
+              }
+            }}
+          >
+            <Text style={styles.buyButtonText}>Buy Now</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  showMoreButton: {
-    alignItems: "flex-start",
-  },
   showMoreButtonText: {
     ...text.link,
     color: Colors.teal_dark,
     fontWeight: "500",
   },
+  showMoreButton: {
+    alignItems: "flex-start",
+  },
+  buyButton: {
+    backgroundColor: Colors.teal_dark,
+    padding: 16,
+    alignItems: "center",
+    borderRadius: 10,
+    marginTop: 24,
+  },
+  buyButtonText: {
+    ...text.h4,
+    color: Colors.white,
+  },
   container: {
     backgroundColor: Colors.background,
     padding: 24,
   },
-  image: {
-    borderWidth: 1,
-    borderColor: Colors.grey,
-    height: 400,
-    borderRadius: 20,
+  video: {
+    height: 220,
+    overflow: "hidden",
+  },
+  title: {
+    ...text.h2,
+    color: Colors.super_teal_dark,
   },
   content: {
     gap: 8,
-    paddingVertical: 16,
-  },
-  instructor: {
-    ...text.h3,
-    color: Colors.teal_dark,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  title: {
-    ...text.h2,
-    color: Colors.black,
-    marginTop: 8,
-  },
-  duration: {
-    ...text.small,
-    color: Colors.red,
-  },
-  price: {
-    ...text.h3,
-    color: Colors.teal_dark,
   },
   sectionTitle: {
     ...text.h4,
@@ -159,15 +248,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontWeight: "400",
   },
-  video: {
-    height: 400, // Đặt chiều cao cho video
-    borderRadius: 20,
-  },
   description: {
     ...text.p,
     color: Colors.dark_grey,
   },
-
+  duration: {
+    ...text.small,
+    color: Colors.dark_grey,
+  },
   lessonItem: {
     backgroundColor: Colors.white,
     flexDirection: "row",
@@ -198,21 +286,6 @@ const styles = StyleSheet.create({
   lessonDuration: {
     ...text.small,
     color: Colors.teal_dark,
-  },
-  buyButton: {
-    backgroundColor: Colors.teal_dark,
-    padding: 16,
-    alignItems: "center",
-    borderRadius: 10,
-    marginTop: 24,
-  },
-  buyButtonText: {
-    ...text.h4,
-    color: Colors.white,
-  },
-  typeName: {
-    ...text.small,
-    color: Colors.dark_grey,
   },
 });
 

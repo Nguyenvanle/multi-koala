@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
-import { Link, router, useGlobalSearchParams } from "expo-router";
+import { Link, Redirect, router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useDetails } from "../../feature/course/hooks/useDetails";
@@ -21,14 +21,11 @@ import { useLesson } from "../../feature/lesson/hooks/useLesson";
 import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 
-// Giả định rằng bạn có một hook hoặc function để fetch dữ liệu khóa học
-
 const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
   const { courseId } = useGlobalSearchParams();
   const [showAllLessons, setShowAllLessons] = useState(false);
   const { user } = useUser();
 
-  // Chuyển đổi courseId thành chuỗi nếu cần
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
   const { courseDetails, loading, errorMessageDetails } =
@@ -51,9 +48,11 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
   if (!courseDetails) {
     return <Text>No course detail</Text>;
   }
+
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
   const shouldShowOriginalPrice = priceDiscount !== finalPrice;
+
   const renderLessonItem = ({
     item,
     index,
@@ -61,11 +60,11 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
     item: LessonBody;
     index: number;
   }) => {
-    const isFirstThree = index < 3; // Kiểm tra nếu là một trong ba bài học đầu tiên
+    const isFirstThree = index < 3;
 
     return (
       <TouchableOpacity
-        style={[styles.lessonItem, !isFirstThree && { opacity: 0.5 }]} // Giảm độ mờ cho các bài học không được phép nhấp
+        style={[styles.lessonItem, !isFirstThree && { opacity: 0.5 }]}
         onPress={() => {
           if (isFirstThree) {
             router.push(`/${courseIdString}/${item.lessonId}`);
@@ -90,6 +89,7 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
   const isLoggedIn = !!user;
   const displayedLessons =
     isLoggedIn && showAllLessons ? lesson : lesson?.slice(0, 3);
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, paddingBottom: 80 }}>
@@ -99,41 +99,29 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
         />
         <View style={styles.content}>
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text style={styles.instructor}>
               {courseDetails.uploadedByTeacher?.firstname}{" "}
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
-            <Text></Text>
-            {/* Sử dụng ?? để đảm bảo có giá trị */}
             <AirbnbRating
               count={5}
               size={20}
               ratingContainerStyle={{ padding: 0 }}
               showRating={false}
-              defaultRating={(courseRating?.avgcourseRating ?? 0) * 5} // Không làm tròn, giữ nguyên giá trị thập phân            showRating={true} // Đặt showRating thành false để ẩn phần đánh giá
-              isDisabled={true} // Thiết lập isDisabled để không cho phép đánh giá
+              defaultRating={(courseRating?.avgcourseRating ?? 0) * 5}
+              isDisabled={true}
             />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
-          {/* Hiển thị tất cả typeName */}
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
-                <TouchableOpacity
-                  style={{
-                    borderRadius: 20,
-                    backgroundColor: "#BDE8CA",
-                    padding: 8,
-                    marginRight: 8,
-                    marginBottom: 8,
-                  }}
-                >
-                  <Text key={type.typeName} style={styles.typeName}>
+                <TouchableOpacity key={type.typeName} style={styles.typeButton}>
+                  <Text
+                    style={{ ...styles.fieldName, color: Colors.teal_dark }}
+                  >
                     {type.typeName}
                   </Text>
                 </TouchableOpacity>
@@ -145,42 +133,18 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
             {Array.isArray(courseDetails.fields) &&
               courseDetails.fields.map((field: any) => (
                 <TouchableOpacity
-                  style={{
-                    borderRadius: 20,
-                    backgroundColor: "#41B3A2",
-                    padding: 8,
-                    marginRight: 8,
-                    marginBottom: 8,
-                  }}
+                  key={field.fieldName}
+                  style={styles.fieldButton}
                 >
-                  <Text
-                    key={field.fieldName}
-                    style={{ ...styles.typeName, color: Colors.grey }}
-                  >
-                    {field.fieldName}
-                  </Text>
+                  <Text style={styles.fieldName}>{field.fieldName}</Text>
                 </TouchableOpacity>
               ))}
           </View>
-          <Text
-            style={{
-              ...text.large,
-              fontWeight: "400",
-              color: Colors.super_teal_dark,
-            }}
-          >
-            {courseDetails.courseLevel}
-          </Text>
+          <Text style={styles.courseLevel}>{courseDetails.courseLevel}</Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
-              <Text
-                style={{
-                  ...styles.price,
-                  textDecorationLine: "line-through",
-                  color: Colors.dark_grey,
-                }}
-              >
+              <Text style={styles.originalPrice}>
                 ${courseDetails.coursePrice.toFixed(2)}
               </Text>
             )}
@@ -190,6 +154,7 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
             {courseDetails.courseDescription}
           </Text>
         </View>
+
         {loadinglesson ? (
           <View style={{ paddingTop: 16, justifyContent: "center" }}>
             <ActivityIndicator size={"large"} color={Colors.teal_dark} />
@@ -202,12 +167,12 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
               keyExtractor={(item) => item.lessonId}
               scrollEnabled={false}
             />
-            {lesson.length > 3 && !showAllLessons && (
+            {lesson.length > 3 && (
               <TouchableOpacity
                 style={styles.showMoreButton}
                 onPress={() => {
                   if (isLoggedIn) {
-                    setShowAllLessons(true);
+                    setShowAllLessons(!showAllLessons);
                   } else {
                     Alert.alert(
                       "Notification",
@@ -217,7 +182,11 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
                 }}
               >
                 <Text style={styles.showMoreButtonText}>
-                  {isLoggedIn ? "Show More" : "Sign in to view more"}
+                  {isLoggedIn
+                    ? showAllLessons
+                      ? "Show Less"
+                      : "Show More"
+                    : "Sign in to view more"}
                 </Text>
               </TouchableOpacity>
             )}
@@ -227,7 +196,19 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
             No lessons available
           </Text>
         )}
-        <TouchableOpacity style={styles.buyButton}>
+
+        <TouchableOpacity
+          style={styles.buyButton}
+          onPress={() => {
+            if (isLoggedIn) {
+            } else {
+              Alert.alert(
+                "Notification",
+                "Please sign in to view more lessons"
+              );
+            }
+          }}
+        >
           <Text style={styles.buyButtonText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
@@ -262,23 +243,19 @@ const styles = StyleSheet.create({
     ...text.h3,
     color: Colors.teal_dark,
   },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
   title: {
     ...text.h2,
     color: Colors.black,
     marginTop: 8,
   },
-  duration: {
-    ...text.small,
-    color: Colors.red,
-  },
   price: {
     ...text.h3,
     color: Colors.teal_dark,
+  },
+  originalPrice: {
+    ...text.h3,
+    textDecorationLine: "line-through",
+    color: Colors.dark_grey,
   },
   sectionTitle: {
     ...text.h4,
@@ -290,7 +267,6 @@ const styles = StyleSheet.create({
     ...text.p,
     color: Colors.dark_grey,
   },
-
   lessonItem: {
     backgroundColor: Colors.white,
     flexDirection: "row",
@@ -333,9 +309,28 @@ const styles = StyleSheet.create({
     ...text.h4,
     color: Colors.white,
   },
-  typeName: {
+  typeButton: {
+    borderRadius: 20,
+    backgroundColor: "#BDE8CA",
+    padding: 8,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  fieldButton: {
+    borderRadius: 20,
+    backgroundColor: "#41B3A2",
+    padding: 8,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  fieldName: {
     ...text.small,
-    color: Colors.dark_grey,
+    color: Colors.white,
+  },
+  courseLevel: {
+    ...text.large,
+    fontWeight: "400",
+    color: Colors.super_teal_dark,
   },
 });
 
