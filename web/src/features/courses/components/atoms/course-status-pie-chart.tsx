@@ -1,106 +1,106 @@
 import React, { useMemo } from "react";
-import { Label, Pie, PieChart } from "recharts";
+import { Cell, Label, Pie, PieChart, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 
-type TeacherStatistics = {
-  totalCourses: number;
-  totalApprovedCourses: number;
+type CourseStatus = "APPROVED" | "PENDING_APPROVAL" | "REJECTED" | "IN_EDITING";
+
+type CourseStatistic = {
+  courseId: string;
+  courseName: string;
+  status: CourseStatus;
   totalEnrollments: number;
-  totalStudents: number;
-  totalCompletedCourses: number;
-  totalPrices: number;
-  passRatingPerTest: number;
-  correctRatingPerQuestion: number;
+  totalCompleted: number;
+  income: number;
 };
 
-const chartConfig: ChartConfig = {
-  courses: {
-    label: "Courses",
-  },
-  approved: {
-    label: "Approved",
-    color: "hsl(var(--chart-1))",
-  },
-  completed: {
-    label: "Completed",
-    color: "hsl(var(--chart-2))",
-  },
-  inProgress: {
-    label: "In Progress",
-    color: "hsl(var(--chart-3))",
-  },
+const statusColors: Record<CourseStatus, string> = {
+  APPROVED: "hsl(152, 57%, 58%)",
+  PENDING_APPROVAL: "hsl(35, 100%, 50%)",
+  REJECTED: "hsl(0, 84%, 60%)",
+  IN_EDITING: "hsl(201, 96%, 32%)",
+};
+
+const statusLabels: Record<CourseStatus, string> = {
+  APPROVED: "Approved",
+  PENDING_APPROVAL: "Pending Approval",
+  REJECTED: "Rejected",
+  IN_EDITING: "In Editing",
 };
 
 interface CourseStatusDonutChartProps {
-  teacherStatistic: TeacherStatistics;
+  teacherCourseStatistic: CourseStatistic[];
 }
 
 export function CourseStatusDonutChart({
-  teacherStatistic,
+  teacherCourseStatistic,
 }: CourseStatusDonutChartProps) {
   const chartData = useMemo(() => {
-    const completed = teacherStatistic.totalCompletedCourses;
-    const approved = teacherStatistic.totalApprovedCourses;
-    const inProgress = approved - completed;
+    const statusCounts: Record<CourseStatus, number> = {
+      APPROVED: 0,
+      PENDING_APPROVAL: 0,
+      REJECTED: 0,
+      IN_EDITING: 0,
+    };
 
-    return [
-      {
-        status: "completed",
-        courses: completed,
-        fill: chartConfig.completed.color,
-      },
-      {
-        status: "inProgress",
-        courses: inProgress,
-        fill: chartConfig.inProgress.color,
-      },
-      {
-        status: "approved",
-        courses: approved,
-        fill: chartConfig.approved.color,
-      },
-    ];
-  }, [teacherStatistic]);
+    teacherCourseStatistic.forEach((course) => {
+      statusCounts[course.status]++;
+    });
 
-  const totalCourses = teacherStatistic.totalCourses;
+    return Object.entries(statusCounts)
+      .filter(([_, count]) => count > 0) // Only include statuses with non-zero counts
+      .map(([status, count]) => ({
+        status: statusLabels[status as CourseStatus],
+        count,
+        fill: statusColors[status as CourseStatus],
+      }));
+  }, [teacherCourseStatistic]);
+
+  const totalCourses = teacherCourseStatistic.length;
+  const approvedCourses = teacherCourseStatistic.filter(
+    (course) => course.status === "APPROVED"
+  ).length;
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Course Status Distribution</CardTitle>
-        <CardDescription>Current Academic Period</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+        <div className="mx-auto aspect-square max-h-[250px]">
+          <PieChart width={250} height={250}>
+            <Tooltip
+              content={({ payload }) => {
+                if (payload && payload.length > 0) {
+                  const data = payload[0].payload;
+                  return (
+                    <div className="bg-background p-2 rounded shadow">
+                      <p className="font-semibold">{data.status}</p>
+                      <p>{`${data.count} course${
+                        data.count !== 1 ? "s" : ""
+                      }`}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }}
             />
             <Pie
               data={chartData}
-              dataKey="courses"
+              dataKey="count"
               nameKey="status"
               innerRadius={60}
               outerRadius={80}
               strokeWidth={5}
             >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.fill} />
+              ))}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -116,14 +116,14 @@ export function CourseStatusDonutChart({
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalCourses.toLocaleString()}
+                          {((approvedCourses / totalCourses) * 100).toFixed(1)}%
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
+                          className="fill-muted-foreground text-sm"
                         >
-                          Courses
+                          Approved
                         </tspan>
                       </text>
                     );
@@ -132,12 +132,19 @@ export function CourseStatusDonutChart({
               />
             </Pie>
           </PieChart>
-        </ChartContainer>
+        </div>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="leading-none text-muted-foreground">
-          Showing total courses and their statuses for the current academic
-          period
+        <div className="grid grid-cols-2 gap-2 w-full ">
+          {chartData.map(({ status, fill }) => (
+            <div key={status} className="flex items-center">
+              <div
+                className="w-3 h-3 rounded-full mr-2"
+                style={{ backgroundColor: fill }}
+              />
+              <span className="text-muted-foreground">{status}</span>
+            </div>
+          ))}
         </div>
       </CardFooter>
     </Card>

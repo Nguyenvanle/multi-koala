@@ -22,11 +22,13 @@ import {
   DollarSign,
   BarChart2,
   Clock,
+  PlusCircle,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
 import { CoursesBarStackedChart } from "@/features/courses/components/atoms/courses-bar-stacked-chart";
+import { CoursesRadialChart } from "@/features/courses/components/atoms/courses-radius-chart";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -71,8 +73,15 @@ const TeacherCourseTemplate = ({
   if (!teacherStatistic || !teacherMyCourses) return <div></div>;
 
   return (
-    <div className=" w-full flex flex-col gap-4 xl:gap-6">
-      <h1 className="text-3xl font-bold">Course Management</h1>
+    <div className="w-full flex flex-col gap-4 xl:gap-6">
+      <div className="flex flex-row items-center justify-between">
+        <h1 className="text-3xl font-bold">Course Management</h1>
+        
+        <Button className="flex items-center gap-2">
+          <PlusCircle className="w-5 h-5" />
+          Add New Course
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
         <OverviewCard
@@ -128,14 +137,14 @@ const TeacherCourseTemplate = ({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6">
-        {/* <CoursesBarStackedChart /> */}
+        <CourseStatusDonutChart teacherCourseStatistic={teacherMyCourses} />
 
         <Card className="overflow-hidden pr-2">
           <Table
             className="rounded-md w-full h-10 overflow-clip relative"
-            divClassname="max-h-[350px] overflow-y-scroll pr-2"
+            divClassname="max-h-[400px] h-full overflow-y-scroll pr-2"
           >
-            <TableHeader className="sticky w-full top-0 h-10  rounded-t-md bg-background ">
+            <TableHeader className="sticky w-full top-0 h-10 rounded-t-md bg-background ">
               <TableRow>
                 <TableHead className="text-primary font-semibold text-base">
                   Name
