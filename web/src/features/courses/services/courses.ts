@@ -12,6 +12,17 @@ export const courseService = {
     return await apiService.get<CourseResType>("/courses");
   },
 
+  getMyCourses: async (token: string) => {
+    return await apiService.get<CourseResType>(
+      "/courses/my-statistic-courses",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  },
+
   getPriceRange: async () => {
     return await apiService.get<CoursePricesResType>(`/courses/course-price`);
   },

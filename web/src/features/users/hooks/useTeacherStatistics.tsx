@@ -6,12 +6,8 @@ import { nextjsApiService } from "@/services/next-api";
 import useSWR from "swr";
 
 export function useTeacherStatistics() {
-  const { data, error } = useSWR(
-    `teacher-statistics`, // Only fetch if teacherId is available
-    () =>
-      nextjsApiService.get<TeacherStatisticsResType>(
-        `/api/teachers/my-statistic`
-      )
+  const { data, error } = useSWR(`teacher-statistics`, () =>
+    nextjsApiService.get<TeacherStatisticsResType>(`/api/teachers/my-statistic`)
   );
 
   return {

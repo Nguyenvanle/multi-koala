@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
+import { CoursesResultResType } from "@/features/courses/types/course";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -78,15 +79,18 @@ const OverviewCard = ({ icon: Icon, title, value, color }: any) => (
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
+  teacherMyCourses: CoursesResultResType;
 }
 
 const TeacherCourseTemplate = ({
   teacherStatistic,
+  teacherMyCourses,
 }: TeacherCourseTemplateProps) => {
   return (
     <div className=" w-full flex flex-col gap-4 xl:gap-6">
       <h1 className="text-3xl font-bold">Course Management</h1>
       <p>{JSON.stringify(teacherStatistic)}</p>
+      <p>{JSON.stringify(teacherMyCourses)}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
         <OverviewCard
