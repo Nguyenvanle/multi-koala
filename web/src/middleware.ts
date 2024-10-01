@@ -60,5 +60,5 @@ function setNewTokenAndContinue(newToken: string): NextResponse {
 }
 
 export const config = {
-  matcher: ["/verify/:path*"],
+  matcher: ["/dashboard/:path*"],
 };

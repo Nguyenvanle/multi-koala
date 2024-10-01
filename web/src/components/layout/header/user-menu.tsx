@@ -7,13 +7,12 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-  SheetFooter,
   SheetClose,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/features/auth/contexts/auth-context";
 import { Muted } from "@/components/ui/typography";
@@ -24,8 +23,13 @@ const UserMenu: React.FC = () => {
 
   const MENU_ITEMS = [
     { icon: <User size={20} />, label: "Your Profile", href: "/" },
-    { icon: <User size={20} />, label: "Settings", href: "/" },
-    { icon: <User size={20} />, label: "Logout", href: "/logout" },
+    { icon: <Settings size={20} />, label: "Settings", href: "/settings" },
+    {
+      icon: <LogOut size={20} />,
+      label: "Logout",
+      href: "/logout",
+      destructive: true,
+    }, // Destructive flag added
   ];
 
   const formatRoleName = (roleName: string) => {
@@ -35,7 +39,7 @@ const UserMenu: React.FC = () => {
   return (
     isAuthenticated && (
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex flex-col">
+        <div className="hidden md:flex flex-col">
           <p className="font-medium">{`${user?.firstname} ${user?.lastname}`}</p>
           <Muted>{`${formatRoleName(user?.roles[0]?.roleName || "")}`}</Muted>
         </div>
@@ -49,13 +53,45 @@ const UserMenu: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle className="text-left">Duokoala</SheetTitle>
-            <SheetDescription className="text-left">User menu</SheetDescription>
+            <SheetTitle className="text-left text-primary hidden">
+              Duokoala
+            </SheetTitle>
+            <SheetDescription className="text-left hidden">
+              User menu
+            </SheetDescription>
           </SheetHeader>
+
+          {/* Basic User Information */}
+          <div className="border-b py-4">
+            <div className="flex items-center space-x-2">
+              <Avatar className="h-14 w-14">
+                <AvatarImage
+                  src={user?.image.imageUrl || "/images/smile.png"}
+                />
+                <AvatarFallback>{user?.firstname.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col overflow-hidden">
+                <span className="font-medium">{`${user?.firstname} ${user?.lastname}`}</span>
+                <Muted className="line-clamp-1 " title={user?.email}>
+                  {user?.email}
+                </Muted>
+                <Muted>{`${formatRoleName(
+                  user?.roles[0]?.roleName || ""
+                )}`}</Muted>
+              </div>
+            </div>
+          </div>
+
+          {/* Menu Items */}
           <div className="flex flex-col space-y-4 mt-4">
             {MENU_ITEMS.map((item) => (
               <SheetClose key={item.label} asChild>
-                <Link href={item.href} className="flex items-center space-x-2">
+                <Link
+                  href={item.href}
+                  className={`flex items-center space-x-2 ${
+                    item.destructive ? "text-destructive" : ""
+                  }`} // Apply destructive color if the item is Logout
+                >
                   {item.icon}
                   <span>{item.label}</span>
                 </Link>

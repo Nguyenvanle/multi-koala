@@ -15,7 +15,7 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
     (role) => role.roleName === "TEACHER" || role.roleName === "ADMIN"
   );
 
-  if (!hasTeacherOrAdminRole) {
+  if (hasTeacherOrAdminRole) {
     menuItems = [...menuItems, { href: "/dashboard", label: "Dashboard" }];
   }
 

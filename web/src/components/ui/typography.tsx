@@ -188,11 +188,15 @@ export function Small({
 export function Muted({
   children,
   className = "",
+  title,
 }: {
   children: React.ReactNode;
   className?: string;
+  title?: string;
 }) {
   return (
-    <p className={`text-sm text-muted-foreground ${className}`}>{children}</p>
+    <p className={`text-sm text-muted-foreground ${className}`} title={title}>
+      {children}
+    </p>
   );
 }
