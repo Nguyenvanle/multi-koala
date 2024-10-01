@@ -29,6 +29,7 @@ import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statis
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
 import { CoursesBarStackedChart } from "@/features/courses/components/atoms/courses-bar-stacked-chart";
 import { CoursesRadialChart } from "@/features/courses/components/atoms/courses-radius-chart";
+import Link from "next/link";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -76,11 +77,13 @@ const TeacherCourseTemplate = ({
     <div className="w-full flex flex-col gap-4 xl:gap-6">
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-3xl font-bold">Course Management</h1>
-        
-        <Button className="flex items-center gap-2">
-          <PlusCircle className="w-5 h-5" />
-          Add New Course
-        </Button>
+
+        <Link href={"/dashboard/courses/add"} passHref>
+          <Button className="flex items-center gap-2">
+            <PlusCircle className="w-5 h-5" />
+            Add New Course
+          </Button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
