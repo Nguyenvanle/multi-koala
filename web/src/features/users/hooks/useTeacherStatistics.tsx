@@ -1,0 +1,22 @@
+import {
+  TeacherStatisticsBodyType,
+  TeacherStatisticsResType,
+} from "@/features/users/types/teacher-statistic";
+import { nextjsApiService } from "@/services/next-api";
+import useSWR from "swr";
+
+export function useTeacherStatistics() {
+  const { data, error } = useSWR(
+    `teacher-statistics`, // Only fetch if teacherId is available
+    () =>
+      nextjsApiService.get<TeacherStatisticsResType>(
+        `/api/teachers/my-statistic`
+      )
+  );
+
+  return {
+    statistics: data?.result?.result as TeacherStatisticsBodyType,
+    loading: !error && !data,
+    error: error?.message,
+  };
+}
