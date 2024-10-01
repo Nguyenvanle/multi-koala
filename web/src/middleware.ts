@@ -60,5 +60,5 @@ function setNewTokenAndContinue(newToken: string): NextResponse {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/verify/:path*"],
 };

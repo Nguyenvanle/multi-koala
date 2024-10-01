@@ -78,8 +78,6 @@ const TeacherCourseTemplate = () => {
               <CardTitle>Course List</CardTitle>
             </CardHeader>
             <CardContent className="overflow-y-auto pr-4 max-h-[320px]">
-              {" "}
-              {/* Thêm lớp overflow */}
               <Table>
                 <TableHeader>
                   <TableRow>
