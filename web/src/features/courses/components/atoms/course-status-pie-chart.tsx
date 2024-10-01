@@ -1,5 +1,4 @@
-"use client";
-import * as React from "react";
+import React, { useMemo } from "react";
 import { Label, Pie, PieChart } from "recharts";
 import {
   Card,
@@ -16,34 +15,67 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { status: "ongoing", courses: 5, fill: "hsl(var(--chart-3))" },
-  { status: "upcoming", courses: 3, fill: "hsl(var(--chart-1))" },
-  { status: "completed", courses: 7, fill: "hsl(var(--chart-2))" },
-];
+type TeacherStatistics = {
+  totalCourses: number;
+  totalApprovedCourses: number;
+  totalEnrollments: number;
+  totalStudents: number;
+  totalCompletedCourses: number;
+  totalPrices: number;
+  passRatingPerTest: number;
+  correctRatingPerQuestion: number;
+};
 
-const chartConfig = {
+const chartConfig: ChartConfig = {
   courses: {
     label: "Courses",
   },
-  ongoing: {
-    label: "Ongoing",
+  approved: {
+    label: "Approved",
     color: "hsl(var(--chart-1))",
-  },
-  upcoming: {
-    label: "Upcoming",
-    color: "hsl(var(--chart-2))",
   },
   completed: {
     label: "Completed",
+    color: "hsl(var(--chart-2))",
+  },
+  inProgress: {
+    label: "In Progress",
     color: "hsl(var(--chart-3))",
   },
-} satisfies ChartConfig;
+};
 
-export function CourseStatusDonutChart() {
-  const totalCourses = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.courses, 0);
-  }, []);
+interface CourseStatusDonutChartProps {
+  teacherStatistic: TeacherStatistics;
+}
+
+export function CourseStatusDonutChart({
+  teacherStatistic,
+}: CourseStatusDonutChartProps) {
+  const chartData = useMemo(() => {
+    const completed = teacherStatistic.totalCompletedCourses;
+    const approved = teacherStatistic.totalApprovedCourses;
+    const inProgress = approved - completed;
+
+    return [
+      {
+        status: "completed",
+        courses: completed,
+        fill: chartConfig.completed.color,
+      },
+      {
+        status: "inProgress",
+        courses: inProgress,
+        fill: chartConfig.inProgress.color,
+      },
+      {
+        status: "approved",
+        courses: approved,
+        fill: chartConfig.approved.color,
+      },
+    ];
+  }, [teacherStatistic]);
+
+  const totalCourses = teacherStatistic.totalCourses;
 
   return (
     <Card className="flex flex-col">
@@ -66,6 +98,7 @@ export function CourseStatusDonutChart() {
               dataKey="courses"
               nameKey="status"
               innerRadius={60}
+              outerRadius={80}
               strokeWidth={5}
             >
               <Label

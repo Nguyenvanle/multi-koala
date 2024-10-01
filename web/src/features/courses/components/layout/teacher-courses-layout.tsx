@@ -25,8 +25,8 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
-import { CoursesResultResType } from "@/features/courses/types/course";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
+import { CoursesBarStackedChart } from "@/features/courses/components/atoms/courses-bar-stacked-chart";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -68,6 +68,8 @@ const TeacherCourseTemplate = ({
   teacherStatistic,
   teacherMyCourses,
 }: TeacherCourseTemplateProps) => {
+  if (!teacherStatistic || !teacherMyCourses) return <div></div>;
+
   return (
     <div className=" w-full flex flex-col gap-4 xl:gap-6">
       <h1 className="text-3xl font-bold">Course Management</h1>
@@ -112,50 +114,58 @@ const TeacherCourseTemplate = ({
         <OverviewCard
           icon={BarChart2}
           title="Pass Rate per Test"
-          value={`${teacherStatistic.passRatingPerTest.toFixed(1)}%`}
+          value={`${teacherStatistic.passRatingPerTest * 100}%`}
           color="bg-blue-400"
         />
         <OverviewCard
           icon={Clock}
           title="Correct Rate per Question"
-          value={`${teacherStatistic.correctRatingPerQuestion.toFixed(1)}%`}
+          value={`${(teacherStatistic.correctRatingPerQuestion * 100).toFixed(
+            1
+          )}%`}
           color="bg-blue-400"
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6">
-        <CourseStatusDonutChart />
+        {/* <CoursesBarStackedChart /> */}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Course List</CardTitle>
-          </CardHeader>
-          <CardContent className="overflow-y-auto pr-4 xl:pr-8 max-h-[320px]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Students</TableHead>
-                  <TableHead>Actions</TableHead>
+        <Card className="overflow-hidden pr-2">
+          <Table
+            className="rounded-md w-full h-10 overflow-clip relative"
+            divClassname="max-h-[350px] overflow-y-scroll pr-2"
+          >
+            <TableHeader className="sticky w-full top-0 h-10  rounded-t-md bg-background ">
+              <TableRow>
+                <TableHead className="text-primary font-semibold text-base">
+                  Name
+                </TableHead>
+                <TableHead className="text-primary font-semibold text-base">
+                  Status
+                </TableHead>
+                <TableHead className="text-primary font-semibold text-base">
+                  Students
+                </TableHead>
+                <TableHead className="text-primary font-semibold text-base">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {teacherMyCourses.map((course) => (
+                <TableRow key={course.courseId}>
+                  <TableCell>{course.courseName}</TableCell>
+                  <TableCell>{course.status}</TableCell>
+                  <TableCell>{course.totalEnrollments}</TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm">
+                      Edit
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {teacherMyCourses.map((course) => (
-                  <TableRow key={course.courseId}>
-                    <TableCell>{course.courseName}</TableCell>
-                    <TableCell>{course.status}</TableCell>
-                    <TableCell>{course.totalEnrollments}</TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
+              ))}
+            </TableBody>
+          </Table>
         </Card>
       </div>
     </div>
