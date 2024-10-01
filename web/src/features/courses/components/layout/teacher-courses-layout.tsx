@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,11 +15,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import OverviewCard from "@/features/courses/components/molecules/teacher-overview-card";
-
+import {
+  Book,
+  CheckCircle,
+  Users,
+  DollarSign,
+  BarChart2,
+  Clock,
+} from "lucide-react";
 import dynamic from "next/dynamic";
-import { Skeleton } from "@/components/ui/skeleton";
-// Dynamic import cho CourseStatusDonutChart
+
 const CourseStatusDonutChart = dynamic(
   () =>
     import("@/features/courses/components/atoms/course-status-pie-chart").then(
@@ -21,9 +32,11 @@ const CourseStatusDonutChart = dynamic(
     ),
   {
     loading: () => (
-      <Skeleton className="h-full bg-background animate-pulse rounded-lg" />
+      <div className="w-full h-[200px] flex items-center justify-center">
+        Loading...
+      </div>
     ),
-    ssr: false, // Nếu bạn không cần render phía server
+    ssr: false,
   }
 );
 
@@ -33,15 +46,6 @@ const courseData = [
   { id: 3, name: "Course 3", status: "Completed", students: 30 },
   { id: 4, name: "Course 4", status: "Completed", students: 45 },
   { id: 5, name: "Course 5", status: "Completed", students: 20 },
-];
-
-const revenueData = [
-  { name: "Jan", revenue: 4000 },
-  { name: "Feb", revenue: 3000 },
-  { name: "Mar", revenue: 5000 },
-  { name: "Apr", revenue: 4500 },
-  { name: "May", revenue: 6000 },
-  { name: "Jun", revenue: 5500 },
 ];
 
 const overviewData = {
@@ -55,56 +59,112 @@ const overviewData = {
   correctRatingPerQuestion: 0.0,
 };
 
-export const colors = ["#15A89E", "#FFB347", "#FF6B6B", "#4E9AF1"];
+const OverviewCard = ({ icon: Icon, title, value, color }: any) => (
+  <Card className="flex-1 ">
+    <CardContent className="flex items-start p-4">
+      <div className={`p-4 rounded-lg mr-4 ${color}`}>
+        <Icon className="w-6 h-6 text-white" />
+      </div>
+      <div className="flex flex-col self-stretch justify-between ">
+        <p className="text-sm text-gray-500 line-clamp-1" title={title}>
+          {title}
+        </p>
+        <p className="text-xl font-bold">{value}</p>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 const TeacherCourseTemplate = () => {
   return (
-    <div className="flex flex-grow">
-      {/* Main Content */}
-      <div className="flex flex-col flex-1 overflow-auto">
-        <h1 className="text-3xl font-bold mb-6">Course Management</h1>
+    <div className=" w-full flex flex-col gap-4 xl:gap-6">
+      <h1 className="text-3xl font-bold">Course Management</h1>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-8">
-          {/* Overview Statistics */}
-          <OverviewCard {...overviewData} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
+        <OverviewCard
+          icon={Book}
+          title="Total Courses"
+          value={overviewData.totalCourses}
+          color="bg-emerald-500"
+        />
+        <OverviewCard
+          icon={CheckCircle}
+          title="Approved Courses"
+          value={overviewData.totalApprovedCourses}
+          color="bg-emerald-500"
+        />
+        <OverviewCard
+          icon={Users}
+          title="Total Enrollments"
+          value={overviewData.totalEnrollments}
+          color="bg-orange-400"
+        />
+        <OverviewCard
+          icon={Users}
+          title="Total Students"
+          value={overviewData.totalStudents}
+          color="bg-orange-400"
+        />
+        <OverviewCard
+          icon={CheckCircle}
+          title="Completed Courses"
+          value={overviewData.totalCompletedCourses}
+          color="bg-red-400"
+        />
+        <OverviewCard
+          icon={DollarSign}
+          title="Total Revenue"
+          value={`$${overviewData.totalPrices.toLocaleString()}`}
+          color="bg-red-400"
+        />
+        <OverviewCard
+          icon={BarChart2}
+          title="Pass Rate per Test"
+          value={`${overviewData.passRatingPerTest}%`}
+          color="bg-blue-400"
+        />
+        <OverviewCard
+          icon={Clock}
+          title="Correct Rate per Question"
+          value={`${overviewData.correctRatingPerQuestion}%`}
+          color="bg-blue-400"
+        />
+      </div>
 
-          {/* Revenue Chart */}
-          <CourseStatusDonutChart />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6">
+        <CourseStatusDonutChart />
 
-          {/* Course List */}
-          <Card className="col-span-full">
-            <CardHeader>
-              <CardTitle>Course List</CardTitle>
-            </CardHeader>
-            <CardContent className="overflow-y-auto pr-4 max-h-[320px]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Students</TableHead>
-                    <TableHead>Actions</TableHead>
+        <Card>
+          <CardHeader>
+            <CardTitle>Course List</CardTitle>
+          </CardHeader>
+          <CardContent className="overflow-y-auto pr-4 xl:pr-8 max-h-[320px]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Students</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {courseData.map((course) => (
+                  <TableRow key={course.id}>
+                    <TableCell>{course.name}</TableCell>
+                    <TableCell>{course.status}</TableCell>
+                    <TableCell>{course.students}</TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {courseData.map((course) => (
-                    <TableRow key={course.id}>
-                      <TableCell>{course.name}</TableCell>
-                      <TableCell>{course.status}</TableCell>
-                      <TableCell>{course.students}</TableCell>
-                      <TableCell>
-                        <Button variant="outline" size="sm">
-                          Edit
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </div>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export default function Sidebar() {
 
   return (
     <div className="w-52 border-none bg-background hidden md:flex">
-      <div className="py-4 pr-4 xl:py-8 xl:pr-8 w-full">
+      <div className="py-4 pr-4 xl:py-6 xl:pr-6 w-full">
         <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
         <nav className="flex flex-col gap-2">
           {sidebarItems.map((item, index) => (

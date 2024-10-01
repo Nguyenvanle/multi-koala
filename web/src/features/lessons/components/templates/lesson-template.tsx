@@ -14,7 +14,7 @@ export default function LessonTemplate() {
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 xl:gap-8 px-4 xl:px-8 w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 xl:gap-6 px-4 xl:px-6 w-full">
           <div className="xl:col-span-2">
             <Skeleton className="w-full aspect-video" />
           </div>
@@ -34,7 +34,7 @@ export default function LessonTemplate() {
   if (!lesson) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 xl:gap-8 px-4 xl:px-8 w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 xl:gap-6 px-4 xl:px-6 w-full">
           <div className="xl:col-span-2 items-center">
             <Skeleton className="w-full aspect-video justify-center items-center content-center">
               <H1 className="text-center">NO LESSONS FOUND</H1>

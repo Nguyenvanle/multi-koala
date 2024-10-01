@@ -27,7 +27,7 @@ const CourseDetail: React.FC = () => {
   if (isLoading) {
     return (
       <div className="bg-secondary pr-0 flex flex-grow">
-        <div className="w-full p-4 xl:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="w-full p-4 xl:p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="flex flex-col gap-6">
             <Skeleton className="w-full aspect-video rounded-lg h-64 bg-background" />
             <Skeleton className="w-full h-full rounded-lg bg-background" />
@@ -48,8 +48,8 @@ const CourseDetail: React.FC = () => {
 
   return (
     <div className="bg-secondary pr-0 flex flex-grow">
-      <div className="w-full p-4 xl:p-8 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8 ">
-        <div className="flex flex-col gap-4 xl:gap-8">
+      <div className="w-full p-4 xl:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6 ">
+        <div className="flex flex-col gap-4 xl:gap-6">
           <DisplayCard
             courseImage={course.image.imageUrl}
             courseName={course.courseName}

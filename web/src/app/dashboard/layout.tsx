@@ -9,9 +9,9 @@ export default function MainLayout({
   return (
     <div>
       <Header />
-      <main className="md:pl-4 xl:pl-8 flex flex-1 flex-grow ">
+      <main className="md:pl-4 xl:pl-6 flex flex-1 flex-grow ">
         <Sidebar />
-        <div className="p-4  xl:p-8 flex flex-1 bg-secondary">{children}</div>
+        <div className="p-4 xl:p-6 flex flex-1 bg-secondary">{children}</div>
       </main>
     </div>
   );

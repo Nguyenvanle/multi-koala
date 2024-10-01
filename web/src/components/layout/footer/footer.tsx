@@ -10,8 +10,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-accent text-foreground py-4 xl:py-8">
-      <div className="w-full px-4 xl:px-8 space-y-4">
+    <footer className="bg-accent text-foreground py-4 xl:py-6">
+      <div className="w-full px-4 xl:px-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
           <Logo />
           <Resources />
