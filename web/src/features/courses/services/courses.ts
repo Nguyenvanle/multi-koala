@@ -3,6 +3,7 @@ import {
   CourseDetailResType,
   CourseResType,
 } from "@/features/courses/types/course";
+import { TeacherMyCoursesResType } from "@/features/courses/types/teacher-my-courses";
 import { DiscountResType } from "@/features/discount/types/discount";
 import { RatingResType } from "@/features/rating/types/rating";
 import { apiService } from "@/services/api";
@@ -13,7 +14,7 @@ export const courseService = {
   },
 
   getMyCourses: async (token: string) => {
-    return await apiService.get<CourseResType>(
+    return await apiService.get<TeacherMyCoursesResType>(
       "/courses/my-statistic-courses",
       {
         headers: {

@@ -26,6 +26,7 @@ import {
 import dynamic from "next/dynamic";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { CoursesResultResType } from "@/features/courses/types/course";
+import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -41,25 +42,6 @@ const CourseStatusDonutChart = dynamic(
     ssr: false,
   }
 );
-
-const courseData = [
-  { id: 1, name: "Course 1", status: "Ongoing", students: 25 },
-  { id: 2, name: "Course 2", status: "Upcoming", students: 15 },
-  { id: 3, name: "Course 3", status: "Completed", students: 30 },
-  { id: 4, name: "Course 4", status: "Completed", students: 45 },
-  { id: 5, name: "Course 5", status: "Completed", students: 20 },
-];
-
-const overviewData = {
-  totalCourses: 10,
-  totalApprovedCourses: 8,
-  totalEnrollments: 150,
-  totalStudents: 120,
-  totalCompletedCourses: 5,
-  totalPrices: 28000.0,
-  passRatingPerTest: 0.0,
-  correctRatingPerQuestion: 0.0,
-};
 
 const OverviewCard = ({ icon: Icon, title, value, color }: any) => (
   <Card className="flex-1 ">
@@ -79,7 +61,7 @@ const OverviewCard = ({ icon: Icon, title, value, color }: any) => (
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
-  teacherMyCourses: CoursesResultResType;
+  teacherMyCourses: TeacherMyCoursesBodyType;
 }
 
 const TeacherCourseTemplate = ({
@@ -89,56 +71,54 @@ const TeacherCourseTemplate = ({
   return (
     <div className=" w-full flex flex-col gap-4 xl:gap-6">
       <h1 className="text-3xl font-bold">Course Management</h1>
-      <p>{JSON.stringify(teacherStatistic)}</p>
-      <p>{JSON.stringify(teacherMyCourses)}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
         <OverviewCard
           icon={Book}
           title="Total Courses"
-          value={overviewData.totalCourses}
+          value={teacherStatistic.totalCourses}
           color="bg-emerald-500"
         />
         <OverviewCard
           icon={CheckCircle}
           title="Approved Courses"
-          value={overviewData.totalApprovedCourses}
+          value={teacherStatistic.totalApprovedCourses}
           color="bg-emerald-500"
         />
         <OverviewCard
           icon={Users}
           title="Total Enrollments"
-          value={overviewData.totalEnrollments}
+          value={teacherStatistic.totalEnrollments}
           color="bg-orange-400"
         />
         <OverviewCard
           icon={Users}
           title="Total Students"
-          value={overviewData.totalStudents}
+          value={teacherStatistic.totalStudents}
           color="bg-orange-400"
         />
         <OverviewCard
           icon={CheckCircle}
           title="Completed Courses"
-          value={overviewData.totalCompletedCourses}
+          value={teacherStatistic.totalCompletedCourses}
           color="bg-red-400"
         />
         <OverviewCard
           icon={DollarSign}
           title="Total Revenue"
-          value={`$${overviewData.totalPrices.toLocaleString()}`}
+          value={`$${teacherStatistic.totalPrices.toLocaleString()}`}
           color="bg-red-400"
         />
         <OverviewCard
           icon={BarChart2}
           title="Pass Rate per Test"
-          value={`${overviewData.passRatingPerTest}%`}
+          value={`${teacherStatistic.passRatingPerTest.toFixed(1)}%`}
           color="bg-blue-400"
         />
         <OverviewCard
           icon={Clock}
           title="Correct Rate per Question"
-          value={`${overviewData.correctRatingPerQuestion}%`}
+          value={`${teacherStatistic.correctRatingPerQuestion.toFixed(1)}%`}
           color="bg-blue-400"
         />
       </div>
@@ -161,11 +141,11 @@ const TeacherCourseTemplate = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {courseData.map((course) => (
-                  <TableRow key={course.id}>
-                    <TableCell>{course.name}</TableCell>
+                {teacherMyCourses.map((course) => (
+                  <TableRow key={course.courseId}>
+                    <TableCell>{course.courseName}</TableCell>
                     <TableCell>{course.status}</TableCell>
-                    <TableCell>{course.students}</TableCell>
+                    <TableCell>{course.totalEnrollments}</TableCell>
                     <TableCell>
                       <Button variant="outline" size="sm">
                         Edit
