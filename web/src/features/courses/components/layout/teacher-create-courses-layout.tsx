@@ -38,36 +38,37 @@ export default function CreateCoursePage() {
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between gap-4 ">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
             <h1 className="text-3xl font-bold">Create New Course</h1>
             <div className="flex gap-2">
               <Button
                 type="button"
                 onClick={() => form.reset()}
-                variant="destructive"
+                variant="outline"
                 className="w-full sm:w-auto"
               >
                 <Undo2 className="mr-2 h-4 w-4" /> Reset
               </Button>
-              <Button type="button" className="w-full sm:w-auto ">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto "
+              >
                 <Save className="mr-2 h-4 w-4" /> Save
               </Button>
-              <Button
-                type="submit"
-                className="w-full sm:w-auto bg-foreground hover:bg-slate-800"
-              >
+              <Button type="submit" className="w-full sm:w-auto">
                 <CirclePlus className="mr-2 h-4 w-4" />
-                Create Course
+                Submit
               </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 ">
-            <div className="flex flex-1 flex-col gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
+            <div className="flex flex-1 flex-col gap-4 xl:gap-6">
               <CourseImageCard form={form} />
               <BasicInformationCard form={form} />
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 xl:gap-6">
               <CourseTypesCard form={form} courseTypes={courseTypes} />
               <CourseFieldsCard form={form} fields={fields} />
             </div>

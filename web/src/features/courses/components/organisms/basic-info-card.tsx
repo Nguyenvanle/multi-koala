@@ -17,8 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { UseFormReturn } from "react-hook-form";
 
-export default function BasicInformationCard({ form }: any) {
+export default function BasicInformationCard({
+  form,
+}: UseFormReturn | any | undefined) {
   return (
     <Card className="flex flex-col flex-1">
       <CardHeader>
@@ -84,6 +87,7 @@ export default function BasicInformationCard({ form }: any) {
                   <SelectItem value="BEGINNER">Beginner</SelectItem>
                   <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
                   <SelectItem value="ADVANCED">Advanced</SelectItem>
+                  <SelectItem value="EXPERT">Expert</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

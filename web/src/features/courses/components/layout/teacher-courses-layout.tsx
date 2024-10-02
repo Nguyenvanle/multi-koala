@@ -165,8 +165,18 @@ const TeacherCourseTemplate = ({
             </TableHeader>
             <TableBody>
               {teacherMyCourses.map((course) => (
-                <TableRow key={course.courseId}>
-                  <TableCell>{course.courseName}</TableCell>
+                <TableRow
+                  key={course.courseId}
+                  className="hover:bg-gray-50 dark:hover:bg-slate-800"
+                >
+                  <TableCell>
+                    <Link
+                      href={`/courses/${course.courseId}`}
+                      className="hover:text-emerald-500 font-semibold"
+                    >
+                      {course.courseName}
+                    </Link>
+                  </TableCell>
                   <TableCell>{course.status}</TableCell>
                   <TableCell>{course.totalEnrollments}</TableCell>
                   <TableCell>

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useCallback, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -20,9 +18,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UseFormReturn } from "react-hook-form";
 
-export default function CourseImageCard({ form }: { form: any }) {
+export default function CourseImageCard({
+  form,
+}: {
+  form: UseFormReturn | any | undefined;
+}) {
   const [preview, setPreview] = useState<string | null>(null);
+  const defaultImageUrl =
+    "https://img.freepik.com/free-vector/app-development-concept-design_23-2148670525.jpg?t=st=1726903863~exp=1726907463~hmac=8832d5f008a90a10ba85a5baa57ce274a70f2d57ed166d12346d7307327e908c&w=996";
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -31,12 +36,13 @@ export default function CourseImageCard({ form }: { form: any }) {
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreview(reader.result as string);
-          form.setValue("image", file);
+          // Không lưu file vào form, thay vào đó lưu URL mặc định
+          form.setValue("imageUrl", defaultImageUrl);
         };
         reader.readAsDataURL(file);
       }
     },
-    [form]
+    [form, defaultImageUrl]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -49,15 +55,15 @@ export default function CourseImageCard({ form }: { form: any }) {
 
   const removeImage = useCallback(() => {
     setPreview(null);
-    form.setValue("image", null);
-  }, [form]);
+    form.setValue("imageUrl", defaultImageUrl); // Khôi phục lại URL mặc định khi người dùng xóa ảnh
+  }, [form, defaultImageUrl]);
 
   return (
     <Card className="flex flex-col flex-0">
       <CardContent className="pt-4">
         <FormField
           control={form.control}
-          name="image"
+          name="imageUrl" // Thay đổi từ "image" sang "imageUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="sr-only">Course Image</FormLabel>
@@ -100,7 +106,7 @@ export default function CourseImageCard({ form }: { form: any }) {
                       className={`flex items-center justify-center w-full border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200 ease-in-out min-h-[200px] ${
                         isDragActive
                           ? "border-primary bg-primary/10"
-                          : "border-border bg-background hover:bg-secondary"
+                          : "border-border bg-background hover:bg-gray-50 dark:hover:bg-slate-800"
                       }`}
                     >
                       <input {...getInputProps()} />
