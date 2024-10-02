@@ -1,23 +1,39 @@
 import React from "react";
-import { AirbnbRating as OriginalAirbnbRating } from "react-native-ratings";
-import { TapRatingProps } from "react-native-ratings/dist/TapRating";
+import { StarRating as OriginalStarRating } from "react-native-star-rating";
+import { ViewStyle } from "react-native";
 
-// Extend TapRatingProps với các props bổ sung nếu cần
-interface ExtendedAirbnbRatingProps extends TapRatingProps {
+// Định nghĩa các props của StarRating
+interface StarRatingProps {
+  // Tham số từ thư viện react-native-star-rating
+  disabled?: boolean;
+  maxStars?: number;
+  rating?: number;
+  selectedStar?: (rating: number) => void;
+  starColor?: string;
+  starSize?: number;
+  emptyStarColor?: string;
+  fullStarColor?: string;
+  // Các props bổ sung khác nếu cần
+}
+
+// Extend StarRatingProps với các props bổ sung nếu cần
+interface ExtendedStarRatingProps extends StarRatingProps {
   // Thêm các props bổ sung ở đây nếu cần
 }
 
-const AirbnbRating: React.FC<ExtendedAirbnbRatingProps> = (props) => {
-  const defaultProps: Partial<ExtendedAirbnbRatingProps> = {
-    count: 5,
-    showRating: false,
-    isDisabled: true,
-    size: 20,
-    starContainerStyle: { padding: 0 },
-    onFinishRating: () => {},
+// Component StarRating
+const StarRating: React.FC<ExtendedStarRatingProps> = (props) => {
+  const defaultProps: Partial<ExtendedStarRatingProps> = {
+    disabled: false,
+    maxStars: 5,
+    rating: 0,
+    starColor: "#f1c40f",
+    starSize: 30,
+    emptyStarColor: "#ccc",
+    fullStarColor: "#f1c40f",
   };
 
-  return <OriginalAirbnbRating {...defaultProps} {...props} />;
+  return <OriginalStarRating {...defaultProps} {...props} />;
 };
 
-export default AirbnbRating;
+export default StarRating;

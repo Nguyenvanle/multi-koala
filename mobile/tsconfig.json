@@ -4,7 +4,11 @@
     "strict": true,
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./@types" // Thêm dòng này
+    ]
   },
   "include": [
     "**/*.ts",

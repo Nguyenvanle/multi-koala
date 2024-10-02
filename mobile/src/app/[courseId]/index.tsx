@@ -11,7 +11,6 @@ import {
   Alert,
 } from "react-native";
 import { router, useGlobalSearchParams } from "expo-router";
-import StarRating from "react-native-star-rating";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useDetails } from "../../feature/course/hooks/useDetails";
