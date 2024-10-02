@@ -10,7 +10,6 @@ import {
   Text,
   View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { topics } from "@/src/feature/intro/types/intro-info";
 
 export const IntroDetails = () => {

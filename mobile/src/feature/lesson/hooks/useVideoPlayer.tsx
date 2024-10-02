@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Audio, Video, AVPlaybackStatus } from "expo-av";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export const useVideoPlayer = () => {
   const videoRef = useRef<Video | null>(null);
@@ -18,9 +18,7 @@ export const useVideoPlayer = () => {
     if (videoRef.current) {
       try {
         await videoRef.current.playAsync();
-      } catch (error) {
-        console.error("Error playing video:", error);
-      }
+      } catch (error) {}
     }
   }, []);
 
@@ -28,9 +26,7 @@ export const useVideoPlayer = () => {
     if (videoRef.current) {
       try {
         await videoRef.current.pauseAsync();
-      } catch (error) {
-        console.error("Error pausing video:", error);
-      }
+      } catch (error) {}
     }
   }, []);
 
@@ -38,9 +34,7 @@ export const useVideoPlayer = () => {
     if (videoRef.current) {
       try {
         await videoRef.current.stopAsync();
-      } catch (error) {
-        console.error("Error stopping video:", error);
-      }
+      } catch (error) {}
     }
   }, []);
 
@@ -48,9 +42,7 @@ export const useVideoPlayer = () => {
     if (videoRef.current) {
       try {
         await videoRef.current.setPositionAsync(millis);
-      } catch (error) {
-        console.error("Error seeking video:", error);
-      }
+      } catch (error) {}
     }
   }, []);
 
@@ -58,12 +50,9 @@ export const useVideoPlayer = () => {
     if (videoRef.current) {
       try {
         await videoRef.current.unloadAsync();
-      } catch (error) {
-        console.error("Error unloading video:", error);
-      }
+      } catch (error) {}
     }
   }, []);
-  console.log("Video status:", status);
   return {
     videoRef,
     status,

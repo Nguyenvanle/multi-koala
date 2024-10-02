@@ -10,8 +10,8 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import { AirbnbRating } from "react-native-ratings";
-import { Link, Redirect, router, useGlobalSearchParams } from "expo-router";
+import AirbnbRating from "@/src/components/atoms/airbnbRating-custom";
+import { router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useDetails } from "../../feature/course/hooks/useDetails";
@@ -106,12 +106,10 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
             <AirbnbRating
-              count={5}
-              size={20}
-              ratingContainerStyle={{ padding: 0 }}
-              showRating={false}
-              defaultRating={(courseRating?.avgcourseRating ?? 0) * 5}
-              isDisabled={true}
+              defaultRating={Math.round(
+                (courseRating?.avgcourseRating ?? 0) * 5
+              )}
+              // Các props khác nếu cần
             />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>

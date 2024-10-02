@@ -6,10 +6,6 @@ import {
   TextInput,
 } from "react-native";
 import React from "react";
-import Label from "@/src/components/atoms/label";
-import { text } from "@/src/constants/Styles";
-import { forgot } from "@/src/app/(auth)/forgot";
-import { Colors } from "@/src/constants/Colors";
 import userForgotPassword from "../../../hooks/userForgotPassword";
 
 const InputNewPassword = () => {

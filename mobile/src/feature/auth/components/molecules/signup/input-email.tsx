@@ -6,7 +6,7 @@ import {
   Platform,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import Label from "@/src/components/atoms/label";
 import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
 import { text } from "@/src/constants/Styles";

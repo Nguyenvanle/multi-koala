@@ -1,9 +1,3 @@
-// src/hook/course/useCourseDetails.ts
-import { useState, useEffect } from "react";
-import { CourseRes } from "./course";
-import API_CONFIG from "@/src/types/api/config";
-import { detailsServices } from "../services/course-details";
-
 export type CourseDetailsBody = {
   courseId: string;
   courseName: string;

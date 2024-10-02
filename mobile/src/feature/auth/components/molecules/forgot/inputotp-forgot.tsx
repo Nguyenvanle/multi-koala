@@ -1,6 +1,3 @@
-import { View, Text, TextInput } from "react-native";
-import React from "react";
-import { forgot } from "@/src/app/(auth)/forgot";
 import userForgotPassword from "../../../hooks/userForgotPassword";
 
 const InputOtpForgotPassword = () => {
@@ -27,9 +24,6 @@ const InputOtpForgotPassword = () => {
     handleConfirmOtp,
     handleResetPassword,
   } = userForgotPassword();
-  return (
-   
-  );
 };
 
 export default InputOtpForgotPassword;

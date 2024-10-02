@@ -15,7 +15,6 @@ export const useLessonDetails = (lessonId: string) => {
         const data = await lessonDetailsServices.getLessonDetails(lessonId);
         if (data.data.result) {
           setLessonDetails(data.data.result);
-          console.log(data.data.result);
         } else {
           setErrorMessageDetails("Get lesson details failed.");
         }

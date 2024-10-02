@@ -18,7 +18,8 @@ import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUser from "@/src/feature/user/hooks/useUser";
 
-const CourseList = () => {
+const CourseList = (): React.JSX.Element => {
+  const { courseId } = useLocalSearchParams<{ courseId: string }>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tab } = useLocalSearchParams();
   const [loading, setLoading] = useState(true); // State để theo dõi trạng thái tải
@@ -70,7 +71,7 @@ const CourseList = () => {
     return (
       <SafeAreaView style={{ ...Styles.container }}>
         <StatusBar barStyle="dark-content" />
-        <HeaderUser />
+        <HeaderUser courseId={courseId || ""} />
         <ActivityIndicator size={"large"} color={Colors.teal_dark} />
       </SafeAreaView>
     );
@@ -79,7 +80,11 @@ const CourseList = () => {
   return (
     <SafeAreaView style={{ ...Styles.container }}>
       <StatusBar barStyle="dark-content" />
-      <HeaderUser />
+      {courseId ? (
+        <HeaderUser courseId={courseId} />
+      ) : (
+        <HeaderUser courseId="" />
+      )}
       {user ? (
         <View>
           <View style={styles.tabContainer}>

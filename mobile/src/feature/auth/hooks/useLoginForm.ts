@@ -26,7 +26,6 @@ const useLoginForm = () => {
 
       if (data.code === 200 && data.result.token) {
         await AsyncStorage.setItem("token", data.result.token);
-        console.log(data.result.token);
         router.replace("/(home)/home");
       } else {
         setError(error);

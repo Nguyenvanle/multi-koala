@@ -4,7 +4,7 @@ import { EnrolledBodyList } from "../types/course-enrolled";
 import { enrolledServices } from "../services/course-enrolled";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useEnrolled = (courseId: string) => {
+export const useEnrolled = (courseId?: string) => {
   const [enrolled, setEnrolled] = useState<EnrolledBodyList>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -18,12 +18,10 @@ export const useEnrolled = (courseId: string) => {
           setErrorMessage("No token found. Please log in.");
           return;
         }
-        console.log(token);
 
         const course = await enrolledServices.getenrolled({ token }); // Sửa dòng này
         if (course.data.result) {
           setEnrolled(course.data.result);
-          console.log(course.data.result);
         } else {
           setErrorMessage("Get course failed.");
         }

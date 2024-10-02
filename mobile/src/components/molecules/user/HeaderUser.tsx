@@ -13,14 +13,16 @@ import { Link, router } from "expo-router";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
-import API_CONFIG from "@/src/types/api/config";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
-import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
 
-const HeaderUser: React.FC = () => {
+interface HeaderUserProps {
+  courseId?: string;
+}
+
+const HeaderUser = ({ courseId }: HeaderUserProps): React.JSX.Element => {
   const { user } = useUser();
-  const { enrolled, errorMessage, loading } = useEnrolled();
+  const { enrolled, errorMessage, loading } = useEnrolled(courseId);
 
   if (loading) {
     return (

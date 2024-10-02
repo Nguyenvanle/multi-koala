@@ -28,8 +28,6 @@ const InProgressCourses = () => {
     );
   }
 
-  const finalPrice = 1 - (discount?.discountApplied || 0);
-
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
     return (
       <Link href={`/(courses)/courses-details`} asChild>
