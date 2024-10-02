@@ -6,16 +6,24 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { CourseBody } from "../../../types/course";
+import { useEnrolled } from "../../../hooks/useEnrrolled";
 
 const AllCourses = () => {
+  const { courseId } = useGlobalSearchParams();
+
+  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+
   const { course, errorMessage, loading } = useCourse();
+
   const { user } = useUser();
+
+  const { enrolled } = useEnrolled();
 
   if (loading) {
     return (
@@ -24,6 +32,15 @@ const AllCourses = () => {
       </View>
     );
   }
+
+  // Lọc danh sách khóa học để loại bỏ những khóa học đã được đăng ký
+  const enrolledCourseIds = Array.isArray(enrolled)
+    ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
+    : [];
+
+  const filteredCourses = course.filter((item: CourseBody) => {
+    return !enrolledCourseIds.includes(item.courseId);
+  });
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <Link href={`/${item.courseId}`} asChild>
@@ -121,7 +138,7 @@ const AllCourses = () => {
         >
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={course}
+            data={filteredCourses} // Sử dụng danh sách đã lọc
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
           />

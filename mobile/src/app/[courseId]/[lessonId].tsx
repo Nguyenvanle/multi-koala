@@ -20,12 +20,15 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useLesson } from "@/src/feature/lesson/hooks/useLesson";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { LessonBody } from "@/src/feature/lesson/types/lesson";
+import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 
 const LessonDetails = () => {
   const { isBought } = useGlobalSearchParams(); // Nhận tham số từ router
   const { user } = useUser();
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+  const { enrolled } = useEnrolled();
+
   const { lessonId } = useGlobalSearchParams();
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
@@ -62,7 +65,12 @@ const LessonDetails = () => {
   if (!lessonDetails) {
     return <Text>No lesson detail</Text>;
   }
-
+  // Kiểm tra xem enrolled có phải là một mảng không
+  const isEnrolled =
+    Array.isArray(enrolled) &&
+    enrolled.some(
+      (enrolledCourse) => enrolledCourse.course.courseId === courseIdString
+    );
   const renderVideo = () => {
     if (!lessonDetails) return null;
     if (
@@ -188,12 +196,17 @@ const LessonDetails = () => {
               No lessons available
             </Text>
           )}
-          {isBought !== "true" ? (
+          {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
+          {!isEnrolled ? (
             <TouchableOpacity
               style={styles.buyButton}
               onPress={() => {
                 if (isLoggedIn) {
-                  // Logic mua
+                  if (lesson.length > 0) {
+                    // Logic to buy the course
+                  } else {
+                    Alert.alert("Notification", "No lessons available to view");
+                  }
                 } else {
                   Alert.alert(
                     "Notification",
@@ -218,7 +231,7 @@ const LessonDetails = () => {
                 }
               }}
             >
-              <Text style={styles.buyButtonText}>Take the test</Text>
+              <Text style={styles.buyButtonText}>Test Exam</Text>
             </TouchableOpacity>
           )}
         </View>
