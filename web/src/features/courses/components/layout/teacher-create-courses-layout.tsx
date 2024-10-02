@@ -25,17 +25,23 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 import useField from "@/features/field/hooks/useField";
 import useCourseType from "@/features/course-type/hooks/useCourseType";
+import { Badge } from "@/components/ui/badge";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 const CreateCoursePage = () => {
   const { form, onSubmit } = useCreateCourseForm();
   const { fields, loading: fieldsLoading, error: fieldsError } = useField();
-  const { courseTypes, loading: typesLoading, error: typesError } = useCourseType();
+  const {
+    courseTypes,
+    loading: typesLoading,
+    error: typesError,
+  } = useCourseType();
 
   if (fieldsLoading || typesLoading) return <div>Loading...</div>;
   if (fieldsError || typesError) return <div>Error loading data</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="w-full">
       <h1 className="text-2xl font-bold mb-4">Create New Course</h1>
 
       <Form {...form}>
@@ -125,7 +131,7 @@ const CreateCoursePage = () => {
             <CardHeader>
               <CardTitle>Course Types</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid grid-cols-3 xl:grid-cols-5">
               {courseTypes?.map((type, index) => (
                 <FormField
                   key={index}
@@ -142,8 +148,15 @@ const CreateCoursePage = () => {
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>{type.typeName}</FormLabel>
-                        <p className="text-sm text-muted-foreground">{type.typeDescription}</p>
+                        <FormLabel
+                          className="text-secondary-foreground"
+                          title={type.typeDescription}
+                        >
+                          {capitalizeFirstLetter(type.typeName)}
+                        </FormLabel>
+                        {/* <p className="text-sm text-muted-foreground">
+                {type.typeDescription}
+              </p> */}
                       </div>
                     </FormItem>
                   )}
@@ -156,7 +169,7 @@ const CreateCoursePage = () => {
             <CardHeader>
               <CardTitle>Course Fields</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid grid-cols-3 xl:grid-cols-5">
               {fields?.map((field, index) => (
                 <FormField
                   key={index}
@@ -165,17 +178,24 @@ const CreateCoursePage = () => {
                   render={({ field: formField }) => (
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-2">
                       <FormControl>
-                        <Checkbox
-                          checked={formField.value !== undefined} // Kiểm tra giá trị
-                          onCheckedChange={(checked) => {
-                            formField.onChange(checked ? field : undefined); // Chọn hoặc bỏ chọn
-                          }}
-                        />
+                        <Badge className="bg-background gap-2">
+                          <Checkbox
+                            checked={formField.value !== undefined} // Kiểm tra giá trị
+                            onCheckedChange={(checked) => {
+                              formField.onChange(checked ? field : undefined); // Chọn hoặc bỏ chọn
+                            }}
+                          />
+                          <div className="space-y-1 leading-none">
+                            <FormLabel
+                              className="text-secondary-foreground"
+                              title={field.fieldDescription}
+                            >
+                              {capitalizeFirstLetter(field.fieldName)}
+                            </FormLabel>
+                            {/* <p className="text-sm text-muted-foreground">{field.fieldDescription}</p> */}
+                          </div>
+                        </Badge>
                       </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>{field.fieldName}</FormLabel>
-                        <p className="text-sm text-muted-foreground">{field.fieldDescription}</p>
-                      </div>
                     </FormItem>
                   )}
                 />
@@ -195,10 +215,7 @@ const CreateCoursePage = () => {
                   <FormItem>
                     <FormLabel>Image URL</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter course image URL"
-                      />
+                      <Input {...field} placeholder="Enter course image URL" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
