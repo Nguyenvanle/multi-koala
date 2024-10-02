@@ -22,6 +22,7 @@ import useUser from "@/src/feature/user/hooks/useUser";
 import { LessonBody } from "@/src/feature/lesson/types/lesson";
 
 const LessonDetails = () => {
+  const { isBought } = useGlobalSearchParams(); // Nhận tham số từ router
   const { user } = useUser();
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
@@ -187,20 +188,39 @@ const LessonDetails = () => {
               No lessons available
             </Text>
           )}
-          <TouchableOpacity
-            style={styles.buyButton}
-            onPress={() => {
-              if (isLoggedIn) {
-              } else {
-                Alert.alert(
-                  "Notification",
-                  "Please sign in to view more lessons"
-                );
-              }
-            }}
-          >
-            <Text style={styles.buyButtonText}>Buy Now</Text>
-          </TouchableOpacity>
+          {isBought !== "true" ? (
+            <TouchableOpacity
+              style={styles.buyButton}
+              onPress={() => {
+                if (isLoggedIn) {
+                  // Logic mua
+                } else {
+                  Alert.alert(
+                    "Notification",
+                    "Please sign in to view more lessons"
+                  );
+                }
+              }}
+            >
+              <Text style={styles.buyButtonText}>Buy Now</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.buyButton}
+              onPress={() => {
+                if (isLoggedIn) {
+                  // Logic mua
+                } else {
+                  Alert.alert(
+                    "Notification",
+                    "Please sign in to view more lessons"
+                  );
+                }
+              }}
+            >
+              <Text style={styles.buyButtonText}>Take the test</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScrollView>

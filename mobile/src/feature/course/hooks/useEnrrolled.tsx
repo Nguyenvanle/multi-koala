@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { EnrolledBodyList } from "../types/course-enrolled";
 import { enrolledServices } from "../services/course-enrolled";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,19 +18,25 @@ export const useEnrolled = (courseId?: string) => {
           return;
         }
 
-        const course = await enrolledServices.getenrolled({ token }); // Sửa dòng này
-        if (course.data.result) {
+        // Gọi API để lấy khóa học
+        const course = await enrolledServices.getenrolled({ token });
+
+        // Kiểm tra xem course có tồn tại và có dữ liệu không
+        if (course && course.data && course.data.result) {
           setEnrolled(course.data.result);
         } else {
           setErrorMessage("Get course failed.");
         }
+      } catch (error) {
+        // Xử lý lỗi
+        setErrorMessage("An error occurred while fetching the course.");
       } finally {
         setLoading(false);
       }
     };
 
-    getCourse(); // Gọi hàm getRating
-  }, []); // Thêm courseId vào dependency array
+    getCourse(); // Gọi hàm getCourse
+  }, [courseId]); // Thêm courseId vào dependency array
 
   return { enrolled, errorMessage, loading }; // Trả về giá trị
 };

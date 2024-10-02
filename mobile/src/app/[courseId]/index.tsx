@@ -20,7 +20,7 @@ import { useLesson } from "../../feature/lesson/hooks/useLesson";
 import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 
-const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
+const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [defaultRating, setDefaultRating] = useState(0);
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
   const starImgFilled =
@@ -219,6 +219,30 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
           style={styles.buyButton}
           onPress={() => {
             if (isLoggedIn) {
+              if (lesson.length > 0) {
+                // Hiển thị thông báo xác nhận
+                Alert.alert(
+                  "Confirm Purchase",
+                  "Are you sure you want to buy this course?",
+                  [
+                    {
+                      text: "Yes", // Nút "Yes" ở bên trái
+                      onPress: () =>
+                        // Chuyển hướng đến lessonId khi người dùng xác nhận
+                        router.push(
+                          `/${courseIdString}/${lesson[0].lessonId}?isBought=true`
+                        ),
+                    },
+                    {
+                      text: "No", // Nút "No" ở bên phải
+                      onPress: () => "",
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              } else {
+                Alert.alert("Notification", "No lessons available to view");
+              }
             } else {
               Alert.alert(
                 "Notification",

@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   contentContainer: {
-    height: 450,
+    height: 455,
   },
   defaultText: {
     color: Colors.dark_grey,

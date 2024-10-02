@@ -26,7 +26,7 @@ const UserAccount = () => {
 
   return (
     <ScrollView
-      style={{ top: -50, width: 415, paddingTop: 50, paddingHorizontal: 16 }}
+      style={{ top: -57.4, width: 415, paddingTop: 50, paddingHorizontal: 16 }}
     >
       <View
         style={{ alignItems: "center", justifyContent: "center", padding: 16 }}
