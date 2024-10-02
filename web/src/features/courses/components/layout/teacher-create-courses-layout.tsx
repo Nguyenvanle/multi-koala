@@ -1,4 +1,5 @@
-"use client";
+'use client'
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,11 +21,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
+import useField from "@/features/field/hooks/useField";
+import useCourseType from "@/features/course-type/hooks/useCourseType";
 
 const CreateCoursePage = () => {
-  const { form, onSubmit, addType, removeType, addField, removeField } =
-    useCreateCourseForm();
+  const { form, onSubmit } = useCreateCourseForm();
+  const { fields, loading: fieldsLoading, error: fieldsError } = useField();
+  const { courseTypes, loading: typesLoading, error: typesError } = useCourseType();
+
+  if (fieldsLoading || typesLoading) return <div>Loading...</div>;
+  if (fieldsError || typesError) return <div>Error loading data</div>;
 
   return (
     <div className="container mx-auto p-4">
@@ -115,123 +123,62 @@ const CreateCoursePage = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex justify-between items-center">
-                Course Types
-                <Button
-                  onClick={addType}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Type
-                </Button>
-              </CardTitle>
+              <CardTitle>Course Types</CardTitle>
             </CardHeader>
             <CardContent>
-              {form.watch("types").map((_, index) => (
-                <div key={index} className="mb-4 p-4 border rounded-md">
-                  <FormField
-                    control={form.control}
-                    name={`types.${index}.typeName`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Type Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Enter course type name"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`types.${index}.typeDescription`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Type Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            placeholder="Enter course type description"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => removeType(index)}
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                  >
-                    <Minus className="mr-2 h-4 w-4" /> Remove Type
-                  </Button>
-                </div>
+              {courseTypes?.map((type, index) => (
+                <FormField
+                  key={index}
+                  control={form.control}
+                  name={`types.${index}`} // Thay đổi để chỉ định đúng key
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value !== undefined} // Kiểm tra xem trường có giá trị hay không
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked ? type : undefined); // Chọn hoặc bỏ chọn
+                          }}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>{type.typeName}</FormLabel>
+                        <p className="text-sm text-muted-foreground">{type.typeDescription}</p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               ))}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex justify-between items-center">
-                Course Fields
-                <Button
-                  onClick={addField}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Field
-                </Button>
-              </CardTitle>
+              <CardTitle>Course Fields</CardTitle>
             </CardHeader>
             <CardContent>
-              {form.watch("fields").map((_, index) => (
-                <div key={index} className="mb-4 p-4 border rounded-md">
-                  <FormField
-                    control={form.control}
-                    name={`fields.${index}.fieldName`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Field Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Enter field name" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`fields.${index}.fieldDescription`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Field Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            placeholder="Enter field description"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => removeField(index)}
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                  >
-                    <Minus className="mr-2 h-4 w-4" /> Remove Field
-                  </Button>
-                </div>
+              {fields?.map((field, index) => (
+                <FormField
+                  key={index}
+                  control={form.control}
+                  name={`fields.${index}`} // Chỉ định đúng key
+                  render={({ field: formField }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={formField.value !== undefined} // Kiểm tra giá trị
+                          onCheckedChange={(checked) => {
+                            formField.onChange(checked ? field : undefined); // Chọn hoặc bỏ chọn
+                          }}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>{field.fieldName}</FormLabel>
+                        <p className="text-sm text-muted-foreground">{field.fieldDescription}</p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               ))}
             </CardContent>
           </Card>
@@ -248,7 +195,10 @@ const CreateCoursePage = () => {
                   <FormItem>
                     <FormLabel>Image URL</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter course image URL" />
+                      <Input
+                        {...field}
+                        placeholder="Enter course image URL"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
