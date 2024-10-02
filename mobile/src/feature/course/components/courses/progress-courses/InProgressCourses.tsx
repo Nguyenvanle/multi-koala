@@ -30,7 +30,7 @@ const InProgressCourses = () => {
 
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
     return (
-      <Link href={`/(courses)/courses-details`} asChild>
+      <Link href={`/${item.course.courseId}`} asChild>
         <TouchableOpacity>
           <View
             style={{

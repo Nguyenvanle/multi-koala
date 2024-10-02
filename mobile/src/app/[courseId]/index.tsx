@@ -77,7 +77,17 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
   const shouldShowOriginalPrice = priceDiscount !== finalPrice;
-
+  // Xác định màu sắc cho courseLevel
+  let courseLevelColor = Colors.black; // Mặc định là màu đen
+  if (courseDetails.courseLevel === "BEGINNER") {
+    courseLevelColor = "#0d9488"; // Màu xanh lá
+  } else if (courseDetails.courseLevel === "INTERMEDIATE") {
+    courseLevelColor = "#eab308"; // Màu vàng
+  } else if (courseDetails.courseLevel === "ADVANCED") {
+    courseLevelColor = "#f97316"; // Màu cam
+  } else if (courseDetails.courseLevel === "EXPERT") {
+    courseLevelColor = "#ef4444"; // Màu đỏ
+  }
   const renderLessonItem = ({
     item,
     index,
@@ -158,7 +168,9 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
                 </TouchableOpacity>
               ))}
           </View>
-          <Text style={styles.courseLevel}>{courseDetails.courseLevel}</Text>
+          <Text style={[styles.courseLevel, { color: courseLevelColor }]}>
+            {courseDetails.courseLevel}
+          </Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
