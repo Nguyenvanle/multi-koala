@@ -16,11 +16,7 @@ import Button from "../../atoms/button";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 
-interface HeaderUserProps {
-  courseId?: string;
-}
-
-const HeaderUser = ({ courseId }: HeaderUserProps): React.JSX.Element => {
+const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
   const { user } = useUser();
   const { enrolled, errorMessage, loading } = useEnrolled(courseId);
 
@@ -31,10 +27,8 @@ const HeaderUser = ({ courseId }: HeaderUserProps): React.JSX.Element => {
       </View>
     );
   }
-
   // Lấy khóa học đầu tiên từ mảng enrolled
   const latestCourse = enrolled?.[0];
-
   return (
     <View
       style={{
@@ -82,7 +76,7 @@ const HeaderUser = ({ courseId }: HeaderUserProps): React.JSX.Element => {
           </View>
 
           {latestCourse ? (
-            <Link href={`/(courses)/courses-details`} asChild>
+            <Link href={`/${courseId}`} asChild>
               <TouchableOpacity
                 style={{
                   borderRadius: 10,

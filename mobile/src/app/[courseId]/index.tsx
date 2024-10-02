@@ -21,6 +21,12 @@ import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 
 const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
+  const [defaultRating, setDefaultRating] = useState(0);
+  const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+  const starImgFilled =
+    "https://github.com/tranhonghan/images/blob/main/star_filled.png?raw=true";
+  const starImgCorner =
+    "https://github.com/tranhonghan/images/blob/main/star_corner.png?raw=true";
   const { courseId } = useGlobalSearchParams();
   const [showAllLessons, setShowAllLessons] = useState(false);
   const { user } = useUser();
@@ -47,6 +53,26 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
   if (!courseDetails) {
     return <Text>No course detail</Text>;
   }
+  const CustomRatingBar = ({ courseRating = 0 }: { courseRating?: number }) => {
+    const filledStars = Math.round(courseRating * 5); // Assuming courseRating is between 0 and 1
+
+    return (
+      <View style={styles.customRatingBarStyle}>
+        {maxRating.map((rating) => (
+          <View key={rating}>
+            <Image
+              style={styles.starImgStyle}
+              source={
+                rating <= filledStars
+                  ? { uri: starImgFilled }
+                  : { uri: starImgCorner }
+              }
+            />
+          </View>
+        ))}
+      </View>
+    );
+  };
 
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
@@ -104,7 +130,7 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
               {courseDetails.uploadedByTeacher?.firstname}{" "}
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
-            <StarRating />
+            <CustomRatingBar courseRating={courseRating?.avgcourseRating} />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
@@ -184,7 +210,7 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
             )}
           </>
         ) : (
-          <Text style={{ ...text.p, color: Colors.red }}>
+          <Text style={{ ...text.p, color: Colors.teal_dark }}>
             No lessons available
           </Text>
         )}
@@ -209,6 +235,17 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
 };
 
 const styles = StyleSheet.create({
+  starImgStyle: {
+    width: 20,
+    height: 20,
+    resizeMode: "cover",
+  },
+  customRatingBarStyle: {
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+  },
   showMoreButton: {
     alignItems: "flex-start",
   },
