@@ -20,7 +20,7 @@ import {
 
 export default function BasicInformationCard({ form }: any) {
   return (
-    <Card>
+    <Card className="flex flex-col flex-1">
       <CardHeader>
         <CardTitle>Basic Information</CardTitle>
       </CardHeader>

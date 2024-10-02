@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { Undo2 } from "lucide-react";
+import { CirclePlus, Save, Undo2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 import useField from "@/features/field/hooks/useField";
@@ -36,27 +36,41 @@ export default function CreateCoursePage() {
 
   return (
     <div className="w-full">
-      <h1 className="text-3xl font-bold mb-6">Create New Course</h1>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <BasicInformationCard form={form} />
-          <CourseTypesCard form={form} courseTypes={courseTypes} />
-          <CourseFieldsCard form={form} fields={fields} />
-          <CourseImageCard form={form} />
+          <div className="flex flex-col sm:flex-row justify-between gap-4 ">
+            <h1 className="text-3xl font-bold">Create New Course</h1>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={() => form.reset()}
+                variant="destructive"
+                className="w-full sm:w-auto"
+              >
+                <Undo2 className="mr-2 h-4 w-4" /> Reset
+              </Button>
+              <Button type="button" className="w-full sm:w-auto ">
+                <Save className="mr-2 h-4 w-4" /> Save
+              </Button>
+              <Button
+                type="submit"
+                className="w-full sm:w-auto bg-foreground hover:bg-slate-800"
+              >
+                <CirclePlus className="mr-2 h-4 w-4" />
+                Create Course
+              </Button>
+            </div>
+          </div>
 
-          <div className="flex flex-col sm:flex-row justify-between gap-4">
-            <Button
-              type="button"
-              onClick={() => form.reset()}
-              variant="outline"
-              className="w-full sm:w-auto"
-            >
-              <Undo2 className="mr-2 h-4 w-4" /> Reset
-            </Button>
-            <Button type="submit" className="w-full sm:w-auto">
-              Create Course
-            </Button>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 ">
+            <div className="flex flex-1 flex-col gap-4">
+              <CourseImageCard form={form} />
+              <BasicInformationCard form={form} />
+            </div>
+            <div className="flex flex-col gap-4">
+              <CourseTypesCard form={form} courseTypes={courseTypes} />
+              <CourseFieldsCard form={form} fields={fields} />
+            </div>
           </div>
         </form>
       </Form>

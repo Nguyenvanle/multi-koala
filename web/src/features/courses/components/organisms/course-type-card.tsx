@@ -16,7 +16,7 @@ export default function CourseTypesCard({ form, courseTypes }: any) {
         <CardTitle>Course Types</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-2">
           {courseTypes?.map((type: any, index: any) => (
             <FormField
               key={index}
