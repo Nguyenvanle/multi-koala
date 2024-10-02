@@ -65,8 +65,6 @@ export function handleInvalidToken(
 ): NextResponse {
   console.log("Deleted token", {
     createAt: new Date().toLocaleTimeString(),
-    request: request,
-    response: response,
   });
   const token = response.cookies.get(TOKEN_COOKIE_NAME)?.value;
   if (token) {

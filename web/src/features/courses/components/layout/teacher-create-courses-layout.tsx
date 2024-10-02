@@ -1,34 +1,23 @@
 'use client'
 
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, Minus, Undo2 } from "lucide-react";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Undo2 } from "lucide-react";
+import { Form } from "@/components/ui/form";
 import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 import useField from "@/features/field/hooks/useField";
 import useCourseType from "@/features/course-type/hooks/useCourseType";
-import { Badge } from "@/components/ui/badge";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import {
+  ErrorMessage,
+  LoadingSkeleton,
+} from "@/features/courses/components/atoms/create-course-data-handler";
+import {
+  BasicInformationCard,
+  CourseFieldsCard,
+  CourseImageCard,
+  CourseTypesCard,
+} from "@/features/courses/components/organisms";
 
-const CreateCoursePage = () => {
+export default function CreateCoursePage() {
   const { form, onSubmit } = useCreateCourseForm();
   const { fields, loading: fieldsLoading, error: fieldsError } = useField();
   const {
@@ -37,209 +26,48 @@ const CreateCoursePage = () => {
     error: typesError,
   } = useCourseType();
 
-  if (fieldsLoading || typesLoading) return <div>Loading...</div>;
-  if (fieldsError || typesError) return <div>Error loading data</div>;
+  if (fieldsLoading || typesLoading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (fieldsError || typesError) {
+    return <ErrorMessage />;
+  }
 
   return (
     <div className="w-full">
-      <h1 className="text-2xl font-bold mb-4">Create New Course</h1>
+      <h1 className="text-3xl font-bold mb-6">Create New Course</h1>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="courseName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Course Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter course name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="courseDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Course Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Enter course description"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="coursePrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Course Price</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        placeholder="Enter course price"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="courseLevel"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Course Level</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select course level" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="BEGINNER">Beginner</SelectItem>
-                        <SelectItem value="INTERMEDIATE">
-                          Intermediate
-                        </SelectItem>
-                        <SelectItem value="ADVANCED">Advanced</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <BasicInformationCard form={form} />
+          <CourseTypesCard form={form} courseTypes={courseTypes} />
+          <CourseFieldsCard form={form} fields={fields} />
+          <CourseImageCard form={form} />
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Course Types</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-3 xl:grid-cols-5">
-              {courseTypes?.map((type, index) => (
-                <FormField
-                  key={index}
-                  control={form.control}
-                  name={`types.${index}`} // Thay đổi để chỉ định đúng key
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-2">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value !== undefined} // Kiểm tra xem trường có giá trị hay không
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked ? type : undefined); // Chọn hoặc bỏ chọn
-                          }}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel
-                          className="text-secondary-foreground"
-                          title={type.typeDescription}
-                        >
-                          {capitalizeFirstLetter(type.typeName)}
-                        </FormLabel>
-                        {/* <p className="text-sm text-muted-foreground">
-                {type.typeDescription}
-              </p> */}
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Course Fields</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-3 xl:grid-cols-5">
-              {fields?.map((field, index) => (
-                <FormField
-                  key={index}
-                  control={form.control}
-                  name={`fields.${index}`} // Chỉ định đúng key
-                  render={({ field: formField }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-2">
-                      <FormControl>
-                        <Badge className="bg-background gap-2">
-                          <Checkbox
-                            checked={formField.value !== undefined} // Kiểm tra giá trị
-                            onCheckedChange={(checked) => {
-                              formField.onChange(checked ? field : undefined); // Chọn hoặc bỏ chọn
-                            }}
-                          />
-                          <div className="space-y-1 leading-none">
-                            <FormLabel
-                              className="text-secondary-foreground"
-                              title={field.fieldDescription}
-                            >
-                              {capitalizeFirstLetter(field.fieldName)}
-                            </FormLabel>
-                            {/* <p className="text-sm text-muted-foreground">{field.fieldDescription}</p> */}
-                          </div>
-                        </Badge>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Course Image</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="image.imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image URL</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter course image URL" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* You can add an UploadButton component here if you want to allow image uploads */}
-              {/* <Button>Upload Image</Button> */}
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
             <Button
               type="button"
               onClick={() => form.reset()}
               variant="outline"
+              className="w-full sm:w-auto"
             >
               <Undo2 className="mr-2 h-4 w-4" /> Reset
             </Button>
-            <Button type="submit">Create Course</Button>
+            <Button type="submit" className="w-full sm:w-auto">
+              Create Course
+            </Button>
           </div>
         </form>
       </Form>
     </div>
   );
-};
+}
 
-export default CreateCoursePage;
+
+
+
+
+
+
+
