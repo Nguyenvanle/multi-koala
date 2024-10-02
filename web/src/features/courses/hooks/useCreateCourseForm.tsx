@@ -3,6 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { showToast } from "@/lib/utils";
+import useCreateCourse from "@/features/courses/hooks/useCreateCourse";
+import { COURSE_VERIFY } from "@/types/course/verify";
+import { nextjsApiService } from "@/services/next-api";
+import { CourseDetailResType } from "@/features/courses/types/course";
 
 const CreateCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -11,7 +15,9 @@ const CreateCourseSchema = z.object({
     (val) => Number(val),
     z.number().min(0, "Price must be a positive number")
   ),
-  courseLevel: z.string().min(1, "Course level is required"),
+  courseLevel: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"], {
+    required_error: "Course level is required",
+  }),
   types: z.array(z.string()),
   fields: z.array(z.string()),
   imageUrl: z.string().url(), // Sửa từ image sang imageUrl
@@ -27,7 +33,7 @@ export default function useCreateCourseForm() {
       courseName: "",
       courseDescription: "",
       coursePrice: 0,
-      courseLevel: "",
+      courseLevel: "BEGINNER",
       types: [],
       fields: [],
       imageUrl:
@@ -38,12 +44,18 @@ export default function useCreateCourseForm() {
   const onSubmit = async (data: CreateCourseFormData) => {
     try {
       // Convert coursePrice to a number before submitting
-      const formData = data
-
+      const formData = data;
       console.log("Submitting course data:", formData);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
+
+      const { result } = await nextjsApiService.post<CourseDetailResType>(
+        `/api/courses/add`,
+        formData
+      );
+      console.log(result);
+
       showToast("Success", "Course created successfully!");
-      router.push("/courses");
+
+      location.href = "/courses";
     } catch (error) {
       showToast("Error", "Failed to create course", "destructive");
     }

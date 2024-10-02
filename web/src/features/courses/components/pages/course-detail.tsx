@@ -1,5 +1,4 @@
 "use client";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import DetailCard from "@/features/courses/components/organisms/detail-card";
@@ -46,6 +45,15 @@ const CourseDetail: React.FC = () => {
     );
   }
 
+  // Sử dụng toán tử nullish coalescing (??) để cung cấp giá trị mặc định nếu null
+  const approvedByAdmin = course.approvedByAdmin
+    ? `${course.approvedByAdmin.firstname} ${course.approvedByAdmin.lastname}`
+    : "N/A"; // Hoặc một giá trị mặc định khác
+
+  const uploadedByTeacher = course.uploadedByTeacher
+    ? `${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`
+    : "N/A"; // Hoặc một giá trị mặc định khác
+
   return (
     <div className="bg-secondary pr-0 flex flex-grow">
       <div className="w-full p-4 xl:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6 ">
@@ -61,7 +69,7 @@ const CourseDetail: React.FC = () => {
           courseName={course.courseName}
           coursePrice={course.coursePrice}
           courseDescription={course.courseDescription}
-          uploadByTeacher={`${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`}
+          uploadByTeacher={uploadedByTeacher}
           totalDuration={duration}
           totalLessons={lessons?.length ?? 0}
           courseRating={RatingAdapter.getRating(course.courseId)}
@@ -71,7 +79,7 @@ const CourseDetail: React.FC = () => {
           courseType={course.types}
           courseFields={course.fields}
           courseImage={course.image.imageUrl}
-          approvedByAdmin={`${course.approvedByAdmin.firstname} ${course.approvedByAdmin.lastname}`}
+          approvedByAdmin={approvedByAdmin}
           status={course.status}
           courseLevel={course.courseLevel}
           teacherId={course.uploadedByTeacher.userId}
