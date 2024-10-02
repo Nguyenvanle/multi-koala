@@ -10,8 +10,8 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import AirbnbRating from "@/src/components/atoms/airbnbRating-custom";
 import { router, useGlobalSearchParams } from "expo-router";
+import StarRating from "react-native-star-rating";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useDetails } from "../../feature/course/hooks/useDetails";
@@ -105,12 +105,7 @@ const CourseDetails = ({ lessons }: { lessons: LessonBody[] }) => {
               {courseDetails.uploadedByTeacher?.firstname}{" "}
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
-            <AirbnbRating
-              defaultRating={Math.round(
-                (courseRating?.avgcourseRating ?? 0) * 5
-              )}
-              // Các props khác nếu cần
-            />
+            <StarRating />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
