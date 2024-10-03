@@ -7,6 +7,7 @@ import useCreateCourse from "@/features/courses/hooks/useCreateCourse";
 import { COURSE_VERIFY } from "@/types/course/verify";
 import { nextjsApiService } from "@/services/next-api";
 import { CourseDetailResType } from "@/features/courses/types/course";
+import { apiService } from "@/services/api";
 
 const CreateCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -46,7 +47,7 @@ export default function useCreateCourseForm() {
       // Convert coursePrice to a number before submitting
       const formData = data;
       console.log("Submitting course data:", formData);
-      
+
       const { result } = await nextjsApiService.post<CourseDetailResType>(
         `/api/courses/add`,
         formData
@@ -55,6 +56,7 @@ export default function useCreateCourseForm() {
 
       showToast("Success", "Course created successfully!");
 
+      apiService.clearCache();
       location.href = "/dashboard/courses";
     } catch (error) {
       showToast("Error", "Failed to create course", "destructive");

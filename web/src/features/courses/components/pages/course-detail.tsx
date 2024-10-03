@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DisplayCard from "@/features/courses/components/molecules/display-card";
 import DetailCard from "@/features/courses/components/organisms/detail-card";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
-import { useCourses } from "@/features/courses/hooks/useCourses";
+import { useCourses, useCoursesWithoutFilter } from "@/features/courses/hooks/useCourses";
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 import useLessons from "@/features/lessons/hooks/useLessons";
@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 
 const CourseDetail: React.FC = () => {
   const { courseId } = useParams();
-  const { courses, isLoading: coursesLoading } = useCourses();
+  const { courses, isLoading: coursesLoading } = useCoursesWithoutFilter();
   const {
     lessons,
     duration,
@@ -38,6 +38,7 @@ const CourseDetail: React.FC = () => {
   }
 
   if (!course) {
+
     return (
       <div className="flex justify-center items-center w-full h-[82vh]">
         No course found.
