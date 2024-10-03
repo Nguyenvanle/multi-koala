@@ -19,23 +19,36 @@ import { useCourseDiscount } from "@/src/feature/discount/hooks/useCourseDiscoun
 import { useLesson } from "../../feature/lesson/hooks/useLesson";
 import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
+import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [defaultRating, setDefaultRating] = useState(0);
+
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+
   const starImgFilled =
     "https://github.com/tranhonghan/images/blob/main/star_filled.png?raw=true";
+
   const starImgCorner =
     "https://github.com/tranhonghan/images/blob/main/star_corner.png?raw=true";
+
   const { courseId } = useGlobalSearchParams();
+
   const [showAllLessons, setShowAllLessons] = useState(false);
+
   const { user } = useUser();
 
+  const { enrolled } = useEnrolled();
+
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+
   const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
+
   const { courseDetails, loading, errorMessageDetails } =
     useDetails(courseIdString);
+
   const { courseRating } = useCourseRating(courseIdString);
+
   const { discount } = useCourseDiscount(courseIdString);
 
   if (loading) {
@@ -53,6 +66,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   if (!courseDetails) {
     return <Text>No course detail</Text>;
   }
+
   const CustomRatingBar = ({ courseRating = 0 }: { courseRating?: number }) => {
     const filledStars = Math.round(courseRating * 5); // Assuming courseRating is between 0 and 1
 
@@ -74,9 +88,28 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
     );
   };
 
+  // Kiểm tra xem enrolled có phải là một mảng không
+  const isEnrolled =
+    Array.isArray(enrolled) &&
+    enrolled.some(
+      (enrolledCourse) => enrolledCourse.course.courseId === courseIdString
+    );
+
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
   const shouldShowOriginalPrice = priceDiscount !== finalPrice;
+
+  // Xác định màu sắc cho courseLevel
+  let courseLevelColor = Colors.black; // Mặc định là màu đen
+  if (courseDetails.courseLevel === "BEGINNER") {
+    courseLevelColor = "#0d9488"; // Màu xanh lá
+  } else if (courseDetails.courseLevel === "INTERMEDIATE") {
+    courseLevelColor = "#eab308"; // Màu vàng
+  } else if (courseDetails.courseLevel === "ADVANCED") {
+    courseLevelColor = "#f97316"; // Màu cam
+  } else if (courseDetails.courseLevel === "EXPERT") {
+    courseLevelColor = "#ef4444"; // Màu đỏ
+  }
 
   const renderLessonItem = ({
     item,
@@ -85,13 +118,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
     item: LessonBody;
     index: number;
   }) => {
-    const isFirstThree = index < 3;
+    const isClickable = index < 3 || isEnrolled; // Cho phép truy cập vào chi tiết bài học nếu đã đăng ký hoặc là bài học đầu tiên
 
     return (
       <TouchableOpacity
-        style={[styles.lessonItem, !isFirstThree && { opacity: 0.5 }]}
+        style={[styles.lessonItem, !isClickable && { opacity: 0.5 }]}
         onPress={() => {
-          if (isFirstThree) {
+          if (isClickable) {
             router.push(`/${courseIdString}/${item.lessonId}`);
           }
         }}
@@ -103,8 +136,8 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
         <View style={styles.lessonInfo}>
           <Text style={styles.lessonTitle}>{item.lessonName}</Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.video.videoDuration / 60)}:
-            {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
+            {Math.floor(item.video.videoDuration / 60)}m
+            {(item.video.videoDuration % 60).toString().padStart(2, "0")}s
           </Text>
         </View>
       </TouchableOpacity>
@@ -130,7 +163,6 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
               {courseDetails.uploadedByTeacher?.firstname}{" "}
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
-            <CustomRatingBar courseRating={courseRating?.avgcourseRating} />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
@@ -158,7 +190,9 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
                 </TouchableOpacity>
               ))}
           </View>
-          <Text style={styles.courseLevel}>{courseDetails.courseLevel}</Text>
+          <Text style={[styles.courseLevel, { color: courseLevelColor }]}>
+            {courseDetails.courseLevel}
+          </Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
@@ -215,44 +249,28 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
           </Text>
         )}
 
-        <TouchableOpacity
-          style={styles.buyButton}
-          onPress={() => {
-            if (isLoggedIn) {
-              if (lesson.length > 0) {
-                // Hiển thị thông báo xác nhận
-                Alert.alert(
-                  "Confirm Purchase",
-                  "Are you sure you want to buy this course?",
-                  [
-                    {
-                      text: "Yes", // Nút "Yes" ở bên trái
-                      onPress: () =>
-                        // Chuyển hướng đến lessonId khi người dùng xác nhận
-                        router.push(
-                          `/${courseIdString}/${lesson[0].lessonId}?isBought=true`
-                        ),
-                    },
-                    {
-                      text: "No", // Nút "No" ở bên phải
-                      onPress: () => "",
-                    },
-                  ],
-                  { cancelable: false }
-                );
+        {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
+        {!isEnrolled && (
+          <TouchableOpacity
+            style={styles.buyButton}
+            onPress={() => {
+              if (isLoggedIn) {
+                if (lesson.length > 0) {
+                  // Logic to buy the course
+                } else {
+                  Alert.alert("Notification", "No lessons available to view");
+                }
               } else {
-                Alert.alert("Notification", "No lessons available to view");
+                Alert.alert(
+                  "Notification",
+                  "Please sign in to view more lessons"
+                );
               }
-            } else {
-              Alert.alert(
-                "Notification",
-                "Please sign in to view more lessons"
-              );
-            }
-          }}
-        >
-          <Text style={styles.buyButtonText}>Buy Now</Text>
-        </TouchableOpacity>
+            }}
+          >
+            <Text style={styles.buyButtonText}>Buy Now</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
