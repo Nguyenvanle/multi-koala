@@ -134,7 +134,9 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
-          <Text style={styles.lessonTitle}>{item.lessonName}</Text>
+          <Text style={styles.lessonTitle} numberOfLines={2}>
+            {item.lessonName}
+          </Text>
           <Text style={styles.lessonDuration}>
             {Math.floor(item.video.videoDuration / 60)}m
             {(item.video.videoDuration % 60).toString().padStart(2, "0")}s

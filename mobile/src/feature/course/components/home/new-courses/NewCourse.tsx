@@ -13,12 +13,10 @@ import { Link } from "expo-router";
 import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { CourseBody } from "../../../types/course";
-import { useEnrolled } from "../../../hooks/useEnrrolled";
 
 const NewCourses = () => {
   const { course, loading, errorMessage } = useCourse();
   const { user } = useUser();
-  const { enrolled } = useEnrolled(); // Giả sử enrolled là mảng chứa các khóa học đã đăng ký
 
   if (loading) {
     return (
@@ -35,21 +33,11 @@ const NewCourses = () => {
     );
   }
 
-  // Lấy danh sách ID của các khóa học đã đăng ký
-  const enrolledCourseIds = Array.isArray(enrolled)
-    ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
-    : [];
-
-  // Lọc khóa học đã đăng ký ra khỏi danh sách
-  const availableCourses = course?.filter(
-    (item: CourseBody) => !enrolledCourseIds.includes(item.courseId)
-  );
-
   // Số lượng khóa học hiển thị dựa trên việc người dùng có tồn tại hay không
   const numberOfCoursesToShow = user ? 10 : 5; // Nếu có người dùng, hiển thị 10 khóa học, ngược lại hiển thị 5 khóa học
 
   // Lấy khóa học theo số lượng đã xác định
-  const limitedCourses = availableCourses?.slice(0, numberOfCoursesToShow); // Đã sửa lại để lấy từ đầu
+  const limitedCourses = course?.slice(1, numberOfCoursesToShow);
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <View style={styles.container}>
@@ -60,21 +48,9 @@ const NewCourses = () => {
             style={styles.courseImage}
           />
           <View style={styles.containerText}>
-            <Text style={styles.clampedText} numberOfLines={1}>
+            <Text style={styles.clampedText} numberOfLines={2}>
               {item.courseName}
             </Text>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: 130,
-                paddingVertical: 8,
-              }}
-            >
-              <Text style={styles.duration}>1h 23m</Text>
-              <Text style={styles.duration}>12 lessons</Text>
-            </View>
             <View style={{ paddingTop: 8 }}>
               <Text style={styles.priceText}>Buy Now</Text>
             </View>
@@ -111,6 +87,7 @@ const NewCourses = () => {
 };
 
 const styles = StyleSheet.create({
+  // Các style đã được giữ nguyên
   price: {
     ...text.large,
     color: Colors.teal_dark,
@@ -144,14 +121,14 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   clampedText: {
-    ...text.p,
+    ...text.large,
     color: Colors.black,
     fontWeight: "400",
   },
   priceText: {
     ...text.p,
     color: Colors.teal_dark,
-    fontWeight: "300",
+    fontWeight: "400",
   },
   duration: {
     ...text.small,

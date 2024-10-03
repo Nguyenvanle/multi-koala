@@ -145,7 +145,9 @@ const LessonDetails = () => {
       <View style={{ flex: 1, paddingBottom: 80 }}>
         {renderVideo()}
         <View style={styles.content}>
-          <Text style={styles.title}>{lessonDetails.lessonName}</Text>
+          <Text style={styles.title} numberOfLines={2}>
+            {lessonDetails.lessonName}
+          </Text>
           <Text style={styles.duration}>
             {Math.floor(lessonDetails.video.videoDuration / 60)}:
             {(lessonDetails.video.videoDuration % 60)
@@ -224,7 +226,8 @@ const LessonDetails = () => {
               style={styles.buyButton}
               onPress={() => {
                 if (isLoggedIn) {
-                  // Logic mua
+                  // Thay đổi đường dẫn đến trang test/index
+                  router.push(`/${courseIdString}/${lessonIdString}/test`); // Điều hướng đến test/index
                 } else {
                   Alert.alert(
                     "Notification",
