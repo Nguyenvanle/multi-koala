@@ -50,12 +50,6 @@ const DetailsLayout = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="test"
-        options={{
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 };

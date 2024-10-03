@@ -68,7 +68,7 @@ const InProgressCourses = () => {
                   style={{
                     ...text.h4,
                     color: Colors.black,
-                    fontWeight: "300",
+                    fontWeight: "400",
                   }}
                 >
                   {item.course.courseName}
@@ -83,6 +83,7 @@ const InProgressCourses = () => {
                 <Text
                   style={{
                     ...text.small,
+                    fontWeight: "500",
                     color: Colors.teal_dark,
                   }}
                 >

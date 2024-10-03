@@ -227,7 +227,7 @@ const LessonDetails = () => {
               onPress={() => {
                 if (isLoggedIn) {
                   // Thay đổi đường dẫn đến trang test/index
-                  router.push(`/${courseIdString}/${lessonIdString}/test`); // Điều hướng đến test/index
+                  // router.push(`/${courseIdString}/${lessonIdString}/test`); // Điều hướng đến test/index
                 } else {
                   Alert.alert(
                     "Notification",

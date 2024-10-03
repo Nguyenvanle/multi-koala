@@ -82,7 +82,7 @@ const AllCourses = () => {
                 style={{
                   ...text.h4,
                   color: Colors.black,
-                  fontWeight: "300",
+                  fontWeight: "400",
                 }}
               >
                 {item.courseName}
@@ -92,8 +92,8 @@ const AllCourses = () => {
               <Text
                 style={{
                   ...text.large,
-                  fontWeight: "300",
-                  color: Colors.dark,
+                  fontWeight: "400",
+                  color: Colors.teal_dark,
                 }}
               >
                 {item.uploadedByTeacher.firstname}{" "}
