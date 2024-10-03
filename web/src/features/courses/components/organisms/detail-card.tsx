@@ -104,7 +104,7 @@ const DetailCard = ({
               <Badge
                 key={field.fieldName}
                 variant="outline"
-                className="bg-blue-50 dark:bg-blue-950 text-blue-600 border-blue-200"
+                className="bg-blue-50 dark:bg-background text-blue-600  border-blue-200"
                 title={`Field Information: ${field.fieldName} (Expertise area of the course)`}
               >
                 {field.fieldName}
@@ -120,7 +120,7 @@ const DetailCard = ({
               <Badge
                 key={type.typeName}
                 variant="outline"
-                className="bg-green-50 dark:bg-green-950 text-green-600 border-green-200"
+                className="bg-green-50 dark:bg-background text-green-600 border-green-200"
                 title={`Type Information: ${type.typeName} (Format of the course, e.g., online)`}
               >
                 {type.typeName}
