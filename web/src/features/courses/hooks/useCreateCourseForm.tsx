@@ -46,7 +46,7 @@ export default function useCreateCourseForm() {
       // Convert coursePrice to a number before submitting
       const formData = data;
       console.log("Submitting course data:", formData);
-
+      
       const { result } = await nextjsApiService.post<CourseDetailResType>(
         `/api/courses/add`,
         formData
@@ -55,7 +55,7 @@ export default function useCreateCourseForm() {
 
       showToast("Success", "Course created successfully!");
 
-      location.href = "/courses";
+      location.href = "/dashboard/courses";
     } catch (error) {
       showToast("Error", "Failed to create course", "destructive");
     }

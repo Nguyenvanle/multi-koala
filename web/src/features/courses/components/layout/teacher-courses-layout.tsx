@@ -27,9 +27,8 @@ import {
 import dynamic from "next/dynamic";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
-import { CoursesBarStackedChart } from "@/features/courses/components/atoms/courses-bar-stacked-chart";
-import { CoursesRadialChart } from "@/features/courses/components/atoms/courses-radius-chart";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -38,9 +37,7 @@ const CourseStatusDonutChart = dynamic(
     ),
   {
     loading: () => (
-      <div className="w-full h-[200px] flex items-center justify-center">
-        Loading...
-      </div>
+      <Skeleton className="w-full h-full flex items-center justify-center bg-background"></Skeleton>
     ),
     ssr: false,
   }
@@ -71,8 +68,6 @@ const TeacherCourseTemplate = ({
   teacherStatistic,
   teacherMyCourses,
 }: TeacherCourseTemplateProps) => {
-  if (!teacherStatistic || !teacherMyCourses) return <div></div>;
-
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
       <div className="flex flex-row items-center justify-between">
@@ -173,6 +168,7 @@ const TeacherCourseTemplate = ({
                     <Link
                       href={`/courses/${course.courseId}`}
                       className="hover:text-emerald-500 font-semibold"
+                      title="View course details"
                     >
                       {course.courseName}
                     </Link>

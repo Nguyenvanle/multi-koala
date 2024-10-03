@@ -16,9 +16,13 @@ export function useCourses() {
   const [sortOrder, setSortOrder] = useState<SortOption>("rating_desc");
   const {filters} = useFilter();
 
-  const { data: courses, error, isValidating } = useSWR(
-    ["/api/courses", sortOrder, filters],
-    () => fetcher("/api/courses", sortOrder, filters)
+  const {
+    data: courses,
+    error,
+    isValidating,
+    mutate,
+  } = useSWR(["/api/courses", sortOrder, filters], () =>
+    fetcher("/api/courses", sortOrder, filters)
   );
 
   return {
@@ -28,5 +32,6 @@ export function useCourses() {
     sortOrder,
     setSortOrder,
     filters,
+    mutate,
   };
 }
