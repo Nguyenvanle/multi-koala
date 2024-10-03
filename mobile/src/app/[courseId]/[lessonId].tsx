@@ -65,12 +65,14 @@ const LessonDetails = () => {
   if (!lessonDetails) {
     return <Text>No lesson detail</Text>;
   }
+
   // Kiểm tra xem enrolled có phải là một mảng không
   const isEnrolled =
     Array.isArray(enrolled) &&
     enrolled.some(
       (enrolledCourse) => enrolledCourse.course.courseId === courseIdString
     );
+
   const renderVideo = () => {
     if (!lessonDetails) return null;
     if (
@@ -108,7 +110,7 @@ const LessonDetails = () => {
     item: LessonBody;
     index: number;
   }) => {
-    const isFirstThree = index < 3;
+    const isFirstThree = index < 3 || isEnrolled; // Hiển thị tất cả nếu đã đăng ký
 
     return (
       <TouchableOpacity

@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import CircleStyle from "@/src/components/molecules/front-end/CircleStyle";
 import { Styles, text } from "@/src/constants/Styles";
@@ -17,6 +18,7 @@ import OtherSignIn from "@/src/feature/auth/components/molecules/signin/other-si
 import SignUpRouter from "@/src/feature/auth/components/molecules/signin/signup-router";
 import ForgotPassword from "@/src/feature/auth/components/molecules/signin/forgot-password";
 import InputSignIn from "@/src/feature/auth/components/molecules/signin/input-signin";
+import { router } from "expo-router";
 
 const SignIn: React.FC = () => {
   const {
@@ -67,12 +69,23 @@ const SignIn: React.FC = () => {
           textStyle={{ ...text.h4, color: Colors.white }}
         />
         <SignUpRouter />
+        {/* Nút trở về Home */}
+        <TouchableOpacity
+          onPress={() => router.replace("/(home)/home")} //Điều hướng về trang Home
+        >
+          <Text style={styles.homeButtonText}>Back to Home</Text>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 export const styles = StyleSheet.create({
+  homeButtonText: {
+    ...text.link,
+    color: Colors.teal_dark,
+    fontWeight: "bold",
+  },
   loginButton: {
     width: 350,
     backgroundColor: Colors.teal_dark,

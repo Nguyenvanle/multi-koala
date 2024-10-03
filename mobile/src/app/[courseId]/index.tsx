@@ -66,6 +66,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   if (!courseDetails) {
     return <Text>No course detail</Text>;
   }
+
   const CustomRatingBar = ({ courseRating = 0 }: { courseRating?: number }) => {
     const filledStars = Math.round(courseRating * 5); // Assuming courseRating is between 0 and 1
 
@@ -86,6 +87,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
       </View>
     );
   };
+
   // Kiểm tra xem enrolled có phải là một mảng không
   const isEnrolled =
     Array.isArray(enrolled) &&
@@ -96,6 +98,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const priceDiscount = courseDetails.coursePrice;
   const finalPrice = priceDiscount * (1 - (discount?.discountApplied || 0));
   const shouldShowOriginalPrice = priceDiscount !== finalPrice;
+
   // Xác định màu sắc cho courseLevel
   let courseLevelColor = Colors.black; // Mặc định là màu đen
   if (courseDetails.courseLevel === "BEGINNER") {
@@ -107,6 +110,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   } else if (courseDetails.courseLevel === "EXPERT") {
     courseLevelColor = "#ef4444"; // Màu đỏ
   }
+
   const renderLessonItem = ({
     item,
     index,
@@ -114,16 +118,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
     item: LessonBody;
     index: number;
   }) => {
-    const isFirstThree = index < 3;
+    const isClickable = index < 3 || isEnrolled; // Cho phép truy cập vào chi tiết bài học nếu đã đăng ký hoặc là bài học đầu tiên
 
     return (
       <TouchableOpacity
-        style={[
-          styles.lessonItem,
-          !isFirstThree && !isEnrolled && { opacity: 0.5 },
-        ]}
+        style={[styles.lessonItem, !isClickable && { opacity: 0.5 }]}
         onPress={() => {
-          if (isFirstThree) {
+          if (isClickable) {
             router.push(`/${courseIdString}/${item.lessonId}`);
           }
         }}
@@ -162,7 +163,6 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
               {courseDetails.uploadedByTeacher?.firstname}{" "}
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
-            <CustomRatingBar courseRating={courseRating?.avgcourseRating} />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>

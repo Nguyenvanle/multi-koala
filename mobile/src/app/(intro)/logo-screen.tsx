@@ -4,17 +4,28 @@ import { text } from "@/src/constants/Styles";
 import { StyleSheet } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { router } from "expo-router";
+import useUser from "@/src/feature/user/hooks/useUser"; // Import hook để lấy thông tin người dùng
 
 const LogoScreen = () => {
+  const { user } = useUser(); // Lấy thông tin người dùng
+
   useEffect(() => {
-    setTimeout(() => {
-      router.replace("/(intro)/intro-screen");
+    const timeout = setTimeout(() => {
+      if (user) {
+        // Nếu người dùng đã đăng nhập, chuyển đến trang Home
+        router.replace("/(home)/home");
+      } else {
+        // Nếu chưa đăng nhập, chuyển đến trang Intro
+        router.replace("/(intro)/intro-screen");
+      }
     }, 1500);
-  }, []);
+
+    return () => clearTimeout(timeout); // Dọn dẹp timeout khi component unmount
+  }, [user]); // Chạy lại khi thông tin người dùng thay đổi
 
   return (
     <SafeAreaView style={logoscreen.containerlogo}>
-      <StatusBar barStyle="dark-content"></StatusBar>
+      <StatusBar barStyle="dark-content" />
       <View style={logoscreen.Logo}>
         <Image source={require("@/src/assets/images/Logo.png")} />
         <Text
@@ -29,7 +40,9 @@ const LogoScreen = () => {
     </SafeAreaView>
   );
 };
+
 export default LogoScreen;
+
 export const logoscreen = StyleSheet.create({
   containerlogo: {
     flex: 1,
