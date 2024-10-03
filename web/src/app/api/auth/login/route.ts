@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         );
 
-        setCookie(jsonResponse, token, TOKEN_EXPIRY);
+        setCookie(token, TOKEN_EXPIRY);
 
         return jsonResponse;
       } else {

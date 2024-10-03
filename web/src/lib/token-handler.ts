@@ -4,6 +4,7 @@ import {
 } from "@/features/auth/enum/auth";
 import { introspectServices } from "@/features/auth/services/introspect";
 import { refreshServices } from "@/features/auth/services/refresh";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 interface CacheEntry {
@@ -66,10 +67,11 @@ export function handleInvalidToken(
   console.log("Deleted token", {
     createAt: new Date().toLocaleTimeString(),
   });
-  const token = response.cookies.get(TOKEN_COOKIE_NAME)?.value;
+  const cookieStore = cookies();
+  const token = cookieStore.get(TOKEN_COOKIE_NAME)?.value;
   if (token) {
     tokenCache.delete(token);
   }
-  response.cookies.delete(TOKEN_COOKIE_NAME);
+  cookieStore.delete(TOKEN_COOKIE_NAME);
   return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
 }

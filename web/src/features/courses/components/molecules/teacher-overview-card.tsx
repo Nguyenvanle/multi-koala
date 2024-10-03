@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { icons } from "lucide-react";
-import { colors } from "@/features/courses/components/layout/teacher-courses-layout";
+import { colors } from "@/features/courses/components/atoms/revenue-chart";
 
 const OverviewItem: React.FC<{
   title: string;

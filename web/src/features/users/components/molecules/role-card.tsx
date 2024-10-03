@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/contexts/auth-context";
 import { useRoles } from "@/hooks/useRoles";
 
 export default function UserRoles() {
@@ -11,13 +11,13 @@ export default function UserRoles() {
   const { roles } = useRoles();
 
   return (
-    <>
+    <div>
       {!user ? (
         <Skeleton className="w-full h-16" />
       ) : (
-        <>
+        <div>
           <CardTitle>
-            {user?.firstName} {user?.lastName}
+            {user?.firstname} {user?.lastname}
           </CardTitle>
           <div className="flex flex-row gap-1">
             {roles.map((role: string) => (
@@ -26,8 +26,8 @@ export default function UserRoles() {
               </Badge>
             ))}
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 }

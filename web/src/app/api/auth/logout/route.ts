@@ -1,40 +1,30 @@
 import { logoutService } from "@/features/auth/services/logout";
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { TOKEN_COOKIE_NAME } from "@/features/auth/enum/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    // Lấy cookie từ request
-    const cookieHeader = request.headers.get("cookie");
-
-    // Tách token từ cookie
-    const token = cookieHeader
-      ?.split("; ")
-      .find((row) => row.startsWith("token="));
+    const cookieStore = cookies();
+    const token = cookieStore.get(TOKEN_COOKIE_NAME)?.value;
 
     if (token) {
-      const tokenValue = token.split("=")[1];
-
       // Gọi API logout với token
       const response = await logoutService.logout({
-        token: tokenValue,
+        token: token,
       });
 
-      // Tạo một cookie mới với thời gian hết hạn trong quá khứ để xóa cookie hiện tại
-      const cookieString = `token=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure`;
+      // Xóa cookie
+      cookieStore.delete(TOKEN_COOKIE_NAME);
 
       // Tạo response
-      const jsonResponse = NextResponse.json(
+      return NextResponse.json(
         {
           code: response.result?.code,
           message: "Logged out successfully",
         },
         { status: 200 }
       );
-
-      // Thêm Set-Cookie header vào response để xóa cookie
-      jsonResponse.headers.set("Set-Cookie", cookieString);
-
-      return jsonResponse;
     }
 
     // Nếu không tìm thấy token, trả về mã lỗi 401 với thông điệp cụ thể

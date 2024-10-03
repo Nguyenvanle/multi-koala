@@ -1,24 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from 'next/headers';
 
 type ServiceFunction<T> = (token: string) => Promise<{ result: T }>;
 
 export function withAuth<T>(serviceFunction: ServiceFunction<T>) {
   return async (request: NextRequest) => {
     try {
-      const cookieHeader = request.headers.get("cookie");
-      const token = cookieHeader
-        ?.split("; ")
-        .find((row) => row.startsWith("token="));
+      const cookieStore = cookies();
+      const tokenCookie = cookieStore.get('token');
 
-      if (!token) {
+      if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
           { status: 401 }
         );
       }
 
-      const tokenValue = token.split("=")[1];
-      const { result } = await serviceFunction(tokenValue);
+      const { result } = await serviceFunction(tokenCookie.value);
 
       if (!result) {
         return NextResponse.json(
@@ -38,7 +36,6 @@ export function withAuth<T>(serviceFunction: ServiceFunction<T>) {
   };
 }
 
-
 type ServiceFunctionWithData<T, D> = (
   token: string,
   data: D
@@ -49,19 +46,15 @@ export function withAuthAndData<T, D>(
 ) {
   return async (request: NextRequest) => {
     try {
-      const cookieHeader = request.headers.get("cookie");
-      const token = cookieHeader
-        ?.split("; ")
-        .find((row) => row.startsWith("token="));
+      const cookieStore = cookies();
+      const tokenCookie = cookieStore.get('token');
 
-      if (!token) {
+      if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
           { status: 401 }
         );
       }
-
-      const tokenValue = token.split("=")[1];
 
       // Lấy dữ liệu từ body
       const data: D = await request.json();
@@ -74,7 +67,7 @@ export function withAuthAndData<T, D>(
       }
 
       // Gọi hàm dịch vụ với cả token và dữ liệu
-      const { result } = await serviceFunction(tokenValue, data);
+      const { result } = await serviceFunction(tokenCookie.value, data);
 
       if (!result) {
         return NextResponse.json(
@@ -94,3 +87,5 @@ export function withAuthAndData<T, D>(
   };
 }
 
+// Export a config object to make the route dynamic
+export const dynamic = 'force-dynamic';
