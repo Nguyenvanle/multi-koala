@@ -13,4 +13,6 @@ import java.util.List;
 @Repository
 public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, String> {
     List<EnrollCourse> findAllByStudent(Student student);
+    int countByCourse(Course course);
+    int countByCourseAndProcess(Course course, float process);
 }

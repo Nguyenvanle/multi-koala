@@ -1,11 +1,14 @@
 package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.EnrollCourseUpdateRequest;
+import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
+import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.EnrollCourse;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
+import com.duokoala.server.mapper.CourseMapper;
 import com.duokoala.server.mapper.EnrollCourseMapper;
 import com.duokoala.server.repository.CourseRepository;
 import com.duokoala.server.repository.EnrollCourseRepository;
@@ -73,4 +76,5 @@ public class EnrollCourseService {
                 .findAllByStudent(authenticationService.getAuthenticatedStudent());
         return enrollCourses.stream().map(enrollCourseMapper::toMyEnrollCourseResponse).toList();
     }
+
 }

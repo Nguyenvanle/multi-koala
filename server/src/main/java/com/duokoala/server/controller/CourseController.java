@@ -7,6 +7,7 @@ import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
 import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
+import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
 import com.duokoala.server.service.CourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -84,12 +85,20 @@ public class CourseController {
                 .build();
     }
 
+    @GetMapping("/courses/my-statistic-courses")
+    ApiResponse<List<StatisticCourseResponse>> getListByTeacherId() {
+        return ApiResponse.<List<StatisticCourseResponse>>builder()
+                .result(courseService.getMyListStatisticCourses())
+                .build();
+    }
+
     @GetMapping("/courses/{courseId}/discount-applied")
     ApiResponse<DiscountAppliedResponse> getDiscountApplied(@PathVariable String courseId) {
         return ApiResponse.<DiscountAppliedResponse>builder()
                 .result(courseService.getMaxApprovedDiscountRate(courseId))
                 .build();
     }
+
     @GetMapping("/courses/course-price")
     ApiResponse<CoursePriceResponse> getMaxCoursePrice() {
         return ApiResponse.<CoursePriceResponse>builder()

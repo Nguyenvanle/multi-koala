@@ -37,6 +37,13 @@ public class StudentController {
                 .build();
     }
 
+    @PutMapping("/students/me")
+    ApiResponse<StudentResponse> updateMyInfo(@RequestBody StudentUpdateRequest request) {
+        return ApiResponse.<StudentResponse>builder()
+                .result(studentService.updateMyInfo(request))
+                .build();
+    }
+
     @GetMapping("/{studentId}")
     ApiResponse<StudentResponse> getStudent(@PathVariable String studentId) {
         return ApiResponse.<StudentResponse>builder()

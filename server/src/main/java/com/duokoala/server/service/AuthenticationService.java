@@ -5,6 +5,7 @@ import com.duokoala.server.dto.request.authRequest.LoginRequest;
 import com.duokoala.server.dto.request.authRequest.LogoutRequest;
 import com.duokoala.server.dto.request.authRequest.RefreshRequest;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
+import com.duokoala.server.dto.response.authResponse.ForgetPasswordResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
 import com.duokoala.server.entity.InvalidatedToken;
 import com.duokoala.server.entity.user.Admin;
@@ -82,10 +83,20 @@ public class AuthenticationService {
                 .build();
     }
 
+//    public ForgetPasswordResponse verifyForgetPassword(String username, String otp) throws JOSEException {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+//        if(!emailService.verifyOtp(user.getEmail(), otp))
+//            throw new AppException(ErrorCode.INVALID_OTP);
+//        var token = generatePasswordResetToken(user);
+//         return ForgetPasswordResponse.builder()
+//                 .forgetPasswordToken()
+//                 .build();
+//    }
+
     public AuthenticationResponse refreshToken(RefreshRequest request)
             throws ParseException, JOSEException {
         SignedJWT signedJWT = verifyToken(request.getToken(), true);
-
         String jit = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
         String username = signedJWT.getJWTClaimsSet().getSubject();
@@ -167,6 +178,24 @@ public class AuthenticationService {
         return signedJWT;
     }
 
+    private String generatePasswordResetToken(User user) throws JOSEException {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .claim("userId", user.getUserId())
+                .subject(user.getUsername())
+                .jwtID(UUID.randomUUID().toString())
+                .issuer("duokoalaServer.com")
+                .issueTime(new Date())
+                .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+                .claim("type", "reset_password")
+                .build();
+
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(header, payload);
+        jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+        return jwsObject.serialize();
+    }
+
     private String generateToken(User user) throws JOSEException {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         //header => use Algorithm HS512, enough strong to protect token
@@ -223,4 +252,8 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
     }
 
+    public User getAuthenticatedUser() {
+        return userRepository.findByUsername(getAuthenticatedUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
 }

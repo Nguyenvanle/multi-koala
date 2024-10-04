@@ -24,7 +24,9 @@ spring:
     hibernate:
 #      ddl-auto: update
 #    show-sql: true
-
+  redis:
+    host: localhost
+    port: 6379
 jwt:
   signerKey: ${SIGNER_KEY}
   valid-duration: 3600 #insecond = 1 hours
