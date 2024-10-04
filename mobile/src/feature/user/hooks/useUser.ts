@@ -42,19 +42,6 @@ const useUser = () => {
         setErrorMessage("No token found. Please log in.");
         return;
       }
-
-      // Gọi API để cập nhật ảnh người dùng
-      const response = await userServices.updateUserImage({ token, uri });
-
-      if (response.success) {
-        // Cập nhật thông tin người dùng trong state
-        setUser((prevUser) => ({
-          ...prevUser,
-          image: { imageUrl: uri }, // Cập nhật URL ảnh
-        }));
-      } else {
-        setErrorMessage("Failed to update image.");
-      }
     } catch (error) {
       setErrorMessage("Error updating image: " + error);
     }
