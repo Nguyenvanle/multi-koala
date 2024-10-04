@@ -3,8 +3,6 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.testRequest.TestCreateRequest;
 import com.duokoala.server.dto.request.testRequest.TestUpdateRequest;
 import com.duokoala.server.dto.response.TestResponse;
-import com.duokoala.server.dto.response.courseResponse.CourseResponse;
-import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Question;
 import com.duokoala.server.entity.Test;
 import com.duokoala.server.enums.Status;
@@ -65,6 +63,13 @@ public class TestService {
 
     public List<TestResponse> getAll() {
         var tests = testRepository.findAll();
+        return tests.stream().map(testMapper::toTestResponse).toList();
+    }
+
+    public List<TestResponse> getTestsByLessonId(String lessonId) {
+        var lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
+        var tests = testRepository.findAllByLesson(lesson);
         return tests.stream().map(testMapper::toTestResponse).toList();
     }
 //    public Test

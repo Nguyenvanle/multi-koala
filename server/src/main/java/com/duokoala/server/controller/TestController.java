@@ -58,13 +58,13 @@ public class TestController {
                 .build();
     }
 
-//    @GetMapping("/lessons/{lessonId}/tests")
-//    ApiResponse<TestResponse> getTestOfLesson(
-//            @PathVariable String lessonId) {
-//        return ApiResponse.<TestResponse>builder()
-//                .result(testService.create(lessonId, request))
-//                .build();
-//    }
+    @GetMapping("/lessons/{lessonId}/tests")
+    ApiResponse<List<TestResponse>> getTestsByLessonId(
+            @PathVariable String lessonId) {
+        return ApiResponse.<List<TestResponse>>builder()
+                .result(testService.getTestsByLessonId(lessonId))
+                .build();
+    }
 
     @DeleteMapping("/tests/{testId}")
     ApiResponse<Void> delete(@PathVariable String testId) {
