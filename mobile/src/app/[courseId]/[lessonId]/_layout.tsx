@@ -9,7 +9,7 @@ const DetailsLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: "Course",
+          headerTitle: "Lesson",
           headerShown: true,
           headerTitleStyle: {
             fontSize: 24,
@@ -29,7 +29,7 @@ const DetailsLayout = () => {
         }}
       />
       <Stack.Screen
-        name="[lessonId]"
+        name="[testId]"
         options={{
           headerShown: false,
         }}

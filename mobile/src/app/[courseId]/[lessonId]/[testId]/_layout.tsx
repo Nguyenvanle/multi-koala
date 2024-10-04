@@ -9,7 +9,7 @@ const DetailsLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: "Course",
+          headerTitle: "Test",
           headerShown: true,
           headerTitleStyle: {
             fontSize: 24,
@@ -26,12 +26,6 @@ const DetailsLayout = () => {
               </TouchableOpacity>
             </View>
           ),
-        }}
-      />
-      <Stack.Screen
-        name="[lessonId]"
-        options={{
-          headerShown: false,
         }}
       />
     </Stack>
