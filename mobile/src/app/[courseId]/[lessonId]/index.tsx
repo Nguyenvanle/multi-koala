@@ -22,12 +22,6 @@ import useUser from "@/src/feature/user/hooks/useUser";
 import { LessonBody } from "@/src/feature/lesson/types/lesson";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
-import {
-  AnswerDetails,
-  QuestionDetails,
-  TestDetails,
-  TestList,
-} from "@/src/feature/test/types/test";
 
 const LessonDetails = () => {
   const { isBought } = useGlobalSearchParams(); // Nhận tham số từ router
@@ -73,40 +67,6 @@ const LessonDetails = () => {
   if (!lessonDetails) {
     return <Text>No lesson detail</Text>;
   }
-  const renderAnswerItem = ({ item }: { item: AnswerDetails }) => {
-    return (
-      <View>
-        <Text>{item.answerDescription}</Text>
-      </View>
-    );
-  };
-  const renderQuestionItem = ({ item }: { item: QuestionDetails }) => {
-    return (
-      <View>
-        <Text>{item.questionDescription}</Text>
-        <FlatList
-          data={item.answers}
-          renderItem={renderAnswerItem}
-          keyExtractor={(answers) => answers.answerId.toString()}
-          scrollEnabled={false}
-        />
-      </View>
-    );
-  };
-
-  const renderTestItem = ({ item }: { item: TestDetails }) => {
-    return (
-      <View>
-        <Text>{item.testDescription}</Text>
-        <FlatList
-          data={item.questions}
-          renderItem={renderQuestionItem}
-          keyExtractor={(question) => question.questionId.toString()}
-          scrollEnabled={false}
-        />
-      </View>
-    );
-  };
 
   // Kiểm tra xem enrolled có phải là một mảng không
   const isEnrolled =
@@ -280,22 +240,6 @@ const LessonDetails = () => {
             >
               <Text style={styles.buyButtonText}>Test Exam</Text>
             </TouchableOpacity>
-          )}
-          {/* Phần hiển thị danh sách Test */}
-          <Text style={styles.sectionTitle}>Tests</Text>
-          {loadingTest ? (
-            <ActivityIndicator size="large" color={Colors.teal_dark} />
-          ) : testDetails && testDetails.length > 0 ? (
-            <FlatList
-              data={testDetails}
-              renderItem={renderTestItem}
-              keyExtractor={(item) => item.testId.toString()}
-              scrollEnabled={false}
-            />
-          ) : (
-            <Text style={{ ...text.p, color: Colors.red }}>
-              No tests available
-            </Text>
           )}
         </View>
       </View>
