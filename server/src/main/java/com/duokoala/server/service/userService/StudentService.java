@@ -53,6 +53,11 @@ public class StudentService {
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }
 
+    public StudentResponse updateMyInfo(StudentUpdateRequest request) {
+        var studentId = authenticationService.getAuthenticatedStudent().getUserId();
+        return updateStudent(studentId,request);
+    }
+
     public StudentResponse getStudent(String studentId) {
         var student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
@@ -62,7 +67,6 @@ public class StudentService {
     public StudentResponse getMyInfo() {
         return studentMapper.toStudentResponse(authenticationService.getAuthenticatedStudent());
     }
-
 
     public List<StudentResponse> getStudents() {
         var students = studentRepository.findAll();
