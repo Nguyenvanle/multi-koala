@@ -288,6 +288,7 @@ const styles = StyleSheet.create({
   },
   description: {
     ...text.p,
+    fontWeight: "300",
     color: Colors.dark_grey,
   },
   duration: {
