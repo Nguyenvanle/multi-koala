@@ -26,7 +26,7 @@ export default function RegisterForm() {
   const handleSubmit = async (data: any) => {
     const isValid = await form.trigger();
     if (isValid) {
-      setIsDialogOpen(true);
+      // setIsDialogOpen(true);
       await onSubmit(data);
     }
   };

@@ -166,29 +166,44 @@ const TeacherCourseTemplate = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {teacherMyCourses.map((course) => (
-                <TableRow
-                  key={course.courseId}
-                  className="hover:bg-gray-50 dark:hover:bg-slate-800"
-                >
-                  <TableCell>
-                    <Link
-                      href={`/courses/${course.courseId}`}
-                      className="hover:text-emerald-500 font-semibold"
-                      title="View course details"
-                    >
-                      {course.courseName}
+              {teacherMyCourses.length === 0 ? (
+                <TableRow className="h-[400px]">
+                  <TableCell colSpan={4} className="text-center py-4">
+                    <p className="text-gray-500">
+                      You haven&apos;t created any courses yet.
+                    </p>
+                    <Link href="/dashboard/courses/add" passHref>
+                      <Button className="mt-2" variant="outline" size="sm">
+                        Create Your First Course
+                      </Button>
                     </Link>
                   </TableCell>
-                  <TableCell>{course.status}</TableCell>
-                  <TableCell>{course.totalEnrollments}</TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm">
-                      Edit
-                    </Button>
-                  </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                teacherMyCourses.map((course) => (
+                  <TableRow
+                    key={course.courseId}
+                    className="hover:bg-gray-50 dark:hover:bg-slate-800"
+                  >
+                    <TableCell>
+                      <Link
+                        href={`/courses/${course.courseId}`}
+                        className="hover:text-emerald-500 font-semibold"
+                        title="View course details"
+                      >
+                        {course.courseName}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{course.status}</TableCell>
+                    <TableCell>{course.totalEnrollments}</TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </Card>
