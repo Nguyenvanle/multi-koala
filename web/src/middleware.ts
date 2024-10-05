@@ -7,15 +7,12 @@ import {
 import { validateToken, refreshToken, handleInvalidToken } from "@/lib/token-handler";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { cookies } from "next/headers";
 
-// Tạo một Set từ SECURE_PATHS để tăng tốc độ kiểm tra
 const securePathSet = new Set(SECURE_PATHS);
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Early return if auth has already been processed
   if (request.nextUrl.searchParams.has("auth_processed")) {
     return NextResponse.next();
   }
@@ -23,8 +20,8 @@ export async function middleware(request: NextRequest) {
   const isSecurePath =
     securePathSet.has(path) ||
     Array.from(securePathSet).some((prefix) => path.startsWith(prefix));
-  const cookieStore = cookies();
-  const token = cookieStore.get(TOKEN_COOKIE_NAME)?.value;
+
+  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
 
   if (!token) {
     return isSecurePath
@@ -40,13 +37,21 @@ export async function middleware(request: NextRequest) {
     const newToken = await refreshToken(token);
 
     if (newToken) {
-      return setNewTokenAndContinue(newToken);
+      const response = NextResponse.next();
+      response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "strict",
+        maxAge: TOKEN_EXPIRY,
+        path: "/",
+      });
+      return response;
     }
 
-    return handleInvalidToken(NextResponse.next(), request);
+    return handleInvalidToken(request);
   } catch (error) {
     console.error("Error in middleware:", error);
-    return handleInvalidToken(NextResponse.next(), request);
+    return handleInvalidToken(request);
   }
 }
 
@@ -54,18 +59,8 @@ function redirectToClearLocalStorage(request: NextRequest): NextResponse {
   return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
 }
 
-function setNewTokenAndContinue(newToken: string): NextResponse {
-  const response = NextResponse.next();
-  response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
-    path: "/",
-  });
-  return response;
-}
-
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+  ],
 };
