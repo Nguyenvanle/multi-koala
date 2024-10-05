@@ -1,9 +1,8 @@
 "use client";
-
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Book, CirclePlus, Home, ListRestart, Save, Undo2 } from "lucide-react";
+import { Book, CirclePlus, Home, ListRestart } from "lucide-react";
 import { Form } from "@/components/ui/form";
-import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 import useField from "@/features/field/hooks/useField";
 import useCourseType from "@/features/course-type/hooks/useCourseType";
 import {
@@ -17,6 +16,7 @@ import {
   CourseTypesCard,
 } from "@/features/courses/components/organisms";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
+import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 
 const breadcrumbs = [
   {
@@ -35,7 +35,7 @@ const breadcrumbs = [
 ];
 
 export default function CreateCoursePage() {
-  const { form, onSubmit } = useCreateCourseForm();
+  const { form, onSubmit, handleReset } = useCreateCourseForm();
   const { fields, loading: fieldsLoading, error: fieldsError } = useField();
   const {
     courseTypes,
@@ -60,19 +60,12 @@ export default function CreateCoursePage() {
             <div className="flex gap-2">
               <Button
                 type="button"
-                onClick={() => form.reset()}
+                onClick={handleReset}
                 variant="outline"
                 className="w-full sm:w-auto"
               >
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full sm:w-auto "
-              >
-                <Save className="mr-2 h-4 w-4" /> Save
               </Button>
               <Button type="submit" className="w-full sm:w-auto">
                 <CirclePlus className="mr-2 h-4 w-4" />

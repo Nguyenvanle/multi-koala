@@ -19,9 +19,7 @@ import {
 } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 
-export default function BasicInformationCard({
-  form,
-}: UseFormReturn | any | undefined) {
+export default function BasicInformationCard({ form }: { form: UseFormReturn<any> }) {
   return (
     <Card className="flex flex-col flex-1">
       <CardHeader>
@@ -77,7 +75,11 @@ export default function BasicInformationCard({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course Level</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select course level" />
