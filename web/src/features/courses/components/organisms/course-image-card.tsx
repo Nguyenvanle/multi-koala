@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Upload, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, FileRejection } from "react-dropzone";
 import {
   Tooltip,
   TooltipContent,
@@ -30,14 +30,34 @@ export default function CourseImageCard({
     "https://img.freepik.com/free-vector/app-development-concept-design_23-2148670525.jpg?t=st=1726903863~exp=1726907463~hmac=8832d5f008a90a10ba85a5baa57ce274a70f2d57ed166d12346d7307327e908c&w=996";
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      if (file) {
+    (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+      // Chỉnh sửa kiểu dữ liệu tham số
+      if (fileRejections.length > 0) {
+        const errorMessages = fileRejections
+          .map(({ file, errors }) => {
+            const messages = errors.map((error) => {
+              if (error.code === "file-too-large") {
+                return `${file.name} is too large. Max size is 5MB.`;
+              } else if (error.code === "file-invalid-type") {
+                return `${file.name} is not a valid image.`;
+              }
+              return `${file.name} could not be uploaded.`;
+            });
+            return messages.join(" ");
+          })
+          .join(" "); // Kết hợp tất cả thông báo lỗi
+
+        form.setError("imageUrl", {
+          type: "manual",
+          message: errorMessages,
+        });
+      } else if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreview(reader.result as string);
-          // Không lưu file vào form, thay vào đó lưu URL mặc định
           form.setValue("imageUrl", defaultImageUrl);
+          form.clearErrors("imageUrl");
         };
         reader.readAsDataURL(file);
       }
@@ -55,7 +75,8 @@ export default function CourseImageCard({
 
   const removeImage = useCallback(() => {
     setPreview(null);
-    form.setValue("imageUrl", defaultImageUrl); // Khôi phục lại URL mặc định khi người dùng xóa ảnh
+    form.setValue("imageUrl", defaultImageUrl);
+    form.clearErrors("imageUrl");
   }, [form, defaultImageUrl]);
 
   return (
@@ -63,7 +84,7 @@ export default function CourseImageCard({
       <CardContent className="pt-4">
         <FormField
           control={form.control}
-          name="imageUrl" // Thay đổi từ "image" sang "imageUrl"
+          name="imageUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="sr-only">Course Image</FormLabel>
