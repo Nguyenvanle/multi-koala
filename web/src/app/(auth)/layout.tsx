@@ -1,7 +1,15 @@
+import Header from "@/components/layout/header/header";
+import React from "react";
+
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="flex flex-1 items-center">{children}</main>;
+  return (
+    <>
+      <Header />
+      <main className="flex flex-1 items-center bg-secondary">{children}</main>
+    </>
+  );
 }
