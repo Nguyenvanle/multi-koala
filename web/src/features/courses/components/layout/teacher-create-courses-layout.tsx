@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { Book, CirclePlus, Home, Save, Undo2 } from "lucide-react";
+import { Book, CirclePlus, Home, ListRestart, Save, Undo2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 import useField from "@/features/field/hooks/useField";
@@ -64,7 +64,8 @@ export default function CreateCoursePage() {
                 variant="outline"
                 className="w-full sm:w-auto"
               >
-                <Undo2 className="mr-2 h-4 w-4" /> Reset
+                <ListRestart className="mr-2 h-4 w-4" />
+                Reset
               </Button>
               <Button
                 type="button"
@@ -95,11 +96,3 @@ export default function CreateCoursePage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-

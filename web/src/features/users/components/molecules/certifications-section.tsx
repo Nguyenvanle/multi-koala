@@ -13,7 +13,7 @@ import { formatDate } from "@/lib/utils";
 export const CertificationsSection: React.FC<{
   certifications: CertificationsResult;
 }> = ({ certifications }) => (
-  <div className="p-12 pt-0 pb-6">
+  <div className="p-4 xl:p-6 pt-0 pb-6">
     <Card className="bg-background rounded-lg shadow-lg">
       <CardHeader className="px-6 py-4 border-b">
         <h3 className="text-2xl font-bold flex items-center">

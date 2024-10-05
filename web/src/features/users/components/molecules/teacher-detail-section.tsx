@@ -27,16 +27,26 @@ export const TeacherDetailsSection: React.FC<{ teacher: TeacherBodyType }> = ({
         <InfoItem
           icon={Calendar}
           label="Birth Date"
-          value={formatDate(teacher.userBirth.toString())}
+          value={
+            teacher.userBirth
+              ? formatDate(teacher.userBirth?.toString())
+              : "Not specified"
+          }
+          className={!teacher.userBirth ? "text-muted-foreground" : ""}
         />
-        <InfoItem icon={MapPin} label="Hometown" value={teacher.userHometown} />
+        <InfoItem
+          icon={MapPin}
+          label="Hometown"
+          value={teacher.userHometown || "Not specified"}
+          className={!teacher.userHometown ? "text-muted-foreground" : ""}
+        />
         <TeacherRatingItem
           initialData={{ avgteacherRating: 0 }}
           teacherId={teacher.userId}
         />
       </div>
     </CardContent>
-    <CardFooter className="pt-6 ">
+    <CardFooter className="pt-6">
       <div className="col-span-1 lg:col-span-2">
         <h3 className="text-lg font-semibold flex items-center mb-2">
           <Book className="mr-2 text-primary" size={20} /> Bio
