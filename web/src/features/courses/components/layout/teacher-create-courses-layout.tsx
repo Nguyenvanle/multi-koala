@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { CirclePlus, Save, Undo2 } from "lucide-react";
+import { Book, CirclePlus, Home, Save, Undo2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
 import useField from "@/features/field/hooks/useField";
@@ -16,6 +16,23 @@ import {
   CourseImageCard,
   CourseTypesCard,
 } from "@/features/courses/components/organisms";
+import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
+
+const breadcrumbs = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: <Home className="w-4 h-4" />,
+  },
+  {
+    label: "Course Management",
+    href: "/dashboard/courses",
+    icon: <Book className="w-4 h-4" />,
+  },
+  {
+    label: "Add Course",
+  },
+];
 
 export default function CreateCoursePage() {
   const { form, onSubmit } = useCreateCourseForm();
@@ -38,8 +55,8 @@ export default function CreateCoursePage() {
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
-            <h1 className="text-3xl font-bold">Create New Course</h1>
+          <div className="flex flex-col xl:flex-row justify-between gap-4 xl:gap-6 ">
+            <Breadcrumbs items={breadcrumbs} />
             <div className="flex gap-2">
               <Button
                 type="button"

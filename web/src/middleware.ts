@@ -38,6 +38,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const newToken = await refreshToken(token);
+
     if (newToken) {
       return setNewTokenAndContinue(newToken);
     }

@@ -1,11 +1,7 @@
+"use client";
+
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -23,12 +19,15 @@ import {
   BarChart2,
   Clock,
   PlusCircle,
+  ChevronRight,
+  Home,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -64,17 +63,25 @@ interface TeacherCourseTemplateProps {
   teacherMyCourses: TeacherMyCoursesBodyType;
 }
 
+const breadcrumbs = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: <Home className="w-4 h-4" />,
+  },
+  { label: "Course Management" }, // Không có href, hiển thị như text tĩnh
+];
+
 const TeacherCourseTemplate = ({
   teacherStatistic,
   teacherMyCourses,
 }: TeacherCourseTemplateProps) => {
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
-      <div className="flex flex-row items-center justify-between">
-        <h1 className="text-3xl font-bold">Course Management</h1>
-
-        <Link href={"/dashboard/courses/add"} passHref>
-          <Button className="flex items-center gap-2">
+      <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+        <Breadcrumbs items={breadcrumbs} />
+        <Link href="/dashboard/courses/add" passHref>
+          <Button className="flex items-center gap-2" size={"sm"}>
             <PlusCircle className="w-5 h-5" />
             Add New Course
           </Button>
