@@ -9,13 +9,16 @@ import React from "react";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import { router } from "expo-router";
-import MyCoures from "@/src/feature/course/components/home/my-courses/MyCoures";
-import NewCoures from "../../../feature/course/components/home/new-courses/NewCourse";
 import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 import useUser from "@/src/feature/user/hooks/useUser";
+import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
+import MyCourses from "@/src/feature/course/components/home/my-courses/MyCoures";
+import NewCourses from "@/src/feature/course/components/home/new-courses/NewCourse";
 
-const Home = () => {
+const Home = ({ courseId }: { courseId: string }) => {
   const { user } = useUser();
+  const { enrolled, errorMessage, loading } = useEnrolled(courseId);
+
   return (
     <SafeAreaView
       style={{
@@ -23,7 +26,7 @@ const Home = () => {
       }}
     >
       <StatusBar barStyle={"dark-content"} />
-      <HeaderUser />
+      <HeaderUser courseId={courseId} />
       {user ? (
         <View style={{ alignItems: "center" }}>
           <View
@@ -47,7 +50,7 @@ const Home = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          <MyCoures />
+          <MyCourses />
           <View
             style={{
               flexDirection: "row",
@@ -68,7 +71,7 @@ const Home = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          <NewCoures />
+          <NewCourses />
         </View>
       ) : (
         <View style={Styles.container}>
@@ -91,7 +94,7 @@ const Home = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          <NewCoures />
+          <NewCourses />
         </View>
       )}
     </SafeAreaView>

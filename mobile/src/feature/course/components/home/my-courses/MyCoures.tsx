@@ -112,19 +112,18 @@ const styles = StyleSheet.create({
   price: {
     ...text.large,
     color: Colors.teal_dark,
-    fontWeight: "300",
-    paddingTop: 8,
+    fontWeight: "400",
   },
   containerText: {
     overflow: "hidden",
     width: 170,
-    padding: 8,
+    paddingTop: 8,
   },
   clampedText: {
     // Styles can be adjusted according to your needs
     ...text.p,
     color: Colors.black,
-    fontWeight: "400",
+    fontWeight: "500",
   },
 });
 

@@ -17,7 +17,7 @@ const Auth_Layout = () => {
       <Stack.Screen
         name="forgot"
         options={{
-          presentation: "modal",
+          presentation: "formSheet",
           headerShown: false,
         }}
       />

@@ -29,6 +29,7 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
   }
   // Lấy khóa học đầu tiên từ mảng enrolled
   const latestCourse = enrolled?.[0];
+
   return (
     <View
       style={{
@@ -142,7 +143,7 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
                     >
                       <Progress.Bar
                         progress={latestCourse.process * 0.01}
-                        color={Colors.teal_light}
+                        color={Colors.super_teal_dark}
                         width={260}
                       />
                     </View>

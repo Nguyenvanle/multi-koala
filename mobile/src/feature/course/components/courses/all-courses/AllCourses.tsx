@@ -5,8 +5,9 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  Alert,
 } from "react-native";
-import { Link, useGlobalSearchParams } from "expo-router";
+import { Link, router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourse } from "../../../hooks/useCourse";
@@ -43,89 +44,111 @@ const AllCourses = () => {
   });
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
-    <Link href={`/${item.courseId}`} asChild>
-      <TouchableOpacity style={{ marginTop: 16 }}>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: 350,
-          }}
-        >
-          <Image
-            source={{ uri: item.image.imageUrl }}
-            style={{
-              width: 350,
-              height: 200,
-              borderRadius: 15,
-              borderColor: Colors.grey,
-              borderWidth: 1,
-            }}
-          />
+    <View>
+      <Link href={`/${item.courseId}`} asChild>
+        <TouchableOpacity style={{ marginTop: 16 }}>
           <View
             style={{
-              flexDirection: "column",
-              alignSelf: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              width: 350,
             }}
           >
+            <Image
+              source={{ uri: item.image.imageUrl }}
+              style={{
+                width: 350,
+                height: 200,
+                borderRadius: 15,
+                borderColor: Colors.grey,
+                borderWidth: 1,
+              }}
+            />
             <View
               style={{
-                flexDirection: "row",
-                alignSelf: "baseline",
-                width: 345,
-
-                paddingTop: 8,
-                paddingBottom: 0,
+                flexDirection: "column",
+                alignSelf: "center",
               }}
             >
-              <Text
-                style={{
-                  ...text.h4,
-                  color: Colors.black,
-                  fontWeight: "300",
-                }}
-              >
-                {item.courseName}
-              </Text>
-            </View>
-            <View style={{ marginVertical: 5, paddingTop: 0 }}>
-              <Text
-                style={{
-                  ...text.large,
-                  fontWeight: "300",
-                  color: Colors.dark,
-                }}
-              >
-                {item.uploadedByTeacher.firstname}{" "}
-                {item.uploadedByTeacher.lastname}
-              </Text>
               <View
                 style={{
-                  borderRadius: 10,
-                  backgroundColor: Colors.teal_dark,
-                  alignItems: "center",
-                  height: 50,
-                  width: 350,
-                  marginTop: 8,
-                  marginBottom: 8,
-                  justifyContent: "center",
+                  flexDirection: "row",
+                  alignSelf: "baseline",
+                  width: 345,
+
+                  paddingTop: 8,
+                  paddingBottom: 0,
                 }}
               >
                 <Text
                   style={{
                     ...text.h4,
-                    fontWeight: "500",
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontWeight: "400",
                   }}
                 >
-                  Buy Now
+                  {item.courseName}
+                </Text>
+              </View>
+              <View style={{ marginVertical: 5, paddingTop: 0 }}>
+                <Text
+                  style={{
+                    ...text.large,
+                    fontWeight: "400",
+                    color: Colors.teal_dark,
+                  }}
+                >
+                  {item.uploadedByTeacher.firstname}{" "}
+                  {item.uploadedByTeacher.lastname}
                 </Text>
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
+      </Link>
+      <TouchableOpacity
+        style={{
+          borderRadius: 10,
+          backgroundColor: Colors.teal_dark,
+          alignItems: "center",
+          height: 50,
+          width: 350,
+          marginTop: 8,
+          marginBottom: 8,
+          justifyContent: "center",
+        }}
+        onPress={() => {
+          if (user) {
+            router.push(`/${item.courseId}`);
+          } else {
+            Alert.alert(
+              "LogIn Required",
+              "You need to LogIn to buy this course.",
+              [
+                {
+                  text: "Cancel",
+                  style: "cancel",
+                },
+                {
+                  text: "LogIn",
+                  onPress: () => router.push("/(auth)/sign-in"), // Assuming you have a login route
+                },
+              ]
+            );
+          }
+        }}
+      >
+        <Text
+          style={{
+            ...text.h4,
+            fontWeight: "500",
+            color: Colors.white,
+          }}
+        >
+          Buy Now
+        </Text>
       </TouchableOpacity>
-    </Link>
+    </View>
   );
 
   return (

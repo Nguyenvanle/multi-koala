@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
             paddingHorizontal: 20,
             height: 120,
           }}
-          title="Sign In"
+          title="Log In"
         />
         <OtherSignIn />
 

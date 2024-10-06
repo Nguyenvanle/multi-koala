@@ -237,7 +237,8 @@ const ForgotPasswordScreen = () => {
 export const forgot = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "center", // Căn giữa theo chiều dọc
+    alignItems: "center", // Căn giữa theo chiều ngang
     padding: 20,
   },
   termsContainer: {

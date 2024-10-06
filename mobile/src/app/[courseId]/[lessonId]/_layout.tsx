@@ -1,18 +1,17 @@
 import { Colors } from "@/src/constants/Colors";
-import { useDetails } from "@/src/feature/course/hooks/useDetails";
+import { useLessonDetails } from "@/src/feature/lesson/hooks/useLessonDetails";
 import { AntDesign } from "@expo/vector-icons";
 import { router, Stack, useGlobalSearchParams } from "expo-router";
-import { TouchableOpacity, View, Text, ActivityIndicator } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-const CourseLayout = () => {
-  const { courseId } = useGlobalSearchParams();
-  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-
-  const { courseDetails, loading, errorMessageDetails } =
-    useDetails(courseIdString);
+const LessonLayout = () => {
+  const { lessonId } = useGlobalSearchParams();
+  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
+  const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
+    useLessonDetails(lessonIdString);
 
   // Kiểm tra trạng thái loading
-  if (loading) {
+  if (loadingLessonDetails) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color={Colors.teal_dark} />
@@ -20,8 +19,8 @@ const CourseLayout = () => {
     );
   }
 
-  // Kiểm tra xem courseDetails có thông tin không
-  if (!courseDetails) {
+  // Kiểm tra xem lesson có thông tin không
+  if (!lessonDetails) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text style={{ color: Colors.red }}>No course details available</Text>
@@ -34,7 +33,7 @@ const CourseLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: courseDetails.courseName, // Đảm bảo courseDetails đã được khởi tạo
+          headerTitle: lessonDetails.lessonName,
           headerShown: true,
           headerTitleStyle: {
             fontSize: 24,
@@ -54,7 +53,7 @@ const CourseLayout = () => {
         }}
       />
       <Stack.Screen
-        name="[lessonId]"
+        name="[testId]"
         options={{
           headerShown: false,
         }}
@@ -62,5 +61,4 @@ const CourseLayout = () => {
     </Stack>
   );
 };
-
-export default CourseLayout;
+export default LessonLayout;
