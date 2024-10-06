@@ -1,15 +1,42 @@
 import { Colors } from "@/src/constants/Colors";
+import { useLessonDetails } from "@/src/feature/lesson/hooks/useLessonDetails";
+import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
 import { AntDesign } from "@expo/vector-icons";
-import { router, Stack } from "expo-router";
-import { TouchableOpacity, View } from "react-native";
+import { router, Stack, useGlobalSearchParams } from "expo-router";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-const DetailsLayout = () => {
+const TestLayout = () => {
+  const { lessonId } = useGlobalSearchParams();
+  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
+  const { testDetails, errorMessageTest, loadingTest } =
+    useTestDetails(lessonIdString);
+  const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
+    useLessonDetails(lessonIdString);
+
+  // Kiểm tra trạng thái loading
+  if (loadingLessonDetails) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.teal_dark} />
+      </View>
+    );
+  }
+
+  // Kiểm tra xem test có thông tin không
+  if (!lessonDetails) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: Colors.red }}>No course details available</Text>
+      </View>
+    );
+  }
+
   return (
     <Stack>
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: "Test",
+          headerTitle: lessonDetails.lessonName,
           headerShown: true,
           headerTitleStyle: {
             fontSize: 24,
@@ -31,4 +58,4 @@ const DetailsLayout = () => {
     </Stack>
   );
 };
-export default DetailsLayout;
+export default TestLayout;

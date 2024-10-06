@@ -147,8 +147,9 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   };
 
   const isLoggedIn = !!user;
-  const displayedLessons =
-    isLoggedIn && showAllLessons ? lesson : lesson?.slice(0, 3);
+  const displayedLessons = showAllLessons ? lesson : lesson?.slice(0, 3);
+
+  const lessonCount = lesson ? lesson.length : 0;
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -165,8 +166,10 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
               {courseDetails.uploadedByTeacher?.firstname}{" "}
               {courseDetails.uploadedByTeacher?.lastname}
             </Text>
+            <CustomRatingBar courseRating={courseRating?.avgcourseRating} />
           </View>
           <Text style={styles.title}>{courseDetails.courseName}</Text>
+          <Text style={styles.lessonCount}>Total Lessons: {lessonCount}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
@@ -192,6 +195,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
                 </TouchableOpacity>
               ))}
           </View>
+
           <Text style={[styles.courseLevel, { color: courseLevelColor }]}>
             {courseDetails.courseLevel}
           </Text>
@@ -221,26 +225,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
               keyExtractor={(item) => item.lessonId}
               scrollEnabled={false}
             />
-            {lesson.length > 3 && (
+            {lesson && lesson.length > 3 && (
               <TouchableOpacity
                 style={styles.showMoreButton}
-                onPress={() => {
-                  if (isLoggedIn) {
-                    setShowAllLessons(!showAllLessons);
-                  } else {
-                    Alert.alert(
-                      "Notification",
-                      "Please sign in to view more lessons"
-                    );
-                  }
-                }}
+                onPress={() => setShowAllLessons(!showAllLessons)}
               >
                 <Text style={styles.showMoreButtonText}>
-                  {isLoggedIn
-                    ? showAllLessons
-                      ? "Show Less"
-                      : "Show More"
-                    : "Sign in to view more"}
+                  {showAllLessons ? "Show Less" : "Show More"}
                 </Text>
               </TouchableOpacity>
             )}
@@ -260,12 +251,22 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
                 if (lesson.length > 0) {
                   // Logic to buy the course
                 } else {
-                  Alert.alert("Notification", "No lessons available to view");
+                  Alert.alert("Notification", "No lessons available to buy");
                 }
               } else {
                 Alert.alert(
-                  "Notification",
-                  "Please sign in to view more lessons"
+                  "LogIn Required",
+                  "You need to logIn to buy this course",
+                  [
+                    {
+                      text: "Cancel",
+                      style: "cancel",
+                    },
+                    {
+                      text: "LogIn",
+                      onPress: () => router.push("/(auth)/sign-in"),
+                    },
+                  ]
                 );
               }
             }}
@@ -404,6 +405,11 @@ const styles = StyleSheet.create({
     ...text.large,
     fontWeight: "400",
     color: Colors.super_teal_dark,
+  },
+  lessonCount: {
+    ...text.p,
+    color: Colors.dark_grey,
+    marginBottom: 8,
   },
 });
 

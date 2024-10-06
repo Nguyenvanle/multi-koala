@@ -25,17 +25,28 @@ import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
 
 const LessonDetails = () => {
   const { isBought } = useGlobalSearchParams(); // Nhận tham số từ router
+
   const { user } = useUser();
+
   const { courseId } = useGlobalSearchParams();
+
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+
   const { enrolled } = useEnrolled();
+
   const { lessonId } = useGlobalSearchParams();
+
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
+
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
+
   const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
+
   const [showAllLessons, setShowAllLessons] = useState(false);
+
   const [isFullScreen, setIsFullScreen] = useState(false);
+
   const { testDetails, errorMessageTest, loadingTest } =
     useTestDetails(lessonIdString);
 
@@ -113,10 +124,14 @@ const LessonDetails = () => {
     index: number;
   }) => {
     const isFirstThree = index < 3 || isEnrolled; // Hiển thị tất cả nếu đã đăng ký
-
+    const isSelected = item.lessonId === lessonIdString; // Kiểm tra xem bài học này có được chọn không
     return (
       <TouchableOpacity
-        style={[styles.lessonItem, !isFirstThree && { opacity: 0.5 }]}
+        style={[
+          styles.lessonItem,
+          !isFirstThree && { opacity: 0.5 },
+          isSelected && { backgroundColor: Colors.teal_light },
+        ]}
         onPress={() => {
           if (isFirstThree) {
             router.replace(`/${courseIdString}/${item.lessonId}`);
@@ -137,10 +152,7 @@ const LessonDetails = () => {
       </TouchableOpacity>
     );
   };
-
-  const isLoggedIn = !!user;
-  const displayedLessons =
-    isLoggedIn && showAllLessons ? lesson : lesson?.slice(0, 3);
+  const displayedLessons = showAllLessons ? lesson : lesson?.slice(0, 3);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -176,23 +188,10 @@ const LessonDetails = () => {
               {lesson.length > 3 && (
                 <TouchableOpacity
                   style={styles.showMoreButton}
-                  onPress={() => {
-                    if (isLoggedIn) {
-                      setShowAllLessons(!showAllLessons);
-                    } else {
-                      Alert.alert(
-                        "Notification",
-                        "Please sign in to view more lessons"
-                      );
-                    }
-                  }}
+                  onPress={() => setShowAllLessons(!showAllLessons)}
                 >
                   <Text style={styles.showMoreButtonText}>
-                    {isLoggedIn
-                      ? showAllLessons
-                        ? "Show Less"
-                        : "Show More"
-                      : "Sign in to view more"}
+                    {showAllLessons ? "Show Less" : "Show More"}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -203,44 +202,16 @@ const LessonDetails = () => {
             </Text>
           )}
           {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
-          {!isEnrolled ? (
-            <TouchableOpacity
-              style={styles.buyButton}
-              onPress={() => {
-                if (isLoggedIn) {
-                  if (lesson.length > 0) {
-                    // Logic to buy the course
-                  } else {
-                    Alert.alert("Notification", "No lessons available to view");
-                  }
-                } else {
-                  Alert.alert(
-                    "Notification",
-                    "Please sign in to view more lessons"
-                  );
-                }
-              }}
-            >
-              <Text style={styles.buyButtonText}>Buy Now</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.buyButton}
-              onPress={() => {
-                if (isLoggedIn) {
-                  // Thay đổi đường dẫn đến trang test/index
-                  // router.push(`/${courseIdString}/${lessonIdString}/test`); // Điều hướng đến test/index
-                } else {
-                  Alert.alert(
-                    "Notification",
-                    "Please sign in to view more lessons"
-                  );
-                }
-              }}
-            >
-              <Text style={styles.buyButtonText}>Test Exam</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            style={styles.buyButton}
+            onPress={() => {
+              router.push(
+                `/${courseIdString}/${lessonIdString}/${testDetails}`
+              );
+            }}
+          >
+            <Text style={styles.buyButtonText}>Test Exam</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -307,6 +278,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.grey,
   },
+
   lessonThumbnail: {
     width: 80,
     height: 80,

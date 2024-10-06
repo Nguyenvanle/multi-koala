@@ -13,10 +13,12 @@ import { Link } from "expo-router";
 import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { CourseBody } from "../../../types/course";
+import { useEnrolled } from "../../../hooks/useEnrrolled";
 
 const NewCourses = () => {
   const { course, loading, errorMessage } = useCourse();
   const { user } = useUser();
+  const { enrolled } = useEnrolled();
 
   if (loading) {
     return (
@@ -33,11 +35,24 @@ const NewCourses = () => {
     );
   }
 
-  // Số lượng khóa học hiển thị dựa trên việc người dùng có tồn tại hay không
-  const numberOfCoursesToShow = user ? 10 : 5; // Nếu có người dùng, hiển thị 10 khóa học, ngược lại hiển thị 5 khóa học
+  const getFilteredCourses = (courses, enrolled, user) => {
+    // Lọc danh sách khóa học để loại bỏ những khóa học đã được đăng ký
+    const enrolledCourseIds = Array.isArray(enrolled)
+      ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
+      : [];
 
-  // Lấy khóa học theo số lượng đã xác định
-  const limitedCourses = course?.slice(1, numberOfCoursesToShow);
+    const filteredCourses = courses.filter((item) => {
+      return !enrolledCourseIds.includes(item.courseId);
+    });
+
+    // Số lượng khóa học hiển thị dựa trên việc người dùng có tồn tại hay không
+    const numberOfCoursesToShow = user ? 10 : 5; // Nếu có người dùng, hiển thị 10 khóa học, ngược lại hiển thị 5 khóa học
+
+    // Lấy khóa học theo số lượng đã xác định
+    return filteredCourses.slice(0, numberOfCoursesToShow);
+  };
+  // Gọi hàm getFilteredCourses với các tham số
+  const coursesToShow = getFilteredCourses(course, enrolled, user);
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
     <View style={styles.container}>
@@ -65,7 +80,7 @@ const NewCourses = () => {
       {user ? (
         <View style={{ height: 250 }}>
           <FlatList
-            data={limitedCourses}
+            data={coursesToShow}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
             showsVerticalScrollIndicator={false}
@@ -74,7 +89,7 @@ const NewCourses = () => {
       ) : (
         <View style={{ height: 450, top: -195 }}>
           <FlatList
-            data={limitedCourses}
+            data={coursesToShow}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
             showsVerticalScrollIndicator={false}
