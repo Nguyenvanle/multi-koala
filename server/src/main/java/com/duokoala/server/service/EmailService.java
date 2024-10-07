@@ -7,28 +7,28 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class EmailService {
-    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
     RedisTemplate<String, Object> redisTemplate;
     JavaMailSender javaMailSender;
+    PasswordEncoder passwordEncoder;
 
     public void sendVerificationEmail(String email) throws MessagingException {
-        int otp = generateOtp(email);
+        String otp = generateRegisterOTP(email);
         String subject = "DuoKoala - Verify Your Email Address";
         String body = "<p>Dear User,</p>"
                 + "<p>Thank you for signing up on DuoKoala, the leading platform for buying and selling courses. "
@@ -41,7 +41,7 @@ public class EmailService {
     }
 
     public void sendForgotPasswordEmail(String email) throws MessagingException {
-        int otp = generateOtp(email);
+        String otp = generateOtp(email);
         String subject = "DuoKoala - Reset Your Password";
         String body = "<p>Dear User,</p>"
                 + "<p>We received a request to reset your DuoKoala account password. Please use the following OTP to reset your password:</p>"
@@ -60,20 +60,37 @@ public class EmailService {
         javaMailSender.send(mimeMessage);
     }
 
-    public int generateRandomOtp() {
+    private String generateRandomNumberOtp() {
         Random random = new Random();
-        return 100000 + random.nextInt(900000);
+        return String.valueOf(100000 + random.nextInt(900000));
     }
 
-    public int generateOtp(String email) {
-        int otp = generateRandomOtp();
-        redisTemplate.opsForValue().set(email,otp, 60, TimeUnit.SECONDS); // Lưu OTP vào Redis với thời gian hết hạn 60 giây
+    private String generateOtp(String email) {
+        var otp = generateRandomNumberOtp();
+        var encodeOTP = passwordEncoder.encode(otp);
+        redisTemplate.opsForValue().set(email,encodeOTP, 60, TimeUnit.SECONDS); // Lưu OTP vào Redis với thời gian hết hạn 60 giây
         return otp;
     }
 
-    public Boolean verifyOtp(String email, String otp) {
+    private String generateRegisterOTP(String email) {
+        return generateOtp(email+"_register");
+    }
+
+    public String generateForgetPasswordOTP(String email) {
+        return generateOtp(email+"_forgetPassword");
+    }
+
+    private Boolean verifyOtp(String email, String otp) {
         Object storedOtp = redisTemplate.opsForValue().get(email); // Lấy OTP từ Redis
         if (storedOtp == null) throw new AppException(ErrorCode.OTP_EXPIRED);
-        return storedOtp.toString().equals(otp);
+        return passwordEncoder.matches(otp,storedOtp.toString());
     }
+
+    private Boolean verifyRegisterOTP(String email, String otp) {
+        return verifyOtp(email+"_register",otp);
+    }
+    private Boolean verifyForgetPasswordOTP(String email, String otp) {
+        return verifyOtp(email+"_forgetPassword",otp);
+    }
+
 }

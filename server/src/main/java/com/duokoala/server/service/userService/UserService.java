@@ -15,6 +15,7 @@ import com.duokoala.server.repository.mediaRepository.ImageRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
 import com.duokoala.server.service.AuthenticationService;
 //import com.duokoala.server.service.EmailService;
+import com.duokoala.server.service.EmailService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
@@ -36,17 +37,24 @@ public class UserService {
     ImageRepository imageRepository;
     ImageMapper imageMapper;
     PasswordEncoder passwordEncoder;
-//    EmailService emailService;
+    EmailService emailService;
     AuthenticationService authenticationService;
 
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-//    public void forgetPassword(String username) throws MessagingException {
+    public void forgetPassword(String username) throws MessagingException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        emailService.sendForgotPasswordEmail(user.getEmail());
+    }
+
+//    public void verifyPassword(String username, String otp) {
 //        User user = userRepository.findByUsername(username)
 //                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//        emailService.sendForgotPasswordEmail(user.getEmail());
+//        if(!emailService.(user.getEmail(),otp))
+//            throw new AppException(ErrorCode.INVALID_OTP);
 //    }
 
     public Image createNewAvatar(String imageUrl) {
