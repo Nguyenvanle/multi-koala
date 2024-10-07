@@ -399,3 +399,5 @@ FodyWeavers.xsd
 server/src/main/resources/application.yaml
 /server/src/main/resources
 server/src/main/resources/application.yaml
+server/src/main/resources/application.yaml
+*.yaml
