@@ -20,5 +20,6 @@ public class LessonResponse {
     VideoResponse video;
     LocalDateTime lessonUploadedAt;
     CourseResponse course;
+    boolean isDemo;
     boolean isDeleted;
 }
