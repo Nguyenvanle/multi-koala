@@ -1,30 +1,19 @@
 import { courseTypeService } from "@/features/course-type/services/course-type";
 import { CourseTypesResultResType } from "@/features/course-type/types/course-type";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
+
+// Định nghĩa fetcher function
+const fetchCourseTypes = async () => {
+  const { result } = await courseTypeService.getAll();
+  return result?.result; // Trả về dữ liệu cần thiết
+};
 
 export default function useCourseType() {
-  const [courseTypes, setCourseTypes] =
-    useState<CourseTypesResultResType | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, error } = useSWR("course-types", fetchCourseTypes);
 
-  useEffect(() => {
-    const fetchCourseTypes = async () => {
-      try {
-        const { result } = await courseTypeService.getAll();
-
-        if (result) {
-          setCourseTypes(result.result);
-        }
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourseTypes();
-  }, []);
-
-  return { courseTypes, loading, error };
+  return {
+    courseTypes: data as CourseTypesResultResType | null, // Chuyển đổi kiểu dữ liệu
+    loading: !error && !data,
+    error: error?.message || null,
+  };
 }

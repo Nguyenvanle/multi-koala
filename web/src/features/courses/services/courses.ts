@@ -3,6 +3,8 @@ import {
   CourseDetailResType,
   CourseResType,
 } from "@/features/courses/types/course";
+import { CourseCreatePayloadType } from "@/features/courses/types/course-create";
+import { TeacherMyCoursesResType } from "@/features/courses/types/teacher-my-courses";
 import { DiscountResType } from "@/features/discount/types/discount";
 import { RatingResType } from "@/features/rating/types/rating";
 import { apiService } from "@/services/api";
@@ -10,6 +12,17 @@ import { apiService } from "@/services/api";
 export const courseService = {
   getAll: async () => {
     return await apiService.get<CourseResType>("/courses");
+  },
+
+  getMyCourses: async (token: string) => {
+    return await apiService.get<TeacherMyCoursesResType>(
+      "/courses/my-statistic-courses",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   },
 
   getPriceRange: async () => {
@@ -35,5 +48,13 @@ export const courseService = {
     return await apiService.get<RatingResType>(
       `/courses/${courseId}/reviews/avg-rating`
     );
+  },
+
+  createNewCourse: async (token: string, data: CourseCreatePayloadType) => {
+    return await apiService.post<CourseDetailResType>(`/courses`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   },
 };

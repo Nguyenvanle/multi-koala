@@ -15,7 +15,7 @@ export default function AuthButtons() {
     !isAuthenticated && (
       <div className="flex flex-row space-x-2">
         <Link href={"/login"}>
-          <Button>Sign In</Button>
+          <Button>Log in</Button>
         </Link>
       </div>
     )

@@ -1,55 +1,66 @@
 import {
   SECURE_PATHS,
   TOKEN_COOKIE_NAME,
-  LOGIN_PATH,
+  CLEAR_LOCAL_STORAGE_PATH,
+  TOKEN_EXPIRY,
 } from "@/features/auth/enum/auth";
-import { validateToken } from "@/lib/token-handler";
+import { validateToken, refreshToken, handleInvalidToken } from "@/lib/token-handler";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const token = request.cookies.get(TOKEN_COOKIE_NAME);
-  const path = request.nextUrl.pathname;
-  const isSecurePath = SECURE_PATHS.some((securePath) =>
-    path.startsWith(securePath)
-  );
+const securePathSet = new Set(SECURE_PATHS);
 
-  // Kiểm tra nếu đã xử lý xác thực (tránh vòng lặp)
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
   if (request.nextUrl.searchParams.has("auth_processed")) {
     return NextResponse.next();
   }
 
-  if (!token && isSecurePath) {
-    // Chuyển hướng đến trang đăng nhập với flag xử lý xác thực
-    const loginUrl = new URL(LOGIN_PATH, request.url);
-    loginUrl.searchParams.set("auth_processed", "true");
-    return NextResponse.redirect(loginUrl);
+  const isSecurePath =
+    securePathSet.has(path) ||
+    Array.from(securePathSet).some((prefix) => path.startsWith(prefix));
+
+  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
+
+  if (!token) {
+    return isSecurePath
+      ? redirectToClearLocalStorage(request)
+      : NextResponse.next();
   }
 
-  if (token) {
-    try {
-      // Thực hiện kiểm tra token ở đây
-      const isValid = await validateToken(token.value);
-      if (!isValid) {
-        // Token không hợp lệ, chuyển hướng đến đăng nhập và xóa token
-        const response = NextResponse.redirect(
-          new URL(LOGIN_PATH, request.url)
-        );
-        response.cookies.delete(TOKEN_COOKIE_NAME);
-        return response;
-      }
-    } catch (error) {
-      console.error("Error validating token:", error);
-      // Xử lý lỗi, chuyển hướng đến đăng nhập
-      const response = NextResponse.redirect(new URL(LOGIN_PATH, request.url));
-      response.cookies.delete(TOKEN_COOKIE_NAME);
+  try {
+    if (await validateToken(token)) {
+      return NextResponse.next();
+    }
+
+    const newToken = await refreshToken(token);
+
+    if (newToken) {
+      const response = NextResponse.next();
+      response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "strict",
+        maxAge: TOKEN_EXPIRY,
+        path: "/",
+      });
       return response;
     }
-  }
 
-  return NextResponse.next();
+    return handleInvalidToken(request);
+  } catch (error) {
+    console.error("Error in middleware:", error);
+    return handleInvalidToken(request);
+  }
+}
+
+function redirectToClearLocalStorage(request: NextRequest): NextResponse {
+  return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+  ],
 };

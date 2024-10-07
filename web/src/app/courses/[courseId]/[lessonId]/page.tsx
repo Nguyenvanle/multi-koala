@@ -2,7 +2,7 @@ import LessonTemplate from "@/features/lessons/components/templates/lesson-templ
 
 export default function LessonDetail() {
   return (
-    <div className="container px-12 xl:px-8 py-9">
+    <div className="w-full p-4 xl:p-6">
       <LessonTemplate />
     </div>
   );

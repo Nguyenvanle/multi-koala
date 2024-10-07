@@ -26,8 +26,8 @@ export const CoursesHeader: React.FC<CoursesHeaderProps> = ({
   };
 
   return (
-    <div className="container px-auto py-6 space-y-4 ">
-      <Card className="p-6 space-y-6 shadow-lg">
+    <div className="w-full p-4 xl:p-6 space-y-4">
+      <Card className="p-4 xl:p-6 space-y-6 shadow-lg">
         <div className="flex flex-1 flex-col justify-start ">
           <H4 className="flex flex-row mt-0 items-center text-primary">
             <Book className="mr-1 text-primary" size={20} />

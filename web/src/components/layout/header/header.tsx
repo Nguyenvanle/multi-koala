@@ -13,10 +13,10 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between bg-background shadow ">
-      <div className="container px-auto py-4 flex gap-4">
+      <div className="flex p-4 xl:px-6 py-4 w-full gap-4">
         <div className=" flex flex-2 items-center ">
           <DesktopNav menuItems={menuItems} />
-          <MobileNav menuItems={menuItems} />
+          <MobileNav menuItems={menuItems as any} />
         </div>
 
         <nav className="flex flex-1 justify-end">

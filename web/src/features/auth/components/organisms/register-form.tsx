@@ -9,7 +9,7 @@ import EmailField from "@/features/auth/components/molecules/email-field";
 import { Form } from "@/components/ui/form";
 import PasswordFields from "@/features/auth/components/molecules/password-fields";
 import TermField from "@/features/auth/components/molecules/term-field";
-import { H1, Muted } from "@/components/ui/typography";
+import { H1, H2, H3, H4, Muted, P } from "@/components/ui/typography";
 import {
   Dialog,
   DialogContent,
@@ -18,15 +18,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import OTPField from "@/features/auth/components/molecules/otp-field";
+import Link from "next/link";
+import { Icons } from "@/components/ui/icons";
 
 export default function RegisterForm() {
   const { form, onSubmit } = useRegisterForm();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const isSubmitting = form.formState.isSubmitting; // Check if the form is submitting
 
   const handleSubmit = async (data: any) => {
     const isValid = await form.trigger();
     if (isValid) {
-      setIsDialogOpen(true);
+      // setIsDialogOpen(true);
       await onSubmit(data);
     }
   };
@@ -35,7 +38,7 @@ export default function RegisterForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-4 flex-1 w-full max-w-md border rounded shadow-md p-4"
+        className="space-y-4 flex-1 w-full max-w-md border rounded shadow-lg hover:shadow-xl p-4 xl:p-6 bg-background"
       >
         <div className="flex flex-1 justify-center">
           <H1>Sign Up</H1>
@@ -46,10 +49,24 @@ export default function RegisterForm() {
         <PasswordFields control={form.control} />
         <TermField control={form.control} />
 
-        <div className="flex flex-1">
-          <Button type="submit" className="flex flex-1">
-            Sign Up
+        <div className="flex flex-1 flex-col space-y-4">
+        <Button type="submit" className="flex flex-1" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Sign up"
+            )}
           </Button>
+
+          <div className="flex flex-row flex-1 justify-between items-center">
+            <P className="text-sm">You already have an account? </P>
+            <Link
+              href={"/login"}
+              className="font-semibold text-primary text-sm  text-center"
+            >
+              Login
+            </Link>
+          </div>
         </div>
       </form>
 

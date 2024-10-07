@@ -59,7 +59,7 @@ export const CoursesListGrid: React.FC<CoursesListGridProps> = ({
   );
 
   return (
-    <div className={`container flex ${className}`}>
+    <div className={`w-full px-4 xl:px-6 flex ${className}`}>
       {forProfile ? (
         content
       ) : (

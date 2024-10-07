@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/footer/footer";
 import Header from "@/components/layout/header/header";
+import React from "react";
 
 export default function MainLayout({
   children,

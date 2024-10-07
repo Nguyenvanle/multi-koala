@@ -1,5 +1,5 @@
-import Footer from "@/components/layout/footer/footer";
 import Header from "@/components/layout/header/header";
+import Sidebar from "@/components/layout/sidebar/sidebar";
 
 export default function MainLayout({
   children,
@@ -7,12 +7,14 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div>
       <Header />
-      <main className="flex flex-grow">
-        <div className="container flex mx-auto px-4 py-8">{children}</div>
+      <main className="md:pl-4 xl:pl-6 flex flex-1 flex-grow ">
+        <Sidebar />
+        <div className="flex flex-1 flex-grow h-full p-4 xl:p-6 bg-secondary">
+          {children}
+        </div>
       </main>
-      <Footer />
-    </>
+    </div>
   );
 }

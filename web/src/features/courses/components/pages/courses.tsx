@@ -2,9 +2,11 @@
 
 import { CoursesTemplate } from "@/features/courses/components/layout/courses";
 import { useCourses } from "@/features/courses/hooks/useCourses";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Courses() {
-  const { courses, isLoading, isError, setSortOrder } = useCourses();
+  const { courses, isLoading, isError, setSortOrder, mutate } = useCourses();
 
   if (isError) return <div>Error loading courses</div>;
 

@@ -3,7 +3,7 @@ import Banner from "@/components/pages/home/banner";
 
 export default function Home() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-1 flex-grow w-full flex-col">
       <Banner />
       <About />
     </div>

@@ -39,3 +39,10 @@ export const formatDate = (dateString: string): string => {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+export const capitalizeFirstLetter = (string: string) => {
+  return string
+    .split(/(?=[A-Z])|_/g) // Tách theo các chữ cái viết hoa hoặc dấu _
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Viết hoa chữ đầu
+    .join(" "); // Kết hợp lại với khoảng trắng
+};

@@ -68,7 +68,7 @@ export const LessonInfo: React.FC<{
             <span>Video Lesson</span>
           </div>
         </div>
-        <div className="mt-2 flex flex-1 justify-between items-center">
+        <div className="mt-2 flex flex-1 justify-between items-center gap-4">
           <div className="flex flex-wrap gap-2 flex-0">
             <Badge variant="secondary" className="self-baseline">
               Duration: {hours > 0 ? `${hours}h ` : ""}

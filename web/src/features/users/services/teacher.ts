@@ -5,6 +5,7 @@ import {
   TeacherDetailResponse,
   TeachersResponse,
 } from "@/features/users/types/teacher-res";
+import { TeacherStatisticsResType } from "@/features/users/types/teacher-statistic";
 import { apiService } from "@/services/api";
 
 export const teacherService = {
@@ -33,6 +34,17 @@ export const teacherService = {
   getRating: async (teacherId: string) => {
     return await apiService.get<TeacherRatingResType>(
       `/teachers/${teacherId}/reviews/avg-rating`
+    );
+  },
+
+  getStatistic: async (token: string) => {
+    return await apiService.get<TeacherStatisticsResType>(
+      `/teachers/my-statistic`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
   },
 };

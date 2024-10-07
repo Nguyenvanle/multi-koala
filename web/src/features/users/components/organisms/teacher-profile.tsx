@@ -16,8 +16,8 @@ const TeacherProfile: React.FC<{
   certifications: CertificationsResult;
 }> = ({ teacher, courses, courseLoading, certifications }) => {
   return (
-    <div className="flex flex-col bg-secondary">
-      <div className="grid grid-cols-1 space-y-6 lg:grid-cols-3 lg:space-x-6 lg:space-y-0 p-12 py-6 bg-secondary">
+    <div className="w-full flex flex-col bg-secondary">
+      <div className="grid grid-cols-1 space-y-6 lg:grid-cols-3 lg:space-x-6 lg:space-y-0 p-4 xl:p-6 bg-secondary">
         <TeacherAvatarSection teacher={teacher} />
         <TeacherDetailsSection teacher={teacher} />
       </div>

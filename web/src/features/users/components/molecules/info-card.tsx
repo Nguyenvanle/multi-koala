@@ -1,13 +1,13 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/contexts/auth-context";
 
 export default function UserInfo({ icon, text }: UserInfoProps) {
   const { user } = useAuth();
 
   return (
-    <>
+    <div>
       {!user ? (
         <Skeleton className="w-ful h-10" />
       ) : (
@@ -16,6 +16,6 @@ export default function UserInfo({ icon, text }: UserInfoProps) {
           <p className="self-center font-medium line-clamp-1">{text}</p>
         </div>
       )}
-    </>
+    </div>
   );
 }

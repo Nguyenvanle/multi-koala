@@ -14,7 +14,7 @@ export const CoursesSection: React.FC<{
   courses: CoursesResultResType;
   courseLoading: boolean;
 }> = ({ courses, courseLoading }) => (
-  <div className="col-span-1 md:col-span-3 p-12 pt-0 pb-6">
+  <div className="col-span-1 md:col-span-3 p-4 xl:p-6 pt-0 pb-6">
     <Card className="rounded-lg shadow-lg">
       <CardHeader className="border-b p-4 px-6">
         <h3 className="text-2xl font-bold flex items-center">
@@ -27,7 +27,8 @@ export const CoursesSection: React.FC<{
           courses={courses}
           loading={courseLoading}
           className="lg:grid-cols-4 p-0 py-0"
-          forProfile
+          forProfile={true}
+          myProfile={false}
         />
       </CardFooter>
     </Card>

@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/footer/footer";
 import Header from "@/components/layout/header/header";
+import React from "react";
 
 export default function MainLayout({
   children,
@@ -9,7 +10,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <main className="flex flex-grow">{children}</main>
+      <main className="flex flex-1 flex-grow">{children}</main>
       <Footer />
     </>
   );

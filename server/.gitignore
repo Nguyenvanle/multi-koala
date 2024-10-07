@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+*.sln.iml
+/server/src/main/resources/application.yaml

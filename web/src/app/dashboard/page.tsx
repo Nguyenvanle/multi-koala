@@ -1,16 +1,16 @@
-// const RoleBaseAccessing = () => {
-//   const { hasRole, canAccess } = useRoles();
+"use client";
+import { TeacherCourseSkeletonTemplate } from "@/features/courses/components/atoms/teacher-course-skeleton";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
-//   return (
-//     <div>
-//       {hasRole('teacher') && <TeachingSection />}
-//       {hasRole('admin') && <AdminSection />}
-//       {canAccess('createCourse') && <CreateCourseButton />}
-//     </div>
-//   );
-// };
-
-// Overview Page
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  useEffect(() => {
+    redirect("/dashboard/courses");
+  }, []);
+
+  return (
+    <div className="min-h-[100vh] w-full">
+      <TeacherCourseSkeletonTemplate />
+    </div>
+  );
 }

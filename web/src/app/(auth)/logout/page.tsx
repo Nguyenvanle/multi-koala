@@ -8,18 +8,32 @@ import { useEffect, useState } from "react";
 export default function Logout() {
   const { push } = useRouter();
   const { logout } = useAuth();
-  const [isLogout, setIsLogout] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLogout) logout();
-    setIsLogout(true);
+    const performLogout = async () => {
+      if (isLoading) {
+        try {
+          await logout();
+          push("/login?auth_processed");
+        } catch (error) {
+          console.error("Logout failed:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
 
-    push("/login?from=logout");
-  }, [isLogout, logout, push]);
+    performLogout();
+  }, [isLoading, logout, push]);
 
-  return (
-    <div className="flex container px-auto py-6">
-      <Skeleton className=" w-[100vw] h-[90vh]"></Skeleton>
-    </div>
-  );
+  if (isLoading) {
+    return (
+      <div className="flex container px-auto py-6">
+        <Skeleton className="w-[100vw] h-[90vh]"></Skeleton>
+      </div>
+    );
+  }
+
+  return null;
 }
