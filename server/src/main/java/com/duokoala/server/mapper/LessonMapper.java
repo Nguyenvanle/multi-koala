@@ -11,7 +11,9 @@ import org.mapstruct.MappingTarget;
 
 @Mapper( componentModel = "spring")// used in spring
 public interface LessonMapper {
+    @Mapping(target = "isDemo", source = "demo")
     Lesson toLesson(LessonCreateRequest request);
     LessonResponse toLessonResponse(Lesson lesson);
+    @Mapping(target = "demo", source = "demo")
     void updateLesson(@MappingTarget Lesson lesson, LessonUpdateRequest request);
 }

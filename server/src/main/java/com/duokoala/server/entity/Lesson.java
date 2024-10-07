@@ -27,5 +27,6 @@ public class Lesson {
     Video video;
     @ManyToOne
     Course course;
+    boolean isDemo;
     boolean isDeleted;
 }

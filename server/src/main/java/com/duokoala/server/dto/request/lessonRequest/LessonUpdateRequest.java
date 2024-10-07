@@ -14,4 +14,5 @@ public class LessonUpdateRequest {
     String imageUrl;
     String videoUrl;
     int videoDuration;
+    boolean isDemo;
 }
