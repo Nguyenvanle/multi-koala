@@ -210,7 +210,7 @@ const LessonDetails = () => {
               );
             }}
           >
-            <Text style={styles.buyButtonText}>Test Exam</Text>
+            <Text style={styles.buyButtonText}>Take Exam</Text>
           </TouchableOpacity>
         </View>
       </View>
