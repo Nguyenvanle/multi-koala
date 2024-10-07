@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+server/src/main/resources/application.yaml
+/server/src/main/resources
+server/src/main/resources/application.yaml

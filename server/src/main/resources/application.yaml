@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/duokoala"
-    username: root
+    username: rootsss
     password: root
   mail:
     host: smtp.gmail.com
