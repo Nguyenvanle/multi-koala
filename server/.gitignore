@@ -33,4 +33,4 @@ build/
 .vscode/
 
 *.sln.iml
-/server/src/main/resources/application.yaml
+*.yaml
