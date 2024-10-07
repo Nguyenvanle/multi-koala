@@ -1,5 +1,6 @@
 import React from "react";
 import { Stack } from "expo-router";
+import { StyleSheet } from "react-native";
 
 const Auth_Layout = () => {
   return (
@@ -19,10 +20,18 @@ const Auth_Layout = () => {
         options={{
           presentation: "formSheet",
           headerShown: false,
+          contentStyle: styles.modalContent, // Thêm style cho modal
         }}
       />
     </Stack>
   );
 };
+
+const styles = StyleSheet.create({
+  modalContent: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default Auth_Layout;

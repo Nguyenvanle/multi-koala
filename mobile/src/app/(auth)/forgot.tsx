@@ -62,7 +62,7 @@ const ForgotPasswordScreen = () => {
                 color: Colors.teal_dark,
                 paddingTop: 20,
                 paddingHorizontal: 20,
-                height: 120,
+                paddingBottom: 80,
               }}
             />
             <View style={{ alignSelf: "baseline", paddingTop: 16 }}>
@@ -102,7 +102,7 @@ const ForgotPasswordScreen = () => {
             <Button
               title="Send OTP"
               textStyle={{ ...text.h4, color: Colors.white }}
-              style={{ ...styles.loginButton, marginTop: 8 }}
+              style={{ ...styles.loginButton, marginTop: 24 }}
               onPress={handleSendOtp}
             />
           </>
