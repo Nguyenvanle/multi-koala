@@ -88,7 +88,7 @@ const InProgressCourses = () => {
                       color: Colors.teal_dark,
                     }}
                   >
-                    {item.process}%
+                    {item.process * 100}%
                   </Text>
                 </View>
                 <View
@@ -100,7 +100,7 @@ const InProgressCourses = () => {
                 >
                   <Progress.Bar
                     width={350}
-                    progress={item.process * 0.01}
+                    progress={item.process}
                     color={Colors.teal_light}
                   />
                 </View>
