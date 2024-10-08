@@ -1,4 +1,5 @@
 package com.duokoala.server.configuration;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,22 +11,25 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    @Value("6379")
-    private String redisPort;
-    @Value("localhost")
+    @Value("${spring.redis.host}")
     private String redisHost;
+    @Value("${spring.redis.port}")
+    private int redisPort;
+    @Value("${spring.redis.password}")
+    private String redisPassword;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(Integer.parseInt(redisPort));
+        redisStandaloneConfiguration.setPort(redisPort);
+        redisStandaloneConfiguration.setPassword(redisPassword);
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
     @Bean
-    RedisTemplate<String, Object> redisTemplate(){
-        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
+    RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());

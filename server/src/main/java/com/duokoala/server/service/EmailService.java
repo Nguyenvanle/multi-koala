@@ -80,7 +80,7 @@ public class EmailService {
         return generateOtp(email+"_forgetPassword");
     }
 
-    private Boolean verifyOtp(String email, String otp) {
+    public Boolean verifyOtp(String email, String otp) {
         Object storedOtp = redisTemplate.opsForValue().get(email); // Lấy OTP từ Redis
         if (storedOtp == null) throw new AppException(ErrorCode.OTP_EXPIRED);
         return passwordEncoder.matches(otp,storedOtp.toString());
