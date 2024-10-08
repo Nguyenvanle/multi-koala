@@ -6,7 +6,7 @@ import { nextjsApiService } from "@/services/next-api";
 import useSWR from "swr";
 
 export function useTeacherStatistics() {
-  const { data, error } = useSWR(`teacher-statistics`, () =>
+  const { data, error, mutate } = useSWR(`teacher-statistics`, () =>
     nextjsApiService.get<TeacherStatisticsResType>(`/api/teachers/my-statistic`)
   );
 
@@ -14,5 +14,6 @@ export function useTeacherStatistics() {
     statistics: data?.result?.result as TeacherStatisticsBodyType,
     loading: !error && !data,
     error: error?.message,
+    mutate: mutate,
   };
 }

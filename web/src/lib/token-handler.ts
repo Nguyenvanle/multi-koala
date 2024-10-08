@@ -26,6 +26,7 @@ export async function validateToken(token: string): Promise<boolean> {
     return cachedEntry.valid;
   }
 
+  // Kiểm tra tính hợp lệ token từ server
   const { result, error } = await introspectServices.checkValid({ token });
   const isValid = result?.result.valid ?? false;
 

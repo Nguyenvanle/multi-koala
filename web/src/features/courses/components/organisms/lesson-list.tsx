@@ -16,14 +16,12 @@ interface LessonListProps {
   lessons: LessonDetailResult[];
   visibleLessons: number;
   onLoadMore: () => void;
-  freeLessonsCount: number; // New prop to determine how many lessons are free
 }
 
 export const LessonList: React.FC<LessonListProps> = ({
   lessons,
   visibleLessons,
   onLoadMore,
-  freeLessonsCount,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +56,7 @@ export const LessonList: React.FC<LessonListProps> = ({
         <LessonCard
           key={lesson.lessonId}
           {...lesson}
-          isLocked={index >= freeLessonsCount}
+          isLocked={!lesson.demo} // Kiểm tra demo để xác định bài học có bị khóa hay không
           lessonNumber={index + 1}
         />
       ))}

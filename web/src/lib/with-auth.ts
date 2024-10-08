@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from 'next/headers';
+import { validateToken } from "@/lib/token-handler"; // Đảm bảo rằng bạn đã import validateToken
 
 type ServiceFunction<T> = (token: string) => Promise<{ result: T }>;
 
@@ -7,11 +8,20 @@ export function withAuth<T>(serviceFunction: ServiceFunction<T>) {
   return async (request: NextRequest) => {
     try {
       const cookieStore = cookies();
-      const tokenCookie = cookieStore.get('token');
+      const tokenCookie = cookieStore.get("token");
 
       if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
+          { status: 401 }
+        );
+      }
+
+      // Kiểm tra tính hợp lệ của token
+      const isValidToken = await validateToken(tokenCookie.value);
+      if (!isValidToken) {
+        return NextResponse.json(
+          { code: 401, message: "Authentication token is invalid" },
           { status: 401 }
         );
       }
@@ -47,11 +57,20 @@ export function withAuthAndData<T, D>(
   return async (request: NextRequest) => {
     try {
       const cookieStore = cookies();
-      const tokenCookie = cookieStore.get('token');
+      const tokenCookie = cookieStore.get("token");
 
       if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
+          { status: 401 }
+        );
+      }
+
+      // Kiểm tra tính hợp lệ của token
+      const isValidToken = await validateToken(tokenCookie.value);
+      if (!isValidToken) {
+        return NextResponse.json(
+          { code: 401, message: "Authentication token is invalid" },
           { status: 401 }
         );
       }
@@ -61,7 +80,7 @@ export function withAuthAndData<T, D>(
 
       if (!data) {
         return NextResponse.json(
-          { code: 401, message: "body data is missing" },
+          { code: 401, message: "Body data is missing" },
           { status: 401 }
         );
       }
