@@ -1,14 +1,12 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.authRequest.IntrospectRequest;
-import com.duokoala.server.dto.request.authRequest.LoginRequest;
-import com.duokoala.server.dto.request.authRequest.LogoutRequest;
-import com.duokoala.server.dto.request.authRequest.RefreshRequest;
+import com.duokoala.server.dto.request.authRequest.*;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
 import com.duokoala.server.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -48,6 +46,14 @@ public class AuthenticationController {
     ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(authenticationService.refreshToken(request))
+                .build();
+    }
+
+    @PostMapping("/reset-password")
+    ApiResponse<Void> resetPassword(@RequestBody ResetPasswordRequest request) throws ParseException, JOSEException, MessagingException {
+        authenticationService.resetPassword(request);
+        return ApiResponse.<Void>builder()
+                .message("Password has been reset!")
                 .build();
     }
 }

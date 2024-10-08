@@ -1,9 +1,6 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.authRequest.IntrospectRequest;
-import com.duokoala.server.dto.request.authRequest.LoginRequest;
-import com.duokoala.server.dto.request.authRequest.LogoutRequest;
-import com.duokoala.server.dto.request.authRequest.RefreshRequest;
+import com.duokoala.server.dto.request.authRequest.*;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
 import com.duokoala.server.dto.response.authResponse.ForgetPasswordResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
@@ -25,12 +22,14 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +40,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -55,7 +55,7 @@ public class AuthenticationService {
     TeacherRepository teacherRepository;
     AdminRepository adminRepository;
     UserMapper userMapper;
-
+    RedisTemplate<String, Object> redisTemplate;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -83,16 +83,18 @@ public class AuthenticationService {
                 .build();
     }
 
-//    public ForgetPasswordResponse verifyForgetPassword(String username, String otp) throws JOSEException {
-//        User user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//        if(!emailService.verifyOtp(user.getEmail(), otp))
-//            throw new AppException(ErrorCode.INVALID_OTP);
-//        var token = generatePasswordResetToken(user);
-//         return ForgetPasswordResponse.builder()
-//                 .forgetPasswordToken()
-//                 .build();
-//    }
+    public void resetPassword(ResetPasswordRequest request) throws MessagingException {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        String verifiedKey = "otp-verified:reset_password:" + user.getEmail();
+        Object verifiedStatus = redisTemplate.opsForValue().get(verifiedKey);
+        if (!Objects.equals(verifiedStatus, "verified"))
+            throw new AppException(ErrorCode.OTP_NOT_VERIFIED); // OTP chưa được verify
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        redisTemplate.delete(verifiedKey);
+    }
 
     public AuthenticationResponse refreshToken(RefreshRequest request)
             throws ParseException, JOSEException {

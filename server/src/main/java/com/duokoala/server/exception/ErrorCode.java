@@ -65,6 +65,7 @@ public enum ErrorCode {
     INVALID_ANSWER_FORMAT(400, "Invalid format: Answers must be a Set of Strings", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN),
     INVALID_PASSWORD(401, "Invalid password: Password is incorrect", HttpStatus.UNAUTHORIZED),
+    OTP_NOT_VERIFIED(401, "Unauthorized: OTP not verified", HttpStatus.UNAUTHORIZED),
     INVALID_OTP(400, "Invalid OTP: The provided OTP is incorrect", HttpStatus.BAD_REQUEST),
     ;
     final int code;
