@@ -180,7 +180,7 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
               }}
             >
               <Button
-                title="Sign In"
+                title="Log In"
                 onPress={() => router.replace("/(auth)/sign-in")}
                 style={{
                   ...button.Authen,

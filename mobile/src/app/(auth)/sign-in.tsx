@@ -63,7 +63,7 @@ const SignIn: React.FC = () => {
         <ForgotPassword />
         {error && <Text style={styles.errorText}>{error}</Text>}
         <Button
-          title={loading ? "Signing In..." : "Sign In"}
+          title={loading ? "Logging In..." : "Log In"}
           style={styles.loginButton}
           onPress={onSubmit}
           textStyle={{ ...text.h4, color: Colors.white }}

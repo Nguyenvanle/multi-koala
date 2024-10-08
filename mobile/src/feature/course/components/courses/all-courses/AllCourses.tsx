@@ -130,7 +130,7 @@ const AllCourses = () => {
                   style: "cancel",
                 },
                 {
-                  text: "LogIn",
+                  text: "Log In",
                   onPress: () => router.push("/(auth)/sign-in"), // Assuming you have a login route
                 },
               ]
