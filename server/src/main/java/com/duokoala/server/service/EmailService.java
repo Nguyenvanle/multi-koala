@@ -1,5 +1,6 @@
 package com.duokoala.server.service;
 
+import com.duokoala.server.enums.OTPEnums.Type;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import jakarta.mail.MessagingException;
@@ -7,7 +8,9 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,13 +24,18 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Slf4j
 public class EmailService {
+    @NonFinal
+    @Value("${otp.valid-for-verification-duration}")
+    long verifyDuration;
+    @NonFinal
+    @Value("${otp.valid-for-usage-duration}")
+    long usageDuration;
     RedisTemplate<String, Object> redisTemplate;
     JavaMailSender javaMailSender;
     PasswordEncoder passwordEncoder;
 
-    public void sendVerificationEmail(String email) throws MessagingException {
+    public void sendRegisterEmail(String email) throws MessagingException {
         String otp = generateRegisterOTP(email);
         String subject = "DuoKoala - Verify Your Email Address";
         String body = "<p>Dear User,</p>"
@@ -40,8 +48,8 @@ public class EmailService {
         sendEmail(email, subject, body);
     }
 
-    public void sendForgotPasswordEmail(String email) throws MessagingException {
-        String otp = generateOtp(email);
+    public void sendResetPasswordEmail(String email) throws MessagingException {
+        String otp = generateForgetPasswordOTP(email);
         String subject = "DuoKoala - Reset Your Password";
         String body = "<p>Dear User,</p>"
                 + "<p>We received a request to reset your DuoKoala account password. Please use the following OTP to reset your password:</p>"
@@ -65,32 +73,39 @@ public class EmailService {
         return String.valueOf(100000 + random.nextInt(900000));
     }
 
-    private String generateOtp(String email) {
+    private String generateOtp(String email, Type type) {
         var otp = generateRandomNumberOtp();
+        String key = "otp:" + type.name().toLowerCase() + ":" + email;
         var encodeOTP = passwordEncoder.encode(otp);
-        redisTemplate.opsForValue().set(email,encodeOTP, 60, TimeUnit.SECONDS); // Lưu OTP vào Redis với thời gian hết hạn 60 giây
+        redisTemplate.opsForValue().set(key, encodeOTP, verifyDuration, TimeUnit.SECONDS); // Lưu OTP vào Redis với thời gian hết hạn 60 giây
         return otp;
     }
 
     private String generateRegisterOTP(String email) {
-        return generateOtp(email+"_register");
+        return generateOtp(email, Type.REGISTER);
     }
 
     public String generateForgetPasswordOTP(String email) {
-        return generateOtp(email+"_forgetPassword");
+        return generateOtp(email, Type.RESET_PASSWORD);
     }
 
-    public Boolean verifyOtp(String email, String otp) {
-        Object storedOtp = redisTemplate.opsForValue().get(email); // Lấy OTP từ Redis
+    private Boolean verifyOtp(String email, String otp, Type type) {
+        String key = "otp:" + type.name().toLowerCase() + ":" + email;
+        Object storedOtp = redisTemplate.opsForValue().get(key); // Lấy key từ Redis
         if (storedOtp == null) throw new AppException(ErrorCode.OTP_EXPIRED);
-        return passwordEncoder.matches(otp,storedOtp.toString());
+        boolean isOtpValid = passwordEncoder.matches(otp, storedOtp.toString());
+        if (isOtpValid) {
+            String verifiedKey = "otp-verified:" + type.name().toLowerCase() + ":" + email;
+            redisTemplate.opsForValue().set(verifiedKey, "verified", usageDuration, TimeUnit.SECONDS);
+        }
+        return isOtpValid;
     }
 
-    private Boolean verifyRegisterOTP(String email, String otp) {
-        return verifyOtp(email+"_register",otp);
-    }
-    private Boolean verifyForgetPasswordOTP(String email, String otp) {
-        return verifyOtp(email+"_forgetPassword",otp);
+    public Boolean verifyRegisterOTP(String email, String otp) {
+        return verifyOtp(email, otp, Type.REGISTER); // verify OTP for register
     }
 
+    public Boolean verifyForgetPasswordOTP(String email, String otp) {
+        return verifyOtp(email, otp, Type.RESET_PASSWORD); // verify OTP for forgetPassword
+    }
 }

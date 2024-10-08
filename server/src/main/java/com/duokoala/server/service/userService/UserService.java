@@ -47,7 +47,7 @@ public class UserService {
     public void forgetPassword(String username) throws MessagingException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        emailService.sendForgotPasswordEmail(user.getEmail());
+        emailService.sendResetPasswordEmail(user.getEmail());
     }
 
 //    public void verifyPassword(String username, String otp) {
