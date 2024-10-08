@@ -12,7 +12,7 @@ interface CacheEntry {
 }
 
 const tokenCache = new Map<string, CacheEntry>();
-const CACHE_DURATION = 45 * 60 * 1000; // 45 minutes in milliseconds
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
 export async function validateToken(token: string): Promise<boolean> {
   const cachedEntry = tokenCache.get(token);
