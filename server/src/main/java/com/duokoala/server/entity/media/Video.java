@@ -18,5 +18,5 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.UUID)
     String videoId;
     String videoUrl;
-    int videoDuration;
+    double videoDuration;
 }
