@@ -1,5 +1,6 @@
 package com.duokoala.server.configuration;
 
+import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-
 //handle security endpoint and allow permission
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {"/**"};
@@ -54,13 +57,19 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {//skip check token if -> public path
-//        return (web) -> web.ignoring().requestMatchers(PUBLIC_ENDPOINTS);
-//    }
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+
+    @Bean
+    public Cloudinary getCloudinary(){
+        Map config = new HashMap();
+        config.put("cloud_name", "dkz1esxyw");
+        config.put("api_key", "137167157615336");
+        config.put("api_secret", "mwoOHAglQTABRNvCVf1DF6-Gaq8");
+        config.put("secure", true);
+        return new Cloudinary(config);
+    }
+
 }
