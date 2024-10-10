@@ -200,7 +200,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             {courseDetails.courseLevel}
           </Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
-            <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
+            <Text style={styles.price}>${finalPrice.toFixed(2)} /</Text>
             {shouldShowOriginalPrice && (
               <Text style={styles.originalPrice}>
                 ${courseDetails.coursePrice.toFixed(2)}
@@ -263,7 +263,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
                       style: "cancel",
                     },
                     {
-                      text: "LogIn",
+                      text: "Log In",
                       onPress: () => router.push("/(auth)/sign-in"),
                     },
                   ]

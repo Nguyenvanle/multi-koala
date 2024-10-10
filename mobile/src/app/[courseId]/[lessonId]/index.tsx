@@ -24,13 +24,12 @@ import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
 
 const LessonDetails = () => {
-  const { isBought } = useGlobalSearchParams(); // Nhận tham số từ router
-
   const { user } = useUser();
 
-  const { courseId } = useGlobalSearchParams();
+  const { courseId, testId } = useGlobalSearchParams();
 
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+  const testIdString = Array.isArray(testId) ? testId[0] : testId;
 
   const { enrolled } = useEnrolled();
 
@@ -47,8 +46,10 @@ const LessonDetails = () => {
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const { testDetails, errorMessageTest, loadingTest } =
-    useTestDetails(lessonIdString);
+  const { testDetails, errorMessageTest, loadingTest } = useTestDetails(
+    lessonIdString,
+    testIdString
+  );
 
   const handleFullScreenChange = async (status: any) => {
     setIsFullScreen(status);
@@ -206,7 +207,7 @@ const LessonDetails = () => {
             style={styles.buyButton}
             onPress={() => {
               router.push(
-                `/${courseIdString}/${lessonIdString}/${testDetails}`
+                `/${courseIdString}/${lessonIdString}/${testDetails}/`
               );
             }}
           >

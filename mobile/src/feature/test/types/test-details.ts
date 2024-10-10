@@ -25,14 +25,8 @@ export type TestDetails = {
 
 export type TestList = TestDetails[];
 
-export type TestRes = {
-  code: number;
-  message: string;
-  result: TestList;
-};
-
 export type TestDetailsRes = {
   code: number;
   message: string;
-  result: TestDetails;
+  result: TestList;
 };

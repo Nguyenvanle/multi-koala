@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { TestDetails } from "../types/test";
-import { testDetailsServices } from "../services/test-details";
+import { TestList } from "../types/test";
+import { testListServices } from "../services/test";
 
-export const useTestDetails = (lessonId: string, testId: string | null) => {
-  const [testDetails, setTestDetails] = useState<TestDetails | null>(null);
+export const useTestList = (lessonId: string) => {
+  const [testList, setTestList] = useState<TestList | null>(null);
   const [errorMessageTest, setErrorMessage] = useState<string>("");
   const [loadingTest, setLoadingTest] = useState<boolean>(true);
 
   useEffect(() => {
     const getTest = async () => {
-      if (!lessonId || !testId) return; // Kiểm tra nếu lessonId và testId có giá trị
+      if (!lessonId) return; // Kiểm tra nếu lessonId và testId có giá trị
 
       try {
         setLoadingTest(true);
-        const data = await testDetailsServices.getTestDetails(lessonId, testId);
+        const data = await testListServices.getTestList(lessonId);
         if (data.data.result) {
-          setTestDetails(data.data.result);
+          setTestList(data.data.result);
         } else {
           setErrorMessage("Get test failed.");
         }
@@ -28,7 +28,7 @@ export const useTestDetails = (lessonId: string, testId: string | null) => {
     };
 
     getTest();
-  }, [lessonId, testId]);
+  }, [lessonId]);
 
-  return { testDetails, errorMessageTest, loadingTest };
+  return { testList, errorMessageTest, loadingTest };
 };
