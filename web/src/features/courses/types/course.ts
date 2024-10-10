@@ -12,7 +12,7 @@ export const CourseBodyType = z.object({
   courseUploadedAt: z.string().transform((date) => new Date(date)),
   coursePrice: z.number(),
   courseDescription: z.string(),
-  courseLevel: z.string(),
+  courseLevel: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]),
   types: z.array(CourseTypeBodyType),
   fields: z.array(CourseFieldBodyType),
   image: ImageBodyType,

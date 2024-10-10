@@ -3,6 +3,9 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import CourseEditForm from "@/features/courses/components/layout/teacher-edit";
 import { useCoursesWithoutFilter } from "@/features/courses/hooks/useCourses";
+import { EditCourseFormData } from "@/features/courses/hooks/useEditCourseForm";
+import { CourseFieldResType } from "@/features/courses/types/course-field";
+import { CourseTypeResType } from "@/features/courses/types/course-type";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
 
@@ -51,5 +54,15 @@ export default function TeacherEditPage() {
     ? `${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`
     : "N/A"; // Hoặc một giá trị mặc định khác
 
-  return <CourseEditForm initialData={course}></CourseEditForm>;
+  const initialData: EditCourseFormData = {
+    courseName: course.courseName,
+    courseDescription: course.courseDescription,
+    coursePrice: course.coursePrice,
+    courseLevel: course.courseLevel,
+    types: course.types.map((type: CourseTypeResType) => type.typeName),
+    fields: course.fields.map((field: CourseFieldResType) => field.fieldName),
+    imageUrl: course.image.imageUrl,
+  };
+
+  return <CourseEditForm initialData={initialData}></CourseEditForm>;
 }

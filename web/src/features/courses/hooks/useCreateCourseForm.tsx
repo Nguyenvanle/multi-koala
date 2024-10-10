@@ -8,6 +8,7 @@ import { nextjsApiService } from "@/services/next-api";
 import { CourseDetailResType } from "@/features/courses/types/course";
 import { apiService } from "@/services/api";
 import { mutate } from "swr";
+import { TeacherMyCoursesResType } from "@/features/courses/types/teacher-my-courses";
 
 const CreateCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -73,9 +74,9 @@ export default function useCreateCourseForm() {
       localStorage.removeItem(STORAGE_KEY); // Clear saved data after successful submission
       form.reset(defaultValues);
 
-      mutate("teacher-my-statistics-courses"); // Cập nhật cache và revalidate
       apiService.clearCache();
-      router.push("/dashboard/courses");
+      const timestamp = new Date().getTime();
+      router.push(`/dashboard/courses?refresh=${timestamp}`);
     } catch (error) {
       showToast("Error", "Failed to create course", "destructive");
     }

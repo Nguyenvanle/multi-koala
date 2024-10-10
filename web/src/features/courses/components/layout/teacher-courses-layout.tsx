@@ -188,6 +188,9 @@ const TeacherCourseTemplate = ({
                     <TableCell>
                       <Link
                         href={`/courses/${course.courseId}`}
+                        onClick={() =>
+                          (location.href = `/courses/${course.courseId}`)
+                        }
                         className="hover:text-emerald-500 font-semibold"
                         title="View course details"
                       >
@@ -198,7 +201,12 @@ const TeacherCourseTemplate = ({
                     <TableCell>{course.totalEnrollments}</TableCell>
                     <TableCell>
                       <Button variant="outline" size="sm">
-                        <Link href={`/dashboard/courses/${course.courseId}`}>
+                        <Link
+                          href={`/dashboard/courses/${course.courseId}`}
+                          onClick={() =>
+                            (location.href = `/dashboard/courses/${course.courseId}`)
+                          }
+                        >
                           Edit
                         </Link>
                       </Button>
