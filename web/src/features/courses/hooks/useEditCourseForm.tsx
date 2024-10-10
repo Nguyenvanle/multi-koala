@@ -2,6 +2,10 @@
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { showToast } from "@/lib/utils";
+import { nextjsApiService } from "@/services/next-api";
+import { CourseDetailResType } from "@/features/courses/types/course";
+import { useParams } from "next/navigation";
 
 const EditCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -21,14 +25,32 @@ const EditCourseSchema = z.object({
 export type EditCourseFormData = z.infer<typeof EditCourseSchema>;
 
 export default function useEditCourseForm(initialData: EditCourseFormData) {
+  const { courseId } = useParams();
   const form = useForm<EditCourseFormData>({
     resolver: zodResolver(EditCourseSchema),
     defaultValues: initialData,
   });
 
   const onSubmit = async (data: EditCourseFormData) => {
-    // Xử lý việc cập nhật khóa học
-    console.log("Updated course data:", data);
+    try {
+      const { result } = await nextjsApiService.put<CourseDetailResType>(
+        `/api/courses/${courseId}`,
+        data
+      );
+
+      if (result?.code === 200) {
+        console.log(result);
+        showToast("Success", "Course update successfully!");
+      } else {
+        showToast(
+          "Error",
+          "Failed to update course, try reload or login again",
+          "destructive"
+        );
+      }
+    } catch (error) {
+      showToast("Error", "Failed to update course", "destructive");
+    }
   };
 
   const handleReset = () => {

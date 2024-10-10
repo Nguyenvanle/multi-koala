@@ -51,6 +51,13 @@ export default function CourseEditForm({
     error: typesError,
   } = useCourseType();
 
+  // Lấy giá trị hiện tại của form
+  const currentFormData = form.watch();
+
+  // So sánh currentFormData với initialData
+  const isFormUnchanged =
+    JSON.stringify(currentFormData) === JSON.stringify(initialData);
+
   if (fieldsLoading || typesLoading) {
     return <LoadingSkeleton />;
   }
@@ -70,14 +77,15 @@ export default function CourseEditForm({
                 type="button"
                 onClick={handleReset}
                 variant="outline"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto "
+                disabled={isFormUnchanged}
               >
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
               <Button type="submit" className="w-full sm:w-auto">
                 <CirclePlus className="mr-2 h-4 w-4" />
-                Save Changes
+                Submit
               </Button>
             </div>
           </div>

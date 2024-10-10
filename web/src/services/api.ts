@@ -31,6 +31,14 @@ export class ApiService {
   ): Promise<ApiResponse<T>> {
     return this.request.request<T>("POST", url, data, config);
   }
+
+  public async put<T>(
+    url: string,
+    data?: any,
+    config?: RequestInit
+  ): Promise<ApiResponse<T>> {
+    return this.request.request<T>("PUT", url, data, config);
+  }
 }
 
 /**

@@ -44,9 +44,7 @@ export default function TeacherEditPage() {
     console.log("Mutating courses data due to mismatch...");
     isReload = true;
     location.reload();
-  } else {
-    console.log("No need to mutate. Data is consistent.");
-  }
+  } 
 
   if (!course) {
     return (
