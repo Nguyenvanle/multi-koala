@@ -25,9 +25,12 @@ spring:
 #      ddl-auto: update
 #    show-sql: true
   redis:
-    host: "redis-15490.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com"
-    port: 15490
-    password: "TDeW3KPTlAhdpdROTzv9sJjD9wSC5K0b"
+#    host: "redis-15490.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com"
+#    port: 15490
+#    password: "TDeW3KPTlAhdpdROTzv9sJjD9wSC5K0b"
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
 jwt:
   signerKey: ${SIGNER_KEY}
   valid-duration: 3600 #insecond = 1 hours
