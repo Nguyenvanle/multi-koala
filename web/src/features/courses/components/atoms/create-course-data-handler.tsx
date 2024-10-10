@@ -10,11 +10,11 @@ export function LoadingSkeleton() {
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardHeader>
-              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-10 w-1/4" />
             </CardHeader>
             <CardContent className="space-y-4">
               {[...Array(3)].map((_, j) => (
-                <Skeleton key={j} className="h-10 w-full" />
+                <Skeleton key={j} className="h-24 w-full" />
               ))}
             </CardContent>
           </Card>

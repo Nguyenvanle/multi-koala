@@ -84,9 +84,11 @@ export default function LessonCard({
         className="flex flex-1 flex-row items-center"
         title="Enroll in this course to unlock additional lessons and advanced content!"
       >
-        <Small className="mr-2 text-muted-foreground font-bold ">
-          {lessonNumber}
-        </Small>
+        <div className="flex min-w-6">
+          <Small className="mr-2 text-muted-foreground font-bold ">
+            {lessonNumber}
+          </Small>
+        </div>
         {cardContent}
       </div>
     );
@@ -95,9 +97,11 @@ export default function LessonCard({
   return (
     <Link href={`/courses/${courseId}/${lessonId}`} className="block">
       <div className="flex flex-1 flex-row items-center">
-        <Small className="mr-2 text-muted-foreground font-bold">
-          {lessonNumber}
-        </Small>
+        <div className="flex min-w-6">
+          <Small className="mr-2 text-muted-foreground font-bold">
+            {lessonNumber}
+          </Small>
+        </div>
         {cardContent}
       </div>
     </Link>

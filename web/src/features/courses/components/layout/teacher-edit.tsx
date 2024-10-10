@@ -21,6 +21,10 @@ import useEditCourseForm, {
   EditCourseFormData,
 } from "@/features/courses/hooks/useEditCourseForm";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
+import { LessonsCard } from "@/features/courses/components/layout/lesson-card";
+import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
+import useLessons from "@/features/lessons/hooks/useLessons";
+import { useParams } from "next/navigation";
 
 const breadcrumbs = [
   {
@@ -43,6 +47,7 @@ export default function CourseEditForm({
 }: {
   initialData: EditCourseFormData;
 }) {
+  const { courseId } = useParams();
   const { form, onSubmit, handleReset } = useEditCourseForm(initialData);
   const { fields, loading: fieldsLoading, error: fieldsError } = useField();
   const {
@@ -50,6 +55,11 @@ export default function CourseEditForm({
     loading: typesLoading,
     error: typesError,
   } = useCourseType();
+  const {
+    lessons,
+    duration,
+    loading: lessonsLoading,
+  } = useLessons(courseId as string);
 
   // Lấy giá trị hiện tại của form
   const currentFormData = form.watch();
@@ -99,6 +109,7 @@ export default function CourseEditForm({
               <BasicInformationCard form={form} />
             </div>
             <div className="flex flex-col gap-4 xl:gap-6">
+              <LessonsCardPage lessons={lessons || []} />
               <CourseTypesCard form={form} courseTypes={courseTypes} />
               <CourseFieldsCard form={form} fields={fields} />
             </div>

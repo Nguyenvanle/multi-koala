@@ -41,19 +41,6 @@ export default function BasicInformationCard({ form }: { form: UseFormReturn<any
         />
         <FormField
           control={form.control}
-          name="courseDescription"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Course Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} placeholder="Enter course description" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="coursePrice"
           render={({ field }) => (
             <FormItem>
@@ -92,6 +79,20 @@ export default function BasicInformationCard({ form }: { form: UseFormReturn<any
                   <SelectItem value="EXPERT">Expert</SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="courseDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Course Description</FormLabel>
+              <FormControl>
+                <Textarea {...field} placeholder="Enter course description" />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
