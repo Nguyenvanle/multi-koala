@@ -15,16 +15,19 @@ import com.duokoala.server.repository.mediaRepository.ImageRepository;
 import com.duokoala.server.repository.userRepository.UserRepository;
 import com.duokoala.server.service.AuthenticationService;
 //import com.duokoala.server.service.EmailService;
+import com.duokoala.server.service.EmailService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,18 +39,11 @@ public class UserService {
     ImageRepository imageRepository;
     ImageMapper imageMapper;
     PasswordEncoder passwordEncoder;
-//    EmailService emailService;
-    AuthenticationService authenticationService;
+    RedisTemplate<String, Object> redisTemplate;
 
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
-
-//    public void forgetPassword(String username) throws MessagingException {
-//        User user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//        emailService.sendForgotPasswordEmail(user.getEmail());
-//    }
 
     public Image createNewAvatar(String imageUrl) {
         Image image = imageMapper.toImage(
