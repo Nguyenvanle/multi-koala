@@ -16,7 +16,7 @@ const LogoScreen = () => {
         router.replace("/(home)/home");
       } else {
         // Nếu chưa đăng nhập, chuyển đến trang Intro
-        router.replace("/(auth)/sign-in");
+        router.replace("/(intro)/intro-screen");
       }
     }, 1500);
 
