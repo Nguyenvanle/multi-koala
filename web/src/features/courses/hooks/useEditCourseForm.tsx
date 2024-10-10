@@ -1,10 +1,7 @@
 // features/courses/hooks/useEditCourseForm.ts
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CourseBodyType } from "@/features/courses/types/course";
 import { z } from "zod";
-import { CourseTypeBodyType } from "@/features/courses/types/course-type";
-import { CourseFieldBodyType } from "@/features/courses/types/course-field";
 
 const EditCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -25,12 +22,9 @@ export type EditCourseFormData = z.infer<typeof EditCourseSchema>;
 
 export default function useEditCourseForm(initialData: EditCourseFormData) {
   const form = useForm<EditCourseFormData>({
-    resolver: zodResolver(CourseBodyType),
+    resolver: zodResolver(EditCourseSchema),
     defaultValues: initialData,
   });
-
-  const watchedValues = form.watch(); // Lấy dữ liệu hiện tại của form
-  console.log("Current form data:", watchedValues); // Debug dữ liệu trước validate
 
   const onSubmit = async (data: EditCourseFormData) => {
     // Xử lý việc cập nhật khóa học
