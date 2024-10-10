@@ -198,7 +198,9 @@ const TeacherCourseTemplate = ({
                     <TableCell>{course.totalEnrollments}</TableCell>
                     <TableCell>
                       <Button variant="outline" size="sm">
-                        Edit
+                        <Link href={`/dashboard/courses/${course.courseId}`}>
+                          Edit
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>
