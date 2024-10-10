@@ -35,9 +35,16 @@ export async function validateToken(token: string): Promise<boolean> {
     result: isValid,
   });
 
+  if (!isValid) {
+    // Nếu token không hợp lệ, xóa nó khỏi cache
+    tokenCache.delete(token);
+    console.log("Invalid token, cleared from cache.");
+  }
+
   tokenCache.set(token, { valid: isValid, timestamp: currentTime });
   return isValid;
 }
+
 
 export async function refreshToken(token: string): Promise<string | null> {
   console.log("Refresh: ", {

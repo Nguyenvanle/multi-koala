@@ -42,11 +42,13 @@ export function useCoursesWithoutFilter() {
     data: courses,
     error,
     isLoading,
+    mutate,
   } = useSWR(`get-courses-without-filter`, () => courseRepository.getCourses());
 
   return {
     courses,
     isLoading,
     isError: error,
+    mutate,
   };
 }

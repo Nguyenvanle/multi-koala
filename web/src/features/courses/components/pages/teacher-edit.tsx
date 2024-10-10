@@ -8,6 +8,9 @@ import { CourseFieldResType } from "@/features/courses/types/course-field";
 import { CourseTypeResType } from "@/features/courses/types/course-type";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
+
+let isReload = false;
 
 export default function TeacherEditPage() {
   const { courseId } = useParams();
@@ -35,6 +38,14 @@ export default function TeacherEditPage() {
         </div>
       </div>
     );
+  }
+
+  if (!course && courseId && !isReload) {
+    console.log("Mutating courses data due to mismatch...");
+    isReload = true;
+    location.reload();
+  } else {
+    console.log("No need to mutate. Data is consistent.");
   }
 
   if (!course) {

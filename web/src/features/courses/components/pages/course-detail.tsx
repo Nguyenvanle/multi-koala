@@ -8,10 +8,15 @@ import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
 
 const CourseDetail: React.FC = () => {
   const { courseId } = useParams();
-  const { courses, isLoading: coursesLoading } = useCoursesWithoutFilter();
+  const {
+    courses,
+    isLoading: coursesLoading,
+    mutate,
+  } = useCoursesWithoutFilter();
   const {
     lessons,
     duration,
@@ -22,6 +27,10 @@ const CourseDetail: React.FC = () => {
   const course = !isLoading
     ? courses?.find((course) => course.courseId === courseId)
     : null;
+
+  useEffect(() => {
+    if (!course && !isLoading) mutate();
+  }, [course, mutate, isLoading]);
 
   if (isLoading) {
     return (
@@ -38,7 +47,6 @@ const CourseDetail: React.FC = () => {
   }
 
   if (!course) {
-
     return (
       <div className="flex justify-center items-center w-full h-[82vh]">
         No course found.

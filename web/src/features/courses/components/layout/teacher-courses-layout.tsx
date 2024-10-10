@@ -28,6 +28,7 @@ import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-co
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
+import { useRouter } from "next/navigation";
 
 const CourseStatusDonutChart = dynamic(
   () =>
@@ -76,6 +77,8 @@ const TeacherCourseTemplate = ({
   teacherStatistic,
   teacherMyCourses,
 }: TeacherCourseTemplateProps) => {
+  const timestamp = new Date().getTime();
+
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
       <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
@@ -188,9 +191,6 @@ const TeacherCourseTemplate = ({
                     <TableCell>
                       <Link
                         href={`/courses/${course.courseId}`}
-                        onClick={() =>
-                          (location.href = `/courses/${course.courseId}`)
-                        }
                         className="hover:text-emerald-500 font-semibold"
                         title="View course details"
                       >
@@ -202,10 +202,7 @@ const TeacherCourseTemplate = ({
                     <TableCell>
                       <Button variant="outline" size="sm">
                         <Link
-                          href={`/dashboard/courses/${course.courseId}`}
-                          onClick={() =>
-                            (location.href = `/dashboard/courses/${course.courseId}`)
-                          }
+                          href={`/dashboard/courses/${course.courseId}?refresh=${timestamp}`}
                         >
                           Edit
                         </Link>
