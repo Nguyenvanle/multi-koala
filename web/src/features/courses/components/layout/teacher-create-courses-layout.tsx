@@ -77,11 +77,12 @@ export default function CreateCoursePage() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
             <div className="flex flex-1 flex-col gap-4 xl:gap-6">
               <CourseImageCard form={form} />
-              <BasicInformationCard form={form} />
-            </div>
-            <div className="flex flex-col gap-4 xl:gap-6">
+
               <CourseTypesCard form={form} courseTypes={courseTypes} />
               <CourseFieldsCard form={form} fields={fields} />
+            </div>
+            <div className="flex flex-col gap-4 xl:gap-6">
+              <BasicInformationCard form={form} />
             </div>
           </div>
         </form>

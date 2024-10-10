@@ -31,7 +31,6 @@ export async function middleware(request: NextRequest) {
 
   try {
     if (await validateToken(token)) {
-      console.log("here");
       return NextResponse.next();
     }
 

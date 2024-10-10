@@ -73,6 +73,21 @@ const breadcrumbs = [
   { label: "Course Management" }, // Không có href, hiển thị như text tĩnh
 ];
 
+// Thêm đoạn mã định nghĩa màu sắc và nhãn cho các trạng thái
+const statusColors = {
+  APPROVED: "hsl(152, 57%, 58%)",
+  PENDING_APPROVAL: "hsl(35, 100%, 50%)",
+  REJECTED: "hsl(0, 84%, 60%)",
+  IN_EDITING: "hsl(201, 96%, 32%)",
+};
+
+const statusLabels = {
+  APPROVED: "Approved",
+  PENDING_APPROVAL: "Pending Approval",
+  REJECTED: "Rejected",
+  IN_EDITING: "In Editing",
+};
+
 const TeacherCourseTemplate = ({
   teacherStatistic,
   teacherMyCourses,
@@ -197,7 +212,15 @@ const TeacherCourseTemplate = ({
                         {course.courseName}
                       </Link>
                     </TableCell>
-                    <TableCell>{course.status}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        <div
+                          className="w-3 h-3 rounded-full mr-2"
+                          style={{ backgroundColor: statusColors[course.status] }}
+                        />
+                        <span>{statusLabels[course.status]}</span>
+                      </div>
+                    </TableCell>
                     <TableCell>{course.totalEnrollments}</TableCell>
                     <TableCell>
                       <Button variant="outline" size="sm">
