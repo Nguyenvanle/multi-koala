@@ -74,7 +74,6 @@ export default function useCreateCourseForm() {
       localStorage.removeItem(STORAGE_KEY); // Clear saved data after successful submission
       form.reset(defaultValues);
 
-      apiService.clearCache();
       const timestamp = new Date().getTime();
       router.push(`/dashboard/courses?refresh=${timestamp}`);
     } catch (error) {

@@ -4,12 +4,10 @@ import { API_CONFIG } from "@/types/api/config";
 
 export class ApiService {
   private static instance: ApiService;
-  private cache: ApiCache;
   private request: ApiRequest;
 
   private constructor() {
-    this.cache = new ApiCache();
-    this.request = new ApiRequest(this.cache);
+    this.request = new ApiRequest();
   }
 
   public static getInstance(): ApiService {
@@ -32,11 +30,6 @@ export class ApiService {
     config?: RequestInit
   ): Promise<ApiResponse<T>> {
     return this.request.request<T>("POST", url, data, config);
-  }
-
-  public clearCache(): void {
-    this.cache.clear();
-    if (API_CONFIG.cacheLog) console.log("Cache cleared");
   }
 }
 

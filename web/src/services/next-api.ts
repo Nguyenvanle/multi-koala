@@ -20,6 +20,7 @@ class NextjsApiService {
   ): Promise<ApiResponse<T>> {
     const defaultConfig: RequestInit = {
       method,
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
