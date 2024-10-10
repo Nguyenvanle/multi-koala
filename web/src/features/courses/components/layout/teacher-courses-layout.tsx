@@ -190,7 +190,7 @@ const TeacherCourseTemplate = ({
                   >
                     <TableCell>
                       <Link
-                        href={`/courses/${course.courseId}`}
+                        href={`/courses/${course.courseId}?refresh=${timestamp}`}
                         className="hover:text-emerald-500 font-semibold"
                         title="View course details"
                       >

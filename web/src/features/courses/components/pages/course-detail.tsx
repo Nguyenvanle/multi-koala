@@ -7,11 +7,12 @@ import { useCourses, useCoursesWithoutFilter } from "@/features/courses/hooks/us
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import { RatingAdapter } from "@/features/courses/services/rating-adapter";
 import useLessons from "@/features/lessons/hooks/useLessons";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const CourseDetail: React.FC = () => {
   const { courseId } = useParams();
+  const searchParams = useSearchParams();
   const {
     courses,
     isLoading: coursesLoading,
@@ -29,8 +30,15 @@ const CourseDetail: React.FC = () => {
     : null;
 
   useEffect(() => {
-    if (!course && !isLoading) mutate();
-  }, [course, mutate, isLoading]);
+    const refetch = async () => {
+      const refresh = searchParams.get("refresh");
+      if (refresh) {
+        await mutate();
+      }
+    };
+
+    refetch();
+  }, [mutate, searchParams]);
 
   if (isLoading) {
     return (
