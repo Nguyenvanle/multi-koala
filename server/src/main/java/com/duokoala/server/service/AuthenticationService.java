@@ -84,7 +84,7 @@ public class AuthenticationService {
     }
 
     public void resetPassword(ResetPasswordRequest request) throws MessagingException {
-        User user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         String verifiedKey = "otp-verified:reset_password:" + user.getEmail();
         Object verifiedStatus = redisTemplate.opsForValue().get(verifiedKey);
