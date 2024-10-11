@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,16 +13,14 @@ import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
 import { useTestList } from "@/src/feature/test/hooks/useTestList";
-import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
-import { QuestionDetails, TestDetails } from "@/src/feature/test/types/test";
+import useTestResultProcessing from "@/src/feature/test/hooks/useTestResultProcessing";
+import { QuestionDetails } from "@/src/feature/test/types/test";
 
 const Test = () => {
   const { lessonId, testId } = useGlobalSearchParams();
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
-  const testIdString = Array.isArray(testId) ? testId[0] : testId;
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
-  const { testDetails } = useTestDetails(lessonIdString, testIdString);
   const [selectedTest, setSelectedTest] = useState(null);
   const [userAnswers, setUserAnswers] = useState({});
   const {
@@ -34,14 +32,31 @@ const Test = () => {
     onSubmit,
   } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [answerSubmitList, setAnswerSubmitList] = useState([]);
+  const [showResult, setShowResult] = useState(false);
+  const processTestResult = useTestResultProcessing(testResult, {
+    answerSubmitList,
+  });
+  const [userSubmission, setUserSubmission] = useState({
+    answerSubmitList: [],
+  });
+
+  const initializeAnswerSubmitList = useCallback((test) => {
+    if (test && test.questions) {
+      const initialList = test.questions.map((question) => ({
+        questionId: question.questionId,
+        selectedAnswerId: null,
+      }));
+      setAnswerSubmitList(initialList);
+    }
+  }, []);
 
   const handleTestSelection = (test) => {
     setSelectedTest(test);
     setUserAnswers({});
-
-    // Giả sử bạn muốn lưu testId vào state để sử dụng sau này
+    initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
+    // console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
   };
 
   const handleAnswerSelect = useCallback(
@@ -50,6 +65,15 @@ const Test = () => {
         ...prevAnswers,
         [questionId]: answerId,
       }));
+
+      setAnswerSubmitList((prevList) =>
+        prevList.map((item) =>
+          item.questionId === questionId
+            ? { ...item, selectedAnswerId: answerId }
+            : item
+        )
+      );
+
       setSelectedAnswerList((prevList) => {
         const existingQuestionIndex = prevList.findIndex(
           (item) => item.questionId === questionId
@@ -74,29 +98,54 @@ const Test = () => {
     [setSelectedAnswerList]
   );
 
+  // Sử dụng useEffect để cập nhật UI khi có kết quả đã xử lý
+  useEffect(() => {
+    if (processTestResult) {
+      // Cập nhật UI với processedResult
+      console.log(processTestResult);
+    }
+  }, [processTestResult]);
+
+  const handleSubmit = () => {
+    console.log(JSON.stringify({ answerSubmitList }, null, 2));
+    onSubmit();
+    setShowResult(true);
+  };
+  console.log(processTestResult);
+
   const renderAnswerItem = useCallback(
-    ({ item, questionId }) => (
-      <TouchableOpacity
-        key={item.answerId}
-        style={[
-          styles.answerButton,
-          selectedAnswers[questionId] === item.answerId &&
-            styles.selectedAnswer,
-        ]}
-        onPress={() => handleAnswerSelect(questionId, item.answerId)}
-      >
-        <Text
+    ({ item, questionId }) => {
+      const isSelected = selectedAnswers[questionId] === item.answerId;
+      const isCorrect = showResult && item.correct;
+      const isIncorrect = showResult && isSelected && !item.correct;
+      return (
+        <TouchableOpacity
+          key={item.answerId}
           style={[
-            styles.answerText,
-            selectedAnswers[questionId] === item.answerId &&
-              styles.selectedAnswerText,
+            styles.answerButton,
+            isSelected && styles.selectedAnswer,
+            isCorrect && styles.correctAnswer,
+            isIncorrect && styles.incorrectAnswer,
           ]}
+          onPress={() =>
+            !showResult && handleAnswerSelect(questionId, item.answerId)
+          }
+          disabled={showResult}
         >
-          {item.answerDescription}
-        </Text>
-      </TouchableOpacity>
-    ),
-    [selectedAnswers, handleAnswerSelect]
+          <Text
+            style={[
+              styles.answerText,
+              isSelected && styles.selectedAnswerText,
+              isCorrect && styles.correctAnswerText,
+              isIncorrect && styles.incorrectAnswerText,
+            ]}
+          >
+            {item.answerDescription}
+          </Text>
+        </TouchableOpacity>
+      );
+    },
+    [selectedAnswers, handleAnswerSelect, showResult]
   );
 
   const renderQuestionItem = useCallback(
@@ -137,21 +186,6 @@ const Test = () => {
     [renderAnswerItem]
   );
 
-  const renderTestItem = useCallback(
-    ({ item }: { item: TestDetails }) => (
-      <View>
-        <FlatList
-          data={item.questions}
-          renderItem={({ item: questionItem }) =>
-            renderQuestionItem({ item: questionItem })
-          }
-          keyExtractor={(question) => question.questionId.toString()}
-          scrollEnabled={false}
-        />
-      </View>
-    ),
-    [renderAnswerItem]
-  );
   if (loadingTest) {
     return <ActivityIndicator size="large" color={Colors.teal_dark} />;
   }
@@ -201,6 +235,7 @@ const Test = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      {/* ... (phần ScrollView cho danh sách test giữ nguyên) */}
 
       <ScrollView
         style={{ flex: 1, padding: 8, backgroundColor: Colors.background }}
@@ -213,56 +248,30 @@ const Test = () => {
               keyExtractor={(item) => item.questionId.toString()}
               scrollEnabled={false}
             />
-            {testResult && (
-              <View
-                style={{
-                  alignSelf: "center",
-                  marginBottom: 8,
-                }}
-              >
-                <Text
-                  style={{
-                    ...text.large,
-                    color: Colors.black,
-                    fontWeight: "500",
-                    marginBottom: 8,
-                  }}
-                >
-                  You got
-                  <Text style={{ color: Colors.teal_dark }}>
-                    {" "}
-                    {testResult.totalQuestion}{" "}
-                  </Text>
-                  question correct out of
-                  <Text style={{ color: Colors.teal_dark }}>
-                    {" "}
-                    {testResult.totalQuestion}{" "}
+            {showResult && processTestResult && (
+              <View style={styles.resultContainer}>
+                <Text style={styles.resultText}>
+                  You got{" "}
+                  <Text style={styles.highlightText}>
+                    {processTestResult.correctAnswers}
+                  </Text>{" "}
+                  questions correct out of{" "}
+                  <Text style={styles.highlightText}>
+                    {processTestResult.totalQuestion}
                   </Text>
                 </Text>
               </View>
             )}
             <TouchableOpacity
-              style={{
-                backgroundColor: Colors.teal_dark,
-                padding: 16,
-                borderRadius: 8,
-                alignItems: "center",
-                marginBottom: 30,
-              }}
-              onPress={onSubmit}
-              disabled={loadingResult}
+              style={styles.submitButton}
+              onPress={handleSubmit}
+              disabled={loadingResult || showResult}
             >
               {loadingResult ? (
                 <ActivityIndicator size="small" color={Colors.white} />
               ) : (
-                <Text
-                  style={{
-                    ...text.large,
-                    color: Colors.white,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Submit
+                <Text style={styles.submitButtonText}>
+                  {showResult ? "Submitted" : "Submit"}
                 </Text>
               )}
             </TouchableOpacity>
@@ -294,6 +303,47 @@ const styles = StyleSheet.create({
   selectedAnswerText: {
     ...text.p,
     color: Colors.white,
+  },
+  correctAnswer: {
+    backgroundColor: Colors.teal_dark,
+  },
+  incorrectAnswer: {
+    backgroundColor: Colors.red,
+    borderColor: Colors.red,
+  },
+  correctAnswerText: {
+    color: Colors.white,
+  },
+  incorrectAnswerText: {
+    color: Colors.white,
+  },
+  resultContainer: {
+    alignSelf: "center",
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: Colors.teal_light,
+    borderRadius: 8,
+  },
+  resultText: {
+    ...text.large,
+    color: Colors.black,
+    fontWeight: "500",
+  },
+  highlightText: {
+    color: Colors.teal_dark,
+    fontWeight: "bold",
+  },
+  submitButton: {
+    backgroundColor: Colors.teal_dark,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  submitButtonText: {
+    ...text.large,
+    color: Colors.white,
+    fontWeight: "bold",
   },
 });
 
