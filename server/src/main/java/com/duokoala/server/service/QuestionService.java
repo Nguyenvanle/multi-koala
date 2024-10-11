@@ -42,17 +42,32 @@ public class QuestionService {
         var question = questionRepository.findById(request.getQuestionId())
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
 
-        var selectedAnswer = answerRepository.findById(request.getSelectedAnswerId())
-                .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
-        if(!selectedAnswer.getQuestion().equals(question))
-            throw new AppException(ErrorCode.ANSWER_DOES_NOT_BELONG_TO_QUESTION);
+        // Giữ nguyên giá trị selectedAnswer như trước nhưng chỉ gán khi cần
+        Answer selectedAnswer = null;
+
+        if (request.getSelectedAnswerId() != null) {
+            selectedAnswer = answerRepository.findById(request.getSelectedAnswerId())
+                    .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+            if (!selectedAnswer.getQuestion().equals(question)) {
+                throw new AppException(ErrorCode.ANSWER_DOES_NOT_BELONG_TO_QUESTION);
+            }
+        }
+
         var answerList = question.getAnswers();
+        Answer finalSelectedAnswer = selectedAnswer;
         List<AnswerSubmitResponse> answerSubmitResponses = answerList
                 .stream().map(answer -> {
                     AnswerSubmitResponse responseAnswer = questionMapper.toAnswerSubmitResponse(answer);
-                    responseAnswer.setSelected(request.getSelectedAnswerId().equals(answer.getAnswerId()));
+
+                    // Chỉ định nếu đáp án này là đáp án đã chọn
+                    if (finalSelectedAnswer != null) {
+                        responseAnswer.setSelected(finalSelectedAnswer.getAnswerId().equals(answer.getAnswerId()));
+                    } else {
+                        responseAnswer.setSelected(false);
+                    }
                     return responseAnswer;
                 }).toList();
+
         var questionSubmitResponse = questionMapper.toQuestionSubmitResponse(question);
         questionSubmitResponse.setAnswers(answerSubmitResponses);
         return questionSubmitResponse;

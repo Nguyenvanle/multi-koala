@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class QuizResultService {
     QuizResultRepository quizResultRepository;
     QuizResultMapper quizResultMapper;
@@ -39,10 +41,15 @@ public class QuizResultService {
     public QuizResultResponse submitQuiz(String testId, QuizResultSubmitRequest request) {
         Test test = testRepository.findById(testId).orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
         List<QuestionSubmitRequest> questionList = request.getAnswerSubmitList();
+        log.info("1");
         QuizResult quizResult = createQuizResult(test, questionList);
+        log.info("2");
         List<StudentAnswer> studentAnswers = createStudentAnswers(quizResult, questionList);
+        log.info("3");
         saveQuizResultAndAnswers(quizResult, studentAnswers);
+        log.info("4");
         List<QuestionSubmitResponse> questionResponses = createQuestionResponses(questionList);
+        log.info("5");
         return createQuizResultResponse(quizResult, questionResponses);
     }
 
@@ -76,6 +83,7 @@ public class QuizResultService {
     }
 
     private boolean isCorrectAnswer(QuestionSubmitRequest question) {
+        if (question.getSelectedAnswerId() == null) return false;
         return answerRepository.findById(question.getSelectedAnswerId())
                 .map(Answer::isCorrect)
                 .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
@@ -86,15 +94,20 @@ public class QuizResultService {
     }
 
     private StudentAnswer createStudentAnswer(QuizResult quizResult, QuestionSubmitRequest questionAnswer) {
-        Answer answer = answerRepository.findById(questionAnswer.getSelectedAnswerId())
-                .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
         Question question = questionRepository.findById(questionAnswer.getQuestionId())
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+        Answer answer = null;
+        boolean isCorrect = false;
+        if (questionAnswer.getSelectedAnswerId() != null) {
+            answer = answerRepository.findById(questionAnswer.getSelectedAnswerId())
+                    .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+            isCorrect = answer.isCorrect();
+        }
         return StudentAnswer.builder()
                 .quizResult(quizResult)
                 .question(question)
                 .selectedAnswer(answer)
-                .isCorrect(answer.isCorrect())
+                .isCorrect(isCorrect)
                 .build();
     }
 
