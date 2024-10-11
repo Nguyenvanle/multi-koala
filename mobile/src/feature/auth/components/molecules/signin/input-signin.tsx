@@ -32,6 +32,7 @@ const InputSignIn: React.FC<InputSignInProps> = ({
         <InputLabel title="Username" style={{ fontWeight: "500" }} />
       </View>
       <TextInput
+        autoCapitalize="words"
         style={styles.input}
         placeholder="Username"
         placeholderTextColor={Colors.grey}

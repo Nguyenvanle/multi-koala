@@ -200,10 +200,10 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             {courseDetails.courseLevel}
           </Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
-            <Text style={styles.price}>${finalPrice.toFixed(2)} /</Text>
+            <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
               <Text style={styles.originalPrice}>
-                ${courseDetails.coursePrice.toFixed(2)}
+                / ${courseDetails.coursePrice.toFixed(2)}
               </Text>
             )}
           </View>

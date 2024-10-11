@@ -247,7 +247,7 @@ const Test = () => {
                 padding: 16,
                 borderRadius: 8,
                 alignItems: "center",
-                marginBottom: 8,
+                marginBottom: 30,
               }}
               onPress={onSubmit}
               disabled={loadingResult}
