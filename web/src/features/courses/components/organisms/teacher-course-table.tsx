@@ -25,7 +25,7 @@ const statusLabels = {
   IN_EDITING: "In Editing",
 };
 
-const TeacherCourseTable = ({
+export const TeacherCourseTable = ({
   teacherMyCourses,
   timestamp,
 }: {
@@ -106,5 +106,3 @@ const TeacherCourseTable = ({
     </TableBody>
   </Table>
 );
-
-export default TeacherCourseTable;

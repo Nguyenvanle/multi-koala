@@ -1,14 +1,14 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { PlusCircle, Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { CourseStatusDonutChart } from "@/features/courses/components/atoms/course-status-pie-chart";
+import { TeacherCourseTable } from "@/features/courses/components/organisms/teacher-course-table";
+import { TeacherOverviewList } from "@/features/courses/components/organisms/teacher-overview-list";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
-import { PlusCircle, Home } from "lucide-react";
-import TeacherCourseTable from "@/features/courses/components/organisms/teacher-course-table";
-import { Card } from "@/components/ui/card";
-import TeacherOverviewList from "@/features/courses/components/organisms/teacher-overview-list";
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;

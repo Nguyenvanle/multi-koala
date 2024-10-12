@@ -14,7 +14,7 @@ interface TeacherOverviewListProps {
   teacherStatistic: TeacherStatisticsBodyType;
 }
 
-const TeacherOverviewList: React.FC<TeacherOverviewListProps> = ({
+export const TeacherOverviewList: React.FC<TeacherOverviewListProps> = ({
   teacherStatistic,
 }) => {
   return (
@@ -72,5 +72,3 @@ const TeacherOverviewList: React.FC<TeacherOverviewListProps> = ({
     </>
   );
 };
-
-export default TeacherOverviewList;

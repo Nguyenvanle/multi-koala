@@ -1,9 +1,7 @@
 "use client";
 
-import { CourseBodyType } from "@/features/courses/types/course";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { z } from "zod";
 import {
   ErrorMessage,
   LoadingSkeleton,
@@ -21,7 +19,6 @@ import useEditCourseForm, {
   EditCourseFormData,
 } from "@/features/courses/hooks/useEditCourseForm";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
-import { LessonsCard } from "@/features/courses/components/layout/lesson-card";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
@@ -61,13 +58,7 @@ export default function CourseEditForm({
     loading: lessonsLoading,
   } = useLessons(courseId as string);
 
-  // Lấy giá trị hiện tại của form
-  const currentFormData = form.watch();
-
-  // So sánh currentFormData với initialData
-  const isFormUnchanged =
-    JSON.stringify(currentFormData) === JSON.stringify(initialData);
-
+  // loading
   if (fieldsLoading || typesLoading) {
     return <LoadingSkeleton />;
   }
@@ -76,6 +67,12 @@ export default function CourseEditForm({
     return <ErrorMessage />;
   }
 
+  // form store
+  const currentFormData = form.watch();
+  const isFormUnchanged =
+    JSON.stringify(currentFormData) === JSON.stringify(initialData);
+
+  // render ui
   return (
     <div className="w-full">
       <Form {...form}>
