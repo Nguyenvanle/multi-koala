@@ -29,19 +29,8 @@ import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { useRouter } from "next/navigation";
+import { CourseStatusDonutChart } from "@/features/courses/components/atoms/course-status-pie-chart";
 
-const CourseStatusDonutChart = dynamic(
-  () =>
-    import("@/features/courses/components/atoms/course-status-pie-chart").then(
-      (mod) => mod.CourseStatusDonutChart
-    ),
-  {
-    loading: () => (
-      <Skeleton className="w-full h-full flex items-center justify-center bg-background"></Skeleton>
-    ),
-    ssr: false,
-  }
-);
 
 const OverviewCard = ({ icon: Icon, title, value, color }: any) => (
   <Card className="flex-1 ">

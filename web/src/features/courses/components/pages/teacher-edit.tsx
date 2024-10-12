@@ -6,25 +6,33 @@ import { useCoursesWithoutFilter } from "@/features/courses/hooks/useCourses";
 import { EditCourseFormData } from "@/features/courses/hooks/useEditCourseForm";
 import { CourseFieldResType } from "@/features/courses/types/course-field";
 import { CourseTypeResType } from "@/features/courses/types/course-type";
-import useLessons from "@/features/lessons/hooks/useLessons";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-let isReload = false;
-
 export default function TeacherEditPage() {
+  const searchParams = useSearchParams();
   const { courseId } = useParams();
-  const { courses, isLoading: coursesLoading } = useCoursesWithoutFilter();
   const {
-    lessons,
-    duration,
-    loading: lessonsLoading,
-  } = useLessons(courseId as string);
+    courses,
+    isLoading: coursesLoading,
+    mutate,
+  } = useCoursesWithoutFilter();
 
-  const isLoading = coursesLoading || lessonsLoading;
+  const isLoading = coursesLoading;
   const course = !isLoading
-    ? courses?.find((course) => course.courseId === courseId)
+    ? courses?.find((c) => c.courseId === courseId)
     : null;
+
+  useEffect(() => {
+    const refetch = async () => {
+      const refresh = searchParams.get("refresh");
+      if (refresh) {
+        await mutate();
+      }
+    };
+
+    refetch();
+  }, [mutate, searchParams]);
 
   if (isLoading) {
     return (
@@ -40,12 +48,6 @@ export default function TeacherEditPage() {
     );
   }
 
-  if (!course && courseId && !isReload) {
-    console.log("Mutating courses data due to mismatch...");
-    isReload = true;
-    location.reload();
-  } 
-
   if (!course) {
     return (
       <div className="flex justify-center items-center w-full h-[82vh]">
@@ -53,15 +55,6 @@ export default function TeacherEditPage() {
       </div>
     );
   }
-
-  // Sử dụng toán tử nullish coalescing (??) để cung cấp giá trị mặc định nếu null
-  const approvedByAdmin = course.approvedByAdmin
-    ? `${course.approvedByAdmin.firstname} ${course.approvedByAdmin.lastname}`
-    : "N/A"; // Hoặc một giá trị mặc định khác
-
-  const uploadedByTeacher = course.uploadedByTeacher
-    ? `${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`
-    : "N/A"; // Hoặc một giá trị mặc định khác
 
   const initialData: EditCourseFormData = {
     courseName: course.courseName,
@@ -73,5 +66,5 @@ export default function TeacherEditPage() {
     imageUrl: course.image.imageUrl,
   };
 
-  return <CourseEditForm initialData={initialData}></CourseEditForm>;
+  return <CourseEditForm initialData={initialData} />;
 }

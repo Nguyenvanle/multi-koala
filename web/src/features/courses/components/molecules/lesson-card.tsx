@@ -49,6 +49,7 @@ export default function LessonCard({
             width={80}
             height={80}
             quality={100}
+            priority
             onLoad={() => setImageLoading(false)}
             className={`h-20 w-20 object-cover ${
               imageLoading ? "invisible" : "visible"

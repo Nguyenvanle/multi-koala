@@ -106,6 +106,7 @@ export default function CourseImageCard({
                           alt="Course preview"
                           className="rounded-md object-cover"
                           fill
+                          priority
                         />
                       </AspectRatio>
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-start justify-end p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
