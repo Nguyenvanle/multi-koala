@@ -140,7 +140,7 @@ under the License.
    | However, this repository may have problems with heavy traffic at times, so people have mirrored
    | it to several places.
    |
-   | That repository definition will have a unique id, so we can create a mirror reference for that
+   | That repository definition will have a unique id, so we can create a mirror recommend for that
    | repository, to be used as an alternate download site. The mirror site will be the preferred
    | server for that repository.
    |-->

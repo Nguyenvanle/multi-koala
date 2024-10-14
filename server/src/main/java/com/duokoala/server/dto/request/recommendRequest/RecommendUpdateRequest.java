@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.request.referenceRequest;
+package com.duokoala.server.dto.request.recommendRequest;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReferenceUpdateRequest {
+public class RecommendUpdateRequest {
     int studyTimeGoal;
     Set<String> favoriteFields;
     String learningLevel;
