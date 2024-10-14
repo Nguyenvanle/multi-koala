@@ -8,11 +8,12 @@ spring:
     url: "jdbc:mysql://localhost:3306/duokoala"
     username: root
     password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${EMAIL}
-    password: ${PASSWORD}
+    username: Duokoala.official@gmail.com
+    password: lxguesiehllqnlne
     properties:
       mail:
         smtp:
@@ -21,15 +22,16 @@ spring:
             enable: true
             required: true
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
 #      ddl-auto: update
 #    show-sql: true
   redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
-    password: ${REDIS_PASSWORD}
+    host: redis-15490.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com
+    port: 15490
+    password: TDeW3KPTlAhdpdROTzv9sJjD9wSC5K0b
 jwt:
-  signerKey: ${SIGNER_KEY}
+  signerKey: 9lg678a/5OweZHwtBKEjPfrwqe0wybmY0f67oNtqziI1UUSMM40iyrb481pdaf82
   valid-duration: 3600 #insecond = 1 hours
   refreshable-duration: 360000 #insecond = 100 hours
 otp:
