@@ -1,10 +1,10 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.referenceRequest.ReferenceCreateRequest;
-import com.duokoala.server.dto.request.referenceRequest.ReferenceUpdateRequest;
+import com.duokoala.server.dto.request.recommendRequest.RecommendCreateRequest;
+import com.duokoala.server.dto.request.recommendRequest.RecommendUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.ReferenceResponse;
-import com.duokoala.server.service.ReferenceService;
+import com.duokoala.server.dto.response.RecommendResponse;
+import com.duokoala.server.service.RecommendService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,35 +16,35 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/references")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ReferenceController {
-    ReferenceService referenceService;
+public class RecommendController {
+    RecommendService referenceService;
 
     @PostMapping
-    ApiResponse<ReferenceResponse> create(@RequestBody ReferenceCreateRequest request) {
-        return ApiResponse.<ReferenceResponse>builder()
+    ApiResponse<RecommendResponse> create(@RequestBody RecommendCreateRequest request) {
+        return ApiResponse.<RecommendResponse>builder()
                 .result(referenceService.create(request))
                 .build();
     }
 
     @PutMapping("/{referenceId}")
-    ApiResponse<ReferenceResponse> update(
+    ApiResponse<RecommendResponse> update(
             @PathVariable String referenceId,
-            @RequestBody ReferenceUpdateRequest request) {
-        return ApiResponse.<ReferenceResponse>builder()
+            @RequestBody RecommendUpdateRequest request) {
+        return ApiResponse.<RecommendResponse>builder()
                 .result(referenceService.update(referenceId, request))
                 .build();
     }
 
     @GetMapping("/{referenceId}")
-    ApiResponse<ReferenceResponse> get(@PathVariable String referenceId) {
-        return ApiResponse.<ReferenceResponse>builder()
+    ApiResponse<RecommendResponse> get(@PathVariable String referenceId) {
+        return ApiResponse.<RecommendResponse>builder()
                 .result(referenceService.get(referenceId))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<ReferenceResponse>> getAll() {
-        return ApiResponse.<List<ReferenceResponse>>builder()
+    ApiResponse<List<RecommendResponse>> getAll() {
+        return ApiResponse.<List<RecommendResponse>>builder()
                 .result(referenceService.getAll())
                 .build();
     }

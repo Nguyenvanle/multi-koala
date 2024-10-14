@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,10 +15,10 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Reference {
+public class Recommend {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String ReferenceId;
+    String RecommendId;
     int studyTimeGoal;
     @ManyToMany
     Set<Field> favoriteFields;

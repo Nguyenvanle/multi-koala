@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReferenceResponse {
-    String ReferenceId;
+public class RecommendResponse {
+    String recommendId;
     int studyTimeGoal;
     Set<FieldResponse> favoriteFields;
     Level learningLevel;
