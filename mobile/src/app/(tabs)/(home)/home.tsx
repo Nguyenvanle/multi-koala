@@ -50,7 +50,7 @@ const Home = ({ courseId }: { courseId: string }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <MyCourses />
+          <MyCourses courseId={courseId} />
           <View
             style={{
               flexDirection: "row",

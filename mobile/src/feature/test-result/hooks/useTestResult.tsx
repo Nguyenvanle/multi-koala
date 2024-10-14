@@ -57,27 +57,19 @@ const useTestResult = (testId) => {
       const requestData: SubmitRes = {
         answerSubmitList: selectedAnswerList || null,
       };
-      console.log(1);
-      console.log(testIdString);
-      console.log("Request Data: ", requestData); // Log dữ liệu trước khi gửi
+
       const request = await testResultService.getResult(
         testIdString, // Sử dụng testIdString ở đây
         requestData
       );
 
-      console.log(
-        "Response from server: ",
-        request.data.result.answeredQuestions
-      ); // Log phản hồi từ server
-
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
+          console.log(request.data.result.totalQuestion); // Kiểm tra dữ liệu kết quả
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }
-      } else {
-        setErrorResult("Unexpected response format");
       }
     } catch (error) {
       console.error("Error occurred: ", error); // Log lỗi chi tiết
@@ -94,6 +86,7 @@ const useTestResult = (testId) => {
     selectedAnswerList,
     setSelectedAnswerList,
     testResult,
+    setTestResult,
     onSubmit, // Hàm này giờ đã sử dụng testIdString
     initializeAnswerList,
   };

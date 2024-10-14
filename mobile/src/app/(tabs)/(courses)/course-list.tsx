@@ -35,6 +35,12 @@ const CourseList = (): React.JSX.Element => {
     },
     {
       id: 3,
+      label: "Favourite",
+      component: <FinishedCourses />,
+      param: "favourite",
+    },
+    {
+      id: 4,
       label: "Finished",
       component: <FinishedCourses />,
       param: "finished",
@@ -100,7 +106,7 @@ const CourseList = (): React.JSX.Element => {
               >
                 <Text
                   style={[
-                    text.p,
+                    text.small,
                     selectedIndex === index
                       ? styles.selectedText
                       : styles.defaultText,
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: 350,
+    width: 365,
     height: 60,
     padding: 8,
     backgroundColor: Colors.white,
@@ -139,12 +145,15 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: 455,
+    alignItems: "center",
   },
   defaultText: {
     color: Colors.dark_grey,
+    fontWeight: "500",
   },
   selectedText: {
     color: Colors.white,
+    fontWeight: "500",
   },
   selectedBackground: {
     backgroundColor: Colors.teal_dark,

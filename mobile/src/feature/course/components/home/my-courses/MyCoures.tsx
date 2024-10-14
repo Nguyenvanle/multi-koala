@@ -15,7 +15,7 @@ import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
 import useUser from "@/src/feature/user/hooks/useUser";
 
-const MyCourses = (courseId: string) => {
+const MyCourses = ({ courseId }: { courseId: string }) => {
   const { enrolled, errorMessage, loading } = useEnrolled(courseId);
   const { user, setUser, setErrorMessage } = useUser();
 
