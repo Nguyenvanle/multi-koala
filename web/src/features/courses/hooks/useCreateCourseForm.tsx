@@ -7,6 +7,8 @@ import { showToast } from "@/lib/utils";
 import { nextjsApiService } from "@/services/next-api";
 import { CourseDetailResType } from "@/features/courses/types/course";
 import { apiService } from "@/services/api";
+import { mutate } from "swr";
+import { TeacherMyCoursesResType } from "@/features/courses/types/teacher-my-courses";
 
 const CreateCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -25,7 +27,7 @@ const CreateCourseSchema = z.object({
 
 type CreateCourseFormData = z.infer<typeof CreateCourseSchema>;
 
-const STORAGE_KEY = 'courseFormData';
+const STORAGE_KEY = "courseFormData";
 
 const defaultValues: CreateCourseFormData = {
   courseName: "",
@@ -34,7 +36,8 @@ const defaultValues: CreateCourseFormData = {
   courseLevel: "BEGINNER",
   types: [],
   fields: [],
-  imageUrl: "https://img.freepik.com/free-vector/app-development-concept-design_23-2148670525.jpg?t=st=1726903863~exp=1726907463~hmac=8832d5f008a90a10ba85a5baa57ce274a70f2d57ed166d12346d7307327e908c&w=996",
+  imageUrl:
+    "https://img.freepik.com/free-vector/app-development-concept-design_23-2148670525.jpg?t=st=1726903863~exp=1726907463~hmac=8832d5f008a90a10ba85a5baa57ce274a70f2d57ed166d12346d7307327e908c&w=996",
 };
 
 export default function useCreateCourseForm() {
@@ -62,13 +65,17 @@ export default function useCreateCourseForm() {
 
   const onSubmit = async (data: CreateCourseFormData) => {
     try {
-      const { result } = await nextjsApiService.post<CourseDetailResType>('/api/courses/add', data);
+      const { result } = await nextjsApiService.post<CourseDetailResType>(
+        "/api/courses/add",
+        data
+      );
       console.log(result);
       showToast("Success", "Course created successfully!");
       localStorage.removeItem(STORAGE_KEY); // Clear saved data after successful submission
       form.reset(defaultValues);
-      apiService.clearCache();
-      router.push('/dashboard/courses');
+
+      const timestamp = new Date().getTime();
+      router.push(`/dashboard/courses?refresh=${timestamp}`);
     } catch (error) {
       showToast("Error", "Failed to create course", "destructive");
     }

@@ -21,11 +21,16 @@ export default function Sidebar() {
               <a
                 key={index}
                 href={`/dashboard/${item.label.toLowerCase()}`} // Updated href to point to the correct route
-                className={`flex items-center text-accent-foreground p-2 rounded ${
-                  isActive ? "bg-accent text-accent-foreground" : ""
+                className={`flex items-center  p-2 rounded ${
+                  isActive ? "bg-primary text-primary-foreground" : ""
                 }`}
               >
-                <item.icon className="mr-2 text-primary" size={20} />
+                <item.icon
+                  className={`mr-2 text-primary ${
+                    isActive ? "text-primary-foreground" : ""
+                  }`}
+                  size={20}
+                />
                 <span>{item.label}</span>
               </a>
             );

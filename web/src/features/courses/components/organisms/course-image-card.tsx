@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   FormField,
@@ -22,16 +22,24 @@ import { UseFormReturn } from "react-hook-form";
 
 export default function CourseImageCard({
   form,
+  initialImageUrl,
 }: {
   form: UseFormReturn | any | undefined;
+  initialImageUrl?: string;
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const defaultImageUrl =
     "https://img.freepik.com/free-vector/app-development-concept-design_23-2148670525.jpg?t=st=1726903863~exp=1726907463~hmac=8832d5f008a90a10ba85a5baa57ce274a70f2d57ed166d12346d7307327e908c&w=996";
 
+  useEffect(() => {
+    if (initialImageUrl) {
+      setPreview(initialImageUrl);
+      form.setValue("imageUrl", initialImageUrl);
+    }
+  }, [initialImageUrl, form]);
+
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      // Chỉnh sửa kiểu dữ liệu tham số
       if (fileRejections.length > 0) {
         const errorMessages = fileRejections
           .map(({ file, errors }) => {
@@ -45,7 +53,7 @@ export default function CourseImageCard({
             });
             return messages.join(" ");
           })
-          .join(" "); // Kết hợp tất cả thông báo lỗi
+          .join(" ");
 
         form.setError("imageUrl", {
           type: "manual",
@@ -56,13 +64,13 @@ export default function CourseImageCard({
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreview(reader.result as string);
-          form.setValue("imageUrl", defaultImageUrl);
+          form.setValue("imageUrl", reader.result as string);
           form.clearErrors("imageUrl");
         };
         reader.readAsDataURL(file);
       }
     },
-    [form, defaultImageUrl]
+    [form]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -98,6 +106,7 @@ export default function CourseImageCard({
                           alt="Course preview"
                           className="rounded-md object-cover"
                           fill
+                          priority
                         />
                       </AspectRatio>
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-start justify-end p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">

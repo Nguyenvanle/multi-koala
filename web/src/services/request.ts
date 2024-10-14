@@ -5,12 +5,6 @@ import { shouldCache } from "@/services/cache-rule";
 import { API_CONFIG } from "@/types/api/config";
 
 export class ApiRequest {
-  private cache: ApiCache;
-
-  constructor(cache: ApiCache) {
-    this.cache = cache;
-  }
-
   private async performRequest<T>(
     method: string,
     url: string,
@@ -67,22 +61,7 @@ export class ApiRequest {
     data?: any,
     config?: RequestInit
   ): Promise<ApiResponse<T>> {
-    const cacheKey = `${method}-${url}`;
-
-    if (shouldCache(method, url)) {
-      const cachedData = this.cache.get<T>(cacheKey);
-      if (cachedData) {
-        if (API_CONFIG.cacheLog) console.log(`Using cached data for ${url}`);
-        return cachedData;
-      }
-    }
-
     const result = await this.performRequest<T>(method, url, data, config);
-
-    if (shouldCache(method, url)) {
-      if (API_CONFIG.cacheLog) console.log(`Caching data for ${url}`);
-      this.cache.set(cacheKey, result);
-    }
 
     return result;
   }

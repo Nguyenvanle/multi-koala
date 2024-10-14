@@ -20,6 +20,7 @@ class NextjsApiService {
   ): Promise<ApiResponse<T>> {
     const defaultConfig: RequestInit = {
       method,
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
@@ -74,6 +75,14 @@ class NextjsApiService {
     config?: RequestInit
   ): Promise<ApiResponse<T>> {
     return this.request<T>("POST", url, data, config);
+  }
+
+  public async put<T>(
+    url: string,
+    data?: any,
+    config?: RequestInit
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>("PUT", url, data, config);
   }
 
   // Add other methods (PUT, DELETE, etc.) as needed

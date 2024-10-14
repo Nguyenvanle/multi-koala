@@ -16,6 +16,7 @@ export const LessonBodySchema = z.object({
   lessonUploadedAt: z.string(),
   course: CourseBodyType,
   deleted: z.boolean(),
+  demo: z.boolean(),
 });
 
 export type LessonBody = z.infer<typeof LessonBodySchema>;

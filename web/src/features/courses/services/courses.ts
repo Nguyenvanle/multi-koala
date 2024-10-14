@@ -1,4 +1,5 @@
 import { CoursePricesResType } from "@/features/course-prices/types/course-prices";
+import { EditCourseFormData } from "@/features/courses/hooks/useEditCourseForm";
 import {
   CourseDetailResType,
   CourseResType,
@@ -56,5 +57,21 @@ export const courseService = {
         Authorization: `Bearer ${token}`,
       },
     });
+  },
+
+  updateCourses: async (
+    token: string,
+    courseId: string,
+    data: EditCourseFormData
+  ) => {
+    return await apiService.put<CourseDetailResType>(
+      `/courses/${courseId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   },
 };

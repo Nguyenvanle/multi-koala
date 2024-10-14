@@ -4,7 +4,6 @@ import { nextjsApiService } from "@/services/next-api";
 
 export const logoutService = {
   logout: async (data: logoutBodyType) => {
-    apiService.clearCache();
     return await apiService.post<LogoutResType>("/auth/logout", data.token);
   },
 

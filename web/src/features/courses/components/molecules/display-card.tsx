@@ -11,6 +11,7 @@ export default function DisplayCard({
   courseImage: string;
 }) {
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(false);
 
   return (

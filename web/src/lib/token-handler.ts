@@ -12,7 +12,7 @@ interface CacheEntry {
 }
 
 const tokenCache = new Map<string, CacheEntry>();
-const CACHE_DURATION = 45 * 60 * 1000; // 45 minutes in milliseconds
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
 export async function validateToken(token: string): Promise<boolean> {
   const cachedEntry = tokenCache.get(token);
@@ -26,6 +26,7 @@ export async function validateToken(token: string): Promise<boolean> {
     return cachedEntry.valid;
   }
 
+  // Kiểm tra tính hợp lệ token từ server
   const { result, error } = await introspectServices.checkValid({ token });
   const isValid = result?.result.valid ?? false;
 
@@ -34,9 +35,16 @@ export async function validateToken(token: string): Promise<boolean> {
     result: isValid,
   });
 
+  if (!isValid) {
+    // Nếu token không hợp lệ, xóa nó khỏi cache
+    tokenCache.delete(token);
+    console.log("Invalid token, cleared from cache.");
+  }
+
   tokenCache.set(token, { valid: isValid, timestamp: currentTime });
   return isValid;
 }
+
 
 export async function refreshToken(token: string): Promise<string | null> {
   console.log("Refresh: ", {
