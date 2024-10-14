@@ -20,6 +20,7 @@ import { useLesson } from "../../feature/lesson/hooks/useLesson";
 import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
+import { AntDesign } from "@expo/vector-icons";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [defaultRating, setDefaultRating] = useState(0);
@@ -50,6 +51,12 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const { courseRating } = useCourseRating(courseIdString);
 
   const { discount } = useCourseDiscount(courseIdString);
+
+  const [isLiked, setIsLiked] = useState(false); // Trạng thái yêu thích
+
+  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái cho Modal
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   if (loading) {
     return (
@@ -168,7 +175,30 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             </Text>
             <CustomRatingBar courseRating={courseRating?.avgcourseRating} />
           </View>
-          <Text style={styles.title}>{courseDetails.courseName}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={styles.title} numberOfLines={3}>
+              {courseDetails.courseName}
+            </Text>
+            <TouchableOpacity
+              onPress={() => setIsLiked(!isLiked)} // Đổi trạng thái yêu thích khi chạm
+            >
+              <AntDesign
+                name="heart"
+                size={32}
+                color={isLiked ? "#FF4E88" : Colors.grey} // Thay đổi màu sắc dựa trên trạng thái
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.lessonCount}>Total Lessons: {lessonCount}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
@@ -321,6 +351,7 @@ const styles = StyleSheet.create({
     ...text.h2,
     color: Colors.black,
     marginTop: 8,
+    flexShrink: 1,
   },
   price: {
     ...text.h3,

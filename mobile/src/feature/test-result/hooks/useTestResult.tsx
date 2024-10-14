@@ -66,11 +66,10 @@ const useTestResult = (testId) => {
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
+          console.log(request.data.result.totalQuestion); // Kiểm tra dữ liệu kết quả
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }
-      } else {
-        setErrorResult("Unexpected response format");
       }
     } catch (error) {
       console.error("Error occurred: ", error); // Log lỗi chi tiết

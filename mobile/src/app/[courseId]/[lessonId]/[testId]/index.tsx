@@ -13,7 +13,6 @@ import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
 import { useTestList } from "@/src/feature/test/hooks/useTestList";
-import useTestResultProcessing from "@/src/feature/test/hooks/useTestResultProcessing";
 import { QuestionDetails } from "@/src/feature/test/types/test";
 
 const Test = () => {
@@ -34,13 +33,9 @@ const Test = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [answerSubmitList, setAnswerSubmitList] = useState([]);
   const [showResult, setShowResult] = useState(false);
-  const processTestResult = useTestResultProcessing(testResult, {
-    answerSubmitList,
-  });
   const [userSubmission, setUserSubmission] = useState({
     answerSubmitList: [],
   });
-
   const initializeAnswerSubmitList = useCallback((test) => {
     if (test && test.questions) {
       const initialList = test.questions.map((question) => ({
@@ -56,7 +51,7 @@ const Test = () => {
     setUserAnswers({});
     initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    // console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
+    console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
   };
 
   const handleAnswerSelect = useCallback(
@@ -98,20 +93,11 @@ const Test = () => {
     [setSelectedAnswerList]
   );
 
-  // Sử dụng useEffect để cập nhật UI khi có kết quả đã xử lý
-  useEffect(() => {
-    if (processTestResult) {
-      // Cập nhật UI với processedResult
-      console.log(processTestResult);
-    }
-  }, [processTestResult]);
-
   const handleSubmit = () => {
-    console.log(JSON.stringify({ answerSubmitList }, null, 2));
+    // console.log(JSON.stringify({ answerSubmitList }, null, 2));
     onSubmit();
     setShowResult(true);
   };
-  console.log(processTestResult);
 
   const renderAnswerItem = useCallback(
     ({ item, questionId }) => {
@@ -235,7 +221,6 @@ const Test = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {/* ... (phần ScrollView cho danh sách test giữ nguyên) */}
 
       <ScrollView
         style={{ flex: 1, padding: 8, backgroundColor: Colors.background }}
@@ -248,16 +233,16 @@ const Test = () => {
               keyExtractor={(item) => item.questionId.toString()}
               scrollEnabled={false}
             />
-            {showResult && processTestResult && (
+            {showResult && testResult && (
               <View style={styles.resultContainer}>
                 <Text style={styles.resultText}>
                   You got{" "}
                   <Text style={styles.highlightText}>
-                    {processTestResult.correctAnswers}
+                    {testResult.correctAnswers}
                   </Text>{" "}
                   questions correct out of{" "}
                   <Text style={styles.highlightText}>
-                    {processTestResult.totalQuestion}
+                    {testResult.totalQuestion}
                   </Text>
                 </Text>
               </View>
