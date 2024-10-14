@@ -21,7 +21,6 @@ const Test = () => {
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
   const [selectedTest, setSelectedTest] = useState(null);
-  const [userAnswers, setUserAnswers] = useState({});
   const {
     loadingResult,
     errorResult,
@@ -48,7 +47,7 @@ const Test = () => {
 
   const handleTestSelection = (test) => {
     setSelectedTest(test);
-    setUserAnswers({});
+    setSelectedAnswers({});
     initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
     console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
@@ -94,7 +93,7 @@ const Test = () => {
   );
 
   const handleSubmit = () => {
-    // console.log(JSON.stringify({ answerSubmitList }, null, 2));
+    console.log(JSON.stringify({ answerSubmitList }, null, 2));
     onSubmit();
     setShowResult(true);
   };
@@ -197,7 +196,8 @@ const Test = () => {
         horizontal
         style={{
           maxHeight: 55,
-          backgroundColor: Colors.teal_light,
+          backgroundColor: Colors.background,
+          marginTop: 8,
         }}
       >
         {testList.map((test) => (
@@ -213,9 +213,7 @@ const Test = () => {
             }}
             onPress={() => handleTestSelection(test)}
           >
-            <Text
-              style={{ ...text.p, color: Colors.teal_light, fontWeight: "600" }}
-            >
+            <Text style={{ ...text.p, color: Colors.white, fontWeight: "600" }}>
               {test.testDescription}
             </Text>
           </TouchableOpacity>
