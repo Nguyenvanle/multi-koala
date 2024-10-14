@@ -1,7 +1,6 @@
-export default function TeachingEditCourse({
-  params,
-}: {
-  params: { courseId: string };
-}) {
-  return <div>TeachingEditCourse: {params.courseId}</div>;
+import CourseEditForm from "@/features/courses/components/layout/teacher-edit";
+import TeacherEditPage from "@/features/courses/components/pages/teacher-edit";
+
+export default function TeachingEditCourse() {
+  return <TeacherEditPage />;
 }

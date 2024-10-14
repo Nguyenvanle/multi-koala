@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { CourseFieldResType } from "@/features/courses/types/course-field";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function CourseFieldsCard({
   form,
@@ -22,6 +24,7 @@ export default function CourseFieldsCard({
   fields: CourseFieldResType[] | null;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Lọc các trường khóa học dựa trên từ khóa tìm kiếm
   const filteredFields = fields?.filter((field: CourseFieldResType) =>
@@ -30,67 +33,80 @@ export default function CourseFieldsCard({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Course Fields</CardTitle>
-
-        <Input
-          type="text"
-          placeholder="Search course fields..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4"
-        />
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          {!filteredFields ? (
-            <Skeleton className="w-full h-52" />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          {isExpanded ? (
+            <>
+              Hide Fields <ChevronUp className="ml-2 h-4 w-4" />
+            </>
           ) : (
-            filteredFields.map((field: CourseFieldResType) => (
-              <FormField
-                key={field.fieldName}
-                control={form.control}
-                // Sử dụng mảng `fields` thay vì tên riêng biệt cho mỗi trường
-                name={`fields`}
-                render={({ field: formField }) => {
-                  // Kiểm tra xem trường hiện tại có được chọn hay không
-                  const isChecked = formField.value.includes(field.fieldName);
-
-                  return (
-                    <FormItem>
-                      <FormControl>
-                        <Badge
-                          variant="outline"
-                          className="w-full justify-start gap-2 py-2 px-3"
-                        >
-                          <Checkbox
-                            checked={isChecked} // Kiểm tra xem checkbox đã được chọn chưa
-                            onCheckedChange={(checked) => {
-                              // Cập nhật danh sách `fields` khi checkbox được chọn hoặc bỏ chọn
-                              const newFields = checked
-                                ? [...formField.value, field.fieldName]
-                                : formField.value.filter(
-                                    (f: string) => f !== field.fieldName
-                                  );
-                              formField.onChange(newFields); // Thay đổi giá trị của `fields`
-                            }}
-                          />
-                          <FormLabel
-                            className="text-sm font-medium leading-none cursor-pointer"
-                            title={field.fieldDescription}
-                          >
-                            {capitalizeFirstLetter(field.fieldName)}
-                          </FormLabel>
-                        </Badge>
-                      </FormControl>
-                    </FormItem>
-                  );
-                }}
-              />
-            ))
+            <>
+              Show Fields <ChevronDown className="ml-2 h-4 w-4" />
+            </>
           )}
-        </div>
-      </CardContent>
+        </Button>
+      </CardHeader>
+      {isExpanded && (
+        <CardContent>
+          <Input
+            type="text"
+            placeholder="Search course fields..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mb-4"
+          />
+          <div className="flex flex-wrap gap-2">
+            {!filteredFields ? (
+              <Skeleton className="w-full h-52" />
+            ) : (
+              filteredFields.map((field: CourseFieldResType) => (
+                <FormField
+                  key={field.fieldName}
+                  control={form.control}
+                  name={`fields`}
+                  render={({ field: formField }) => {
+                    const isChecked = formField.value.includes(field.fieldName);
+                    return (
+                      <FormItem>
+                        <FormControl>
+                          <Badge
+                            variant="outline"
+                            className="w-full justify-start gap-2 py-2 px-3"
+                          >
+                            <Checkbox
+                              checked={isChecked}
+                              onCheckedChange={(checked) => {
+                                const newFields = checked
+                                  ? [...formField.value, field.fieldName]
+                                  : formField.value.filter(
+                                      (f: string) => f !== field.fieldName
+                                    );
+                                formField.onChange(newFields);
+                              }}
+                            />
+                            <FormLabel
+                              className="text-sm font-medium leading-none cursor-pointer"
+                              title={field.fieldDescription}
+                            >
+                              {capitalizeFirstLetter(field.fieldName)}
+                            </FormLabel>
+                          </Badge>
+                        </FormControl>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))
+            )}
+          </div>
+        </CardContent>
+      )}
     </Card>
   );
 }

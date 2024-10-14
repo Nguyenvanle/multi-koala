@@ -30,11 +30,11 @@ export default function TermField({
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I agree to the{" "}
-              <Link className="font-bold" href={"/register"}>
+              <Link className="font-bold" href={"/terms"}>
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link className="font-bold" href={"/register"}>
+              <Link className="font-bold" href={"/policy"}>
                 Privacy Policy
               </Link>
             </label>

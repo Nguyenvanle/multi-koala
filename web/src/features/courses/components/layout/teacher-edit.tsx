@@ -1,22 +1,27 @@
 "use client";
-import React from "react";
+
 import { Button } from "@/components/ui/button";
-import { Book, CirclePlus, Home, ListRestart } from "lucide-react";
 import { Form } from "@/components/ui/form";
-import useField from "@/features/field/hooks/useField";
-import useCourseType from "@/features/course-type/hooks/useCourseType";
 import {
   ErrorMessage,
   LoadingSkeleton,
 } from "@/features/courses/components/atoms/create-course-data-handler";
+import useCourseType from "@/features/course-type/hooks/useCourseType";
+import useField from "@/features/field/hooks/useField";
+import { Book, CirclePlus, Home, ListRestart } from "lucide-react";
 import {
   BasicInformationCard,
   CourseFieldsCard,
   CourseImageCard,
   CourseTypesCard,
 } from "@/features/courses/components/organisms";
+import useEditCourseForm, {
+  EditCourseFormData,
+} from "@/features/courses/hooks/useEditCourseForm";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
-import useCreateCourseForm from "@/features/courses/hooks/useCreateCourseForm";
+import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
+import useLessons from "@/features/lessons/hooks/useLessons";
+import { useParams } from "next/navigation";
 
 const breadcrumbs = [
   {
@@ -30,19 +35,30 @@ const breadcrumbs = [
     icon: <Book className="w-4 h-4" />,
   },
   {
-    label: "Add Course",
+    label: "Edit Course",
   },
 ];
 
-export default function CreateCoursePage() {
-  const { form, onSubmit, handleReset } = useCreateCourseForm();
+export default function CourseEditForm({
+  initialData,
+}: {
+  initialData: EditCourseFormData;
+}) {
+  const { courseId } = useParams();
+  const { form, onSubmit, handleReset } = useEditCourseForm(initialData);
   const { fields, loading: fieldsLoading, error: fieldsError } = useField();
   const {
     courseTypes,
     loading: typesLoading,
     error: typesError,
   } = useCourseType();
+  const {
+    lessons,
+    duration,
+    loading: lessonsLoading,
+  } = useLessons(courseId as string);
 
+  // loading
   if (fieldsLoading || typesLoading) {
     return <LoadingSkeleton />;
   }
@@ -51,6 +67,12 @@ export default function CreateCoursePage() {
     return <ErrorMessage />;
   }
 
+  // form store
+  const currentFormData = form.watch();
+  const isFormUnchanged =
+    JSON.stringify(currentFormData) === JSON.stringify(initialData);
+
+  // render ui
   return (
     <div className="w-full">
       <Form {...form}>
@@ -62,7 +84,8 @@ export default function CreateCoursePage() {
                 type="button"
                 onClick={handleReset}
                 variant="outline"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto "
+                disabled={isFormUnchanged}
               >
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
@@ -76,13 +99,16 @@ export default function CreateCoursePage() {
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
             <div className="flex flex-1 flex-col gap-4 xl:gap-6">
-              <CourseImageCard form={form} />
-
-              <CourseTypesCard form={form} courseTypes={courseTypes} />
-              <CourseFieldsCard form={form} fields={fields} />
+              <CourseImageCard
+                form={form}
+                initialImageUrl={initialData.imageUrl}
+              />
+              <BasicInformationCard form={form} />
             </div>
             <div className="flex flex-col gap-4 xl:gap-6">
-              <BasicInformationCard form={form} />
+              <LessonsCardPage lessons={lessons || []} />
+              <CourseTypesCard form={form} courseTypes={courseTypes} />
+              <CourseFieldsCard form={form} fields={fields} />
             </div>
           </div>
         </form>
