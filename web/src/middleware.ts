@@ -12,8 +12,14 @@ const securePathSet = new Set(SECURE_PATHS);
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
+
+  // Log the path and token for debugging
+  console.log("Middleware triggered for path:", path);
+  console.log("Token found in cookies:", token ? "Yes" : "No");
 
   if (request.nextUrl.searchParams.has("auth_processed")) {
+    console.log("Auth processed, continuing...");
     return NextResponse.next();
   }
 
@@ -21,23 +27,27 @@ export async function middleware(request: NextRequest) {
     securePathSet.has(path) ||
     Array.from(securePathSet).some((prefix) => path.startsWith(prefix));
 
-  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
-
   if (!token) {
+    console.log("No token found. Checking secure path...");
     return isSecurePath
       ? redirectToClearLocalStorage(request)
       : NextResponse.next();
   }
 
   try {
+    // Token validation
+    console.log("Validating token...");
     if (await validateToken(token)) {
-      console.log("next");
+      console.log("Token is valid, proceeding...");
       return NextResponse.next();
     }
 
+    // Token refresh attempt
+    console.log("Token invalid, attempting to refresh...");
     const newToken = await refreshToken(token);
 
     if (newToken) {
+      console.log("Token refreshed successfully.");
       const response = NextResponse.next();
       response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
         httpOnly: true,
@@ -49,19 +59,22 @@ export async function middleware(request: NextRequest) {
       return response;
     }
 
-    return handleInvalidToken(request);
+    // Handle invalid token
+    console.log("Failed to refresh token, handling invalid token...");
+    return handleInvalidToken(request, token);
   } catch (error) {
-    console.error("Error in middleware:", error);
-    return handleInvalidToken(request);
+    console.error("Error during middleware execution:", error);
+    return handleInvalidToken(request, token);
   }
 }
 
 function redirectToClearLocalStorage(request: NextRequest): NextResponse {
+  console.log("Redirecting to clear local storage...");
   return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
 }
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

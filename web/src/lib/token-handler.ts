@@ -20,15 +20,39 @@ export async function validateToken(token: string): Promise<boolean> {
 
   if (cachedEntry && currentTime - cachedEntry.timestamp < CACHE_DURATION) {
     console.log("Using cached validation result:", {
-      createAt: new Date().toLocaleTimeString(),
-      result: cachedEntry.valid,
+      token,
+      valid: cachedEntry.valid,
+      cachedAt: new Date(cachedEntry.timestamp).toLocaleTimeString(),
+      currentTime: new Date(currentTime).toLocaleTimeString(),
+      remainingCacheTime: CACHE_DURATION - (currentTime - cachedEntry.timestamp),
     });
     return cachedEntry.valid;
   }
+  
 
-  // Kiểm tra tính hợp lệ token từ server
+  console.log("Validating token from server:", {
+    token,
+    requestAt: new Date().toLocaleTimeString(),
+  });
+  
   const { result, error } = await introspectServices.checkValid({ token });
+  
+  if (error) {
+    console.error("Error validating token from server:", {
+      token,
+      error,
+      requestAt: new Date().toLocaleTimeString(),
+    });
+  }
+  
   const isValid = result?.result.valid ?? false;
+  
+  console.log("Validation result from server:", {
+    token,
+    isValid,
+    responseAt: new Date().toLocaleTimeString(),
+  });
+  
 
   console.log("Validate:", {
     createAt: new Date().toLocaleTimeString(),
@@ -47,34 +71,52 @@ export async function validateToken(token: string): Promise<boolean> {
 
 
 export async function refreshToken(token: string): Promise<string | null> {
-  console.log("Refresh: ", {
-    createAt: new Date().toLocaleTimeString(),
+  console.log("Attempting to refresh token:", {
     token,
+    requestAt: new Date().toLocaleTimeString(),
   });
+  
   const res = await refreshServices.refresh({ token });
+  
   if (res.result?.result.token) {
     const newToken = res.result.result.token;
-    // Invalidate the old token in cache and add the new one
+    
+    console.log("Token refreshed successfully:", {
+      oldToken: token,
+      newToken,
+      refreshedAt: new Date().toLocaleTimeString(),
+    });
+  
+    // Thay đổi cache
     tokenCache.delete(token);
     tokenCache.set(newToken, { valid: true, timestamp: Date.now() });
     return newToken;
   } else {
-    console.log("Refresh failed: ", {
-      createAt: new Date().toLocaleTimeString(),
-      res,
+    console.error("Failed to refresh token:", {
+      token,
+      error: res.error,
+      responseAt: new Date().toLocaleTimeString(),
     });
     return null;
   }
+  
 }
 
-export function handleInvalidToken(request: NextRequest): NextResponse {
-  console.log("Deleted token", {
-    createAt: new Date().toLocaleTimeString(),
+export function handleInvalidToken(request: NextRequest, token: string): NextResponse {
+  console.log("Handling invalid token:", {
+    token,
+    redirectPath: CLEAR_LOCAL_STORAGE_PATH,
+    timestamp: new Date().toLocaleTimeString(),
   });
-
+  
   const response = NextResponse.redirect(
     new URL(CLEAR_LOCAL_STORAGE_PATH, request.url)
   );
+  tokenCache.delete(token)
+  console.log("Token removed from cache.");
+
   response.cookies.delete(TOKEN_COOKIE_NAME);
+  console.log("Token cookie deleted and user redirected.");
   return response;
+  
 }
