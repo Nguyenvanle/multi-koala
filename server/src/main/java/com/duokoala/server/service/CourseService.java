@@ -15,12 +15,15 @@ import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.CourseMapper;
 import com.duokoala.server.repository.*;
+import com.duokoala.server.service.mediaService.CloudinaryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +44,7 @@ public class CourseService {
     DiscountCourseRepository discountCourseRepository;
     RequestDiscountRepository requestDiscountRepository;
     EnrollCourseRepository enrollCourseRepository;
+    CloudinaryService cloudinaryService;
 
     public DiscountAppliedResponse getMaxApprovedDiscountRate(String courseId) {
         Float maxDiscountCourse = Optional.ofNullable(
@@ -65,9 +69,9 @@ public class CourseService {
         course.setTypes(new HashSet<>(types));
         var fields = fieldRepository.findAllById(request.getFields());
         course.setFields(new HashSet<>(fields));
-        Image image = new Image();
-        image.setImageUrl(request.getImageUrl());
-        course.setImage(image);
+//        Image image = new Image();
+//        image.setImageUrl(request.getImageUrl());
+//        course.setImage(image);
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
@@ -85,7 +89,15 @@ public class CourseService {
         var fields = fieldRepository.findAllById(request.getFields());
         course.setFields(new HashSet<>(fields));
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
-        course.getImage().setImageUrl(request.getImageUrl());
+//        course.getImage().setImageUrl(request.getImageUrl());
+        return courseMapper.toCourseResponse(courseRepository.save(course));
+    }
+
+    public CourseResponse changeImage(String courseId, MultipartFile imageFile) throws IOException {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
+        if (course.getImage() != null) cloudinaryService.deleteImage(course.getImage().getImageId());
+        course.setImage(cloudinaryService.uploadImage(imageFile));
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 

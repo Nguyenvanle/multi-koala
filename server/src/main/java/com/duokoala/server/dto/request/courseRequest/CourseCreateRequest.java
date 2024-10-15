@@ -17,5 +17,5 @@ public class CourseCreateRequest {
     String courseLevel;
     Set<String> types;
     Set<String> fields;
-    String imageUrl;
+//    String imageUrl;
 }

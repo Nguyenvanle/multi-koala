@@ -23,7 +23,7 @@ public class CloudinaryService {
     }
 
     @Transactional
-    public Object uploadImage(MultipartFile file) throws IOException {
+    public Image uploadImage(MultipartFile file) throws IOException {
         Map image = cloudinary.uploader().upload(file.getBytes(),
                 ObjectUtils.asMap("resource_type", "image"));
         return Image.builder()
@@ -31,6 +31,7 @@ public class CloudinaryService {
                 .imageUrl((String) image.get("secure_url"))
                 .build();
     }
+
 
     @Transactional
     public List<Image> uploadImages(List<MultipartFile> files) throws IOException {
@@ -81,4 +82,5 @@ public class CloudinaryService {
             log.error("Error deleting file: {}", publicId, e);
         }
     }
+
 }
