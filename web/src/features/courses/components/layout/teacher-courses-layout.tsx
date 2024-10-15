@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { PlusCircle, Home } from "lucide-react";
+import { PlusCircle, Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
@@ -9,6 +9,7 @@ import { TeacherCourseTable } from "@/features/courses/components/organisms/teac
 import { TeacherOverviewList } from "@/features/courses/components/organisms/teacher-overview-list";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
+import { Input } from "@/components/ui/input";
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
@@ -32,14 +33,25 @@ const TeacherCourseLayout = ({
 
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
-      <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <Breadcrumbs items={breadcrumbs} />
-        <Link href="/dashboard/courses/add" passHref>
+
+        <div className="relative flex-grow w-full md:max-w-96 ">
+          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+          <Input
+            placeholder="Search for course names..."
+            // value={value}
+            // onChange={onChange}
+            className="pl-8 focus:border-accent"
+          />
+        </div>
+        {/* <Link href="/dashboard/courses/add" passHref>
           <Button className="flex items-center gap-2" size={"sm"}>
             <PlusCircle className="w-5 h-5" />
             Add New Course
           </Button>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
