@@ -32,7 +32,6 @@ export default function useMyTeacherCourses() {
           router.refresh();
         } catch (error) {
           console.error("Error to refresh, logout action: ", error);
-          logoutAction();
         }
       }
     };
