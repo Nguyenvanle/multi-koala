@@ -124,6 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async () => {
     setLoading(true);
     await handleLogout();
+    router.replace("/login?auth_processed");
     setLoading(false);
   };
 

@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   // Log the path and token for debugging
   console.log("Middleware triggered for path:", path);
-  console.log("Token found in cookies:", token ? "Yes" : "No");
+  console.log("Token found in cookies:", token ? true : false);
 
   if (request.nextUrl.searchParams.has("auth_processed")) {
     console.log("Auth processed, continuing...");
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     console.log("No token found. Checking secure path...");
     return isSecurePath
-      ? NextResponse.redirect(new URL('/login?auth_processed', request.url))
+      ? NextResponse.redirect(new URL("/login?auth_processed", request.url))
       : NextResponse.next();
   }
 
@@ -39,19 +39,22 @@ export async function middleware(request: NextRequest) {
       console.log("Token is invalid, logout actions...");
       // await logoutAction();
       console.log("Redirect to /login");
-      return NextResponse.redirect(new URL('/login?auth_processed', request.url));
+      return NextResponse.redirect(
+        new URL("/login?auth_processed", request.url)
+      );
     }
 
+    console.log("Token is valid, continuing...");
     return NextResponse.next();
   } catch (error) {
     console.error("Error during middleware execution: ", error);
     console.log("Logout actions...");
     await logoutAction();
     console.log("Redirect to /login");
-    return NextResponse.redirect(new URL('/login?auth_processed', request.url));
+    return NextResponse.redirect(new URL("/login?auth_processed", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/verify/:path*"],
+  matcher: ["/dashboard/:path*"],
 };

@@ -4,7 +4,7 @@ import { introspectServices } from "@/features/auth/services/introspect";
 import { cookies } from "next/headers";
 
 export async function checkTokenValidity() {
-  const accessToken = cookies().get("accessToken")?.value;
+  const accessToken = cookies().get("token")?.value;
 
   if (!accessToken) {
     return { valid: false };
