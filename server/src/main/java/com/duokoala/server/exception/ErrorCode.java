@@ -22,6 +22,7 @@ public enum ErrorCode {
     DISCOUNT_COURSE_EXISTED(409, "Conflict: Discount for Course already exists", HttpStatus.CONFLICT),
     REFERENCE_EXISTED(409, "Conflict: Reference already exists", HttpStatus.CONFLICT),
     ENROLL_COURSE_EXISTED(409, "Conflict: Enroll for Course already exists", HttpStatus.CONFLICT),
+    FAVOURITE_EXISTED(409, "Conflict: Favourite for Course already exists", HttpStatus.CONFLICT),
     REVIEW_EXISTED(409, "Conflict: Review already exists", HttpStatus.CONFLICT),
     CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
     COURSE_ALREADY_APPROVED(409, "Conflict: Course is already approved", HttpStatus.CONFLICT),
