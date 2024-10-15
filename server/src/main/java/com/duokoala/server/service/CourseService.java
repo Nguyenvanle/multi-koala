@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -91,6 +92,7 @@ public class CourseService {
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 
+    @Transactional
     public CourseResponse uploadImage(String courseId, MultipartFile imageFile) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));

@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -59,6 +60,7 @@ public class LessonService {
         return lessonMapper.toLessonResponse(lessonRepository.save(lesson));
     }
 
+    @Transactional
     public LessonResponse uploadImage(String lessonId, MultipartFile imageFile) throws IOException {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
@@ -67,6 +69,7 @@ public class LessonService {
         return lessonMapper.toLessonResponse(lessonRepository.save(lesson));
     }
 
+    @Transactional
     public LessonResponse uploadVideo(String lessonId, MultipartFile videoFile) throws IOException {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
