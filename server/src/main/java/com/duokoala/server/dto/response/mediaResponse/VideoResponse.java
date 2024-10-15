@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class VideoResponse {
     String videoId;
     String videoUrl;
-    int videoDuration;
+    double videoDuration;
 }
