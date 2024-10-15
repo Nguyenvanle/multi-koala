@@ -22,5 +22,5 @@ public class UserCreationRequest {
     String userHometown;
     @Email
     String email;
-    String imageUrl;
+//    String imageUrl;
 }

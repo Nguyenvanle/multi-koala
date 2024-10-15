@@ -31,7 +31,7 @@ public class StudentService {
 
     public StudentResponse createStudent(StudentCreationRequest request) {
         Student student = studentMapper.toStudent(request);
-        student.setImage(userService.createNewAvatar(request.getImageUrl()));
+//        student.setImage(userService.createNewAvatar(request.getImageUrl()));
         student.setRoles(userService.transferRoles(Role.STUDENT.name()));
         student.setDeleted(false);
         student.setFirstLogin(true);
@@ -48,7 +48,7 @@ public class StudentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         studentMapper.updateStudent(student,request);
-        userService.updateAvatarByUserId(student.getImage(), request.getImageUrl());
+//        userService.updateAvatarByUserId(student.getImage(), request.getImageUrl());
         student.setPassword(userService.encodePassword(request.getPassword()));
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }

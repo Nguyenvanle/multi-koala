@@ -35,7 +35,7 @@ public class AdminService {
 
     public AdminResponse createAdmin(AdminCreationRequest request) {
         Admin admin = adminMapper.toAdmin(request);
-        admin.setImage(userService.createNewAvatar(request.getImageUrl()));
+//        admin.setImage(userService.createNewAvatar(request.getImageUrl()));
         admin.setRoles(userService.transferRoles(Role.ADMIN.name()));
         admin.setDeleted(false);
         admin.setFirstLogin(true);
@@ -53,7 +53,7 @@ public class AdminService {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
         adminMapper.updateAdmin(admin, request);
-        userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
+//        userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
         admin.setPassword(userService.encodePassword(request.getPassword()));
         return adminMapper.toAdminResponse(adminRepository.save(admin));
     }

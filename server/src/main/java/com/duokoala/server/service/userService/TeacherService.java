@@ -41,7 +41,7 @@ public class TeacherService {
 
     public TeacherResponse createTeacher(TeacherCreationRequest request) {
         Teacher teacher = teacherMapper.toTeacher(request);
-        teacher.setImage(userService.createNewAvatar(request.getImageUrl()));
+//        teacher.setImage(userService.createNewAvatar(request.getImageUrl()));
         teacher.setRoles(userService.transferRoles(Role.TEACHER.name()));
         teacher.setDeleted(false);
         teacher.setFirstLogin(true);
@@ -58,7 +58,7 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
         teacherMapper.updateTeacher(teacher, request);
-        userService.updateAvatarByUserId(teacher.getImage(), request.getImageUrl());
+//        userService.updateAvatarByUserId(teacher.getImage(), request.getImageUrl());
         teacher.setPassword(userService.encodePassword(request.getPassword()));
         return teacherMapper.toTeacherResponse(teacherRepository.save(teacher)
                 /*,getAvgRatingTeacher(teacherId)*/);
