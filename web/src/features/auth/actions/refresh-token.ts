@@ -5,7 +5,7 @@ import { refreshServices } from "@/features/auth/services/refresh";
 import { cookies } from "next/headers";
 
 export async function refreshTokenAction() {
-  const accessToken = cookies().get("accessToken")?.value;
+  const accessToken = cookies().get("token")?.value;
 
   if (!accessToken) {
     throw new Error("No access token available");

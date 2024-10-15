@@ -4,7 +4,14 @@ import { checkTokenValidity } from "@/features/auth/actions/check-token";
 import { logoutAction } from "@/features/auth/actions/logout";
 import { refreshTokenAction } from "@/features/auth/actions/refresh-token";
 import { UserResType } from "@/features/users/schema/user";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface AuthContextType {
   user: UserResType | null;
@@ -22,7 +29,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<UserResType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  
+
+  const router = useRouter();
+
   const refreshAccessTokenInBackground = useCallback(async () => {
     try {
       const refreshedData = await refreshTokenAction();
@@ -30,24 +39,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (refreshedData) {
         setIsAuthenticated(true);
 
-        console.log({
-          title: "Session Refreshed",
-          description: "Your session has been refreshed.",
-        });
-        return true
+        console.log("refresh:", true);
+        return true;
       } else {
-
-        console.log('Refresh fail, logout action')
+        console.log("Refresh fail, logout action");
         await handleLogout();
-        return false
+
+        return false;
       }
     } catch (error) {
       console.error("Error refreshing access token:", error);
       // Nếu có lỗi khi refresh, tự động logout
       await handleLogout();
-      return false
+      return false;
     }
-  }, [])
+  }, []);
 
   const initializeAuth = useCallback(async () => {
     setLoading(true);
@@ -59,17 +65,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsAuthenticated(true);
       }
 
+      console.log("initializeAuth checkTokenValidity...");
       const { valid } = await checkTokenValidity();
+      console.log("valid: ", valid);
 
-      if (valid) {
-        setIsAuthenticated(true);
-      } else {
-        await refreshAccessTokenInBackground();
+      if (!valid) {
+        const success = await refreshAccessTokenInBackground();
+
+        if (!success) {
+          await handleLogout();
+          router.replace("/login");
+
+          toast({
+            title: "Session Expired",
+            description: "Your session has expired, please log in again.",
+            variant: "destructive",
+            duration: 3000,
+          });
+        }
       }
     } catch (error) {
       console.error("Error checking auth status:", error);
       await handleLogout();
-      
+
       toast({
         title: "Session Expired",
         description: "Your session has expired, please log in again.",
@@ -79,22 +97,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setLoading(false);
     }
-  }, [refreshAccessTokenInBackground])
+  }, [refreshAccessTokenInBackground, router]);
 
   useEffect(() => {
     initializeAuth();
 
     const intervalId = setInterval(async () => {
-      console.log('Attempting to refresh token in background...');
+      console.log("Attempting to refresh token in background...");
       const success = await refreshAccessTokenInBackground();
       if (!success) {
-        console.log('Failed to refresh token, user may need to log in again.');
+        console.log("Failed to refresh token, user may need to log in again.");
         clearInterval(intervalId); // Dừng việc refresh nếu không thành công
       }
     }, 15 * 60 * 1000); // 15 phút
 
     return () => clearInterval(intervalId);
-
   }, [initializeAuth, refreshAccessTokenInBackground]);
 
   const login = (userData: UserResType) => {
@@ -117,12 +134,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem("user");
-      
-      console.log("Logout success")
+
+      console.log("Logout success");
     } catch (error) {
       console.error("Logout error:", error);
     }
-  }
+  };
 
   return (
     <AuthContext.Provider

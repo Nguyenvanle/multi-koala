@@ -2,8 +2,8 @@
 
 import { cookies } from "next/headers";
 
-export function setAccessTokenCookie(token: string) {
-  cookies().set("accessToken", token, {
+export async function setAccessTokenCookie(token: string) {
+  cookies().set("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -13,6 +13,6 @@ export function setAccessTokenCookie(token: string) {
   });
 }
 
-export function clearAccessTokenCookie() {
-  cookies().delete("accessToken");
+export async function clearAccessTokenCookie() {
+  cookies().delete("token");
 }

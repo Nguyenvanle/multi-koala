@@ -1,7 +1,6 @@
 "use server";
 
 import { clearAccessTokenCookie } from "@/features/auth/actions/access-token";
-import { logoutService } from "@/features/auth/services/logout";
 
 export async function logoutAction() {
   // Clear cookie chứa access token
