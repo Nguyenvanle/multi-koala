@@ -31,15 +31,17 @@ const useTestResult = (testId) => {
     try {
       setLoadingResult(true);
       setErrorResult(null);
+
+      // Dữ liệu gửi đi đã được cập nhật từ handleSubmit
       const requestData: SubmitRes = {
-        answerSubmitList: selectedAnswerList || null,
+        answerSubmitList: selectedAnswerList,
       };
 
       const request = await testResultService.getResult(
         testIdString, // Sử dụng testIdString ở đây
         requestData
       );
-      console.log(request.data);
+
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);

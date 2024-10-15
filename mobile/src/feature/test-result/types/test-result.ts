@@ -9,7 +9,7 @@ export type AnswerBodyList = AnswerBody[];
 
 export type QuizBody = {
   questionId: string;
-  image: string | null;
+  image: string;
   questionDescription: string;
   answers: AnswerBodyList;
 };
@@ -17,7 +17,7 @@ export type QuizBody = {
 export type QuizBodyList = QuizBody[];
 
 export type TestResultBody = {
-  quizResultId: null;
+  quizResultId: string;
   totalQuestion: number;
   answeredQuestions: number;
   correctAnswers: number;

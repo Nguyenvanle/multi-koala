@@ -21,10 +21,10 @@ import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useFavouriteCourse from "@/src/feature/favourite-courses/hooks/useFavouriteCourse";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
-  const [defaultRating, setDefaultRating] = useState(0);
-
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
   const starImgFilled =
@@ -52,11 +52,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
 
   const { discount } = useCourseDiscount(courseIdString);
 
-  const [isLiked, setIsLiked] = useState(false); // Trạng thái yêu thích
-
-  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái cho Modal
-
-  const [searchTerm, setSearchTerm] = useState("");
+  const { isLiked, handleLikeToggle } = useFavouriteCourse();
 
   if (loading) {
     return (
@@ -94,7 +90,6 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
       </View>
     );
   };
-
   // Kiểm tra xem enrolled có phải là một mảng không
   const isEnrolled =
     Array.isArray(enrolled) &&
@@ -185,13 +180,12 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <Text style={styles.title} numberOfLines={3}>
               {courseDetails.courseName}
             </Text>
-            <TouchableOpacity
-              onPress={() => setIsLiked(!isLiked)} // Đổi trạng thái yêu thích khi chạm
-            >
+            {/* Nút yêu thích */}
+            <TouchableOpacity onPress={handleLikeToggle}>
               <AntDesign
                 name="heart"
                 size={32}
-                color={isLiked ? "#FF4E88" : Colors.grey} // Thay đổi màu sắc dựa trên trạng thái
+                color={isLiked ? "#FF4E88" : Colors.grey} // Màu sắc dựa trên trạng thái
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
