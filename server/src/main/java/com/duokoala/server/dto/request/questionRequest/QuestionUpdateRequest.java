@@ -13,7 +13,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionUpdateRequest {
     String questionDescription;
-    String imageUrl;
+//    String imageUrl;
     List<String> answers;
     int correctIndex;
 }

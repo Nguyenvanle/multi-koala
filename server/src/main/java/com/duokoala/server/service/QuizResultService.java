@@ -41,15 +41,10 @@ public class QuizResultService {
     public QuizResultResponse submitQuiz(String testId, QuizResultSubmitRequest request) {
         Test test = testRepository.findById(testId).orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
         List<QuestionSubmitRequest> questionList = request.getAnswerSubmitList();
-        log.info("1");
         QuizResult quizResult = createQuizResult(test, questionList);
-        log.info("2");
         List<StudentAnswer> studentAnswers = createStudentAnswers(quizResult, questionList);
-        log.info("3");
         saveQuizResultAndAnswers(quizResult, studentAnswers);
-        log.info("4");
         List<QuestionSubmitResponse> questionResponses = createQuestionResponses(questionList);
-        log.info("5");
         return createQuizResultResponse(quizResult, questionResponses);
     }
 

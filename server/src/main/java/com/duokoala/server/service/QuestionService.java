@@ -4,25 +4,28 @@ import com.duokoala.server.dto.request.questionRequest.QuestionCreateRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionSubmitRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
 import com.duokoala.server.dto.response.answerResponse.AnswerSubmitResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.questionResponse.QuestionResponse;
 import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import com.duokoala.server.entity.Answer;
+import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Question;
-import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuestionMapper;
 import com.duokoala.server.repository.AnswerRepository;
 import com.duokoala.server.repository.QuestionRepository;
 import com.duokoala.server.repository.TestRepository;
-import com.duokoala.server.repository.mediaRepository.ImageRepository;
-import jakarta.transaction.Transactional;
+import com.duokoala.server.service.mediaService.CloudinaryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +35,10 @@ import java.util.List;
 @Slf4j
 public class QuestionService {
     private final AnswerRepository answerRepository;
-    private final ImageRepository imageRepository;
     QuestionRepository questionRepository;
     QuestionMapper questionMapper;
     TestRepository testRepository;
+    CloudinaryService cloudinaryService;
 
     @Transactional
     public QuestionSubmitResponse convertToSubmitResponse(QuestionSubmitRequest request) {
@@ -78,9 +81,9 @@ public class QuestionService {
         Question question = questionMapper.toQuestion(request);
         question.setTest(testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
-        Image image = new Image();
-        image.setImageUrl(request.getImageUrl());
-        question.setImage(image);
+//        Image image = new Image();
+//        image.setImageUrl(request.getImageUrl());
+//        question.setImage(image);
         question.setActive(true);
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
@@ -106,21 +109,15 @@ public class QuestionService {
         questionRepository.save(question);
         return create(question.getTest().getTestId(),
                 questionMapper.toQuestionCreateRequest(request));
-//        questionMapper.updateQuestion(question, request);
-//        List<Answer> answers = question.getAnswers();
-//        answers.clear();
-//        int indexAnswer = 0;
-//        for (String answerDescription : request.getAnswers()) {
-//            Answer answer = Answer.builder()
-//                    .answerDescription(answerDescription)
-//                    .question(question)
-//                    .build();
-//            answer.setCorrect(indexAnswer == request.getCorrectIndex());
-//            answers.add(answer);
-//            indexAnswer++;
-//        }
-//        question.getImage().setImageUrl(request.getImageUrl());
-//        return questionMapper.toQuestionResponse(questionRepository.save(question));
+    }
+
+    @Transactional
+    public QuestionResponse uploadImage(String questionId, MultipartFile imageFile) throws IOException {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+        if (question.getImage() != null) cloudinaryService.deleteImage(question.getImage().getImageId());
+        question.setImage(cloudinaryService.uploadImage(imageFile));
+        return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 
     public QuestionResponse get(String questionId) {
