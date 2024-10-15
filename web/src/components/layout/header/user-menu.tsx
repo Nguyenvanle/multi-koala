@@ -19,7 +19,7 @@ import { Muted } from "@/components/ui/typography";
 
 const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const MENU_ITEMS = [
     { icon: <User size={20} />, label: "Your Profile", href: "/" },
@@ -27,7 +27,7 @@ const UserMenu: React.FC = () => {
     {
       icon: <LogOut size={20} />,
       label: "Logout",
-      href: "/logout",
+      onclick: logout,
       destructive: true,
     }, // Destructive flag added
   ];
@@ -87,10 +87,11 @@ const UserMenu: React.FC = () => {
             {MENU_ITEMS.map((item) => (
               <SheetClose key={item.label} asChild>
                 <Link
-                  href={item.href}
+                  href={item.href || ""}
                   className={`flex items-center space-x-2 ${
                     item.destructive ? "text-destructive" : ""
-                  }`} // Apply destructive color if the item is Logout
+                  }`}
+                  onClick={item.onclick}
                 >
                   {item.icon}
                   <span>{item.label}</span>

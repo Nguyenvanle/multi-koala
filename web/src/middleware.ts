@@ -1,10 +1,6 @@
-import {
-  SECURE_PATHS,
-  TOKEN_COOKIE_NAME,
-  CLEAR_LOCAL_STORAGE_PATH,
-  TOKEN_EXPIRY,
-} from "@/features/auth/enum/auth";
-import { validateToken, refreshToken, handleInvalidToken } from "@/lib/token-handler";
+import { checkTokenValidity } from "@/features/auth/actions/check-token";
+import { logoutAction } from "@/features/auth/actions/logout";
+import { SECURE_PATHS, TOKEN_COOKIE_NAME } from "@/features/auth/enum/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -12,8 +8,14 @@ const securePathSet = new Set(SECURE_PATHS);
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
+
+  // Log the path and token for debugging
+  console.log("Middleware triggered for path:", path);
+  console.log("Token found in cookies:", token ? true : false);
 
   if (request.nextUrl.searchParams.has("auth_processed")) {
+    console.log("Auth processed, continuing...");
     return NextResponse.next();
   }
 
@@ -21,47 +23,38 @@ export async function middleware(request: NextRequest) {
     securePathSet.has(path) ||
     Array.from(securePathSet).some((prefix) => path.startsWith(prefix));
 
-  const token = request.cookies.get(TOKEN_COOKIE_NAME)?.value;
-
   if (!token) {
+    console.log("No token found. Checking secure path...");
     return isSecurePath
-      ? redirectToClearLocalStorage(request)
+      ? NextResponse.redirect(new URL("/login?auth_processed", request.url))
       : NextResponse.next();
   }
 
   try {
-    if (await validateToken(token)) {
-      console.log("next");
-      return NextResponse.next();
+    // Token validation
+    console.log("Validating token...");
+    const { valid } = await checkTokenValidity();
+
+    if (!valid) {
+      console.log("Token is invalid, logout actions...");
+      // await logoutAction();
+      console.log("Redirect to /login");
+      return NextResponse.redirect(
+        new URL("/login?auth_processed", request.url)
+      );
     }
 
-    const newToken = await refreshToken(token);
-
-    if (newToken) {
-      const response = NextResponse.next();
-      response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: "strict",
-        maxAge: TOKEN_EXPIRY,
-        path: "/",
-      });
-      return response;
-    }
-
-    return handleInvalidToken(request);
+    console.log("Token is valid, continuing...");
+    return NextResponse.next();
   } catch (error) {
-    console.error("Error in middleware:", error);
-    return handleInvalidToken(request);
+    console.error("Error during middleware execution: ", error);
+    console.log("Logout actions...");
+    await logoutAction();
+    console.log("Redirect to /login");
+    return NextResponse.redirect(new URL("/login?auth_processed", request.url));
   }
 }
 
-function redirectToClearLocalStorage(request: NextRequest): NextResponse {
-  return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
-}
-
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
-  ],
+  matcher: ["/dashboard/:path*"],
 };
