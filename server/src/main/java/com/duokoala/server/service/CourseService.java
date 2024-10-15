@@ -8,7 +8,6 @@ import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
 import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
 import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
 import com.duokoala.server.entity.Course;
-import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.enums.Level;
 import com.duokoala.server.enums.Status;
 import com.duokoala.server.exception.AppException;
@@ -29,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,7 +91,7 @@ public class CourseService {
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 
-    public CourseResponse changeImage(String courseId, MultipartFile imageFile) throws IOException {
+    public CourseResponse uploadImage(String courseId, MultipartFile imageFile) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
         if (course.getImage() != null) cloudinaryService.deleteImage(course.getImage().getImageId());

@@ -65,7 +65,7 @@ public class CourseController {
             @PathVariable String courseId
             ,@RequestParam("file") MultipartFile file) throws IOException {
         return ApiResponse.<CourseResponse>builder()
-                .result(courseService.changeImage(courseId,file))
+                .result(courseService.uploadImage(courseId,file))
                 .build();
     }
 
