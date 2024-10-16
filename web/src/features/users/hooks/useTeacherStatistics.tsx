@@ -20,6 +20,7 @@ export function useTeacherStatistics() {
     const fetch = async () => {
       if (data?.code === 401) {
         try {
+          console.log("Teacher statistic 401");
           const refreshData = await refreshTokenAction();
 
           if (!refreshData) {

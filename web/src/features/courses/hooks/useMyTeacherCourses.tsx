@@ -21,6 +21,7 @@ export default function useMyTeacherCourses() {
     const fetch = async () => {
       if (data?.code === 401) {
         try {
+          console.log("Teacher Statistic 401");
           const refreshData = await refreshTokenAction();
 
           if (!refreshData) {

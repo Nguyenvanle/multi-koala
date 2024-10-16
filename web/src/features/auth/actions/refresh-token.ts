@@ -5,6 +5,7 @@ import { refreshServices } from "@/features/auth/services/refresh";
 import { cookies } from "next/headers";
 
 export async function refreshTokenAction() {
+  console.log("Refreshing...");
   const getCookies = cookies();
 
   if (!getCookies) {
@@ -17,7 +18,6 @@ export async function refreshTokenAction() {
     throw new Error("No access token available");
   }
 
-  // Gửi access token cũ lên server để lấy token mới
   const { result } = await refreshServices.refresh({ token: accessToken });
 
   if (!result?.result.token) {
