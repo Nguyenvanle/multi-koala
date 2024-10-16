@@ -23,6 +23,7 @@ public class Course {
     String courseId;
     String courseName;
     LocalDateTime courseUploadedAt;
+    LocalDateTime courseResponsibilityEndAt;
     float coursePrice;
     String courseDescription;
     @Enumerated(EnumType.STRING)
