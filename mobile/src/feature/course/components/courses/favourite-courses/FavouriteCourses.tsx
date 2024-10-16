@@ -7,25 +7,17 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { Link, router, useGlobalSearchParams } from "expo-router";
+import { Link, router } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
-import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
-import { CourseBody } from "../../../types/course";
-import { useEnrolled } from "../../../hooks/useEnrrolled";
+import { ResultCourse } from "@/src/feature/favourite-courses/types/favourite-course";
+import useGetCourse from "@/src/feature/favourite-courses/hooks/useGetFavourite";
 
 const FavouriteCourses = () => {
-  const { courseId } = useGlobalSearchParams();
-
-  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-
-  const { course, errorMessage, loading } = useCourse();
-
+  const { loading, errorFavouriteMessage, favouriteCourse } = useGetCourse();
   const { user } = useUser();
-
-  const { enrolled } = useEnrolled();
-
+  console.log(favouriteCourse);
   if (loading) {
     return (
       <View style={{ paddingTop: 16, justifyContent: "center" }}>
@@ -34,18 +26,9 @@ const FavouriteCourses = () => {
     );
   }
 
-  // Lọc danh sách khóa học để loại bỏ những khóa học đã được đăng ký
-  const enrolledCourseIds = Array.isArray(enrolled)
-    ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
-    : [];
-
-  const filteredCourses = course.filter((item: CourseBody) => {
-    return !enrolledCourseIds.includes(item.courseId);
-  });
-
-  const renderCourseItem = ({ item }: { item: CourseBody }) => (
+  const renderCourseItem = ({ item }: { item: ResultCourse }) => (
     <View>
-      <Link href={`/${item.courseId}`} asChild>
+      <Link href={`/${item.course.courseId}`} asChild>
         <TouchableOpacity style={{ marginTop: 16 }}>
           <View
             style={{
@@ -55,7 +38,7 @@ const FavouriteCourses = () => {
             }}
           >
             <Image
-              source={{ uri: item.image.imageUrl }}
+              source={{ uri: item.course.image.imageUrl }}
               style={{
                 width: 350,
                 height: 200,
@@ -87,7 +70,7 @@ const FavouriteCourses = () => {
                     fontWeight: "400",
                   }}
                 >
-                  {item.courseName}
+                  {item.course.courseName}
                 </Text>
               </View>
               <View style={{ marginVertical: 5, paddingTop: 0 }}>
@@ -98,8 +81,8 @@ const FavouriteCourses = () => {
                     color: Colors.teal_dark,
                   }}
                 >
-                  {item.uploadedByTeacher.firstname}{" "}
-                  {item.uploadedByTeacher.lastname}
+                  {item.course.uploadedByTeacher.firstname}{" "}
+                  {item.course.uploadedByTeacher.lastname}
                 </Text>
               </View>
             </View>
@@ -119,7 +102,7 @@ const FavouriteCourses = () => {
         }}
         onPress={() => {
           if (user) {
-            router.push(`/${item.courseId}`);
+            router.push(`/${item.course.courseId}`);
           } else {
             Alert.alert(
               "LogIn Required",
@@ -131,7 +114,7 @@ const FavouriteCourses = () => {
                 },
                 {
                   text: "Log In",
-                  onPress: () => router.push("/(auth)/sign-in"), // Assuming you have a login route
+                  onPress: () => router.push("/(auth)/sign-in"),
                 },
               ]
             );
@@ -152,37 +135,14 @@ const FavouriteCourses = () => {
   );
 
   return (
-    <View>
-      {user ? (
-        <View
-          style={{
-            paddingVertical: 10,
-          }}
-        >
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={filteredCourses} // Sử dụng danh sách đã lọc
-            renderItem={renderCourseItem}
-            keyExtractor={(item) => item.courseId}
-          />
-        </View>
-      ) : (
-        <View
-          style={{
-            flex: 0,
-            paddingVertical: 10,
-            height: 700,
-            top: -160,
-          }}
-        >
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={course}
-            renderItem={renderCourseItem}
-            keyExtractor={(item) => item.courseId}
-            style={{ height: 630 }}
-          />
-        </View>
+    <View style={{ flex: 1, paddingVertical: 10 }}>
+      {loading && (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={favouriteCourse} // Dữ liệu từ hook
+          renderItem={renderCourseItem}
+          keyExtractor={(item) => item.course.courseId}
+        />
       )}
     </View>
   );

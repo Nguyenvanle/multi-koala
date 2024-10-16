@@ -21,8 +21,6 @@ import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import useFavouriteCourse from "@/src/feature/favourite-courses/hooks/useFavouriteCourse";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -52,7 +50,11 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
 
   const { discount } = useCourseDiscount(courseIdString);
 
-  const { isLiked, handleLikeToggle } = useFavouriteCourse();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+
+  const handleFavoriteToggle = () => {
+    setIsLiked((prevState) => !prevState);
+  };
 
   if (loading) {
     return (
@@ -181,7 +183,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
               {courseDetails.courseName}
             </Text>
             {/* Nút yêu thích */}
-            <TouchableOpacity onPress={handleLikeToggle}>
+            <TouchableOpacity onPress={handleFavoriteToggle}>
               <AntDesign
                 name="heart"
                 size={32}

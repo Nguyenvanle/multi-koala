@@ -12,13 +12,11 @@ import * as Progress from "react-native-progress";
 import { Link, router, useGlobalSearchParams } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
-import { useCourseDiscount } from "@/src/feature/discount/hooks/useCourseDiscount";
 
 const InProgressCourses = () => {
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);
-  const { discount } = useCourseDiscount(courseIdString);
 
   if (loading) {
     return (

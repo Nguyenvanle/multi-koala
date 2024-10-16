@@ -3,7 +3,7 @@ import { Image } from "./image";
 import { RolesList } from "./roles";
 import { TypeCourseList } from "./type-course";
 
-export type UploadByTeacher = {
+export type uploadedByTeacher = {
   userId: string;
   username: string;
   firstname: string;
@@ -28,8 +28,8 @@ export type Course = {
   types: TypeCourseList;
   fields: FieldCourseList;
   image: Image;
-  uploadByTeacher: UploadByTeacher;
-  approvedByAdmin: null;
+  uploadedByTeacher: uploadedByTeacher;
+  approvedByAdmin: [];
   status: string;
   deleted: boolean;
 };
@@ -52,12 +52,22 @@ export type Student = {
 export type ResultCourse = {
   favouriteId: string;
   favouriteAt: string;
-  student: Student;
   course: Course;
+};
+
+export type CourseResList = {
+  code: number;
+  message: string;
+  result: ResultCourse[];
 };
 
 export type CourseRes = {
   code: number;
   message: string;
   result: ResultCourse;
+};
+
+export type CourseDelete = {
+  code: number;
+  message: string;
 };
