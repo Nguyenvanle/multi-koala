@@ -10,7 +10,6 @@ import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.QuizResultMapper;
 import com.duokoala.server.repository.*;
-import com.duokoala.server.repository.userRepository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -150,7 +147,19 @@ public class QuizResultService {
     }
 
     public List<QuizResultResponse> getMine() {
-        var quizResults = quizResultRepository.findAllByStudent(authenticationService.getAuthenticatedStudent());
+        List<QuizResult> quizResults = quizResultRepository.findAllByStudent(authenticationService.getAuthenticatedStudent());
+        return quizResults
+                .stream()
+                .map(quizResult ->
+                        getQuizResultResponse(quizResult.getQuizResultId()))
+                .toList();
+    }
+
+    public List<QuizResultResponse> getMineFromTest(String testId) {
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
+        List<QuizResult> quizResults = quizResultRepository
+                .findAllByStudentAndTest(authenticationService.getAuthenticatedStudent(),test);
         return quizResults
                 .stream()
                 .map(quizResult ->
