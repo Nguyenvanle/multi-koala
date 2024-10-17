@@ -19,7 +19,7 @@ export const useEnrolled = (courseId?: string) => {
         }
 
         // Gọi API để lấy khóa học
-        const course = await enrolledServices.getenrolled({ token });
+        const course = await enrolledServices.getEnrolled({ token });
 
         // Kiểm tra xem course có tồn tại và có dữ liệu không
         if (course && course.data && course.data.result) {

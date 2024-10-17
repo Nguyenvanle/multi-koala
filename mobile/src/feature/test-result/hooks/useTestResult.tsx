@@ -27,35 +27,14 @@ const useTestResult = (testId) => {
   );
   const [testResult, setTestResult] = useState<TestResultBody | null>();
 
-  const initializeAnswerList = () => {
-    // Khởi tạo danh sách các câu trả lời đã chọn cho các câu hỏi trong một bài test.
-    if (testDetails && testDetails.questions.length > 0) {
-      const initialList: SubmitBodyList = testDetails[0].questions.map(
-        (question) => ({
-          questionId: question.questionId,
-          selectedAnswerId: null, // Initially set to null
-        })
-      );
-      setSelectedAnswerList(initialList);
-    }
-  };
-
-  useEffect(() => {
-    initializeAnswerList();
-  }, [testDetails]);
-
   const onSubmit = async () => {
-    // Xử lý việc gửi danh sách câu trả lời đã chọn cho một bài test tới server để nhận kết quả của bài test đó
-    if (!selectedAnswerList || selectedAnswerList.length === 0) {
-      setErrorResultMessage("Please choose at least 1 answer.");
-      return;
-    }
-
     try {
       setLoadingResult(true);
       setErrorResult(null);
+
+      // Dữ liệu gửi đi đã được cập nhật từ handleSubmit
       const requestData: SubmitRes = {
-        answerSubmitList: selectedAnswerList || null,
+        answerSubmitList: selectedAnswerList,
       };
 
       const request = await testResultService.getResult(
@@ -66,7 +45,6 @@ const useTestResult = (testId) => {
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
-          console.log(request.data.result.totalQuestion); // Kiểm tra dữ liệu kết quả
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }
@@ -88,7 +66,6 @@ const useTestResult = (testId) => {
     testResult,
     setTestResult,
     onSubmit, // Hàm này giờ đã sử dụng testIdString
-    initializeAnswerList,
   };
 };
 

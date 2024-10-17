@@ -5,20 +5,44 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../front-end/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
-import { Link, router } from "expo-router";
+import { Link, router, useGlobalSearchParams } from "expo-router";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
+import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
 
-const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
+const HeaderUser = () => {
+  const { courseId } = useGlobalSearchParams();
+  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { user } = useUser();
-  const { enrolled, errorMessage, loading } = useEnrolled(courseId);
+  const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);
+  const [nextCourse, setNextCourse] = useState<EnrolledBody | null>(null);
+
+  useEffect(() => {
+    checkCompleted(); // Gọi hàm kiểm tra khi dữ liệu enrolled thay đổi
+  }, [enrolled]);
+
+  const checkCompleted = () => {
+    for (let i = 0; i < enrolled?.length; i++) {
+      const latestCourse = enrolled[i];
+      if (latestCourse.process === 1) {
+        // Kiểm tra nếu khóa học hiện tại hoàn thành
+        if (i + 1 < enrolled.length) {
+          // Kiểm tra nếu có khóa học tiếp theo
+          setNextCourse(enrolled[i + 1]); // Cập nhật khóa học tiếp theo
+        } else {
+          setNextCourse(null); // Không có khóa học tiếp theo
+        }
+        break; // Chỉ cần tìm khóa học hoàn thành đầu tiên
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -27,8 +51,6 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
       </View>
     );
   }
-  // Lấy khóa học đầu tiên từ mảng enrolled
-  const latestCourse = enrolled?.[0];
 
   return (
     <View
@@ -76,8 +98,8 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
             )}
           </View>
 
-          {latestCourse ? (
-            <Link href={`/${courseId}`} asChild>
+          {nextCourse ? (
+            <Link href={`/${nextCourse.course.courseId}`} asChild>
               <TouchableOpacity
                 style={{
                   borderRadius: 10,
@@ -121,7 +143,7 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
                           style={{ ...text.p, color: Colors.background }}
                           numberOfLines={1}
                         >
-                          {latestCourse.course.courseName}
+                          {nextCourse.course.courseName}
                         </Text>
                       </View>
                       <Text
@@ -131,20 +153,20 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
                           paddingTop: 2,
                         }}
                       >
-                        {latestCourse.process}%
+                        {nextCourse.process * 100}%
                       </Text>
                     </View>
                     <View
                       style={{
                         backgroundColor: Colors.white,
                         borderRadius: 20,
-                        width: 260,
+                        width: 280,
                       }}
                     >
                       <Progress.Bar
-                        progress={latestCourse.process * 0.01}
+                        progress={nextCourse.process}
                         color={Colors.super_teal_dark}
-                        width={260}
+                        width={280}
                       />
                     </View>
                   </View>
@@ -173,12 +195,7 @@ const HeaderUser = ({ courseId }: { courseId: string }): React.JSX.Element => {
               top: -160,
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                alignSelf: "center",
-              }}
-            >
+            <View style={{ flexDirection: "row", alignSelf: "center" }}>
               <Button
                 title="Log In"
                 onPress={() => router.replace("/(auth)/sign-in")}

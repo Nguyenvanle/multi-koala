@@ -17,6 +17,7 @@ import FinishedCourses from "@/src/feature/course/components/courses/finished-co
 import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUser from "@/src/feature/user/hooks/useUser";
+import FavouriteCourses from "@/src/feature/course/components/courses/favourite-courses/FavouriteCourses";
 
 const CourseList = (): React.JSX.Element => {
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
@@ -35,12 +36,6 @@ const CourseList = (): React.JSX.Element => {
     },
     {
       id: 3,
-      label: "Favourite",
-      component: <FinishedCourses />,
-      param: "favourite",
-    },
-    {
-      id: 4,
       label: "Finished",
       component: <FinishedCourses />,
       param: "finished",
@@ -148,10 +143,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   defaultText: {
+    ...text.p,
     color: Colors.dark_grey,
     fontWeight: "500",
   },
   selectedText: {
+    ...text.p,
     color: Colors.white,
     fontWeight: "500",
   },

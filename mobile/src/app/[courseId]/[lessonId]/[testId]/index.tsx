@@ -21,37 +21,38 @@ const Test = () => {
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
   const [selectedTest, setSelectedTest] = useState(null);
-  const [userAnswers, setUserAnswers] = useState({});
   const {
     loadingResult,
     errorResult,
     errorResultMessage,
+    selectedAnswerList,
     setSelectedAnswerList,
     testResult,
-    onSubmit,
+    setTestResult,
+    onSubmit, // Hàm này giờ đã sử dụng testIdString
   } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [answerSubmitList, setAnswerSubmitList] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [userSubmission, setUserSubmission] = useState({
     answerSubmitList: [],
   });
+
   const initializeAnswerSubmitList = useCallback((test) => {
     if (test && test.questions) {
       const initialList = test.questions.map((question) => ({
         questionId: question.questionId,
         selectedAnswerId: null,
       }));
-      setAnswerSubmitList(initialList);
+      setSelectedAnswerList(initialList);
     }
   }, []);
 
   const handleTestSelection = (test) => {
     setSelectedTest(test);
-    setUserAnswers({});
+    setSelectedAnswers({});
     initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
+    // console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
   };
 
   const handleAnswerSelect = useCallback(
@@ -61,14 +62,7 @@ const Test = () => {
         [questionId]: answerId,
       }));
 
-      setAnswerSubmitList((prevList) =>
-        prevList.map((item) =>
-          item.questionId === questionId
-            ? { ...item, selectedAnswerId: answerId }
-            : item
-        )
-      );
-
+      // Cập nhật selectedAnswerList
       setSelectedAnswerList((prevList) => {
         const existingQuestionIndex = prevList.findIndex(
           (item) => item.questionId === questionId
@@ -92,24 +86,27 @@ const Test = () => {
     },
     [setSelectedAnswerList]
   );
-
   const handleSubmit = () => {
-    // console.log(JSON.stringify({ answerSubmitList }, null, 2));
+    // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
+    setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
+
+    // Gọi hàm onSubmit để gửi dữ liệu
     onSubmit();
     setShowResult(true);
   };
 
   const renderAnswerItem = useCallback(
     ({ item, questionId }) => {
-      const isSelected = selectedAnswers[questionId] === item.answerId;
+      const isSelected = selectedAnswers[questionId] === item.answerId; // Kiểm tra đáp án đã chọn
       const isCorrect = showResult && item.correct;
       const isIncorrect = showResult && isSelected && !item.correct;
+
       return (
         <TouchableOpacity
           key={item.answerId}
           style={[
             styles.answerButton,
-            isSelected && styles.selectedAnswer,
+            isSelected && styles.selectedAnswer, // Thay đổi màu sắc nếu đã chọn
             isCorrect && styles.correctAnswer,
             isIncorrect && styles.incorrectAnswer,
           ]}
@@ -133,7 +130,6 @@ const Test = () => {
     },
     [selectedAnswers, handleAnswerSelect, showResult]
   );
-
   const renderQuestionItem = useCallback(
     ({ item }: { item: QuestionDetails }) => (
       <View
@@ -197,7 +193,8 @@ const Test = () => {
         horizontal
         style={{
           maxHeight: 55,
-          backgroundColor: Colors.teal_light,
+          backgroundColor: Colors.background,
+          marginTop: 8,
         }}
       >
         {testList.map((test) => (
@@ -213,9 +210,7 @@ const Test = () => {
             }}
             onPress={() => handleTestSelection(test)}
           >
-            <Text
-              style={{ ...text.p, color: Colors.teal_light, fontWeight: "600" }}
-            >
+            <Text style={{ ...text.p, color: Colors.white, fontWeight: "600" }}>
               {test.testDescription}
             </Text>
           </TouchableOpacity>

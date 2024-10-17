@@ -2,6 +2,8 @@ export type CourseDetailsBody = {
   courseId: string;
   courseName: string;
   coursePrice: number;
+  courseUploadedAt: string;
+  courseResponsibilityEndAt: string;
   image: {
     imageUrl: string;
     image: string;
@@ -19,7 +21,7 @@ export type CourseDetailsBody = {
   };
   fields: {
     fieldName: string;
-    fielDescription: string;
+    fieldDescription: string;
   };
   discountApprovedRate: number;
   status: string;

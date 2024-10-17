@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -21,10 +21,12 @@ import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CourseDeleteService } from "@/src/feature/favourite-courses/services/favourite-delete";
+import { CourseCheckService } from "@/src/feature/favourite-courses/services/favourite-check";
+import usePostCourse from "@/src/feature/favourite-courses/hooks/usePostFavourite";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
-  const [defaultRating, setDefaultRating] = useState(0);
-
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
   const starImgFilled =
@@ -52,11 +54,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
 
   const { discount } = useCourseDiscount(courseIdString);
 
-  const [isLiked, setIsLiked] = useState(false); // Trạng thái yêu thích
-
-  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái cho Modal
-
-  const [searchTerm, setSearchTerm] = useState("");
+  // const {
+  //   handleToggleFavourite,
+  //   loadingPost,
+  //   errorPostMessage,
+  //   isLiked,
+  //   postCourse,
+  // } = usePostCourse();
 
   if (loading) {
     return (
@@ -185,21 +189,36 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <Text style={styles.title} numberOfLines={3}>
               {courseDetails.courseName}
             </Text>
-            <TouchableOpacity
-              onPress={() => setIsLiked(!isLiked)} // Đổi trạng thái yêu thích khi chạm
-            >
+            {/* <TouchableOpacity onPress={handleToggleFavourite}>
               <AntDesign
                 name="heart"
                 size={32}
-                color={isLiked ? "#FF4E88" : Colors.grey} // Thay đổi màu sắc dựa trên trạng thái
+                color={isLiked ? "#FF4E88" : Colors.grey}
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-          <Text style={styles.lessonCount}>Total Lessons: {lessonCount}</Text>
+          <Text style={styles.lessonCount}>
+            Total Lessons:{" "}
+            <Text style={{ ...text.p, color: Colors.blue }}>{lessonCount}</Text>
+          </Text>
+          <Text style={styles.courseTime}>
+            Course created:{" "}
+            <Text style={{ ...text.p, color: Colors.super_teal_dark }}>
+              {new Date(courseDetails.courseUploadedAt).toLocaleDateString()}
+            </Text>
+          </Text>
+          <Text style={styles.courseTime}>
+            Responsibility End At:{" "}
+            <Text style={{ ...text.p, color: Colors.red }}>
+              {new Date(
+                courseDetails.courseResponsibilityEndAt
+              ).toLocaleDateString()}
+            </Text>
+          </Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
@@ -438,6 +457,11 @@ const styles = StyleSheet.create({
     color: Colors.super_teal_dark,
   },
   lessonCount: {
+    ...text.p,
+    color: Colors.dark_grey,
+    marginBottom: 8,
+  },
+  courseTime: {
     ...text.p,
     color: Colors.dark_grey,
     marginBottom: 8,
