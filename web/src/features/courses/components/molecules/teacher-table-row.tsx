@@ -27,7 +27,7 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
       </TableCell>
       <TableCell className="hidden lg:table-cell">
         <Image
-          priority
+          sizes={"60"}
           width={60}
           height={60}
           src={course.image.imageUrl}
