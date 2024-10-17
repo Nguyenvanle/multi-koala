@@ -55,7 +55,15 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
 
   const { discount } = useCourseDiscount(courseIdString);
 
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const {
+    loadingPost,
+    errorPostMessage,
+    postCourse,
+    deleteCourse,
+    isLiked,
+    setIsLiked,
+    handleToggleFavourite,
+  } = usePostCourse();
 
   if (loading) {
     return (
@@ -92,58 +100,6 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
         ))}
       </View>
     );
-  };
-
-  const handleToggleFavourite = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        console.error("Token is null or undefined");
-        return;
-      }
-
-      // Gọi API để thêm hoặc xóa yêu thích dựa trên trạng thái hiện tại
-      if (!isLiked) {
-        // Gọi API để thêm yêu thích
-        const postResult = await CoursePostService.postCourse(
-          courseIdString,
-          token
-        );
-
-        // Kiểm tra xem postResult có hợp lệ không
-        if (postResult && postResult.data) {
-          console.log(postResult.data.result);
-          // Cập nhật trạng thái yêu thích
-          setIsLiked(true);
-        } else {
-          console.error(
-            "Post result is undefined or does not contain data:",
-            postResult
-          );
-        }
-      } else {
-        // Gọi API để xóa yêu thích
-        const deleteResult = await CourseDeleteService.deleteCourse(
-          courseIdString,
-          token
-        );
-
-        // Kiểm tra deleteResult có hợp lệ không
-        if (deleteResult && deleteResult.data) {
-          console.log(deleteResult.data.message);
-          // Cập nhật trạng thái yêu thích
-          setIsLiked(false);
-        } else {
-          console.error("Delete result is undefined or does not contain data");
-        }
-      }
-    } catch (error) {
-      // In ra thông tin lỗi chi tiết
-      console.error(
-        "Error in handleToggleFavourite:",
-        error.response ? error.response.data : error.message
-      );
-    }
   };
 
   // Kiểm tra xem enrolled có phải là một mảng không
@@ -251,6 +207,12 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
           <Text style={styles.lessonCount}>
             Total Lessons:{" "}
             <Text style={{ ...text.p, color: Colors.blue }}>{lessonCount}</Text>
+          </Text>
+          <Text style={styles.courseTime}>
+            Course created:{" "}
+            <Text style={{ ...text.p, color: Colors.super_teal_dark }}>
+              {new Date(courseDetails.courseUploadedAt).toLocaleDateString()}
+            </Text>
           </Text>
           <Text style={styles.courseTime}>
             Responsibility End At:{" "}

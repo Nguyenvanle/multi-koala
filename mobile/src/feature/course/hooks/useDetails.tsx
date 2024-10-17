@@ -21,8 +21,9 @@ export const useDetails = (courseId: string) => {
           const updatedCourseDetails: CourseDetailsBody = {
             ...result,
             courseResponsibilityEndAt: new Date(
-              result.courseResponsibilityEndAt
-            ).toLocaleDateString(), // Hoặc sử dụng toLocaleDateString() nếu cần
+              result.courseResponsibilityEndAt || result.courseUploadedAt
+            ).toISOString(), // Hoặc sử dụng toLocaleDateString() nếu cần
+            courseUploadedAt: new Date(result.courseUploadedAt).toISOString(),
           };
 
           setCourseDetails(updatedCourseDetails);

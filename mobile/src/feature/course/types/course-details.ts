@@ -2,6 +2,7 @@ export type CourseDetailsBody = {
   courseId: string;
   courseName: string;
   coursePrice: number;
+  courseUploadedAt: string;
   courseResponsibilityEndAt: string;
   image: {
     imageUrl: string;
