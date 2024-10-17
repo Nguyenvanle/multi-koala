@@ -16,6 +16,7 @@ export default function TeacherCoursesPage() {
     courses,
     loading: coursesLoading,
     mutate: mutateCourses,
+    setSearchTerm,
   } = useMyTeacherCourses();
 
   // refetch
@@ -25,7 +26,7 @@ export default function TeacherCoursesPage() {
     }
   }, [statistics, courses, mutateCourses]);
 
-  // loading 
+  // loading
   const isLoading = statisticLoading || coursesLoading;
   if (isLoading) {
     return <TeacherCourseSkeletonTemplate />;
@@ -39,6 +40,7 @@ export default function TeacherCoursesPage() {
     <TeacherCourseTemplate
       teacherStatistic={statistics}
       teacherMyCourses={courses}
+      setSearchTerm={setSearchTerm}
     />
   );
 }

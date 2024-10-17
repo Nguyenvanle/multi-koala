@@ -1,13 +1,22 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Search } from "lucide-react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { COURSE_VERIFY } from "@/types/course/verify";
 
 import { Input } from "@/components/ui/input";
 
-interface TeacherCoursesHeaderProps {}
+interface TeacherCoursesHeaderProps {
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+}
 
-export default function TeacherCoursesTableHeader() {
+export default function TeacherCoursesTableHeader({
+  setSearchTerm,
+}: TeacherCoursesHeaderProps) {
+  const handleSearch = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setSearchTerm(event.target.value);
+  };
   return (
     <>
       <TabsList className="flex self-start bg-background border flex-grow w-full md:w-auto md:grow-0">
@@ -32,8 +41,7 @@ export default function TeacherCoursesTableHeader() {
 
           <Input
             placeholder="Search for course names..."
-            // value={value}
-            // onChange={onChange}
+            onChange={handleSearch}
             className="pl-8 focus:border-accent"
           />
         </div>

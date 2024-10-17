@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Card } from "@/components/ui/card";
 import { CourseStatusDonutChart } from "@/features/courses/components/atoms/course-status-pie-chart";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
@@ -16,11 +16,13 @@ import {
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
   teacherMyCourses: TeacherMyCoursesBodyType;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
 }
 
 const TeacherCourseLayout = ({
   teacherStatistic,
   teacherMyCourses,
+  setSearchTerm,
 }: TeacherCourseTemplateProps) => {
   const timestamp = new Date().getTime();
 
@@ -32,7 +34,7 @@ const TeacherCourseLayout = ({
 
       <Tabs defaultValue="all">
         <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-6">
-          <TeacherCoursesTableHeader />
+          <TeacherCoursesTableHeader setSearchTerm={setSearchTerm} />
         </div>
 
         <TabsContent value="all">
