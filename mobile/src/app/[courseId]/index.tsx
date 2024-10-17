@@ -21,11 +21,10 @@ import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { AntDesign } from "@expo/vector-icons";
-import usePostCourse from "@/src/feature/favourite-courses/hooks/usePostCourse";
-import { CoursePostService } from "@/src/feature/favourite-courses/services/favourite-post";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CourseDeleteService } from "@/src/feature/favourite-courses/services/favourite-delete";
 import { CourseCheckService } from "@/src/feature/favourite-courses/services/favourite-check";
+import usePostCourse from "@/src/feature/favourite-courses/hooks/usePostFavourite";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -55,15 +54,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
 
   const { discount } = useCourseDiscount(courseIdString);
 
-  const {
-    loadingPost,
-    errorPostMessage,
-    postCourse,
-    deleteCourse,
-    isLiked,
-    setIsLiked,
-    handleToggleFavourite,
-  } = usePostCourse();
+  // const {
+  //   handleToggleFavourite,
+  //   loadingPost,
+  //   errorPostMessage,
+  //   isLiked,
+  //   postCourse,
+  // } = usePostCourse();
 
   if (loading) {
     return (
@@ -192,7 +189,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <Text style={styles.title} numberOfLines={3}>
               {courseDetails.courseName}
             </Text>
-            <TouchableOpacity onPress={handleToggleFavourite}>
+            {/* <TouchableOpacity onPress={handleToggleFavourite}>
               <AntDesign
                 name="heart"
                 size={32}
@@ -202,7 +199,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
                   justifyContent: "center",
                 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <Text style={styles.lessonCount}>
             Total Lessons:{" "}

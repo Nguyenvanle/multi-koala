@@ -36,12 +36,6 @@ const CourseList = (): React.JSX.Element => {
     },
     {
       id: 3,
-      label: "Favourite",
-      component: <FavouriteCourses />,
-      param: "favourite",
-    },
-    {
-      id: 4,
       label: "Finished",
       component: <FinishedCourses />,
       param: "finished",
@@ -149,10 +143,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   defaultText: {
+    ...text.p,
     color: Colors.dark_grey,
     fontWeight: "500",
   },
   selectedText: {
+    ...text.p,
     color: Colors.white,
     fontWeight: "500",
   },

@@ -53,6 +53,7 @@ export type ResultCourse = {
   favouriteId: string;
   favouriteAt: string;
   course: Course;
+  student: Student;
 };
 
 export type CourseResList = {
