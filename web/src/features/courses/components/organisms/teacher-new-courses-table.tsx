@@ -26,16 +26,14 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal } from "lucide-react";
 
-const description =
-  "An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions.";
 
-export default function TeacherTableHeader() {
+export default function TeacherTable() {
   return (
     <Card x-chunk="dashboard-06-chunk-0">
       <CardHeader>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Courses</CardTitle>
         <CardDescription>
-          Manage your products and view their sales performance.
+          Manage your courses and view their sales performance.
         </CardDescription>
       </CardHeader>
       <CardContent>

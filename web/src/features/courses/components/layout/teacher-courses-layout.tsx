@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import TeacherCoursesHeader from "@/features/courses/components/organisms/teacher-courses-header";
-import TeacherTableHeader from "@/features/courses/components/organisms/teacher-table-header";
+import TeacherTable from "@/features/courses/components/organisms/teacher-new-courses-table";
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
@@ -90,7 +90,7 @@ const TeacherCourseLayout = ({
         </div>
 
         <TabsContent value="all">
-          <TeacherTableHeader />
+          <TeacherTable />
         </TabsContent>
 
         <TabsContent value={COURSE_VERIFY.Values.APPROVED}>
