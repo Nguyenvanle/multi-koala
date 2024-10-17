@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { PlusCircle, Home, Search } from "lucide-react";
+import { PlusCircle, Home, Search, ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
@@ -10,6 +10,16 @@ import { TeacherOverviewList } from "@/features/courses/components/organisms/tea
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { TeacherMyCoursesBodyType } from "@/features/courses/types/teacher-my-courses";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { COURSE_VERIFY } from "@/types/course/verify";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
@@ -33,10 +43,10 @@ const TeacherCourseLayout = ({
 
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <Breadcrumbs items={breadcrumbs} />
 
-        <div className="relative flex-grow w-full md:max-w-96 ">
+        <div className="relative flex-grow w-full md:max-w-72 ">
           <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
           <Input
@@ -46,27 +56,90 @@ const TeacherCourseLayout = ({
             className="pl-8 focus:border-accent"
           />
         </div>
-        {/* <Link href="/dashboard/courses/add" passHref>
-          <Button className="flex items-center gap-2" size={"sm"}>
-            <PlusCircle className="w-5 h-5" />
-            Add New Course
-          </Button>
-        </Link> */}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
-        <TeacherOverviewList teacherStatistic={teacherStatistic} />
-      </div>
+      <Tabs defaultValue="all">
+        <div className="flex flex-col md:flex-row justify-between gap-2">
+          <TabsList className="flex self-start bg-gray-200 dark:bg-gray-700">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value={COURSE_VERIFY.Values.APPROVED}>
+              Approved
+            </TabsTrigger>
+            <TabsTrigger value={COURSE_VERIFY.Values.PENDING_APPROVAL}>
+              Pending Approval
+            </TabsTrigger>
+            <TabsTrigger value={COURSE_VERIFY.Values.IN_EDITING}>
+              In Editing
+            </TabsTrigger>
+            <TabsTrigger value={COURSE_VERIFY.Values.REJECTED}>
+              Rejected
+            </TabsTrigger>
+          </TabsList>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
-        <CourseStatusDonutChart teacherCourseStatistic={teacherMyCourses} />
-        <Card className="overflow-hidden pr-2">
-          <TeacherCourseTable
-            teacherMyCourses={teacherMyCourses}
-            timestamp={timestamp}
-          />
-        </Card>
-      </div>
+          <div className="flex flex-row items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8 gap-1">
+                  <ListFilter className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Filter
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem checked>
+                  Approved
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>
+                  Pending Approval
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>In Editing</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>Rejected</DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button className="h-8 gap-1" size="sm">
+              <PlusCircle className="w-3.5 h-3.5" />
+              <Link
+                href="/dashboard/courses/add"
+                className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
+              >
+                Add New Course
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        <TabsContent value="all">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
+            <TeacherOverviewList teacherStatistic={teacherStatistic} />
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
+            <CourseStatusDonutChart teacherCourseStatistic={teacherMyCourses} />
+            <Card className="overflow-hidden pr-2">
+              <TeacherCourseTable
+                teacherMyCourses={teacherMyCourses}
+                timestamp={timestamp}
+              />
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value={COURSE_VERIFY.Values.APPROVED}>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
+            <CourseStatusDonutChart teacherCourseStatistic={teacherMyCourses} />
+            <Card className="overflow-hidden pr-2">
+              <TeacherCourseTable
+                teacherMyCourses={teacherMyCourses}
+                timestamp={timestamp}
+              />
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

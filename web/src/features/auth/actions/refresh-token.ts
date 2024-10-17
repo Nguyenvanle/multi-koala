@@ -28,7 +28,6 @@ export async function refreshTokenAction() {
 
   const newAccessToken = result.result.token;
 
-  // Cập nhật access token mới vào cookie
   setAccessTokenCookie(newAccessToken);
 
   return newAccessToken;

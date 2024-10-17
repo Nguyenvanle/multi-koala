@@ -13,13 +13,12 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { LogOut, Settings, User } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/features/auth/contexts/auth-context";
 import { Muted } from "@/components/ui/typography";
 
 const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const MENU_ITEMS = [
     { icon: <User size={20} />, label: "Your Profile", href: "/" },
@@ -37,7 +36,7 @@ const UserMenu: React.FC = () => {
   };
 
   return (
-    isAuthenticated && (
+    user && (
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <div className="hidden md:flex flex-col">
           <p className="font-medium">{`${user?.firstname} ${user?.lastname}`}</p>
@@ -46,9 +45,6 @@ const UserMenu: React.FC = () => {
         <SheetTrigger asChild>
           <Avatar className="cursor-pointer">
             <AvatarImage src={user?.image.imageUrl || "/images/smile.png"} />
-            <AvatarFallback>
-              <Skeleton />
-            </AvatarFallback>
           </Avatar>
         </SheetTrigger>
         <SheetContent side="right">
