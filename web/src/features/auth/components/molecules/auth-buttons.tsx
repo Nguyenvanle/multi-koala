@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function AuthButtons() {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) return <Skeleton className="w-10 h-10 rounded-full" />;
+  if (loading) return <Skeleton className="w-28 h-10" />;
 
   return (
     !isAuthenticated && (
