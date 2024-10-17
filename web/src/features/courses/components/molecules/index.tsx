@@ -21,3 +21,9 @@ import { CoursesListEmpty } from "@/features/courses/components/molecules/course
 import { CoursesListGrid } from "@/features/courses/components/molecules/courses-list-grid";
 
 export { CoursesListLoading, CoursesListEmpty, CoursesListGrid };
+
+// TeacherTable
+import { TeacherTableHeader } from "@/features/courses/components/molecules/teacher-table-header";
+import { TeacherTableRow } from "@/features/courses/components/molecules/teacher-table-row";
+
+export { TeacherTableHeader, TeacherTableRow };
