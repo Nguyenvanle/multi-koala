@@ -20,7 +20,7 @@ export type CourseDetailsBody = {
   };
   fields: {
     fieldName: string;
-    fielDescription: string;
+    fieldDescription: string;
   };
   discountApprovedRate: number;
   status: string;

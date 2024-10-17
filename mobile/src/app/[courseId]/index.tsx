@@ -248,8 +248,18 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.lessonCount}>Total Lessons: {lessonCount}</Text>
-          <Text>{courseDetails.courseResponsibilityEndAt}</Text>
+          <Text style={styles.lessonCount}>
+            Total Lessons:{" "}
+            <Text style={{ ...text.p, color: Colors.blue }}>{lessonCount}</Text>
+          </Text>
+          <Text style={styles.courseTime}>
+            Responsibility End At:{" "}
+            <Text style={{ ...text.p, color: Colors.red }}>
+              {new Date(
+                courseDetails.courseResponsibilityEndAt
+              ).toLocaleDateString()}
+            </Text>
+          </Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
@@ -488,6 +498,11 @@ const styles = StyleSheet.create({
     color: Colors.super_teal_dark,
   },
   lessonCount: {
+    ...text.p,
+    color: Colors.dark_grey,
+    marginBottom: 8,
+  },
+  courseTime: {
     ...text.p,
     color: Colors.dark_grey,
     marginBottom: 8,
