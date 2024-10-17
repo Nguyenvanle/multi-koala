@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 interface TeacherCoursesHeaderProps {}
 
@@ -34,39 +35,17 @@ export default function TeacherCoursesHeader() {
         </TabsTrigger>
       </TabsList>
 
-      <div className="flex flex-row items-center gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-8 gap-1">
-              <ListFilter className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Filter
-              </span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem checked>
-              Approved
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem>
-              Pending Approval
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem>In Editing</DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem>Rejected</DropdownMenuCheckboxItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex flex-row items-center gap-2 w-full md:max-w-96">
+        <div className="relative flex-grow ">
+          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-        <Button className="h-8 gap-1" size="sm">
-          <PlusCircle className="w-3.5 h-3.5" />
-          <Link
-            href="/dashboard/courses/add"
-            className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
-          >
-            Add New Course
-          </Link>
-        </Button>
+          <Input
+            placeholder="Search for course names..."
+            // value={value}
+            // onChange={onChange}
+            className="pl-8 focus:border-accent"
+          />
+        </div>
       </div>
     </>
   );
