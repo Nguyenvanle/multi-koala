@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
       );
     }
 
-    console.log("Token is valid, continuing...");
+    console.log("Token is ok, continuing...");
     return NextResponse.next();
   } catch (error) {
     console.error("Error during middleware execution: ", error);
