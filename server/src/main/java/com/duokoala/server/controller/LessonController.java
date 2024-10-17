@@ -4,12 +4,15 @@ import com.duokoala.server.dto.request.lessonRequest.LessonCreateRequest;
 import com.duokoala.server.dto.request.lessonRequest.LessonUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.LessonResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.service.LessonService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,6 +27,24 @@ public class LessonController {
             @RequestBody LessonCreateRequest request) {
         return ApiResponse.<LessonResponse>builder()
                 .result(lessonService.create(courseId, request))
+                .build();
+    }
+
+    @PostMapping("/lessons/{lessonId}/update-image")
+    ApiResponse<LessonResponse> uploadImage(
+            @PathVariable String lessonId
+            ,@RequestParam("file") MultipartFile file) throws IOException {
+        return ApiResponse.<LessonResponse>builder()
+                .result(lessonService.uploadImage(lessonId,file))
+                .build();
+    }
+
+    @PostMapping("/lessons/{lessonId}/update-video")
+    ApiResponse<LessonResponse> uploadVideo(
+            @PathVariable String lessonId
+            ,@RequestParam("file") MultipartFile file) throws IOException {
+        return ApiResponse.<LessonResponse>builder()
+                .result(lessonService.uploadVideo(lessonId,file))
                 .build();
     }
 

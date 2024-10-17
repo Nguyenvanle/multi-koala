@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from 'next/headers';
-import { validateToken } from "@/lib/token-handler"; // Đảm bảo rằng bạn đã import validateToken
+import { cookies } from "next/headers";
 
 type ServiceFunction<T> = (token: string) => Promise<{ result: T }>;
 
@@ -13,15 +12,6 @@ export function withAuth<T>(serviceFunction: ServiceFunction<T>) {
       if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
-          { status: 401 }
-        );
-      }
-
-      // Kiểm tra tính hợp lệ của token
-      const isValidToken = await validateToken(tokenCookie.value);
-      if (!isValidToken) {
-        return NextResponse.json(
-          { code: 401, message: "Authentication token is invalid" },
           { status: 401 }
         );
       }
@@ -62,15 +52,6 @@ export function withAuthAndData<T, D>(
       if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
-          { status: 401 }
-        );
-      }
-
-      // Kiểm tra tính hợp lệ của token
-      const isValidToken = await validateToken(tokenCookie.value);
-      if (!isValidToken) {
-        return NextResponse.json(
-          { code: 401, message: "Authentication token is invalid" },
           { status: 401 }
         );
       }
@@ -124,16 +105,6 @@ export function withAuthAndCourseIdAndData<T, D>(
       if (!tokenCookie) {
         return NextResponse.json(
           { code: 401, message: "Authentication token is missing" },
-          { status: 401 }
-        );
-      }
-
-      // Kiểm tra tính hợp lệ của token
-      const isValidToken = await validateToken(tokenCookie.value);
-
-      if (!isValidToken) {
-        return NextResponse.json(
-          { code: 401, message: "Authentication token is invalid" },
           { status: 401 }
         );
       }

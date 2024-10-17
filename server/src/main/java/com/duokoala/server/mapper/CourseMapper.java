@@ -2,7 +2,6 @@ package com.duokoala.server.mapper;
 
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
-import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
 import com.duokoala.server.entity.Course;
@@ -23,5 +22,9 @@ public interface CourseMapper {
     @Mapping(target = "fields", ignore = true)
     void updateCourse(@MappingTarget Course course, CourseUpdateRequest request);
 
+
+    @Mapping(target = "totalEnrollments", ignore = true)
+    @Mapping(target = "totalCompleted", ignore = true)
+    @Mapping(target = "income", ignore = true)
     StatisticCourseResponse toStatisticCourseResponse(Course course);
 }

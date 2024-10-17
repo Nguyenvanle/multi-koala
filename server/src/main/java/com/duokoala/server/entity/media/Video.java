@@ -15,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 @Entity
 public class Video {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     String videoId;
     String videoUrl;
     double videoDuration;

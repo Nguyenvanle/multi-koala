@@ -3,13 +3,16 @@ package com.duokoala.server.controller;
 import com.duokoala.server.dto.request.questionRequest.QuestionCreateRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.questionResponse.QuestionResponse;
 import com.duokoala.server.service.QuestionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,6 +28,16 @@ public class QuestionController {
                 .result(questionService.create(testId,request))
                 .build();
     }
+
+    @PostMapping("/questions/{questionId}/update-image")
+    ApiResponse<QuestionResponse> uploadImage(
+            @PathVariable String questionId
+            ,@RequestParam("file") MultipartFile file) throws IOException {
+        return ApiResponse.<QuestionResponse>builder()
+                .result(questionService.uploadImage(questionId,file))
+                .build();
+    }
+
 
     @PutMapping("/questions/{questionId}")
     ApiResponse<QuestionResponse> update(

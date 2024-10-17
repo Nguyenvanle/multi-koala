@@ -16,6 +16,6 @@ public class UserUpdateRequest {
     LocalDate userBirth;
     String userBio;
     String userHometown;
-    String imageUrl;
+//    String imageUrl;
     boolean isFirstLogin;
 }

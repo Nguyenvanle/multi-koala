@@ -3,6 +3,7 @@ package com.duokoala.server.dto.request.courseRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -17,5 +18,6 @@ public class CourseUpdateRequest {
     String courseLevel;
     Set<String> types;
     Set<String> fields;
-    String imageUrl;
+    LocalDateTime courseResponsibilityEndAt;
+//    String imageUrl;
 }

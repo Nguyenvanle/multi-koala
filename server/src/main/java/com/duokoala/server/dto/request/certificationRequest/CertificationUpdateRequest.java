@@ -16,5 +16,5 @@ public class CertificationUpdateRequest {
     LocalDate issueDate;
     LocalDate expiryDate;
     String issuingOrganization;
-    List<String> proofImageUrls;
+//    List<String> proofImageUrls;
 }

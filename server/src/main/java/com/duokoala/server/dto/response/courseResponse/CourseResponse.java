@@ -20,6 +20,7 @@ public class CourseResponse {
     String courseId;
     String courseName;
     LocalDateTime courseUploadedAt;
+    LocalDateTime courseResponsibilityEndAt;
     float coursePrice;
     String courseDescription;
     Level courseLevel;

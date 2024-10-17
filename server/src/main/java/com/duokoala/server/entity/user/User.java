@@ -30,7 +30,7 @@ public class User {
     String userHometown;
     @Email
     String email;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     Image image;
     @ManyToMany
     Set<Role> roles;

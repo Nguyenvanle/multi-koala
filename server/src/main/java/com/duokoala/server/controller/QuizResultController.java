@@ -50,6 +50,13 @@ public class QuizResultController {
                 .build();
     }
 
+    @GetMapping("tests/{testId}/my-quiz-result")
+    ApiResponse<List<QuizResultResponse>> getMineFromTest(@PathVariable String testId) {
+        return ApiResponse.<List<QuizResultResponse>>builder()
+                .result(quizResultService.getMineFromTest(testId))
+                .build();
+    }
+
     @GetMapping("/quiz-results")
     ApiResponse<List<QuizResultResponse>> getAll() {
         return ApiResponse.<List<QuizResultResponse>>builder()

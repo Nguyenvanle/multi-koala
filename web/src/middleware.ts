@@ -1,10 +1,6 @@
-import {
-  SECURE_PATHS,
-  TOKEN_COOKIE_NAME,
-  CLEAR_LOCAL_STORAGE_PATH,
-  TOKEN_EXPIRY,
-} from "@/features/auth/enum/auth";
-import { validateToken, refreshToken, handleInvalidToken } from "@/lib/token-handler";
+import { checkTokenValidity } from "@/features/auth/actions/check-token";
+import { logoutAction } from "@/features/auth/actions/logout";
+import { SECURE_PATHS, TOKEN_COOKIE_NAME } from "@/features/auth/enum/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -16,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   // Log the path and token for debugging
   console.log("Middleware triggered for path:", path);
-  console.log("Token found in cookies:", token ? "Yes" : "No");
+  console.log("Token found in cookies:", token ? true : false);
 
   if (request.nextUrl.searchParams.has("auth_processed")) {
     console.log("Auth processed, continuing...");
@@ -30,51 +26,35 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     console.log("No token found. Checking secure path...");
     return isSecurePath
-      ? redirectToClearLocalStorage(request)
+      ? NextResponse.redirect(new URL("/login?auth_processed", request.url))
       : NextResponse.next();
   }
 
   try {
     // Token validation
     console.log("Validating token...");
-    if (await validateToken(token)) {
-      console.log("Token is valid, proceeding...");
-      return NextResponse.next();
+    const { valid } = await checkTokenValidity();
+
+    if (!valid) {
+      console.log("Token is invalid, logout actions...");
+      // await logoutAction();
+      console.log("Redirect to /login");
+      return NextResponse.redirect(
+        new URL("/login?auth_processed", request.url)
+      );
     }
 
-    // Token refresh attempt
-    console.log("Token invalid, attempting to refresh...");
-    const newToken = await refreshToken(token);
-
-    if (newToken) {
-      console.log("Token refreshed successfully.");
-      const response = NextResponse.next();
-      response.cookies.set(TOKEN_COOKIE_NAME, newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: "strict",
-        maxAge: TOKEN_EXPIRY,
-        path: "/",
-      });
-      return response;
-    }
-
-    // Handle invalid token
-    console.log("Failed to refresh token, handling invalid token...");
-    return handleInvalidToken(request, token);
+    console.log("Token is valid, continuing...");
+    return NextResponse.next();
   } catch (error) {
-    console.error("Error during middleware execution:", error);
-    return handleInvalidToken(request, token);
+    console.error("Error during middleware execution: ", error);
+    console.log("Logout actions...");
+    await logoutAction();
+    console.log("Redirect to /login");
+    return NextResponse.redirect(new URL("/login?auth_processed", request.url));
   }
 }
 
-function redirectToClearLocalStorage(request: NextRequest): NextResponse {
-  console.log("Redirecting to clear local storage...");
-  return NextResponse.redirect(new URL(CLEAR_LOCAL_STORAGE_PATH, request.url));
-}
-
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-  ],
+  matcher: ["/dashboard/:path*"],
 };

@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @Entity
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     String imageId;
     String imageUrl;
 }

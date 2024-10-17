@@ -12,7 +12,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionCreateRequest {
     String questionDescription;
-    String imageUrl;
+//    String imageUrl;
     List<String> answers;
     int correctIndex;
 }
