@@ -18,19 +18,6 @@ interface TeacherCourseTemplateProps {
   teacherMyCourses: TeacherMyCoursesBodyType;
 }
 
-const coursesData = [
-  {
-    id: 1,
-    name: "Laser Lemonade Machine",
-    status: "Draft",
-    price: 499.99,
-    totalSales: 25,
-    createdAt: "2023-07-12 10:42 AM",
-    imageSrc: "/placeholder.svg",
-  },
-  // ... other courses
-];
-
 const TeacherCourseLayout = ({
   teacherStatistic,
   teacherMyCourses,
@@ -49,7 +36,7 @@ const TeacherCourseLayout = ({
         </div>
 
         <TabsContent value="all">
-          <TeacherTable courses={coursesData} totalCourses={32} />
+          <TeacherTable courses={teacherMyCourses} />
         </TabsContent>
 
         <TabsContent value={COURSE_VERIFY.Values.APPROVED}>

@@ -6,3 +6,5 @@ export const COURSE_VERIFY = z.enum([
   "REJECTED",
   "IN_EDITING",
 ]);
+
+export type CourseStatusType = z.infer<typeof COURSE_VERIFY>;

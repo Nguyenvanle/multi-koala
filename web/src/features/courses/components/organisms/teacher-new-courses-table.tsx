@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -7,30 +6,21 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  Table,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { TableBody, Table } from "@/components/ui/table";
 import {
   TeacherTableHeader,
   TeacherTableRow,
 } from "@/features/courses/components/molecules";
+import {
+  TeacherMyCourseBodyType,
+  TeacherMyCoursesBodyType,
+} from "@/features/courses/types/teacher-my-courses";
 
-export default function TeacherTable({ courses, totalCourses }: any) {
+export default function TeacherTable({
+  courses,
+}: {
+  courses: TeacherMyCoursesBodyType;
+}) {
   return (
     <Card x-chunk="dashboard-06-chunk-0">
       <CardHeader>
@@ -43,8 +33,8 @@ export default function TeacherTable({ courses, totalCourses }: any) {
         <Table>
           <TeacherTableHeader />
           <TableBody>
-            {courses.map((course: any) => (
-              <TeacherTableRow key={course.id} course={course} />
+            {courses.map((course: TeacherMyCourseBodyType) => (
+              <TeacherTableRow key={course.courseId} course={course} />
             ))}
           </TableBody>
         </Table>
@@ -52,7 +42,7 @@ export default function TeacherTable({ courses, totalCourses }: any) {
       <CardFooter>
         <div className="text-xs text-muted-foreground">
           Showing <strong>1-{courses.length}</strong> of{" "}
-          <strong>{totalCourses}</strong> courses
+          <strong>{courses.length}</strong> courses
         </div>
       </CardFooter>
     </Card>

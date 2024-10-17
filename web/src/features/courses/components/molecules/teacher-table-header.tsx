@@ -9,6 +9,7 @@ export const TeacherTableHeader: React.FC = () => (
       <TableHead>Name</TableHead>
       <TableHead>Status</TableHead>
       <TableHead className="hidden md:table-cell">Price</TableHead>
+      <TableHead className="hidden md:table-cell">Income</TableHead>
       <TableHead className="hidden md:table-cell">Total Sales</TableHead>
       <TableHead className="hidden md:table-cell">Created at</TableHead>
       <TableHead>
