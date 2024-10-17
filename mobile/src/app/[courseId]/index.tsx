@@ -249,6 +249,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             </TouchableOpacity>
           </View>
           <Text style={styles.lessonCount}>Total Lessons: {lessonCount}</Text>
+          <Text>{courseDetails.courseResponsibilityEndAt}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
