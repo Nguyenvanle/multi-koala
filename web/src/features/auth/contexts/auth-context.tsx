@@ -1,4 +1,5 @@
 "use client";
+
 import { toast } from "@/components/ui/use-toast";
 import { checkTokenValidity } from "@/features/auth/actions/check-token";
 import { logoutAction } from "@/features/auth/actions/logout";

@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { Toaster } from "@/components/ui/toaster";
 import { FilterProvider } from "@/features/filter/context/provider";
 import { AuthProvider } from "@/features/auth/contexts/auth-context";
+import { Tooltip } from "@radix-ui/react-tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Roboto_Flex({
   subsets: ["latin"],
@@ -35,8 +37,10 @@ export default function RootLayout({
         >
           <AuthProvider>
             <FilterProvider>
-              <Toaster />
-              {children}
+              <TooltipProvider>
+                <Toaster />
+                {children}
+              </TooltipProvider>
             </FilterProvider>
           </AuthProvider>
         </ThemeProvider>
