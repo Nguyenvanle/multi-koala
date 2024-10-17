@@ -3,10 +3,7 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
-import com.duokoala.server.dto.response.courseResponse.CourseResponse;
-import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
-import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
-import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
+import com.duokoala.server.dto.response.courseResponse.*;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.enums.Level;
 import com.duokoala.server.enums.Status;
@@ -35,6 +32,7 @@ import java.util.Optional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseService {
+    private final ReviewRepository reviewRepository;
     CourseRepository courseRepository;
     CourseMapper courseMapper;
     TypeRepository typeRepository;
@@ -174,9 +172,25 @@ public class CourseService {
         return statistic;
     }
 
-    public List<StatisticCourseResponse> getMyListStatisticCourses() {
+    public List<StatisticCourseResponse> getMyStatisticCoursesList() {
         var courses = courseRepository.findAllByUploadedByTeacher
                 (authenticationService.getAuthenticatedTeacher());
         return courses.stream().map(this::getStatisticCourse).toList();
+    }
+
+    private PerformingCourseResponse getPerformingCourse(Course course) {
+        PerformingCourseResponse courseResponse
+                = courseMapper.toPerformingCourseResponse(course);
+        courseResponse.setAVGCourseRating
+                (reviewRepository.getAvgCourse(course.getCourseId()));
+        courseResponse.setNumberOfReviews(reviewRepository.countReviewByCourse(course));
+        courseResponse.setIncome(courseRepository.sumIncomeCourse(courseResponse.getCourseId()));
+        return courseResponse;
+    }
+
+    public List<PerformingCourseResponse> getMyPerformingCoursesList() {
+        List<Course> courses = courseRepository.findAllByUploadedByTeacher
+                (authenticationService.getAuthenticatedTeacher());
+        return courses.stream().map(this::getPerformingCourse).toList();
     }
 }
