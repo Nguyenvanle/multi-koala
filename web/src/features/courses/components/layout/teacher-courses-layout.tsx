@@ -20,6 +20,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import TeacherCoursesHeader from "@/features/courses/components/organisms/teacher-courses-header";
+import TeacherTableHeader from "@/features/courses/components/organisms/teacher-table-header";
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
@@ -60,75 +62,18 @@ const TeacherCourseLayout = ({
 
       <Tabs defaultValue="all">
         <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-6">
-          <TabsList className="flex self-start bg-gray-200 dark:bg-gray-700 flex-grow w-full md:w-auto md:grow-0">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value={COURSE_VERIFY.Values.APPROVED}>
-              Approved
-            </TabsTrigger>
-            <TabsTrigger value={COURSE_VERIFY.Values.PENDING_APPROVAL}>
-              Pending Approval
-            </TabsTrigger>
-            <TabsTrigger value={COURSE_VERIFY.Values.IN_EDITING}>
-              In Editing
-            </TabsTrigger>
-            <TabsTrigger value={COURSE_VERIFY.Values.REJECTED}>
-              Rejected
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="flex flex-row items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 gap-1">
-                  <ListFilter className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Filter
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem checked>
-                  Approved
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>
-                  Pending Approval
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>In Editing</DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>Rejected</DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Button className="h-8 gap-1" size="sm">
-              <PlusCircle className="w-3.5 h-3.5" />
-              <Link
-                href="/dashboard/courses/add"
-                className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
-              >
-                Add New Course
-              </Link>
-            </Button>
-          </div>
+          <TeacherCoursesHeader />
         </div>
 
         <TabsContent value="all">
+          <TeacherTableHeader />
+        </TabsContent>
+
+        <TabsContent value={COURSE_VERIFY.Values.APPROVED}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
             <TeacherOverviewList teacherStatistic={teacherStatistic} />
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
-            <CourseStatusDonutChart teacherCourseStatistic={teacherMyCourses} />
-            <Card className="overflow-hidden pr-2">
-              <TeacherCourseTable
-                teacherMyCourses={teacherMyCourses}
-                timestamp={timestamp}
-              />
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value={COURSE_VERIFY.Values.APPROVED}>
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
             <CourseStatusDonutChart teacherCourseStatistic={teacherMyCourses} />
             <Card className="overflow-hidden pr-2">
