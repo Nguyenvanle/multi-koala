@@ -14,7 +14,7 @@ const badgeVariants = cva(
         destructive: "border-transparent bg-destructive text-background",
         outline: "text-foreground",
         edit: "border-transparent bg-sky-600 text-background ",
-        pending: "border-transparent bg-amber-300 text-background ",
+        pending: "border-transparent bg-amber-400 text-background ",
       },
     },
     defaultVariants: {

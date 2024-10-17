@@ -8,7 +8,7 @@ export async function setAccessTokenCookie(token: string) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",
-    maxAge: 60 * 60 * 24 * 4,
+    maxAge: 60 * 60 * 24 * 5,
   });
 }
 

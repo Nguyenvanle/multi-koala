@@ -12,9 +12,9 @@ type getStatusColorRes =
 
 export const statusLabels = {
   APPROVED: "Approved",
-  PENDING_APPROVAL: "Pending Approval",
+  PENDING_APPROVAL: "Pending",
   REJECTED: "Rejected",
-  IN_EDITING: "In Editing",
+  IN_EDITING: "Draft",
 };
 
 export const getStatusColor = (status: CourseStatusType): getStatusColorRes => {

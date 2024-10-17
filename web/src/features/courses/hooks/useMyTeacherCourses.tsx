@@ -6,8 +6,18 @@ import {
 } from "@/features/courses/types/teacher-my-courses";
 import { nextjsApiService } from "@/services/next-api";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+
+export type SortOption = {
+  field: keyof TeacherMyCoursesBodyType[0];
+  direction: "asc" | "desc";
+};
+
+export type FilterOption = {
+  field: keyof TeacherMyCoursesBodyType[0];
+  value: string;
+};
 
 export default function useMyTeacherCourses() {
   const { data, error, mutate } = useSWR(`teacher-my-statistics-courses`, () =>
@@ -16,6 +26,13 @@ export default function useMyTeacherCourses() {
     )
   );
   const router = useRouter();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState<SortOption | null>({
+    direction: "desc",
+    field: "courseUploadedAt",
+  });
+  const [filterOptions, setFilterOptions] = useState<FilterOption[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -40,10 +57,46 @@ export default function useMyTeacherCourses() {
     fetch();
   }, [data?.code, mutate, router]);
 
+  const filteredAndSortedCourses = useMemo(() => {
+    let result = data?.result?.result || [];
+
+    // Áp dụng tìm kiếm
+    if (searchTerm) {
+      result = result.filter((course) =>
+        course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Áp dụng bộ lọc
+    filterOptions.forEach((filter) => {
+      result = result.filter((course) =>
+        String(course[filter.field])
+          .toLowerCase()
+          .includes(filter.value.toLowerCase())
+      );
+    });
+
+    // Áp dụng sắp xếp
+    if (sortOption) {
+      result.sort((a, b) => {
+        if (a[sortOption.field] < b[sortOption.field])
+          return sortOption.direction === "asc" ? -1 : 1;
+        if (a[sortOption.field] > b[sortOption.field])
+          return sortOption.direction === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return result;
+  }, [data?.result?.result, searchTerm, filterOptions, sortOption]);
+
   return {
-    courses: data?.result?.result as TeacherMyCoursesBodyType,
+    courses: filteredAndSortedCourses,
     loading: !error && !data,
     error: error?.message,
     mutate: mutate,
+    setSearchTerm,
+    setSortOption,
+    setFilterOptions,
   };
 }

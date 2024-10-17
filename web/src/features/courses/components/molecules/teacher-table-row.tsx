@@ -10,15 +10,22 @@ import {
 
 interface TeacherTableRowProps {
   course: TeacherMyCourseBodyType;
+  index: number;
 }
 
-export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({ course }) => {
+export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
+  course,
+  index,
+}) => {
   const date = new Date(course.courseUploadedAt).toLocaleDateString();
   const variant = getStatusColor(course.status);
 
   return (
     <TableRow>
-      <TableCell className="hidden sm:table-cell">
+      <TableCell className="hidden sm:table-cell font-medium">
+        {index + 1}
+      </TableCell>
+      <TableCell className="hidden lg:table-cell">
         <Image
           priority
           width={60}
@@ -30,7 +37,9 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({ course }) => {
       </TableCell>
       <TableCell className="font-medium">{course.courseName}</TableCell>
       <TableCell>
-        <Badge variant={variant}>{statusLabels[course.status]}</Badge>
+        <Badge variant={variant} className="line-clamp-1 w-fit">
+          {statusLabels[course.status]}
+        </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
         ${course.coursePrice.toFixed(0)}
@@ -41,7 +50,7 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({ course }) => {
       <TableCell className="hidden md:table-cell">
         {course.totalEnrollments}
       </TableCell>
-      <TableCell className="hidden md:table-cell">{date}</TableCell>
+      <TableCell className="hidden lg:table-cell">{date}</TableCell>
       <TableCell>
         <TeacherCourseActions />
       </TableCell>

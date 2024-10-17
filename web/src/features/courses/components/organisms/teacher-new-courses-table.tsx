@@ -33,8 +33,12 @@ export default function TeacherTable({
         <Table>
           <TeacherTableHeader />
           <TableBody>
-            {courses.map((course: TeacherMyCourseBodyType) => (
-              <TeacherTableRow key={course.courseId} course={course} />
+            {courses.map((course: TeacherMyCourseBodyType, index) => (
+              <TeacherTableRow
+                key={course.courseId}
+                course={course}
+                index={index}
+              />
             ))}
           </TableBody>
         </Table>
