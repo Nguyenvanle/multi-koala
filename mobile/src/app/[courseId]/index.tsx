@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -21,6 +21,11 @@ import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { AntDesign } from "@expo/vector-icons";
+import usePostCourse from "@/src/feature/favourite-courses/hooks/usePostCourse";
+import { CoursePostService } from "@/src/feature/favourite-courses/services/favourite-post";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CourseDeleteService } from "@/src/feature/favourite-courses/services/favourite-delete";
+import { CourseCheckService } from "@/src/feature/favourite-courses/services/favourite-check";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -51,10 +56,6 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const { discount } = useCourseDiscount(courseIdString);
 
   const [isLiked, setIsLiked] = useState<boolean>(false);
-
-  const handleFavoriteToggle = () => {
-    setIsLiked((prevState) => !prevState);
-  };
 
   if (loading) {
     return (
@@ -92,6 +93,59 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
       </View>
     );
   };
+
+  const handleToggleFavourite = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.error("Token is null or undefined");
+        return;
+      }
+
+      // Gọi API để thêm hoặc xóa yêu thích dựa trên trạng thái hiện tại
+      if (!isLiked) {
+        // Gọi API để thêm yêu thích
+        const postResult = await CoursePostService.postCourse(
+          courseIdString,
+          token
+        );
+
+        // Kiểm tra xem postResult có hợp lệ không
+        if (postResult && postResult.data) {
+          console.log(postResult.data.result);
+          // Cập nhật trạng thái yêu thích
+          setIsLiked(true);
+        } else {
+          console.error(
+            "Post result is undefined or does not contain data:",
+            postResult
+          );
+        }
+      } else {
+        // Gọi API để xóa yêu thích
+        const deleteResult = await CourseDeleteService.deleteCourse(
+          courseIdString,
+          token
+        );
+
+        // Kiểm tra deleteResult có hợp lệ không
+        if (deleteResult && deleteResult.data) {
+          console.log(deleteResult.data.message);
+          // Cập nhật trạng thái yêu thích
+          setIsLiked(false);
+        } else {
+          console.error("Delete result is undefined or does not contain data");
+        }
+      }
+    } catch (error) {
+      // In ra thông tin lỗi chi tiết
+      console.error(
+        "Error in handleToggleFavourite:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
   // Kiểm tra xem enrolled có phải là một mảng không
   const isEnrolled =
     Array.isArray(enrolled) &&
@@ -182,12 +236,11 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <Text style={styles.title} numberOfLines={3}>
               {courseDetails.courseName}
             </Text>
-            {/* Nút yêu thích */}
-            <TouchableOpacity onPress={handleFavoriteToggle}>
+            <TouchableOpacity onPress={handleToggleFavourite}>
               <AntDesign
                 name="heart"
                 size={32}
-                color={isLiked ? "#FF4E88" : Colors.grey} // Màu sắc dựa trên trạng thái
+                color={isLiked ? "#FF4E88" : Colors.grey}
                 style={{
                   alignItems: "center",
                   justifyContent: "center",

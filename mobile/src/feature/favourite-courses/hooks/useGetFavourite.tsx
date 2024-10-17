@@ -29,6 +29,7 @@ const useGetCourse = () => {
           Array.isArray(courseResponse.data.result)
         ) {
           setFavouriteCourse(courseResponse.data.result); // Gán dữ liệu nếu là mảng
+          console.log(courseResponse.data.result);
         } else {
           setErrorFavouriteMessage("No favourite courses found.");
         }

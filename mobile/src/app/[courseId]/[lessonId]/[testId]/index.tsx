@@ -52,7 +52,7 @@ const Test = () => {
     setSelectedAnswers({});
     initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
+    // console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
   };
 
   const handleAnswerSelect = useCallback(

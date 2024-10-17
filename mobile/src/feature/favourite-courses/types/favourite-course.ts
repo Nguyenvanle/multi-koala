@@ -71,3 +71,9 @@ export type CourseDelete = {
   code: number;
   message: string;
 };
+
+export type CourseCheck = {
+  code: number;
+  message: string;
+  result: boolean;
+};

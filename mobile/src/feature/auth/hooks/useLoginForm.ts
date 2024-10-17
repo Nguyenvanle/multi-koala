@@ -23,7 +23,7 @@ const useLoginForm = () => {
       const loginData: LoginBody = { username, password };
       const response = await loginServices.login(loginData);
       const data: LoginRes = response.data;
-      console.log(response.data.result.token);
+      // console.log(response.data.result.token);
       if (data.code === 200 && data.result.token) {
         await AsyncStorage.setItem("token", data.result.token);
         router.replace("/(home)/home");

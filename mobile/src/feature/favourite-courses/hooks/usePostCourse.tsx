@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGlobalSearchParams } from "expo-router";
 import { ResultCourse } from "../types/favourite-course";
 import { CoursePostService } from "../services/favourite-post";
-import useGetCourse from "./useGetFavourite";
+import { CourseDeleteService } from "../services/favourite-delete";
 
 const usePostCourse = () => {
   const courseId = useGlobalSearchParams(); // Lấy courseId từ params
@@ -11,6 +11,12 @@ const usePostCourse = () => {
   const [loadingPost, setLoading] = useState<boolean>(true);
   const [errorPostMessage, setErrorPostMessage] = useState<string>("");
   const [postCourse, setPostCourse] = useState<ResultCourse | null>(null);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+
+  const handleToggleFavourite = async () => {
+    setIsLiked(!isLiked);
+    console.log(isLiked);
+  };
 
   useEffect(() => {
     const fetchFavouriteCourse = async () => {
@@ -18,16 +24,25 @@ const usePostCourse = () => {
         const token = await AsyncStorage.getItem("token");
         if (!token) return;
         // console.log(token);
-        // Lấy thông tin khóa học yêu thích từ server
-        const result = await CoursePostService.postCourse(
+        // Gửi thông tin khóa học yêu thích lên server
+        const postResult = await CoursePostService.postCourse(
           courseIdString,
           token
         );
-        if (result && result.data && result.data.result) {
-          setPostCourse(result.data.result);
-          // console.log(result.data.result);
+        if (
+          postResult &&
+          postResult.data &&
+          postResult.data.result &&
+          isLiked === true
+        ) {
+          setPostCourse(postResult.data.result);
+          console.log(postResult.data.result);
         } else {
-          setErrorPostMessage("Can not choose your favourite course.");
+          const deleteResult = await CourseDeleteService.deleteCourse(
+            postResult.data.result.favouriteId,
+            token
+          );
+          console.log(deleteResult.data.message);
         }
       } catch (error) {
         // console.log(error.message || "Error fetching post course.");
@@ -43,6 +58,9 @@ const usePostCourse = () => {
     loadingPost,
     errorPostMessage,
     postCourse,
+    isLiked,
+    setIsLiked,
+    handleToggleFavourite,
   };
 };
 
