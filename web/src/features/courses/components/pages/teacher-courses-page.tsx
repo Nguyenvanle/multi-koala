@@ -17,6 +17,9 @@ export default function TeacherCoursesPage() {
     loading: coursesLoading,
     mutate: mutateCourses,
     setSearchTerm,
+    setFilterOptions,
+    setSortOption,
+    sortOption,
   } = useMyTeacherCourses();
 
   // refetch
@@ -41,6 +44,9 @@ export default function TeacherCoursesPage() {
       teacherStatistic={statistics}
       teacherMyCourses={courses}
       setSearchTerm={setSearchTerm}
+      setFilterOptions={setFilterOptions}
+      setSortOption={setSortOption}
+      currentSort={sortOption}
     />
   );
 }

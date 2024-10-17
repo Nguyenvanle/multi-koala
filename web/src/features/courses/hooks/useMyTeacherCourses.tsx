@@ -94,6 +94,7 @@ export default function useMyTeacherCourses() {
     courses: filteredAndSortedCourses,
     loading: !error && !data,
     error: error?.message,
+    sortOption,
     mutate: mutate,
     setSearchTerm,
     setSortOption,

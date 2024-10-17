@@ -11,15 +11,21 @@ import {
   TeacherTableHeader,
   TeacherTableRow,
 } from "@/features/courses/components/molecules";
+import { SortOption } from "@/features/courses/hooks/useMyTeacherCourses";
 import {
   TeacherMyCourseBodyType,
   TeacherMyCoursesBodyType,
 } from "@/features/courses/types/teacher-my-courses";
+import { Dispatch, SetStateAction } from "react";
 
 export default function TeacherTable({
   courses,
+  setSortOption,
+  currentSort,
 }: {
   courses: TeacherMyCoursesBodyType;
+  setSortOption: Dispatch<SetStateAction<SortOption | null>>;
+  currentSort: SortOption | null;
 }) {
   return (
     <Card x-chunk="dashboard-06-chunk-0">
@@ -31,7 +37,7 @@ export default function TeacherTable({
       </CardHeader>
       <CardContent>
         <Table>
-          <TeacherTableHeader />
+          <TeacherTableHeader setSortOption={setSortOption} sortOption={currentSort} />
           <TableBody>
             {courses.map((course: TeacherMyCourseBodyType, index) => (
               <TeacherTableRow
