@@ -4,10 +4,7 @@ import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.courseResponse.CourseResponse;
-import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
-import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
-import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
+import com.duokoala.server.dto.response.courseResponse.*;
 import com.duokoala.server.service.CourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -97,9 +94,16 @@ public class CourseController {
     }
 
     @GetMapping("/courses/my-statistic-courses")
-    ApiResponse<List<StatisticCourseResponse>> getListByTeacherId() {
+    ApiResponse<List<StatisticCourseResponse>> getMyStatisticCoursesList() {
         return ApiResponse.<List<StatisticCourseResponse>>builder()
-                .result(courseService.getMyListStatisticCourses())
+                .result(courseService.getMyStatisticCoursesList())
+                .build();
+    }
+
+    @GetMapping("/courses/my-performing-courses")
+    ApiResponse<List<PerformingCourseResponse>> getMyPerformingCoursesList() {
+        return ApiResponse.<List<PerformingCourseResponse>>builder()
+                .result(courseService.getMyPerformingCoursesList())
                 .build();
     }
 
