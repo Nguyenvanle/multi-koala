@@ -7,6 +7,7 @@ import {
   getStatusColor,
   statusLabels,
 } from "@/features/courses/utils/get-status-color";
+import { dateFormatter } from "@/utils/date-formater";
 
 interface TeacherTableRowProps {
   course: TeacherMyCourseBodyType;
@@ -17,7 +18,7 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
   course,
   index,
 }) => {
-  const date = new Date(course.courseUploadedAt).toLocaleDateString();
+  const date = dateFormatter(course.courseUploadedAt);
   const variant = getStatusColor(course.status);
 
   return (
@@ -50,7 +51,9 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
       <TableCell className="hidden md:table-cell">
         {course.totalEnrollments}
       </TableCell>
-      <TableCell className="hidden lg:table-cell">{date}</TableCell>
+      <TableCell className="hidden lg:table-cell" title="dd/mm/yyyy">
+        {date}
+      </TableCell>
       <TableCell>
         <TeacherCourseActions />
       </TableCell>

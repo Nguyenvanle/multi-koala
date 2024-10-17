@@ -10,7 +10,7 @@ interface TeacherCoursesHeaderProps {}
 export default function TeacherCoursesTableHeader() {
   return (
     <>
-      <TabsList className="flex self-start bg-gray-200 dark:bg-gray-700 flex-grow w-full md:w-auto md:grow-0">
+      <TabsList className="flex self-start bg-background border flex-grow w-full md:w-auto md:grow-0">
         <TabsTrigger value="all">All</TabsTrigger>
         <TabsTrigger value={COURSE_VERIFY.Values.APPROVED}>
           Approved

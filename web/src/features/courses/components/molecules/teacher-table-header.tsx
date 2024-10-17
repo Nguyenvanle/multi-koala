@@ -2,7 +2,7 @@ import { TableHeader, TableRow, TableHead } from "@/components/ui/table";
 
 export const TeacherTableHeader: React.FC = () => (
   <TableHeader>
-    <TableRow>
+    <TableRow className="text-foreground">
       <TableHead className="table-cell">ID</TableHead>
       <TableHead className="hidden w-[100px] lg:table-cell">Image</TableHead>
       <TableHead>Name</TableHead>
