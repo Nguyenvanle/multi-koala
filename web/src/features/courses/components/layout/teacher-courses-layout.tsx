@@ -43,7 +43,7 @@ const TeacherCourseLayout = ({
 
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <Breadcrumbs items={breadcrumbs} />
 
         <div className="relative flex-grow w-full md:max-w-72 ">
@@ -59,8 +59,8 @@ const TeacherCourseLayout = ({
       </div>
 
       <Tabs defaultValue="all">
-        <div className="flex flex-col md:flex-row justify-between gap-2">
-          <TabsList className="flex self-start bg-gray-200 dark:bg-gray-700">
+        <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-6">
+          <TabsList className="flex self-start bg-gray-200 dark:bg-gray-700 flex-grow w-full md:w-auto md:grow-0">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value={COURSE_VERIFY.Values.APPROVED}>
               Approved
