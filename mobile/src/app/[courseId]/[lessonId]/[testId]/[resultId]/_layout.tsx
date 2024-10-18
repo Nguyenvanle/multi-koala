@@ -6,36 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { router, Stack, useGlobalSearchParams } from "expo-router";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-const TestLayout = () => {
-  const { lessonId, testId } = useGlobalSearchParams();
-  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
-  const testIdString = Array.isArray(testId) ? testId[0] : testId;
-
-  const { testDetails, errorMessageTest, loadingTest } = useTestDetails(
-    lessonIdString,
-    testIdString
-  );
-  const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
-    useLessonDetails(lessonIdString);
-
-  // Kiểm tra trạng thái loading
-  if (loadingLessonDetails) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.teal_dark} />
-      </View>
-    );
-  }
-
-  // Kiểm tra xem test có thông tin không
-  if (!lessonDetails) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: Colors.red }}>No course details available</Text>
-      </View>
-    );
-  }
-
+const TestResultLayout = () => {
   const handleBackPress = async () => {
     // Xóa AsyncStorage trước khi quay lại
     await AsyncStorage.removeItem("yourKey"); // Thay "yourKey" bằng key mà bạn muốn xóa
@@ -47,7 +18,6 @@ const TestLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: lessonDetails.lessonName,
           headerShown: true,
           headerTitleStyle: {
             fontSize: 24,
@@ -66,14 +36,8 @@ const TestLayout = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="[resultId]"
-        options={{
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 };
 
-export default TestLayout;
+export default TestResultLayout;

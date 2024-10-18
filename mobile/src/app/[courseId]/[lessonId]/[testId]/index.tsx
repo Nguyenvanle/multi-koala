@@ -8,7 +8,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
@@ -17,7 +17,8 @@ import { QuestionDetails } from "@/src/feature/test/types/test";
 
 const Test = () => {
   const { lessonId, testId } = useGlobalSearchParams();
-  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
+  const lessonIdString = lessonId as string;
+  const testIdString = testId as string;
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
   const [selectedTest, setSelectedTest] = useState(null);
@@ -52,7 +53,7 @@ const Test = () => {
     setSelectedAnswers({});
     initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    // console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
+    console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
   };
 
   const handleAnswerSelect = useCallback(
@@ -89,7 +90,6 @@ const Test = () => {
   const handleSubmit = () => {
     // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
     setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
-
     // Gọi hàm onSubmit để gửi dữ liệu
     onSubmit();
     setShowResult(true);
@@ -130,6 +130,7 @@ const Test = () => {
     },
     [selectedAnswers, handleAnswerSelect, showResult]
   );
+
   const renderQuestionItem = useCallback(
     ({ item }: { item: QuestionDetails }) => (
       <View

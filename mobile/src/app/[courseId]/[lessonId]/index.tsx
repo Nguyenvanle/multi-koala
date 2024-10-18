@@ -138,6 +138,7 @@ const LessonDetails = () => {
             router.replace(`/${courseIdString}/${item.lessonId}`);
           }
         }}
+        disabled={isSelected}
       >
         <Image
           source={{ uri: item.image.imageUrl }}

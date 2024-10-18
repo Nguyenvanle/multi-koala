@@ -4,7 +4,7 @@ import {
   SubmitRes,
   TestResultBody,
 } from "../types/test-result";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import { useTestDetails } from "../../test/hooks/useTestDetails";
 import { testResultService } from "./../services/test-result";
 
@@ -36,15 +36,18 @@ const useTestResult = (testId) => {
       const requestData: SubmitRes = {
         answerSubmitList: selectedAnswerList,
       };
+      console.log(requestData);
 
       const request = await testResultService.getResult(
         testIdString, // Sử dụng testIdString ở đây
         requestData
       );
-
+      console.log(request);
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
+          console.log(request.data.result);
+          // router.push(`/${testIdString}/${request.data.result.quizResultId}`);
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }
