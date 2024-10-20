@@ -11,7 +11,7 @@ import {
 } from "@/features/courses/types/course";
 
 interface CourseDetailLayoutProps {
-  course: CourseDetailResultResType;
+  course: CourseDetailResultResType | null | undefined;
   lessons: any[] | null;
   duration: number | null;
   isLoading: boolean;

@@ -6,13 +6,13 @@ import { z } from "zod";
 import { showToast } from "@/lib/utils";
 import { nextjsApiService } from "@/services/next-api";
 import { CourseDetailResType } from "@/features/courses/types/course";
-import { apiService } from "@/services/api";
-import { mutate } from "swr";
-import { TeacherMyCoursesResType } from "@/features/courses/types/teacher-my-courses";
 
 const CreateCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
-  courseDescription: z.string().min(1, "Course description is required"),
+  courseResponsibilityEndAt: z
+    .string()
+    .min(1, "Course responsibility end date is required")
+    .transform((date) => new Date(date)),
   coursePrice: z.preprocess(
     (val) => Number(val),
     z.number().min(0, "Price must be a positive number")
@@ -20,6 +20,7 @@ const CreateCourseSchema = z.object({
   courseLevel: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"], {
     required_error: "Course level is required",
   }),
+  courseDescription: z.string().min(1, "Course description is required"),
   types: z.array(z.string()),
   fields: z.array(z.string()),
   imageUrl: z.string().url(),
@@ -31,9 +32,10 @@ const STORAGE_KEY = "courseFormData";
 
 const defaultValues: CreateCourseFormData = {
   courseName: "",
-  courseDescription: "",
+  courseResponsibilityEndAt: new Date(),
   coursePrice: 0,
   courseLevel: "BEGINNER",
+  courseDescription: "",
   types: [],
   fields: [],
   imageUrl:

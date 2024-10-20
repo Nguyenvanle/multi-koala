@@ -31,7 +31,7 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
           sizes={"60"}
           width={60}
           height={60}
-          src={course.image.imageUrl}
+          src={course.image?.imageUrl ?? "/images/fallback-image.jpg"}
           alt={`${course.courseName} image`}
           className="aspect-square rounded-md object-cover"
         />

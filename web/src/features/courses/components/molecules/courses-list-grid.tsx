@@ -51,6 +51,7 @@ export const CoursesListGrid: React.FC<CoursesListGridProps> = ({
               courseRating={RatingAdapter.getRating(course.courseId)}
               courseLevel={course.courseLevel}
               courseDiscount={discountedPrice}
+              courseResponsibilityEndAt={course.courseResponsibilityEndAt}
             />
           </Link>
         );
