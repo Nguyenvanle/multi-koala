@@ -4,9 +4,14 @@ import DetailCard from "@/features/courses/components/organisms/detail-card";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import { DiscountAdapter } from "@/features/courses/services/discount-adapter";
 import { RatingAdapter } from "@/features/courses/services/rating-adapter";
+import {
+  CourseDetailResType,
+  CourseDetailResultResType,
+  CourseResType,
+} from "@/features/courses/types/course";
 
 interface CourseDetailLayoutProps {
-  course: any; // Để đơn giản, tạm để là `any`
+  course: CourseDetailResultResType;
   lessons: any[] | null;
   duration: number | null;
   isLoading: boolean;
@@ -72,6 +77,9 @@ const CourseDetailLayout: React.FC<CourseDetailLayoutProps> = ({
           courseDiscount={DiscountAdapter.getDiscountedPrice(course)}
           courseId={course?.courseId ?? "N/A"}
           courseCreateAt={course?.courseUploadedAt ?? new Date()}
+          courseResponsibilityEndAt={
+            course.courseResponsibilityEndAt ?? course.courseUploadedAt
+          }
           courseType={course?.types ?? []}
           courseFields={course?.fields ?? []}
           courseImage={course?.image?.imageUrl ?? "/images/smile.png"}

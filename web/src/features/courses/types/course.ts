@@ -10,6 +10,7 @@ export const CourseBodyType = z.object({
   courseId: z.string().uuid(),
   courseName: z.string(),
   courseUploadedAt: z.string().transform((date) => new Date(date)),
+  courseResponsibilityEndAt: z.string().transform((date) => new Date(date)),
   coursePrice: z.number(),
   courseDescription: z.string(),
   courseLevel: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]),

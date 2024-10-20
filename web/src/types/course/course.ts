@@ -2,6 +2,7 @@ export interface CourseCardProps {
   courseId: string;
   courseName: string;
   courseCreateAt: Date;
+  courseResponsibilityEndAt: Date;
   coursePrice: number;
   courseDescription: string;
   courseType: {

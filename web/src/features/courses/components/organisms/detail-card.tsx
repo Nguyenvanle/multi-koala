@@ -12,7 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { H4, P } from "@/components/ui/typography";
 import PriceButton from "@/features/courses/components/atoms/price-button";
 import { CourseCardProps } from "@/types/course/course";
-import { BarChart2, BookOpen, Calendar, Clock, Star } from "lucide-react";
+import {
+  BarChart2,
+  BookOpen,
+  Calendar,
+  CalendarPlus,
+  CalendarX,
+  CalendarX2,
+  Clock,
+  Star,
+} from "lucide-react";
 import { convertDuration } from "@/lib/utils";
 import { TeacherLink } from "@/features/courses/components/molecules/teacher-link";
 import { enrollHandler } from "@/features/courses/libs/enroll-handler";
@@ -33,6 +42,7 @@ const DetailCard = ({
   totalDuration,
   totalLessons,
   courseCreateAt,
+  courseResponsibilityEndAt: courseEndAt,
   courseType,
   courseFields,
   courseLevel,
@@ -85,8 +95,17 @@ const DetailCard = ({
               courseCreateAt
             ).toLocaleDateString()} (Indicates course release date)`}
           >
-            <Calendar className="w-4 h-4 mr-2" />
+            <CalendarPlus className="w-4 h-4 mr-2" />
             {new Date(courseCreateAt).toLocaleDateString()}
+          </div>
+          <div
+            className="flex items-center"
+            title={`Expires At: ${new Date(
+              courseEndAt
+            ).toLocaleDateString()} (Indicates course expiry date)`}
+          >
+            <CalendarX2 className="w-4 h-4 mr-2" />
+            {new Date(courseEndAt).toLocaleDateString()}
           </div>
           <div
             className="flex items-center"
