@@ -23,9 +23,7 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
 
   return (
     <TableRow>
-      <TableCell className="hidden sm:table-cell font-medium">
-        {index + 1}
-      </TableCell>
+      <TableCell className="table-cell font-medium">{index + 1}</TableCell>
       <TableCell className="hidden lg:table-cell">
         <Image
           sizes={"60"}

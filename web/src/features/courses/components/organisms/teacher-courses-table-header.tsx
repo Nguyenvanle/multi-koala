@@ -28,7 +28,7 @@ export default function TeacherCoursesTableHeader({
 
   return (
     <>
-      <TabsList className="flex self-start bg-background border flex-grow w-full md:w-auto md:grow-0">
+      <TabsList className="flex justify-between flex-1 self-start bg-background border flex-grow w-full md:w-auto md:grow-0">
         <TabsTrigger
           value="all"
           onClick={() => {

@@ -40,7 +40,7 @@ const TeacherCourseLayout = ({
       </div>
 
       <Tabs defaultValue="all">
-        <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-6">
+        <div className="flex flex-col min-[510px]:flex-row items-center md:justify-between gap-4 md:gap-6">
           <TeacherCoursesTableHeader
             setFilterOptions={setFilterOptions}
             setSearchTerm={setSearchTerm}
