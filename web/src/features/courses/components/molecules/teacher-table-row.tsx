@@ -55,7 +55,7 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
         {date}
       </TableCell>
       <TableCell>
-        <TeacherCourseActions />
+        <TeacherCourseActions courseId={course.courseId} />
       </TableCell>
     </TableRow>
   );

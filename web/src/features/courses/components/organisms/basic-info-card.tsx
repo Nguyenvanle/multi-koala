@@ -25,11 +25,12 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {format} from "date-fns"
+import { CreateCourseFormData } from "@/features/courses/hooks/useCreateCourseForm";
 
 export default function BasicInformationCard({
   form,
 }: {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<CreateCourseFormData>;
 }) {
   return (
     <Card className="flex flex-col flex-1">
@@ -114,7 +115,7 @@ export default function BasicInformationCard({
           name="courseResponsibilityEndAt"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
+              <FormLabel>Course End Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -134,21 +135,26 @@ export default function BasicInformationCard({
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="flex flex-col p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={field.value}
+                    selected={new Date(field.value)}
                     onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
+                    disabled={(date) => date < new Date()}
                     initialFocus
                   />
+
+                  <FormDescription className="text-wrap p-3 pt-0">
+                    Choose the date when your{" "}
+                    <span className="font-semibold">
+                      responsibility for this course ends.
+                    </span>{" "}
+                    Until this date, you are fully responsible for managing the
+                    course, including answering student queries, updating
+                    content, processing refunds, etc.
+                  </FormDescription>
                 </PopoverContent>
               </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

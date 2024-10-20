@@ -58,12 +58,13 @@ export default function TeacherEditPage() {
 
   const initialData: EditCourseFormData = {
     courseName: course.courseName,
+    courseResponsibilityEndAt: course.courseResponsibilityEndAt,
     courseDescription: course.courseDescription,
     coursePrice: course.coursePrice,
     courseLevel: course.courseLevel,
     types: course.types.map((type: CourseTypeResType) => type.typeName),
     fields: course.fields.map((field: CourseFieldResType) => field.fieldName),
-    imageUrl: course.image.imageUrl,
+    imageUrl: course.image?.imageUrl,
   };
 
   return <CourseEditForm initialData={initialData} />;

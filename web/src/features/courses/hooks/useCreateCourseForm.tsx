@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -10,9 +10,12 @@ import { CourseDetailResType } from "@/features/courses/types/course";
 const CreateCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
   courseResponsibilityEndAt: z
-    .string()
-    .min(1, "Course responsibility end date is required")
-    .transform((date) => new Date(date)),
+    .date({
+      required_error: "Course responsibility end date is required",
+    })
+    .refine((date) => date > new Date(), {
+      message: "Course responsibility end date must be after today.",
+    }),
   coursePrice: z.preprocess(
     (val) => Number(val),
     z.number().min(0, "Price must be a positive number")
@@ -26,9 +29,9 @@ const CreateCourseSchema = z.object({
   imageUrl: z.string().url(),
 });
 
-type CreateCourseFormData = z.infer<typeof CreateCourseSchema>;
-
 const STORAGE_KEY = "courseFormData";
+
+export type CreateCourseFormData = z.infer<typeof CreateCourseSchema>;
 
 const defaultValues: CreateCourseFormData = {
   courseName: "",
@@ -50,16 +53,23 @@ export default function useCreateCourseForm() {
   });
 
   useEffect(() => {
-    // Restore data from localStorage on initial render
     const savedData = localStorage.getItem(STORAGE_KEY);
     if (savedData) {
       const parsedData = JSON.parse(savedData);
+      // Convert the date string back to Date object
+      parsedData.courseResponsibilityEndAt = new Date(
+        parsedData.courseResponsibilityEndAt
+      );
       form.reset(parsedData);
     }
 
-    // Save form data to localStorage whenever it changes
     const subscription = form.watch((value) => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+      const dataToSave = {
+        ...value,
+        courseResponsibilityEndAt:
+          value.courseResponsibilityEndAt?.toISOString(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
     });
 
     return () => subscription.unsubscribe();
@@ -67,17 +77,32 @@ export default function useCreateCourseForm() {
 
   const onSubmit = async (data: CreateCourseFormData) => {
     try {
+      // Convert Date object to ISO string for API submission
+      const submissionData = {
+        ...data,
+        courseResponsibilityEndAt: data.courseResponsibilityEndAt.toISOString(),
+      };
+
       const { result } = await nextjsApiService.post<CourseDetailResType>(
         "/api/courses/add",
-        data
+        submissionData
       );
-      console.log(result);
-      showToast("Success", "Course created successfully!");
-      localStorage.removeItem(STORAGE_KEY); // Clear saved data after successful submission
-      form.reset(defaultValues);
 
-      const timestamp = new Date().getTime();
-      router.push(`/dashboard/courses?refresh=${timestamp}`);
+      if (result?.code === 200) {
+        console.log(result);
+        showToast("Success", "Course created successfully!");
+        localStorage.removeItem(STORAGE_KEY);
+        form.reset(defaultValues);
+
+        const timestamp = new Date().getTime();
+        router.push(`/dashboard/courses?refresh=${timestamp}`);
+      } else {
+        showToast(
+          "Error",
+          "Failed to created course, try reload or login again",
+          "destructive"
+        );
+      }
     } catch (error) {
       showToast("Error", "Failed to create course", "destructive");
     }
