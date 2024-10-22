@@ -67,6 +67,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsAuthenticated(true);
       }
 
+      if (!currentPath.includes("/dashboard")) return;
+
       console.log("initializeAuth checkTokenValidity...");
       const { valid } = await checkTokenValidity();
       console.log("valid: ", valid);
@@ -99,22 +101,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setLoading(false);
     }
-  }, [refreshAccessTokenInBackground, router]);
+  }, [currentPath, refreshAccessTokenInBackground, router]);
 
   useEffect(() => {
-    if (currentPath.includes("/dashboard")) initializeAuth();
+    initializeAuth();
 
-    const intervalId = setInterval(async () => {
-      console.log("Attempting to refresh token in background...");
-      const success = await refreshAccessTokenInBackground();
-      if (!success) {
-        console.log("Failed to refresh token, user may need to log in again.");
-        clearInterval(intervalId); // Dừng việc refresh nếu không thành công
-      }
-    }, 15 * 60 * 1000); // 15 phút
+    const intervalId = setInterval(
+      async () => {
+        console.log("Attempting to refresh token in background...");
+        const success = await refreshAccessTokenInBackground();
+        if (!success) {
+          console.log(
+            "Failed to refresh token, user may need to log in again."
+          );
+          clearInterval(intervalId); // Dừng việc refresh nếu không thành công
+        }
+      },
+      15 * 60 * 1000
+    ); // 15 phút
 
     return () => clearInterval(intervalId);
-  }, [currentPath, initializeAuth, refreshAccessTokenInBackground]);
+  }, [initializeAuth, refreshAccessTokenInBackground]);
 
   const login = (userData: UserResType) => {
     setUser(userData);
