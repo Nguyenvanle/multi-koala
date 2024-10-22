@@ -20,11 +20,6 @@ import { useLesson } from "../../feature/lesson/hooks/useLesson";
 import { LessonBody } from "../../feature/lesson/types/lesson";
 import useUser from "../../feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
-import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CourseDeleteService } from "@/src/feature/favourite-courses/services/favourite-delete";
-import { CourseCheckService } from "@/src/feature/favourite-courses/services/favourite-check";
-import usePostCourse from "@/src/feature/favourite-courses/hooks/usePostFavourite";
 
 const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -149,8 +144,8 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             {item.lessonName}
           </Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.video.videoDuration / 60)}m
-            {(item.video.videoDuration % 60).toString().padStart(2, "0")}s
+            {Math.floor(item.video.videoDuration / 60)}:
+            {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
           </Text>
         </View>
       </TouchableOpacity>
@@ -206,13 +201,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <Text style={{ ...text.p, color: Colors.blue }}>{lessonCount}</Text>
           </Text>
           <Text style={styles.courseTime}>
-            Course created:{" "}
+            Course started:{" "}
             <Text style={{ ...text.p, color: Colors.super_teal_dark }}>
               {new Date(courseDetails.courseUploadedAt).toLocaleDateString()}
             </Text>
           </Text>
           <Text style={styles.courseTime}>
-            Responsibility End At:{" "}
+            Course ended:{" "}
             <Text style={{ ...text.p, color: Colors.red }}>
               {new Date(
                 courseDetails.courseResponsibilityEndAt

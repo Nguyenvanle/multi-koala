@@ -1,15 +1,15 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { Colors } from "@/src/constants/Colors";
 import { useLessonDetails } from "@/src/feature/lesson/hooks/useLessonDetails";
-import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
+import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
 import { AntDesign } from "@expo/vector-icons";
 import { router, Stack, useGlobalSearchParams } from "expo-router";
+import { useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-const TestLayout = () => {
-  const { lessonId, testId } = useGlobalSearchParams();
-  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
-  const testIdString = Array.isArray(testId) ? testId[0] : testId;
+const TestResultLayout = () => {
+  const { lessonId } = useGlobalSearchParams();
+  const lessonIdString = lessonId as string;
+  const [selectedTest, setSelectedTest] = useState(null);
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
 
@@ -59,14 +59,8 @@ const TestLayout = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="[resultId]"
-        options={{
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 };
 
-export default TestLayout;
+export default TestResultLayout;

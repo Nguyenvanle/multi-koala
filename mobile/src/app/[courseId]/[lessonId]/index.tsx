@@ -26,16 +26,15 @@ import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
 const LessonDetails = () => {
   const { user } = useUser();
 
-  const { courseId, testId } = useGlobalSearchParams();
+  const { courseId, testId, lessonId } = useGlobalSearchParams();
 
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+
+  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
+
   const testIdString = Array.isArray(testId) ? testId[0] : testId;
 
   const { enrolled } = useEnrolled();
-
-  const { lessonId } = useGlobalSearchParams();
-
-  const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
 
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
@@ -138,6 +137,7 @@ const LessonDetails = () => {
             router.replace(`/${courseIdString}/${item.lessonId}`);
           }
         }}
+        disabled={isSelected}
       >
         <Image
           source={{ uri: item.image.imageUrl }}

@@ -4,9 +4,10 @@ import {
   SubmitRes,
   TestResultBody,
 } from "../types/test-result";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import { useTestDetails } from "../../test/hooks/useTestDetails";
 import { testResultService } from "./../services/test-result";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const useTestResult = (testId) => {
   const { lessonId } = useGlobalSearchParams();
@@ -31,20 +32,21 @@ const useTestResult = (testId) => {
     try {
       setLoadingResult(true);
       setErrorResult(null);
-
       // Dữ liệu gửi đi đã được cập nhật từ handleSubmit
       const requestData: SubmitRes = {
         answerSubmitList: selectedAnswerList,
       };
+      console.log(requestData);
 
       const request = await testResultService.getResult(
         testIdString, // Sử dụng testIdString ở đây
         requestData
       );
-
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
+          console.log(request.data.result);
+          // router.push(`/${testIdString}/${request.data.result.quizResultId}`);
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }
