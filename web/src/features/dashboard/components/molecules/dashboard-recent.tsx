@@ -19,13 +19,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function DashboardRecentCourseSales() {
+export default function DashboardRecentlySoldCourses() {
   return (
     <Card className="xl:col-span-2">
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
-          <CardTitle>Recent Course Sales</CardTitle>
-          <CardDescription>Your latest course purchases.</CardDescription>
+          <CardTitle>Recently Sold Courses</CardTitle>
+          <CardDescription>
+            Your recent course has been purchased.
+          </CardDescription>
         </div>
         <Button asChild size="sm" className="ml-auto gap-1">
           <Link href="#">
@@ -39,9 +41,9 @@ export default function DashboardRecentCourseSales() {
           <TableHeader>
             <TableRow>
               <TableHead>Student</TableHead>
-              <TableHead className="hidden xl:table-column">Course</TableHead>
-              <TableHead className="hidden xl:table-column">Status</TableHead>
-              <TableHead className="hidden xl:table-column">Date</TableHead>
+              <TableHead className="hidden md:table-cell">Course</TableHead>
+              <TableHead className="hidden lg:table-cell">Status</TableHead>
+              <TableHead className="hidden xl:table-cell">Date</TableHead>
               <TableHead className="text-right">Amount</TableHead>
             </TableRow>
           </TableHeader>
@@ -53,17 +55,15 @@ export default function DashboardRecentCourseSales() {
                   emma@example.com
                 </div>
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden md:table-cell">
                 Advanced React Patterns
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden lg:table-cell">
                 <Badge className="text-xs" variant="outline">
                   Completed
                 </Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                2023-06-23
-              </TableCell>
+              <TableCell className="hidden xl:table-cell">2023-06-23</TableCell>
               <TableCell className="text-right">$129.99</TableCell>
             </TableRow>
             <TableRow>
@@ -73,17 +73,15 @@ export default function DashboardRecentCourseSales() {
                   liam@example.com
                 </div>
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden md:table-cell">
                 Python for Data Science
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden lg:table-cell">
                 <Badge className="text-xs" variant="outline">
                   In Progress
                 </Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                2023-06-24
-              </TableCell>
+              <TableCell className="hidden xl:table-cell">2023-06-24</TableCell>
               <TableCell className="text-right">$89.99</TableCell>
             </TableRow>
             <TableRow>
@@ -93,17 +91,15 @@ export default function DashboardRecentCourseSales() {
                   olivia@example.com
                 </div>
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden md:table-cell">
                 UX/UI Design Fundamentals
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden lg:table-cell">
                 <Badge className="text-xs" variant="outline">
                   Completed
                 </Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                2023-06-25
-              </TableCell>
+              <TableCell className="hidden xl:table-cell">2023-06-25</TableCell>
               <TableCell className="text-right">$149.99</TableCell>
             </TableRow>
             <TableRow>
@@ -113,17 +109,15 @@ export default function DashboardRecentCourseSales() {
                   noah@example.com
                 </div>
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden md:table-cell">
                 Machine Learning Basics
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden lg:table-cell">
                 <Badge className="text-xs" variant="outline">
                   Just Started
                 </Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                2023-06-26
-              </TableCell>
+              <TableCell className="hidden xl:table-cell">2023-06-26</TableCell>
               <TableCell className="text-right">$199.99</TableCell>
             </TableRow>
             <TableRow>
@@ -133,17 +127,15 @@ export default function DashboardRecentCourseSales() {
                   ava@example.com
                 </div>
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden md:table-cell">
                 Web Development Bootcamp
               </TableCell>
-              <TableCell className="hidden xl:table-column">
+              <TableCell className="hidden lg:table-cell">
                 <Badge className="text-xs" variant="outline">
                   In Progress
                 </Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                2023-06-27
-              </TableCell>
+              <TableCell className="hidden xl:table-cell">2023-06-27</TableCell>
               <TableCell className="text-right">$299.99</TableCell>
             </TableRow>
           </TableBody>

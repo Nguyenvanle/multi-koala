@@ -17,7 +17,7 @@ export default function DashboardTopPerformingCourses() {
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
             <AvatarImage
-              src="/placeholder.svg?height=36&width=36"
+              src="/images/smile.png"
               alt="Course"
             />
             <AvatarFallback>AR</AvatarFallback>
@@ -35,7 +35,7 @@ export default function DashboardTopPerformingCourses() {
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
             <AvatarImage
-              src="/placeholder.svg?height=36&width=36"
+              src="/images/smile.png"
               alt="Course"
             />
             <AvatarFallback>PD</AvatarFallback>
@@ -53,7 +53,7 @@ export default function DashboardTopPerformingCourses() {
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
             <AvatarImage
-              src="/placeholder.svg?height=36&width=36"
+              src="/images/smile.png"
               alt="Course"
             />
             <AvatarFallback>UX</AvatarFallback>
@@ -71,7 +71,7 @@ export default function DashboardTopPerformingCourses() {
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
             <AvatarImage
-              src="/placeholder.svg?height=36&width=36"
+              src="/images/smile.png"
               alt="Course"
             />
             <AvatarFallback>ML</AvatarFallback>
@@ -89,7 +89,7 @@ export default function DashboardTopPerformingCourses() {
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
             <AvatarImage
-              src="/placeholder.svg?height=36&width=36"
+              src="/images/smile.png"
               alt="Course"
             />
             <AvatarFallback>WD</AvatarFallback>
