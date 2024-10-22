@@ -1,6 +1,6 @@
 import { getTopCourses } from "@/features/courses/actions/get-top-courses";
-import useSWR from "swr";
 import { MyPerformingCoursesBodyType } from "@/features/courses/types/course-perform";
+import useSWR from "swr";
 
 export default function useMyPerformingCourses() {
   const { data, error, isLoading } = useSWR(`get-top-courses`, () =>
