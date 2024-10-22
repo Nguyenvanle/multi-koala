@@ -1,32 +1,37 @@
 import { CardInfo } from "@/features/dashboard/components/atoms/card-info";
-import { BookOpen, Users, GraduationCap, Activity } from "lucide-react";
+import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
+import { Activity, BookOpen, GraduationCap, Users } from "lucide-react";
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  statistics: TeacherStatisticsBodyType;
+  teacherRating: number;
+}
+
+export function DashboardHeader({
+  statistics,
+  teacherRating,
+}: DashboardHeaderProps) {
   return (
     <div className="w-full grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <CardInfo
         title="Total Revenue"
-        value="$12,345.67"
+        value={`$${statistics?.totalPrices.toFixed(2)}`}
         icon={<BookOpen className="h-4 w-4 text-primary " />}
-        description="+15.2% from last month"
       />
       <CardInfo
         title="Active Students"
-        value="1,234"
+        value={`${statistics?.totalStudents}`}
         icon={<Users className="h-4 w-4 text-primary" />}
-        description="+7.3% from last month"
       />
       <CardInfo
         title="Course Sales"
-        value="456"
+        value={`${statistics?.totalCourses}`}
         icon={<GraduationCap className="h-4 w-4 text-primary " />}
-        description="+22.4% from last month"
       />
       <CardInfo
         title="Average Rating"
-        value="4.8"
+        value={`${(Number(teacherRating.toFixed(1)) * 100).toFixed(1)}%`}
         icon={<Activity className="h-4 w-4 text-primary " />}
-        description="+0.2 from last month"
       />
     </div>
   );

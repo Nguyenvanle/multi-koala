@@ -1,11 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DashboardTopPerformingCourses() {
   return (
@@ -16,10 +10,7 @@ export default function DashboardTopPerformingCourses() {
       <CardContent className="grid gap-8">
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
-            <AvatarImage
-              src="/images/smile.png"
-              alt="Course"
-            />
+            <AvatarImage src="/images/smile.png" alt="Course" />
             <AvatarFallback>AR</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">
@@ -34,10 +25,7 @@ export default function DashboardTopPerformingCourses() {
         </div>
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
-            <AvatarImage
-              src="/images/smile.png"
-              alt="Course"
-            />
+            <AvatarImage src="/images/smile.png" alt="Course" />
             <AvatarFallback>PD</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">
@@ -52,10 +40,7 @@ export default function DashboardTopPerformingCourses() {
         </div>
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
-            <AvatarImage
-              src="/images/smile.png"
-              alt="Course"
-            />
+            <AvatarImage src="/images/smile.png" alt="Course" />
             <AvatarFallback>UX</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">
@@ -70,10 +55,7 @@ export default function DashboardTopPerformingCourses() {
         </div>
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
-            <AvatarImage
-              src="/images/smile.png"
-              alt="Course"
-            />
+            <AvatarImage src="/images/smile.png" alt="Course" />
             <AvatarFallback>ML</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">
@@ -88,10 +70,7 @@ export default function DashboardTopPerformingCourses() {
         </div>
         <div className="flex items-center gap-4">
           <Avatar className="hidden h-9 w-9 sm:flex">
-            <AvatarImage
-              src="/images/smile.png"
-              alt="Course"
-            />
+            <AvatarImage src="/images/smile.png" alt="Course" />
             <AvatarFallback>WD</AvatarFallback>
           </Avatar>
           <div className="grid gap-1">

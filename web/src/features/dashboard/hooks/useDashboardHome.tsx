@@ -27,7 +27,7 @@ export default function useDashboardHome() {
     );
   const teacherRating = rating?.avgteacherRating ?? 0;
 
-  const {topCourses, isLoading: topCoursesLoading} = useMyPerformingCourses()
+  const { topCourses, isLoading: topCoursesLoading } = useMyPerformingCourses();
 
   return {
     statistics,
