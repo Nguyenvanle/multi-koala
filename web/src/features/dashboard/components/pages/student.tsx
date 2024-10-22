@@ -1,5 +1,11 @@
+import dynamic from "next/dynamic";
 import StudentHeader from "@/features/dashboard/components/atoms/students-header";
-import StudentPerformanceTrend from "@/features/dashboard/components/atoms/trend-chart";
+import TopPerformingStudents from "@/features/dashboard/components/atoms/top-student";
+import RecentStudentActivities from "@/features/dashboard/components/atoms/recent-activity";
+const StudentPerformanceTrend = dynamic(
+  () => import("@/features/dashboard/components/atoms/trend-chart"),
+  { ssr: false }
+);
 
 export default function DashboardStudentPage() {
   return (
@@ -8,9 +14,12 @@ export default function DashboardStudentPage() {
         <StudentHeader />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 xl:gap-6 md:grid-cols-2">
         <StudentPerformanceTrend />
+        <TopPerformingStudents />
       </div>
+
+      <RecentStudentActivities />
     </div>
   );
 }

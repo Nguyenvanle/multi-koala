@@ -1,3 +1,5 @@
+"uss client";
+
 import useMyPerformingCourses from "@/features/courses/hooks/useMyPerformingCourses";
 import { TeacherRatingBodyType } from "@/features/rating/types/teacher-rating";
 import { useTeacherStatistics } from "@/features/users/hooks/useTeacherStatistics";
@@ -27,7 +29,7 @@ export default function useDashboardHome() {
     );
   const teacherRating = rating?.avgteacherRating ?? 0;
 
-  const {topCourses, isLoading: topCoursesLoading} = useMyPerformingCourses()
+  const { topCourses, isLoading: topCoursesLoading } = useMyPerformingCourses();
 
   return {
     statistics,

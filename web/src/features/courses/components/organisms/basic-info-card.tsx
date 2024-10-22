@@ -28,13 +28,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
 import { CreateCourseFormData } from "@/features/courses/hooks/useCreateCourseForm";
+import { dateFormatter } from "@/utils/date-formater";
 
 export default function BasicInformationCard({
   form,
 }: {
-  form: UseFormReturn<CreateCourseFormData>;
+  form: UseFormReturn<any>;
 }) {
   return (
     <Card className="flex flex-col">
@@ -72,7 +72,7 @@ export default function BasicInformationCard({
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP")
+                        dateFormatter(field.value)
                       ) : (
                         <span>Pick a date</span>
                       )}
