@@ -36,7 +36,9 @@ export const CoursesListGrid: React.FC<CoursesListGridProps> = ({
               courseDescription={course.courseDescription}
               courseType={course.types}
               courseFields={course.fields}
-              courseImage={course.image.imageUrl || ""}
+              courseImage={
+                course.image?.imageUrl ?? "/images/fallback-image.jpg"
+              }
               uploadByTeacher={
                 course.uploadedByTeacher
                   ? `${course.uploadedByTeacher.firstname} ${course.uploadedByTeacher.lastname}`
@@ -51,6 +53,7 @@ export const CoursesListGrid: React.FC<CoursesListGridProps> = ({
               courseRating={RatingAdapter.getRating(course.courseId)}
               courseLevel={course.courseLevel}
               courseDiscount={discountedPrice}
+              courseResponsibilityEndAt={course.courseResponsibilityEndAt}
             />
           </Link>
         );

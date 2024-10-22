@@ -56,7 +56,7 @@ const sidebarItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard" },
   { href: "/dashboard/courses", icon: LibraryBig, label: "Courses" },
   { href: "/dashboard/students", icon: Users, label: "Students" },
-  { href: "/dashboard/analytics", icon: LineChart, label: "Analytics" },
+  // { href: "/dashboard/analytics", icon: LineChart, label: "Analytics" },
 ];
 
 const settingsItem = {
@@ -81,12 +81,12 @@ export default function Sidebar() {
           />
         ))}
       </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <TooltipItem
           {...settingsItem}
           isActive={isItemActive(settingsItem.href)}
         />
-      </nav>
+      </nav> */}
     </aside>
   );
 }

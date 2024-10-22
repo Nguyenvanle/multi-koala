@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -7,30 +6,27 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  Table,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { TableBody, Table } from "@/components/ui/table";
 import {
   TeacherTableHeader,
   TeacherTableRow,
 } from "@/features/courses/components/molecules";
+import { SortOption } from "@/features/courses/hooks/useMyTeacherCourses";
+import {
+  TeacherMyCourseBodyType,
+  TeacherMyCoursesBodyType,
+} from "@/features/courses/types/teacher-my-courses";
+import { Dispatch, SetStateAction } from "react";
 
-export default function TeacherTable({ courses, totalCourses }: any) {
+export default function TeacherTable({
+  courses,
+  setSortOption,
+  currentSort,
+}: {
+  courses: TeacherMyCoursesBodyType;
+  setSortOption: Dispatch<SetStateAction<SortOption | null>>;
+  currentSort: SortOption | null;
+}) {
   return (
     <Card x-chunk="dashboard-06-chunk-0">
       <CardHeader>
@@ -41,10 +37,14 @@ export default function TeacherTable({ courses, totalCourses }: any) {
       </CardHeader>
       <CardContent>
         <Table>
-          <TeacherTableHeader />
+          <TeacherTableHeader setSortOption={setSortOption} sortOption={currentSort} />
           <TableBody>
-            {courses.map((course: any) => (
-              <TeacherTableRow key={course.id} course={course} />
+            {courses.map((course: TeacherMyCourseBodyType, index) => (
+              <TeacherTableRow
+                key={course.courseId}
+                course={course}
+                index={index}
+              />
             ))}
           </TableBody>
         </Table>
@@ -52,7 +52,7 @@ export default function TeacherTable({ courses, totalCourses }: any) {
       <CardFooter>
         <div className="text-xs text-muted-foreground">
           Showing <strong>1-{courses.length}</strong> of{" "}
-          <strong>{totalCourses}</strong> courses
+          <strong>{courses.length}</strong> courses
         </div>
       </CardFooter>
     </Card>

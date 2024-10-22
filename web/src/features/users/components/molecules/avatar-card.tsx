@@ -10,19 +10,15 @@ export default function UserAvatar({
 }) {
   return (
     <div className="relative h-52 w-52 overflow-hidden bg-muted rounded-full">
-      {!imageUrl ? (
-        <Skeleton className="w-20 h-20 rounded-full" />
-      ) : (
-        <Image
-          src={imageUrl || "/images/smile.png"}
-          alt={firstName || "avatar"}
-          fill
-          className="object-cover object-center"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority
-          quality={100}
-        />
-      )}
+      <Image
+        src={imageUrl || "/images/smile.png"}
+        alt={firstName || "avatar"}
+        fill
+        className="object-cover object-center"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority
+        quality={100}
+      />
     </div>
   );
 }

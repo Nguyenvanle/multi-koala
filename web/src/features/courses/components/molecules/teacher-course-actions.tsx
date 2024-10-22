@@ -7,8 +7,11 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 
-export const TeacherCourseActions: React.FC = () => (
+export const TeacherCourseActions: React.FC<{ courseId: string }> = ({
+  courseId,
+}) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -18,7 +21,11 @@ export const TeacherCourseActions: React.FC = () => (
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      <DropdownMenuItem>Edit</DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link href={`/dashboard/courses/${courseId}`} className="w-full">
+          Edit
+        </Link>
+      </DropdownMenuItem>
       <DropdownMenuItem>Delete</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

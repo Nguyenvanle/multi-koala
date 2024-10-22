@@ -4,11 +4,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/features/auth/contexts/auth-context";
 
 export default function UserInfo({ icon, text }: UserInfoProps) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   return (
     <div>
-      {!user ? (
+      {loading ? (
         <Skeleton className="w-ful h-10" />
       ) : (
         <div className="flex flex-row gap-2">

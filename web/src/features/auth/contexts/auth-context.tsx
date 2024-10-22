@@ -5,7 +5,7 @@ import { checkTokenValidity } from "@/features/auth/actions/check-token";
 import { logoutAction } from "@/features/auth/actions/logout";
 import { refreshTokenAction } from "@/features/auth/actions/refresh-token";
 import { UserResType } from "@/features/users/schema/user";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -32,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const router = useRouter();
+  const currentPath = usePathname();
 
   const refreshAccessTokenInBackground = useCallback(async () => {
     try {
@@ -101,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [refreshAccessTokenInBackground, router]);
 
   useEffect(() => {
-    initializeAuth();
+    if (currentPath.includes("/dashboard")) initializeAuth();
 
     const intervalId = setInterval(async () => {
       console.log("Attempting to refresh token in background...");
@@ -113,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }, 15 * 60 * 1000); // 15 phút
 
     return () => clearInterval(intervalId);
-  }, [initializeAuth, refreshAccessTokenInBackground]);
+  }, [currentPath, initializeAuth, refreshAccessTokenInBackground]);
 
   const login = (userData: UserResType) => {
     setUser(userData);
