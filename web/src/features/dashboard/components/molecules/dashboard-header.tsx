@@ -30,7 +30,7 @@ export function DashboardHeader({
       />
       <CardInfo
         title="Average Rating"
-        value={`${(Number(teacherRating.toFixed(1)) * 100).toFixed(1)}%`}
+        value={`${(Number(teacherRating.toFixed(1)) * 5).toFixed(2)} ★`}
         icon={<Activity className="h-4 w-4 text-primary " />}
       />
     </div>
