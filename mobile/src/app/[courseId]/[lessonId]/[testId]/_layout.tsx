@@ -10,11 +10,6 @@ const TestLayout = () => {
   const { lessonId, testId } = useGlobalSearchParams();
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
   const testIdString = Array.isArray(testId) ? testId[0] : testId;
-
-  const { testDetails, errorMessageTest, loadingTest } = useTestDetails(
-    lessonIdString,
-    testIdString
-  );
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
 
@@ -37,8 +32,6 @@ const TestLayout = () => {
   }
 
   const handleBackPress = async () => {
-    // Xóa AsyncStorage trước khi quay lại
-    await AsyncStorage.removeItem("yourKey"); // Thay "yourKey" bằng key mà bạn muốn xóa
     router.back();
   };
 

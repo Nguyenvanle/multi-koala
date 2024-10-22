@@ -39,62 +39,45 @@ const Test = () => {
     answerSubmitList: [],
   });
 
-  const initializeAnswerSubmitList = useCallback((test) => {
-    if (test && test.questions) {
-      const initialList = test.questions.map((question) => ({
-        questionId: question.questionId,
-        selectedAnswerId: null,
-      }));
-      setSelectedAnswerList(initialList);
-    }
-  }, []);
+  const initializeAnswerSubmitList = useCallback(
+    (test) => {
+      if (test && test.questions) {
+        const initialList = test.questions.map((question) => ({
+          questionId: question.questionId,
+          selectedAnswerId: selectedAnswers[question.questionId] || null, // Sử dụng selectedAnswers đã khôi phục
+        }));
+        setSelectedAnswerList(initialList);
+      }
+    },
+    [selectedAnswers]
+  ); // Dependency là selectedAnswers
 
   const handleTestSelection = async (test) => {
     setSelectedTest(test);
-    setSelectedAnswers({});
+    setShowResult(false);
+    setSelectedAnswers({}); // Reset selectedAnswers khi chọn bài kiểm tra mới
     await loadSavedAnswers(); // Tải lại đáp án từ AsyncStorage
-    initializeAnswerSubmitList(test);
-    const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
   };
 
-  const handleAnswerSelect = useCallback(
-    (questionId, answerId) => {
-      setSelectedAnswers((prevAnswers) => ({
+  const handleAnswerSelect = useCallback(async (questionId, answerId) => {
+    setSelectedAnswers((prevAnswers) => {
+      const updatedAnswers = {
         ...prevAnswers,
         [questionId]: answerId,
-      }));
-      // Cập nhật selectedAnswerList
-      setSelectedAnswerList((prevList) => {
-        const existingQuestionIndex = prevList.findIndex(
-          (item) => item.questionId === questionId
-        );
-        if (existingQuestionIndex !== -1) {
-          return prevList.map((item) =>
-            item.questionId === questionId
-              ? { ...item, selectedAnswerId: answerId }
-              : item
-          );
-        } else {
-          return [
-            ...prevList,
-            {
-              questionId,
-              selectedAnswerId: answerId,
-            },
-          ];
-        }
-      });
-    },
-    [setSelectedAnswerList]
-  );
+      };
+      // Lưu vào AsyncStorage
+      AsyncStorage.setItem("selectedAnswers", JSON.stringify(updatedAnswers));
+      return updatedAnswers;
+    });
+  }, []);
+
   const handleSubmit = async () => {
     // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
     setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
-    // Gọi hàm onSubmit để gửi dữ liệu
-    onSubmit();
     // Xóa dữ liệu đã lưu trong AsyncStorage
     await AsyncStorage.removeItem("selectedAnswers");
+    // Gọi hàm onSubmit để gửi dữ liệu
+    onSubmit();
     setShowResult(true);
   };
 
@@ -116,7 +99,7 @@ const Test = () => {
             selectedChoose && { backgroundColor: Colors.teal_dark },
             selectedCorrect && { backgroundColor: Colors.super_teal_dark },
             selectedWrong && { backgroundColor: "#fecaca" },
-            correct && { backgroundColor: "#F3C623" },
+            correct && { backgroundColor: "#FFF7D1" },
           ]}
           onPress={() =>
             !showResult && handleAnswerSelect(questionId, item.answerId)
@@ -127,9 +110,9 @@ const Test = () => {
             style={[
               styles.answerText,
               !showResult && isSelected && { color: Colors.white },
-              selectedCorrect && { color: Colors.white },
-              selectedWrong && { color: "red" },
-              correct && { color: "#F9F7CF" },
+              selectedCorrect && { color: Colors.teal_dark },
+              selectedWrong && { color: Colors.red },
+              correct && { color: "#FFB200" },
             ]}
           >
             {letters[index]}. {item.answerDescription} {/* Hiển thị chữ cái */}
@@ -186,7 +169,10 @@ const Test = () => {
       const savedAnswers = await AsyncStorage.getItem("selectedAnswers");
       if (savedAnswers) {
         const parsedAnswers = JSON.parse(savedAnswers);
+        console.log("Loaded answers from AsyncStorage:", parsedAnswers);
         setSelectedAnswers(parsedAnswers); // Thiết lập selectedAnswers
+        // Gọi lại initializeAnswerSubmitList sau khi cập nhật selectedAnswers
+        initializeAnswerSubmitList(selectedTest); // Chỉ khi selectedTest có giá trị
       }
     } catch (error) {
       console.error("Error loading saved answers:", error);
@@ -194,8 +180,10 @@ const Test = () => {
   };
 
   useEffect(() => {
-    loadSavedAnswers();
-  }, []);
+    if (selectedTest) {
+      initializeAnswerSubmitList(selectedTest);
+    }
+  }, [selectedTest, selectedAnswers]); // Tùy thuộc vào selectedTest và selectedAnswers
 
   if (loadingTest) {
     return <ActivityIndicator size="large" color={Colors.teal_dark} />;

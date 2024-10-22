@@ -1,15 +1,37 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { Colors } from "@/src/constants/Colors";
 import { useLessonDetails } from "@/src/feature/lesson/hooks/useLessonDetails";
-import { useTestDetails } from "@/src/feature/test/hooks/useTestDetails";
+import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
 import { AntDesign } from "@expo/vector-icons";
 import { router, Stack, useGlobalSearchParams } from "expo-router";
+import { useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 const TestResultLayout = () => {
+  const { lessonId } = useGlobalSearchParams();
+  const lessonIdString = lessonId as string;
+  const [selectedTest, setSelectedTest] = useState(null);
+  const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
+    useLessonDetails(lessonIdString);
+
+  // Kiểm tra trạng thái loading
+  if (loadingLessonDetails) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.teal_dark} />
+      </View>
+    );
+  }
+
+  // Kiểm tra xem test có thông tin không
+  if (!lessonDetails) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: Colors.red }}>No course details available</Text>
+      </View>
+    );
+  }
+
   const handleBackPress = async () => {
-    // Xóa AsyncStorage trước khi quay lại
-    await AsyncStorage.removeItem("yourKey"); // Thay "yourKey" bằng key mà bạn muốn xóa
     router.back();
   };
 
@@ -18,6 +40,7 @@ const TestResultLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+          headerTitle: lessonDetails.lessonName,
           headerShown: true,
           headerTitleStyle: {
             fontSize: 24,
