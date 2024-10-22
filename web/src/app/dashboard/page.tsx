@@ -1,16 +1,9 @@
-"use client";
-import { TeacherCourseSkeletonTemplate } from "@/features/courses/components/atoms/teacher-course-skeleton";
-import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import DashboardHomePage from "@/features/dashboard/components/pages/home";
 
 export default function Dashboard() {
-  useEffect(() => {
-    redirect("/dashboard/courses");
-  }, []);
-
   return (
-    <div className="min-h-[100vh] w-full">
-      <TeacherCourseSkeletonTemplate />
+    <div className="flex-1">
+      <DashboardHomePage />
     </div>
   );
 }
