@@ -42,7 +42,6 @@ const useTestResult = (testId) => {
         testIdString, // Sử dụng testIdString ở đây
         requestData
       );
-      console.log(request);
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);

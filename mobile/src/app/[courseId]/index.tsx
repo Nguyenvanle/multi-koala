@@ -201,13 +201,13 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <Text style={{ ...text.p, color: Colors.blue }}>{lessonCount}</Text>
           </Text>
           <Text style={styles.courseTime}>
-            Course created:{" "}
+            Course started:{" "}
             <Text style={{ ...text.p, color: Colors.super_teal_dark }}>
               {new Date(courseDetails.courseUploadedAt).toLocaleDateString()}
             </Text>
           </Text>
           <Text style={styles.courseTime}>
-            Responsibility End At:{" "}
+            Course ended:{" "}
             <Text style={{ ...text.p, color: Colors.red }}>
               {new Date(
                 courseDetails.courseResponsibilityEndAt

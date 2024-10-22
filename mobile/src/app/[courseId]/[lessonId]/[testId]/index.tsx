@@ -14,6 +14,7 @@ import { text } from "@/src/constants/Styles";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
 import { useTestList } from "@/src/feature/test/hooks/useTestList";
 import { QuestionDetails } from "@/src/feature/test/types/test";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Test = () => {
   const { lessonId, testId } = useGlobalSearchParams();
@@ -48,9 +49,10 @@ const Test = () => {
     }
   }, []);
 
-  const handleTestSelection = (test) => {
+  const handleTestSelection = async (test) => {
     setSelectedTest(test);
     setSelectedAnswers({});
+    await loadSavedAnswers(); // Tải lại đáp án từ AsyncStorage
     initializeAnswerSubmitList(test);
     const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
     console.log("Selected Test ID: ", selectedTestId); // Log testId đã chọn
@@ -62,7 +64,6 @@ const Test = () => {
         ...prevAnswers,
         [questionId]: answerId,
       }));
-
       // Cập nhật selectedAnswerList
       setSelectedAnswerList((prevList) => {
         const existingQuestionIndex = prevList.findIndex(
@@ -87,28 +88,35 @@ const Test = () => {
     },
     [setSelectedAnswerList]
   );
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
     setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
     // Gọi hàm onSubmit để gửi dữ liệu
     onSubmit();
+    // Xóa dữ liệu đã lưu trong AsyncStorage
+    await AsyncStorage.removeItem("selectedAnswers");
     setShowResult(true);
   };
 
   const renderAnswerItem = useCallback(
-    ({ item, questionId }) => {
+    ({ item, questionId, index }) => {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Mảng chữ cái từ A đến Z
       const isSelected = selectedAnswers[questionId] === item.answerId; // Kiểm tra đáp án đã chọn
-      const isCorrect = showResult && item.correct;
-      const isIncorrect = showResult && isSelected && !item.correct;
+      const isCorrect = item.correct; // Kiểm tra xem đáp án hiện tại có đúng hay không
+      const selectedChoose = !showResult && isSelected;
+      const selectedWrong = showResult && isSelected && !isCorrect; // Kiểm tra đáp án người dùng chọn là sai
+      const selectedCorrect = showResult && isSelected && isCorrect;
+      const correct = showResult && !isSelected && isCorrect;
 
       return (
         <TouchableOpacity
           key={item.answerId}
           style={[
             styles.answerButton,
-            isSelected && styles.selectedAnswer, // Thay đổi màu sắc nếu đã chọn
-            isCorrect && styles.correctAnswer,
-            isIncorrect && styles.incorrectAnswer,
+            selectedChoose && { backgroundColor: Colors.teal_dark },
+            selectedCorrect && { backgroundColor: Colors.super_teal_dark },
+            selectedWrong && { backgroundColor: "#fecaca" },
+            correct && { backgroundColor: "#F3C623" },
           ]}
           onPress={() =>
             !showResult && handleAnswerSelect(questionId, item.answerId)
@@ -118,12 +126,13 @@ const Test = () => {
           <Text
             style={[
               styles.answerText,
-              isSelected && styles.selectedAnswerText,
-              isCorrect && styles.correctAnswerText,
-              isIncorrect && styles.incorrectAnswerText,
+              !showResult && isSelected && { color: Colors.white },
+              selectedCorrect && { color: Colors.white },
+              selectedWrong && { color: "red" },
+              correct && { color: "#F9F7CF" },
             ]}
           >
-            {item.answerDescription}
+            {letters[index]}. {item.answerDescription} {/* Hiển thị chữ cái */}
           </Text>
         </TouchableOpacity>
       );
@@ -139,25 +148,28 @@ const Test = () => {
           marginBottom: 24,
           padding: 8,
           borderRadius: 20,
-          borderColor: Colors.dark_grey,
+          borderColor: Colors.grey,
         }}
       >
-        <View style={{ padding: 16 }}>
+        <View style={{ padding: 8 }}>
           <Text
             style={{
               ...text.h4,
-              color: Colors.super_teal_dark,
-              fontWeight: "600",
+              color: Colors.teal_dark,
+              fontWeight: "500",
             }}
           >
             {item.questionDescription}
           </Text>
           <FlatList
             data={item.answers}
-            renderItem={({ item: answerItem }) =>
+            renderItem={(
+              { item: answerItem, index } // Thêm index vào đây
+            ) =>
               renderAnswerItem({
                 item: answerItem,
                 questionId: item.questionId,
+                index, // Truyền index vào hàm renderAnswerItem
               })
             }
             keyExtractor={(answer) => answer.answerId.toString()}
@@ -168,6 +180,22 @@ const Test = () => {
     ),
     [renderAnswerItem]
   );
+
+  const loadSavedAnswers = async () => {
+    try {
+      const savedAnswers = await AsyncStorage.getItem("selectedAnswers");
+      if (savedAnswers) {
+        const parsedAnswers = JSON.parse(savedAnswers);
+        setSelectedAnswers(parsedAnswers); // Thiết lập selectedAnswers
+      }
+    } catch (error) {
+      console.error("Error loading saved answers:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadSavedAnswers();
+  }, []);
 
   if (loadingTest) {
     return <ActivityIndicator size="large" color={Colors.teal_dark} />;
@@ -219,7 +247,7 @@ const Test = () => {
       </ScrollView>
 
       <ScrollView
-        style={{ flex: 1, padding: 8, backgroundColor: Colors.background }}
+        style={{ flex: 1, padding: 16, backgroundColor: Colors.background }}
       >
         {selectedTest && (
           <View>
@@ -273,30 +301,28 @@ const styles = StyleSheet.create({
     borderColor: Colors.grey,
   },
   selectedAnswer: {
-    backgroundColor: Colors.teal_dark,
+    backgroundColor: Colors.blue,
   },
   answerText: {
     ...text.p,
-    color: Colors.teal_dark,
-    fontWeight: "500",
+    color: Colors.black,
+    fontWeight: "400",
   },
-
   selectedAnswerText: {
     ...text.p,
     color: Colors.white,
   },
   correctAnswer: {
-    backgroundColor: Colors.teal_dark,
+    backgroundColor: Colors.super_teal_dark,
   },
   incorrectAnswer: {
-    backgroundColor: Colors.red,
-    borderColor: Colors.red,
+    backgroundColor: "#fecaca",
   },
   correctAnswerText: {
-    color: Colors.white,
+    color: Colors.black,
   },
   incorrectAnswerText: {
-    color: Colors.white,
+    color: Colors.black,
   },
   resultContainer: {
     alignSelf: "center",
@@ -319,7 +345,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 50,
   },
   submitButtonText: {
     ...text.large,
