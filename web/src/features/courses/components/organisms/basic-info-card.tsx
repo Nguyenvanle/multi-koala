@@ -79,16 +79,8 @@ export default function BasicInformationCard({
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="flex flex-col p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={new Date(field.value)}
-                      onSelect={field.onChange}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-
-                    <FormDescription className="text-wrap p-3 pt-0">
+                  <PopoverContent className="flex flex-col p-0" align="end">
+                    {/* <FormDescription className="text-wrap p-3 pb-0">
                       Choose the date when your{" "}
                       <span className="font-semibold">
                         responsibility for this course ends.
@@ -96,7 +88,15 @@ export default function BasicInformationCard({
                       Until this date, you are fully responsible for managing
                       the course, including answering student queries, updating
                       content, processing refunds, etc.
-                    </FormDescription>
+                    </FormDescription> */}
+
+                    <Calendar
+                      mode="single"
+                      selected={new Date(field.value)}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
                   </PopoverContent>
                 </Popover>
               </FormControl>

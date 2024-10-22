@@ -7,12 +7,12 @@ import { useAuth } from "@/features/auth/contexts/auth-context";
 import { useRoles } from "@/hooks/useRoles";
 
 export default function UserRoles() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { roles } = useRoles();
 
   return (
     <div>
-      {!user ? (
+      {loading ? (
         <Skeleton className="w-full h-16" />
       ) : (
         <div>
