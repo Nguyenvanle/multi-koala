@@ -5,6 +5,7 @@ import com.duokoala.server.entity.Test;
 import com.duokoala.server.entity.user.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,8 +21,7 @@ value = "select qr.* " +
         "join test t ON qr.test_test_id = t.test_id " +
         "join lesson l ON t.lesson_lesson_id = l.lesson_id " +
         "join course c ON l.course_course_id = c.course_id " +
-        "join student s ON qr.student_user_id = s.user_id " +
-        "join `user` u ON s.user_id = u.user_id " +
+        "where c.uploaded_by_teacher_user_id = :teacherId " +
         "ORDER BY qr.date_taken DESC")
-List<QuizResult> findAllWithDetails();
+List<QuizResult> findAllWithDetails(@Param("teacherId") String teacherId);
 }

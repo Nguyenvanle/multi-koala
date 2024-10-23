@@ -177,8 +177,9 @@ public class QuizResultService {
         quizResultRepository.deleteById(quizResultId);
     }
 
-    public List<QuizResultReportResponse> getQuizResultReport() {
-        List<QuizResult> quizResults = quizResultRepository.findAllWithDetails();
+    public List<QuizResultReportResponse> getMyQuizResultReport() {
+        String teacherId = authenticationService.getAuthenticatedTeacher().getUserId();
+        List<QuizResult> quizResults = quizResultRepository.findAllWithDetails(teacherId);
         return quizResults.stream().map(qr -> {
             QuizResultReportResponse.QuizResultReportResponseBuilder reportBuilder = QuizResultReportResponse.builder();
             reportBuilder.studentName(qr.getStudent().getFirstname() + " " + qr.getStudent().getLastname());

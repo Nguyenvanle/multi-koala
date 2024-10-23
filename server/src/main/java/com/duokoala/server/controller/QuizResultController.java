@@ -65,10 +65,10 @@ public class QuizResultController {
                 .build();
     }
 
-    @GetMapping("/quiz-results/report")
-    public ApiResponse<List<QuizResultReportResponse>> getReport() {
+    @GetMapping("/quiz-results/my-report")
+    public ApiResponse<List<QuizResultReportResponse>> getMyReport() {
         return ApiResponse.<List<QuizResultReportResponse>>builder()
-                .result(quizResultService.getQuizResultReport())
+                .result(quizResultService.getMyQuizResultReport())
                 .build();
     }
 
