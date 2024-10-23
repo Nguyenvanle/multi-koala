@@ -71,7 +71,7 @@ export default function TopPerformingStudents() {
               <TableCell>Data Science Fundamentals</TableCell>
               <TableCell>95%</TableCell>
               <TableCell>
-                <Badge>In Progress</Badge>
+                <Badge className="line-clamp-1">In Progress</Badge>
               </TableCell>
             </TableRow>
             <TableRow>

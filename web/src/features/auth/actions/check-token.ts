@@ -7,6 +7,7 @@ export async function checkTokenValidity() {
   const accessToken = cookies().get("token")?.value;
 
   if (!accessToken) {
+    console.log("No token in cookies")
     return { valid: false };
   }
 
