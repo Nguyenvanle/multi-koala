@@ -3,7 +3,8 @@ package com.duokoala.server.controller;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultSubmitRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.QuizResultResponse;
+import com.duokoala.server.dto.response.quizResultResponse.QuizResultReportResponse;
+import com.duokoala.server.dto.response.quizResultResponse.QuizResultResponse;
 import com.duokoala.server.service.QuizResultService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,13 @@ public class QuizResultController {
     ApiResponse<List<QuizResultResponse>> getAll() {
         return ApiResponse.<List<QuizResultResponse>>builder()
                 .result(quizResultService.getAll())
+                .build();
+    }
+
+    @GetMapping("/quiz-results/report")
+    public ApiResponse<List<QuizResultReportResponse>> getReport() {
+        return ApiResponse.<List<QuizResultReportResponse>>builder()
+                .result(quizResultService.getQuizResultReport())
                 .build();
     }
 

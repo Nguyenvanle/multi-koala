@@ -3,7 +3,8 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.questionRequest.QuestionSubmitRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultSubmitRequest;
-import com.duokoala.server.dto.response.QuizResultResponse;
+import com.duokoala.server.dto.response.quizResultResponse.QuizResultReportResponse;
+import com.duokoala.server.dto.response.quizResultResponse.QuizResultResponse;
 import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import com.duokoala.server.entity.*;
 import com.duokoala.server.exception.AppException;
@@ -159,7 +160,7 @@ public class QuizResultService {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
         List<QuizResult> quizResults = quizResultRepository
-                .findAllByStudentAndTest(authenticationService.getAuthenticatedStudent(),test);
+                .findAllByStudentAndTest(authenticationService.getAuthenticatedStudent(), test);
         return quizResults
                 .stream()
                 .map(quizResult ->
@@ -174,5 +175,19 @@ public class QuizResultService {
 
     public void delete(String quizResultId) {
         quizResultRepository.deleteById(quizResultId);
+    }
+
+    public List<QuizResultReportResponse> getQuizResultReport() {
+        List<QuizResult> quizResults = quizResultRepository.findAllWithDetails();
+        return quizResults.stream().map(qr -> {
+            QuizResultReportResponse.QuizResultReportResponseBuilder reportBuilder = QuizResultReportResponse.builder();
+            reportBuilder.studentName(qr.getStudent().getFirstname() + " " + qr.getStudent().getLastname());
+            reportBuilder.courseName(qr.getTest().getLesson().getCourse().getCourseName());
+            reportBuilder.lessonName(qr.getTest().getLesson().getLessonName());
+            reportBuilder.testName(qr.getTest().getTestDescription());
+            reportBuilder.correct(qr.getCorrectAnswers() + "/" + qr.getTotalQuestion());
+reportBuilder.score(qr.getTotalQuestion() == 0 ? "0" : String.format("%.2f%%", (1.0 * qr.getCorrectAnswers() / qr.getTotalQuestion() * 100)));            reportBuilder.dateTaken(qr.getDateTaken());
+            return reportBuilder.build();
+        }).toList();
     }
 }

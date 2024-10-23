@@ -3,7 +3,7 @@ package com.duokoala.server.mapper;
 
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultUpdateRequest;
-import com.duokoala.server.dto.response.QuizResultResponse;
+import com.duokoala.server.dto.response.quizResultResponse.QuizResultResponse;
 import com.duokoala.server.entity.QuizResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
