@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
-import { Label, Pie, PieChart } from "recharts";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -19,35 +19,38 @@ import {
 } from "@/components/ui/chart";
 
 const chartData = [
-  { 
-    status: "active", 
-    students: 275, 
-    fill: "var(--color-active)",
-    description: "Students currently participating in courses and regularly completing assignments"
+  {
+    category: "active",
+    students: 275,
+    fill: "hsl(var(--chart-1))",
+    description:
+      "Students currently participating in courses and regularly completing assignments",
   },
-  { 
-    status: "completed", 
-    students: 200, 
-    fill: "var(--color-completed)",
-    description: "Students who have successfully finished all course requirements"
+  {
+    category: "completed",
+    students: 200,
+    fill: "hsl(var(--chart-2))",
+    description:
+      "Students who have successfully finished all course requirements",
   },
-  { 
-    status: "inProgress", 
-    students: 187, 
-    fill: "var(--color-inProgress)",
-    description: "Students who have started but not yet completed their coursework"
+  {
+    category: "inProgress",
+    students: 187,
+    fill: "hsl(var(--chart-3))",
+    description:
+      "Students who have started but not yet completed their coursework",
   },
-  { 
-    status: "onHold", 
-    students: 73, 
-    fill: "var(--color-onHold)",
-    description: "Students who have temporarily paused their studies"
+  {
+    category: "onHold",
+    students: 73,
+    fill: "hsl(var(--chart-4))",
+    description: "Students who have temporarily paused their studies",
   },
-  { 
-    status: "newlyEnrolled", 
-    students: 90, 
-    fill: "var(--color-newlyEnrolled)",
-    description: "Students who have just joined within the last 30 days"
+  {
+    category: "newlyEnrolled",
+    students: 90,
+    fill: "hsl(var(--chart-5))",
+    description: "Students who have just joined within the last 30 days",
   },
 ];
 
@@ -83,7 +86,9 @@ const CustomTooltip = ({ active, payload }: any) => {
     const data = payload[0].payload;
     return (
       <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-        <p className="font-semibold text-gray-900">{chartConfig[data.status as keyof typeof chartConfig].label}</p>
+        <p className="font-semibold text-gray-900">
+          {chartConfig[data.category as keyof typeof chartConfig]?.label}
+        </p>
         <p className="text-gray-600">{data.students} students</p>
         <p className="text-sm text-gray-500 mt-2">{data.description}</p>
       </div>
@@ -92,7 +97,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-export default function StudentStatsDonut() {
+export default function StudentStatsBar() {
   const totalStudents = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.students, 0);
   }, []);
@@ -101,75 +106,72 @@ export default function StudentStatsDonut() {
 
   const currentDate = new Date();
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
   const currentMonth = monthNames[currentDate.getMonth()];
   const currentYear = currentDate.getFullYear();
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
+    <Card>
+      <CardHeader>
         <CardTitle>Student Enrollment Overview</CardTitle>
         <CardDescription>{`${currentMonth} ${currentYear}`}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
-          <PieChart>
-            <ChartTooltip 
-              content={<CustomTooltip />}
-              cursor={false}
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20,
+            }}
+            height={300}
+          >
+            <YAxis
+              dataKey="category"
+              type="category"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) =>
+                chartConfig[value as keyof typeof chartConfig]?.label
+              }
             />
-            <Pie
-              data={chartData}
+            <XAxis
               dataKey="students"
-              nameKey="status"
-              innerRadius={60}
-              strokeWidth={5}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalStudents.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Total Students
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
+              type="number"
+              tickLine={false}
+              axisLine={false}
+            />
+            <ChartTooltip
+              cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
+              content={<CustomTooltip />}
+            />
+            <Bar dataKey="students" radius={[0, 4, 4, 0]} fill="currentColor" />
+          </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
           Student enrollment up by {growthRate}% this month{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Breakdown of student status across all courses
+          Total Students: {totalStudents.toLocaleString()}
         </div>
       </CardFooter>
     </Card>

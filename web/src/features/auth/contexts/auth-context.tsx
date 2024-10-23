@@ -36,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const refreshAccessTokenInBackground = useCallback(async () => {
     try {
+      console.log("Refreshing:", new Date().toLocaleTimeString());
       const refreshedData = await refreshTokenAction();
 
       if (refreshedData) {
@@ -69,9 +70,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (!currentPath.includes("/dashboard")) return;
 
-      console.log("initializeAuth checkTokenValidity...");
+      console.log("Init check token,", new Date().toLocaleTimeString());
       const { valid } = await checkTokenValidity();
-      console.log("valid: ", valid);
+      console.log(`valid ${valid},`, new Date().toLocaleTimeString());
 
       if (!valid) {
         const success = await refreshAccessTokenInBackground();
@@ -87,6 +88,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             duration: 3000,
           });
         }
+
+        return;
       }
     } catch (error) {
       console.error("Error checking auth status:", error);
