@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.request;
+package com.duokoala.server.dto.request.enrollCourseRequest;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

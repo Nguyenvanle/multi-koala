@@ -1,9 +1,10 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.EnrollCourseUpdateRequest;
+import com.duokoala.server.dto.request.enrollCourseRequest.EnrollCourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
+import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.service.EnrollCourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,13 @@ public class EnrollCourseController {
     ApiResponse<List<EnrollCourseResponse>> getAll() {
         return ApiResponse.<List<EnrollCourseResponse>>builder()
                 .result(enrollCourseService.getAll())
+                .build();
+    }
+
+    @GetMapping("/enroll-courses/recently-enrolled-courses")
+    ApiResponse<List<RecentlyEnrollCourseResponse>> getRecentlyEnrollCourses() {
+        return ApiResponse.<List<RecentlyEnrollCourseResponse>>builder()
+                .result(enrollCourseService.getRecentlyEnrollCourse())
                 .build();
     }
 }

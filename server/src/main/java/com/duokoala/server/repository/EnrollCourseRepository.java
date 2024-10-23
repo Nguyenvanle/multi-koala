@@ -1,5 +1,6 @@
 package com.duokoala.server.repository;
 
+import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.EnrollCourse;
 import com.duokoala.server.entity.user.Student;
@@ -15,4 +16,11 @@ public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, Stri
     List<EnrollCourse> findAllByStudent(Student student);
     int countByCourse(Course course);
     int countByCourseAndProcess(Course course, float process);
+
+    @Query(nativeQuery = true,
+            value = "select ec.* from enroll_course ec " +
+                    "join course c on ec.course_course_id = c.course_id " +
+                    "WHERE c.uploaded_by_teacher_user_id = :teacherId " +
+                    "ORDER by enroll_at DESC")
+    List<EnrollCourse> getRecentlyEnrollCourse(@Param("teacherId") String teacherId);
 }

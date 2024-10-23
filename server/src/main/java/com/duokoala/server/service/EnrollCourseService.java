@@ -1,8 +1,9 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.EnrollCourseUpdateRequest;
+import com.duokoala.server.dto.request.enrollCourseRequest.EnrollCourseUpdateRequest;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
+import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.entity.EnrollCourse;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -73,4 +74,17 @@ public class EnrollCourseService {
         return enrollCourses.stream().map(enrollCourseMapper::toMyEnrollCourseResponse).toList();
     }
 
+    public List<RecentlyEnrollCourseResponse> getRecentlyEnrollCourse() {
+        String teacherId = authenticationService.getAuthenticatedTeacher().getUserId();
+        return enrollCourseRepository.getRecentlyEnrollCourse(teacherId).stream()
+                .map(enrollCourse -> RecentlyEnrollCourseResponse.builder()
+                        .studentName(enrollCourse.getStudent().getFirstname() + " " + enrollCourse.getStudent().getLastname())
+                        .studentEmail(enrollCourse.getStudent().getEmail())
+                        .courseName(enrollCourse.getCourse().getCourseName())
+                        .process(enrollCourse.getProcess())
+                        .status(enrollCourse.getProcess() == 0 ? "Just started" : enrollCourse.getProcess() == 1 ? "Completed" : "In progress")
+                        .enrollAt(enrollCourse.getEnrollAt())
+                        .coursePrice(enrollCourse.getCourse().getCoursePrice())
+                        .build()).toList();
+    }
 }
