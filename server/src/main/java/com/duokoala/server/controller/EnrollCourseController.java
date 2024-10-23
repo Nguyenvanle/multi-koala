@@ -56,7 +56,7 @@ public class EnrollCourseController {
                 .build();
     }
 
-    @GetMapping("/enroll-courses/recently-enrolled-courses")
+    @GetMapping("/enroll-courses/recently-student-enrolled-my-courses")
     ApiResponse<List<RecentlyEnrollCourseResponse>> getRecentlyEnrollCourses() {
         return ApiResponse.<List<RecentlyEnrollCourseResponse>>builder()
                 .result(enrollCourseService.getRecentlyEnrollCourse())
