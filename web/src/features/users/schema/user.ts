@@ -18,3 +18,4 @@ export const UserBodyType = z.object({
 });
 
 export type UserResType = z.infer<typeof UserBodyType>;
+export type UserBodyType = z.infer<typeof UserBodyType>;

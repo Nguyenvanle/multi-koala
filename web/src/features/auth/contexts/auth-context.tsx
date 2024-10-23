@@ -34,6 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const router = useRouter();
   const currentPath = usePathname();
 
+
   const refreshAccessTokenInBackground = useCallback(async () => {
     try {
       console.log("Refreshing:", new Date().toLocaleTimeString());
@@ -70,26 +71,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (!currentPath.includes("/dashboard")) return;
 
-      console.log("Init check token,", new Date().toLocaleTimeString());
-      const { valid } = await checkTokenValidity();
-      console.log(`valid ${valid},`, new Date().toLocaleTimeString());
+      console.log("Init refreshing,", new Date().toLocaleTimeString());
+      const success = await refreshAccessTokenInBackground();
 
-      if (!valid) {
-        const success = await refreshAccessTokenInBackground();
+      if (!success) {
+        await handleLogout();
+        router.replace("/login");
 
-        if (!success) {
-          await handleLogout();
-          router.replace("/login");
-
-          toast({
-            title: "Session Expired",
-            description: "Your session has expired, please log in again.",
-            variant: "destructive",
-            duration: 3000,
-          });
-        }
-
-        return;
+        toast({
+          title: "Session Expired",
+          description: "Your session has expired, please log in again.",
+          variant: "destructive",
+          duration: 3000,
+        });
       }
     } catch (error) {
       console.error("Error checking auth status:", error);
