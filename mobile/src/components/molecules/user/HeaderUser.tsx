@@ -17,8 +17,11 @@ import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
 
-const HeaderUser = () => {
-  const { courseId } = useGlobalSearchParams();
+interface HeaderUserProps {
+  courseId: string;
+}
+
+const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { user } = useUser();
   const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);

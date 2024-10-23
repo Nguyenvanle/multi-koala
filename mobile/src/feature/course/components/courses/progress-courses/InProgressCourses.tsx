@@ -26,6 +26,9 @@ const InProgressCourses = () => {
     );
   }
 
+  // Filter out courses where process is 1.0
+  const filteredEnrolled = enrolled.filter((item) => item.process < 1.0);
+
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
     return (
       <View>
@@ -152,14 +155,12 @@ const InProgressCourses = () => {
         paddingVertical: 10,
       }}
     >
-      {loading ? (
-        <Text style={{ ...text.p, color: Colors.teal_dark }}>Loading...</Text>
-      ) : errorMessage ? (
+      {errorMessage ? (
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={enrolled}
+          data={filteredEnrolled} // Use the filtered data
           renderItem={renderCourseItem}
           keyExtractor={(item) => item.course.courseId}
         />
