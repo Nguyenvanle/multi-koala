@@ -1,23 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   SubmitBodyList,
   SubmitRes,
   TestResultBody,
 } from "../types/test-result";
-import { router, useGlobalSearchParams } from "expo-router";
+import { useGlobalSearchParams } from "expo-router";
 import { useTestDetails } from "../../test/hooks/useTestDetails";
 import { testResultService } from "./../services/test-result";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const useTestResult = (testId) => {
   const { lessonId } = useGlobalSearchParams();
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
   const testIdString = Array.isArray(testId) ? testId[0] : testId;
-  const { testDetails, errorMessageTest, loadingTest } = useTestDetails(
-    lessonIdString,
-    testIdString
-  );
-
   const [loadingResult, setLoadingResult] = useState(false);
   const [errorResult, setErrorResult] = useState<string | null>(null);
   const [errorResultMessage, setErrorResultMessage] = useState<string | null>(

@@ -17,7 +17,9 @@ import { QuestionDetails } from "@/src/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Test = () => {
-  const { lessonId, testId } = useGlobalSearchParams();
+  const { courseId, lessonId, testId } = useGlobalSearchParams();
+  const [selectedTestId, setSelectedTestId] = useState();
+  const courseIdString = courseId as string;
   const lessonIdString = lessonId as string;
   const testIdString = testId as string;
   const { testList, errorMessageTest, loadingTest } =
@@ -35,9 +37,6 @@ const Test = () => {
   } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
-  const [userSubmission, setUserSubmission] = useState({
-    answerSubmitList: [],
-  });
 
   const initializeAnswerSubmitList = useCallback(
     (test) => {
@@ -57,6 +56,9 @@ const Test = () => {
     setShowResult(false);
     setSelectedAnswers({}); // Reset selectedAnswers khi chọn bài kiểm tra mới
     await loadSavedAnswers(); // Tải lại đáp án từ AsyncStorage
+    const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
+    setSelectedTestId(selectedTestId);
+    console.log(selectedTestId);
   };
 
   const handleAnswerSelect = useCallback(async (questionId, answerId) => {
@@ -72,6 +74,10 @@ const Test = () => {
   }, []);
 
   const handleSubmit = async () => {
+    // Chuyển đến trang hiển thị kết quả
+    router.push(
+      `/${courseIdString}/${lessonIdString}/${testIdString}/${testResult}`
+    );
     // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
     setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
     // Xóa dữ liệu đã lưu trong AsyncStorage
@@ -97,7 +103,7 @@ const Test = () => {
           style={[
             styles.answerButton,
             selectedChoose && { backgroundColor: Colors.teal_dark },
-            selectedCorrect && { backgroundColor: Colors.super_teal_dark },
+            selectedCorrect && { backgroundColor: "#00FF9C" },
             selectedWrong && { backgroundColor: "#fecaca" },
             correct && { backgroundColor: "#FFF7D1" },
           ]}
@@ -125,16 +131,8 @@ const Test = () => {
 
   const renderQuestionItem = useCallback(
     ({ item }: { item: QuestionDetails }) => (
-      <View
-        style={{
-          borderWidth: 1,
-          marginBottom: 24,
-          padding: 8,
-          borderRadius: 20,
-          borderColor: Colors.grey,
-        }}
-      >
-        <View style={{ padding: 8 }}>
+      <View>
+        <View style={{ padding: 8, paddingBottom: 32, paddingTop: 32 }}>
           <Text
             style={{
               ...text.h4,
@@ -159,11 +157,17 @@ const Test = () => {
             scrollEnabled={false}
           />
         </View>
+        <View
+          style={{
+            height: 1,
+            backgroundColor: Colors.grey,
+            alignSelf: "stretch",
+          }}
+        />
       </View>
     ),
     [renderAnswerItem]
   );
-
   const loadSavedAnswers = async () => {
     try {
       const savedAnswers = await AsyncStorage.getItem("selectedAnswers");
@@ -212,6 +216,7 @@ const Test = () => {
           maxHeight: 55,
           backgroundColor: Colors.background,
           marginTop: 8,
+          marginBottom: 8,
         }}
       >
         {testList.map((test) => (
