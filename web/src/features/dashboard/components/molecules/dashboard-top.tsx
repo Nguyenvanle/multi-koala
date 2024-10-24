@@ -18,7 +18,10 @@ export default function DashboardTopPerformingCourses({
         {topCourses.map((course, index) => (
           <div key={index} className="flex items-center gap-4">
             <Avatar className="hidden h-9 w-9 sm:flex">
-              <AvatarImage src={course.image.imageUrl} />
+              <AvatarImage
+                src={course.image?.imageUrl ?? "/images/fallback-image.jpg"}
+                className="object-contain"
+              />
               <AvatarFallback>{course.courseName}</AvatarFallback>
             </Avatar>
             <div className="grid gap-1">
