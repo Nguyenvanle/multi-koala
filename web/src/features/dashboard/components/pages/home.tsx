@@ -38,7 +38,7 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col flex-1 gap-4 xl:gap-6">
       <DashboardHeader statistics={statistics} teacherRating={teacherRating} />
-      <div className="grid gap-4 xl:gap-6 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 xl:gap-6 grid-cols-1 xl:grid-cols-3">
         <DashboardRecentlySoldCourses courseSales={students} />
         <DashboardTopPerformingCourses topCourses={topCourses} />
       </div>

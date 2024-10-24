@@ -20,7 +20,7 @@ export default function DashboardRecentlySoldCourses({
 }: DashboardRecentlySoldCoursesProps) {
   return (
     <Card className="xl:col-span-2">
-      <CardHeader className="flex flex-row items-center">
+      <CardHeader className="flex flex-row justify-between space-y-0">
         <div className="grid gap-2">
           <CardTitle>Recently Sold Courses</CardTitle>
           <CardDescription>
@@ -28,7 +28,12 @@ export default function DashboardRecentlySoldCourses({
           </CardDescription>
         </div>
         {courseSales.length > 0 && (
-          <Button asChild size="sm" className="ml-auto gap-1">
+          <Button
+            asChild
+            size="sm"
+            className="gap-1 p-2 py-0"
+            variant={"outline"}
+          >
             <Link href="#">
               View All
               <ArrowUpRight className="h-4 w-4" />

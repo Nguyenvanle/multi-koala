@@ -22,9 +22,9 @@ export function CourseTable({ courseSales }: CourseTableProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Student</TableHead>
-          <TableHead className="hidden md:table-cell">Course</TableHead>
-          <TableHead className="hidden lg:table-cell">Status</TableHead>
+          <TableHead className="hidden sm:table-cell">Student</TableHead>
+          <TableHead>Course</TableHead>
+          <TableHead className="hidden xl:table-cell">Status</TableHead>
           <TableHead className="hidden xl:table-cell">Date</TableHead>
           <TableHead className="text-right">Amount</TableHead>
         </TableRow>
@@ -32,16 +32,16 @@ export function CourseTable({ courseSales }: CourseTableProps) {
       <TableBody>
         {courseSales.map((sale, index) => (
           <TableRow key={index}>
-            <TableCell>
+            <TableCell className="hidden sm:table-cell ">
               <div className="font-medium">{sale.studentName}</div>
               <div className="hidden text-sm text-muted-foreground md:inline">
                 {sale.studentEmail}
               </div>
             </TableCell>
-            <TableCell className="hidden md:table-cell">
-              {sale.courseName}
+            <TableCell>
+              <div className="line-clamp-2">{sale.courseName}</div>
             </TableCell>
-            <TableCell className="hidden lg:table-cell">
+            <TableCell className="hidden xl:table-cell">
               <Badge
                 className="text-xs"
                 variant={
