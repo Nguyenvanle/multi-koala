@@ -1,8 +1,12 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import useMyPerformingCourses from "@/features/courses/hooks/useMyPerformingCourses";
 import { TeacherRatingBodyType } from "@/features/rating/types/teacher-rating";
 import { useTeacherStatistics } from "@/features/users/hooks/useTeacherStatistics";
 import { teacherService } from "@/features/users/services/teacher";
 import useSWR from "swr";
+import { UserBodyType } from '@/features/users/schema/user';
 
 const fetcher = async (
   teacherId: string
@@ -15,10 +19,17 @@ const fetcher = async (
 };
 
 export default function useDashboardHome() {
+  const [user, setUser] = useState<UserBodyType | null>(null);
   const { statistics, loading: statisticLoading } = useTeacherStatistics();
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
+
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      setUser(JSON.parse(userString));
+    }
+  }, []);
   const userId = user ? user.userId : null;
+
 
   const { data: rating, isLoading: ratingLoading } =
     useSWR<TeacherRatingBodyType | null>(
@@ -32,7 +43,7 @@ export default function useDashboardHome() {
   return {
     statistics,
     userId,
-    teacherRating,
+    teacherRating, 
     topCourses,
     statisticLoading,
     ratingLoading,

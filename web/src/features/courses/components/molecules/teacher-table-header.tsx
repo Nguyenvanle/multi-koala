@@ -45,9 +45,9 @@ export const TeacherTableHeader: React.FC<TeacherTableHeaderProps> = ({
         {children}
         {sortOption?.field === field ? (
           sortOption.direction === "asc" ? (
-            <ChevronDown className="ml-2 h-4 w-4" />
-          ) : (
             <ChevronUp className="ml-2 h-4 w-4" />
+          ) : (
+            <ChevronDown className="ml-2 h-4 w-4" />
           )
         ) : (
           <ChevronsUpDown className="ml-2 h-4 w-4" />
