@@ -12,21 +12,33 @@ import {
 import { CourseTable } from "@/features/dashboard/components/molecules/course-table";
 import { RecentEnrollBodyType } from "@/features/enroll-courses/types/recent-enroll";
 import { Input } from "@/components/ui/input";
+import {
+  PaginationControlProps,
+  PaginationProps,
+} from "@/features/pagination/types/pagination";
 import PageNavigation from "@/features/pagination/components/page-nav";
-import { PaginationControlProps, PaginationProps } from "@/features/pagination/types/pagination";
 
 interface DashboardRecentlySoldCoursesProps {
   courseSales: RecentEnrollBodyType[];
-  handleSearch: (query: string) => void;
+  search: {
+    handleSearch: (query: string) => void;
+    searchQuery: string;
+  };
+  controls: PaginationControlProps;
+  pagination: PaginationProps;
 }
-
 
 export default function DashboardRecentlySoldCourses({
   courseSales,
-  handleSearch,
+  search,
+  controls,
+  pagination,
 }: DashboardRecentlySoldCoursesProps) {
+  // Tính toán start index cho trang hiện tại
+  const startIndex = (pagination.currentPage - 1) * pagination.pageSize;
+
   const onSearch = (event: { target: { value: string } }) => {
-    handleSearch(event.target.value);
+    search.handleSearch(event.target.value);
   };
   return (
     <Card className="xl:col-span-2">
@@ -49,7 +61,7 @@ export default function DashboardRecentlySoldCourses({
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-[436px]">
         {courseSales?.length === 0 || !courseSales ? (
           <p className="text-sm text-muted-foreground font-medium leading-none">
             You haven&#39;t sold any courses yet. Please wait to see updated
@@ -59,6 +71,19 @@ export default function DashboardRecentlySoldCourses({
           <CourseTable courseSales={courseSales} />
         )}
       </CardContent>
+      <CardFooter className="flex flex-col gap-4 md:flex-row justify-between items-center px-4 pb-4 sm:px-6 sm:pb-6">
+        <div className="text-sm text-muted-foreground">
+          Showing
+          <span className="font-bold">
+            {" "}
+            {startIndex + 1}-
+            {Math.min(startIndex + courseSales.length, pagination.totalItems)}
+          </span>{" "}
+          of <span className="font-bold ">{pagination.totalItems} </span>
+          courses
+        </div>
+        <PageNavigation controls={controls} pagination={pagination} />
+      </CardFooter>
     </Card>
   );
 }

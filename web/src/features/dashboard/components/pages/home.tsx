@@ -18,7 +18,9 @@ export default function DashboardHomePage() {
     topCoursesLoading,
     recentEnrollLoading,
 
-    handleSearch,
+    search,
+    pagination,
+    paginationControls,
   } = useDashboardHome();
 
   if (
@@ -44,7 +46,9 @@ export default function DashboardHomePage() {
       <div className="grid gap-4 xl:gap-6 grid-cols-1 xl:grid-cols-3">
         <DashboardRecentlySoldCourses
           courseSales={students}
-          handleSearch={handleSearch}
+          search={search}
+          controls={paginationControls}
+          pagination={pagination}
         />
         <DashboardTopPerformingCourses topCourses={topCourses} />
       </div>

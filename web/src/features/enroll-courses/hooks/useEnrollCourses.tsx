@@ -11,9 +11,23 @@ interface PaginationOptions {
   initialPage?: number;
 }
 
+interface FilterOptions {
+  studentName?: string;
+  courseName?: string;
+  courseStatus?: string;
+}
+
+interface SortOptions {
+  field: keyof RecentEnrollBodyType;
+  direction: "asc" | "desc";
+}
+
 export default function useEnrollCourses(options: PaginationOptions = {}) {
   const { pageSize = 10, initialPage = 1 } = options;
   const [currentPage, setCurrentPage] = useState(initialPage);
+  const [searchQuery, setSearchQuery] = useState(""); // Tìm kiếm
+  const [filters, setFilters] = useState<FilterOptions>({}); // Bộ lọc
+  const [sort, setSort] = useState<SortOptions>({ field: "enrollAt", direction: "desc" }); // Sắp xếp
   const { logout } = useAuth();
 
   const { data, error, isLoading, mutate } = useSWR(
@@ -21,17 +35,52 @@ export default function useEnrollCourses(options: PaginationOptions = {}) {
     () => getRecentEnroll()
   );
 
-  const students = useMemo(() => data?.student as RecentEnrollBodyType[] || [], [data?.student])
-  
+  const students = useMemo(() => data?.student as RecentEnrollBodyType[] || [], [data?.student]);
+
+  // Áp dụng tìm kiếm
+  const filteredStudents = useMemo(() => {
+    return students.filter((student) => {
+      const matchesSearch = student.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.courseName.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesFilter =
+        (!filters.studentName || student.studentName.toLowerCase().includes(filters.studentName.toLowerCase())) &&
+        (!filters.courseName || student.courseName.toLowerCase().includes(filters.courseName.toLowerCase())) &&
+        (!filters.courseStatus || student.status === filters.courseStatus);
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [students, searchQuery, filters]);
+
+  // Áp dụng sắp xếp
+  const sortedStudents = useMemo(() => {
+    return [...filteredStudents].sort((a, b) => {
+      const aValue = a[sort.field];
+      const bValue = b[sort.field];
+
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return sort.direction === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return sort.direction === "asc" ? aValue - bValue : bValue - aValue;
+      }
+
+      return 0;
+    });
+  }, [filteredStudents, sort]);
+
   // Tính toán tổng số trang
-  const totalPages = Math.ceil(students.length / pageSize);
-  
-  // Lấy danh sách students cho trang hiện tại
+  const totalPages = Math.ceil(sortedStudents.length / pageSize);
+
+  // Lấy danh sách sinh viên cho trang hiện tại
   const paginatedStudents = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    return students.slice(startIndex, endIndex);
-  }, [students, currentPage, pageSize]);
+    return sortedStudents.slice(startIndex, endIndex);
+  }, [sortedStudents, currentPage, pageSize]);
 
   // Các hàm điều hướng trang
   const goToPage = (page: number) => {
@@ -55,6 +104,23 @@ export default function useEnrollCourses(options: PaginationOptions = {}) {
     setCurrentPage(1);
   };
 
+  // Cập nhật tìm kiếm
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Đặt lại trang khi tìm kiếm
+  };
+
+  // Cập nhật lọc
+  const handleFilter = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+    setCurrentPage(1); // Đặt lại trang khi lọc
+  };
+
+  // Cập nhật sắp xếp
+  const handleSort = (field: keyof RecentEnrollBodyType, direction: "asc" | "desc") => {
+    setSort({ field, direction });
+  };
+
   return {
     // Dữ liệu đã phân trang
     students: paginatedStudents,
@@ -63,7 +129,7 @@ export default function useEnrollCourses(options: PaginationOptions = {}) {
       currentPage,
       totalPages,
       pageSize,
-      totalItems: students.length,
+      totalItems: sortedStudents.length,
       hasNextPage: currentPage < totalPages,
       hasPreviousPage: currentPage > 1,
     },
@@ -73,6 +139,19 @@ export default function useEnrollCourses(options: PaginationOptions = {}) {
       nextPage,
       previousPage,
       resetPage,
+    },
+    // Các hàm tìm kiếm, lọc, sắp xếp
+    search: {
+      handleSearch,
+      searchQuery,
+    },
+    filter: {
+      handleFilter,
+      filters,
+    },
+    sort: {
+      handleSort,
+      sort,
     },
     // Các trạng thái khác
     loading: isLoading,

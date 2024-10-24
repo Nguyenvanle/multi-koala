@@ -82,7 +82,7 @@ export default function PageNavigation({
     }
   };
 
-  if (totalPages <= 1) return null;
+  // if (totalPages <= 1) return null;
 
   return (
     <Pagination className="mx-0 w-fit ">

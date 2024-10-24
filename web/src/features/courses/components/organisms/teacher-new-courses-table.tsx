@@ -49,7 +49,7 @@ export default function TeacherTable({
           Manage your courses and view their sales performance.
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6 min-h-[366px] xl:min-h-[444px]">
         <Table divClassName="border rounded">
           <TeacherTableHeader
             setSortOption={setSortOption}
