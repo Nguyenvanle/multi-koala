@@ -17,6 +17,7 @@ export function DashboardHeader({
         title="Total Revenue"
         value={`${statistics?.totalPrices.toFixed(2)} USD`}
         icon={<BookOpen className="h-4 w-4 text-primary " />}
+        href={`/dashboard/courses?sort=sales`}
       />
       <CardInfo
         title="Active Students"
@@ -27,7 +28,6 @@ export function DashboardHeader({
         title="Course Sales"
         value={`${statistics?.totalEnrollments} courses`}
         icon={<GraduationCap className="h-4 w-4 text-primary " />}
-        href={`/dashboard/courses?sort=sales`}
       />
       <CardInfo
         title="Average Rating"
