@@ -8,83 +8,260 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { router, useGlobalSearchParams } from "expo-router";
+import { useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
+import useTestStudent from "@/src/feature/test-result/hooks/useTestStudent";
 import { useTestList } from "@/src/feature/test/hooks/useTestList";
 import { QuestionDetails } from "@/src/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useTestResultList from "@/src/feature/test-result/hooks/useTestResultList";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
   const [selectedTestId, setSelectedTestId] = useState();
+  const [hasToken, setHasToken] = useState(false);
   const courseIdString = courseId as string;
   const lessonIdString = lessonId as string;
   const testIdString = testId as string;
+
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
   const [selectedTest, setSelectedTest] = useState(null);
+
+  // Initialize both hooks
   const {
     loadingResult,
     errorResult,
     errorResultMessage,
-    selectedAnswerList,
-    setSelectedAnswerList,
+    selectedAnswerList: guestAnswerList,
+    setSelectedAnswerList: setGuestAnswerList,
     testResult,
     setTestResult,
-    onSubmit, // Hàm này giờ đã sử dụng testIdString
-  } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
+    onSubmit,
+  } = useTestResult(selectedTest?.testId);
+
+  const {
+    loadingStudentResult,
+    errorStudentResult,
+    errorStudentResultMessage,
+    selectedAnswerList: studentAnswerList,
+    setSelectedAnswerList: setStudentAnswerList,
+    testStudentResult,
+    setTestStudentResult,
+    onStudentSubmit,
+  } = useTestStudent(selectedTest?.testId);
+
+  const {
+    loadingResultList,
+    errorResultList,
+    errorResultListMessage,
+    testResultList,
+    setTestResultList,
+    handleTest,
+  } = useTestResultList(selectedTest?.testId);
+
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
+  const [isRetake, setIsRetake] = useState(false); // Thêm state để kiểm tra có đang thực hiện lại bài test không
+
+  // Check for token on component mount
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("token");
+      setHasToken(!!token);
+    };
+    checkToken();
+  }, []);
 
   const initializeAnswerSubmitList = useCallback(
     (test) => {
       if (test && test.questions) {
         const initialList = test.questions.map((question) => ({
           questionId: question.questionId,
-          selectedAnswerId: selectedAnswers[question.questionId] || null, // Sử dụng selectedAnswers đã khôi phục
+          selectedAnswerId: selectedAnswers[question.questionId] || null,
         }));
-        setSelectedAnswerList(initialList);
+        // Update the appropriate answer list based on token presence
+        if (hasToken) {
+          setStudentAnswerList(initialList);
+        } else {
+          setGuestAnswerList(initialList);
+        }
       }
     },
-    [selectedAnswers]
-  ); // Dependency là selectedAnswers
+    [selectedAnswers, hasToken]
+  );
 
   const handleTestSelection = async (test) => {
     setSelectedTest(test);
     setShowResult(false);
-    setSelectedAnswers({}); // Reset selectedAnswers khi chọn bài kiểm tra mới
-    await loadSavedAnswers(); // Tải lại đáp án từ AsyncStorage
-    const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    setSelectedTestId(selectedTestId);
-    console.log(selectedTestId);
+    setSelectedAnswers({});
+    await loadSavedAnswers();
+    setSelectedTestId(test.testId);
   };
 
-  const handleAnswerSelect = useCallback(async (questionId, answerId) => {
-    setSelectedAnswers((prevAnswers) => {
-      const updatedAnswers = {
-        ...prevAnswers,
-        [questionId]: answerId,
-      };
-      // Lưu vào AsyncStorage
-      AsyncStorage.setItem("selectedAnswers", JSON.stringify(updatedAnswers));
-      return updatedAnswers;
-    });
-  }, []);
+  const handleAnswerSelect = useCallback(
+    async (questionId, answerId) => {
+      setSelectedAnswers((prevAnswers) => {
+        const updatedAnswers = {
+          ...prevAnswers,
+          [questionId]: answerId,
+        };
+
+        const correctAnswersCount = Object.keys(updatedAnswers).filter((id) => {
+          const question = selectedTest.questions.find(
+            (q) => q.questionId === id
+          );
+          return (
+            question &&
+            question.answers.some(
+              (answer) =>
+                answer.answerId === updatedAnswers[id] && answer.correct
+            )
+          );
+        }).length;
+
+        const totalQuestions = selectedTest.questions.length;
+        const newScore = calculateScore(correctAnswersCount, totalQuestions);
+        setScore(newScore);
+
+        AsyncStorage.setItem("selectedAnswers", JSON.stringify(updatedAnswers));
+        return updatedAnswers;
+      });
+    },
+    [selectedTest]
+  );
+
+  const calculateScore = (correctAnswersCount, totalQuestions) => {
+    if (totalQuestions === 0) return 0;
+    return parseFloat(((correctAnswersCount / totalQuestions) * 10).toFixed(1));
+  };
+
+  const handleRetakeTest = () => {
+    setIsRetake(true); // Đặt trạng thái để thực hiện lại bài test
+    setShowResult(false); // Ẩn kết quả
+    setSelectedAnswers({}); // Đặt lại đáp án đã chọn
+    loadSavedAnswers();
+    setSelectedTestId(selectedTest); // Giữ nguyên bài test đã chọn
+    initializeAnswerSubmitList(selectedTest); // Khởi tạo lại danh sách câu trả lời
+  };
+
+  const renderResults = () => {
+    if (!testResultList || testResultList.length === 0) {
+      return (
+        <View>
+          <Text
+            style={{
+              ...styles.resultText,
+              color: Colors.super_teal_dark,
+              fontWeight: "600",
+            }}
+          >
+            No previous test results available
+          </Text>
+          <TouchableOpacity
+            style={{ ...styles.submitButton, marginTop: 24, marginBottom: 60 }}
+            onPress={handleRetakeTest}
+          >
+            <Text style={styles.retakeButtonText}>Do this test</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return (
+      <View>
+        <Text
+          style={{
+            ...styles.resultText,
+            color: Colors.super_teal_dark,
+            fontWeight: "600",
+          }}
+        >
+          Your previous test result
+        </Text>
+        {testResultList.map((result, index) => {
+          const previousScore = calculateScore(
+            result.correctAnswers,
+            result.totalQuestion
+          ); // Calculate the score using previous result
+          return (
+            <TouchableOpacity
+              key={index}
+              style={{
+                ...styles.resultContainer,
+                marginBottom: 8,
+                marginTop: 8,
+              }}
+            >
+              <Text style={styles.answerText}>
+                {index + 1}: You got{" "}
+                <Text
+                  style={[
+                    styles.highlightText,
+                    { color: getScoreColor(previousScore) },
+                  ]}
+                >
+                  {result.correctAnswers}
+                </Text>{" "}
+                questions correct out of{" "}
+                <Text
+                  style={[
+                    styles.highlightText,
+                    { color: getScoreColor(previousScore) },
+                  ]}
+                >
+                  {result.totalQuestion}
+                </Text>
+              </Text>
+              <Text style={styles.answerText}>
+                Your score is:{" "}
+                <Text
+                  style={[
+                    styles.highlightText,
+                    { color: getScoreColor(previousScore) },
+                  ]}
+                >
+                  {previousScore} / 10
+                </Text>
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+        <TouchableOpacity
+          style={{ ...styles.submitButton, marginTop: 24, marginBottom: 60 }}
+          onPress={handleRetakeTest}
+        >
+          <Text style={styles.submitButtonText}>Do this test again</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  useEffect(() => {
+    if (selectedTest?.testId) {
+      handleTest(); // Gọi API để lấy danh sách kết quả
+    }
+  }, [selectedTest?.testId]);
 
   const handleSubmit = async () => {
-    // Chuyển đến trang hiển thị kết quả
-    router.push(
-      `/${courseIdString}/${lessonIdString}/${selectedTestId}/${testResult}`
-    );
-    // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
-    setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
-    // Xóa dữ liệu đã lưu trong AsyncStorage
-    await AsyncStorage.removeItem("selectedAnswers");
-    // Gọi hàm onSubmit để gửi dữ liệu
-    onSubmit();
-    setShowResult(true);
+    try {
+      if (hasToken) {
+        setStudentAnswerList([]);
+        await onStudentSubmit();
+      } else {
+        setGuestAnswerList([]);
+        await onSubmit();
+      }
+
+      // Xóa câu trả lời đã chọn
+      await AsyncStorage.removeItem("selectedAnswers");
+      setShowResult(true);
+    } catch (error) {
+      console.error("Error submitting answers:", error);
+    }
   };
 
   const renderAnswerItem = useCallback(
@@ -189,6 +366,19 @@ const Test = () => {
     }
   }, [selectedTest, selectedAnswers]); // Tùy thuộc vào selectedTest và selectedAnswers
 
+  // Trong phần render chính của component
+  if (loadingResultList) {
+    return <ActivityIndicator size="large" color={Colors.teal_dark} />;
+  }
+
+  if (errorResultList) {
+    return (
+      <Text style={{ ...text.large, color: Colors.red }}>
+        {errorResultListMessage}
+      </Text>
+    );
+  }
+
   if (loadingTest) {
     return <ActivityIndicator size="large" color={Colors.teal_dark} />;
   }
@@ -208,6 +398,16 @@ const Test = () => {
     );
   }
 
+  const getScoreColor = (score) => {
+    if (score >= 8.0) return "#0d9488"; // Màu cho score >= 8.0
+    if (score >= 6.5) return "#eab308"; // Màu cho score từ 6.5 đến 7.9
+    if (score >= 5.0) return "#f97316"; // Màu cho score từ 5.0 đến 6.4
+    return "#ef4444"; // Màu cho score < 4.9
+  };
+
+  const displayResult = hasToken ? testStudentResult : testResult;
+  const isLoading = hasToken ? loadingStudentResult : loadingResult;
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -215,8 +415,6 @@ const Test = () => {
         style={{
           maxHeight: 55,
           backgroundColor: Colors.background,
-          marginTop: 8,
-          marginBottom: 8,
         }}
       >
         {testList.map((test) => (
@@ -244,39 +442,66 @@ const Test = () => {
       >
         {selectedTest && (
           <View>
-            <FlatList
-              data={selectedTest.questions}
-              renderItem={renderQuestionItem}
-              keyExtractor={(item) => item.questionId.toString()}
-              scrollEnabled={false}
-            />
-            {showResult && testResult && (
-              <View style={styles.resultContainer}>
-                <Text style={styles.resultText}>
-                  You got{" "}
-                  <Text style={styles.highlightText}>
-                    {testResult.correctAnswers}
-                  </Text>{" "}
-                  questions correct out of{" "}
-                  <Text style={styles.highlightText}>
-                    {testResult.totalQuestion}
-                  </Text>
-                </Text>
+            {isRetake ? (
+              <View>
+                <FlatList
+                  data={selectedTest.questions}
+                  renderItem={renderQuestionItem}
+                  keyExtractor={(item) => item.questionId.toString()}
+                  scrollEnabled={false}
+                />
+                {showResult && displayResult && (
+                  <View style={styles.resultContainer}>
+                    <Text style={styles.resultText}>
+                      You got{" "}
+                      <Text
+                        style={[
+                          styles.highlightText,
+                          { color: getScoreColor(score) },
+                        ]}
+                      >
+                        {displayResult.correctAnswers}
+                      </Text>{" "}
+                      questions correct out of{" "}
+                      <Text
+                        style={[
+                          styles.highlightText,
+                          { color: getScoreColor(score) },
+                        ]}
+                      >
+                        {displayResult.totalQuestion}
+                      </Text>
+                    </Text>
+                    <Text style={styles.resultText}>
+                      Your score is:{" "}
+                      <Text
+                        style={[
+                          styles.highlightText,
+                          { color: getScoreColor(score) },
+                        ]}
+                      >
+                        {score} / 10
+                      </Text>
+                    </Text>
+                  </View>
+                )}
+                {!showResult && (
+                  <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={handleSubmit}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <ActivityIndicator size="small" color={Colors.white} />
+                    ) : (
+                      <Text style={styles.submitButtonText}>Submit</Text>
+                    )}
+                  </TouchableOpacity>
+                )}
               </View>
+            ) : (
+              renderResults() // Hiển thị kết quả và nút thực hiện lại
             )}
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-              disabled={loadingResult || showResult}
-            >
-              {loadingResult ? (
-                <ActivityIndicator size="small" color={Colors.white} />
-              ) : (
-                <Text style={styles.submitButtonText}>
-                  {showResult ? "Submitted" : "Submit"}
-                </Text>
-              )}
-            </TouchableOpacity>
           </View>
         )}
       </ScrollView>
@@ -299,7 +524,7 @@ const styles = StyleSheet.create({
   answerText: {
     ...text.p,
     color: Colors.black,
-    fontWeight: "400",
+    fontWeight: "300",
   },
   selectedAnswerText: {
     ...text.p,
@@ -318,19 +543,20 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   resultContainer: {
-    alignSelf: "center",
-    marginBottom: 16,
+    marginTop: 32,
+    alignSelf: "stretch",
+    marginBottom: 56,
     padding: 16,
-    backgroundColor: Colors.teal_light,
-    borderRadius: 8,
+    backgroundColor: Colors.white,
+    borderRadius: 10,
+    alignContent: "center",
   },
   resultText: {
-    ...text.large,
-    color: Colors.black,
-    fontWeight: "500",
+    ...text.h4,
+    color: Colors.blue,
+    fontWeight: "400",
   },
   highlightText: {
-    color: Colors.teal_dark,
     fontWeight: "bold",
   },
   submitButton: {
@@ -342,6 +568,11 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     ...text.large,
+    color: Colors.white,
+    fontWeight: "bold",
+  },
+
+  retakeButtonText: {
     color: Colors.white,
     fontWeight: "bold",
   },
