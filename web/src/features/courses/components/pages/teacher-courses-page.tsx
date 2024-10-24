@@ -20,8 +20,10 @@ export default function TeacherCoursesPage() {
     setFilterOptions,
     setSortOption,
     sortOption,
+    pagination,
+    paginationControls,
   } = useMyTeacherCourses({
-    pageSize: 5,
+    pageSize: 4,
     initialPage: 1,
   });
 
@@ -50,6 +52,8 @@ export default function TeacherCoursesPage() {
       setFilterOptions={setFilterOptions}
       setSortOption={setSortOption}
       currentSort={sortOption}
+      controls={paginationControls}
+      pagination={pagination}
     />
   );
 }

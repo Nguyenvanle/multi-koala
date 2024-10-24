@@ -3,12 +3,12 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 interface ExtendedTableProps extends React.HTMLAttributes<HTMLTableElement> {
-  divClassname?: string;
+  divClassName?: string;
 }
 
 const Table = React.forwardRef<HTMLTableElement, ExtendedTableProps>(
-  ({ className, divClassname, ...props }, ref) => (
-    <div className={cn("relative w-full overflow-auto", divClassname)}>
+  ({ className, divClassName, ...props }, ref) => (
+    <div className={cn("relative w-full overflow-auto", divClassName)}>
       <table
         ref={ref}
         className={cn(

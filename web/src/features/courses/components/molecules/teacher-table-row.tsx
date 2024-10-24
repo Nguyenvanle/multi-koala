@@ -34,8 +34,10 @@ export const TeacherTableRow: React.FC<TeacherTableRowProps> = ({
           className="aspect-square rounded-md object-cover"
         />
       </TableCell>
-      <TableCell className="font-medium">{course.courseName}</TableCell>
-      <TableCell>
+      <TableCell className="font-medium ">
+        <div className="line-clamp-2">{course.courseName}</div>
+      </TableCell>
+      <TableCell className="hidden sm:table-cell">
         <Badge variant={variant} className="line-clamp-1 w-fit">
           {statusLabels[course.status]}
         </Badge>

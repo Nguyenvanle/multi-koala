@@ -34,7 +34,7 @@ export const TeacherCourseTable = ({
 }) => (
   <Table
     className="rounded-md w-full h-10 overflow-clip relative"
-    divClassname="max-h-[400px] h-full overflow-y-scroll pr-2"
+    divClassName="max-h-[400px] h-full overflow-y-scroll pr-2"
   >
     <TableHeader className="sticky w-full top-0 h-10 rounded-t-md bg-background">
       <TableRow>

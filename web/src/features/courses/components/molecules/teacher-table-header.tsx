@@ -62,7 +62,9 @@ export const TeacherTableHeader: React.FC<TeacherTableHeaderProps> = ({
         <TableHead className="table-cell">ID</TableHead>
         <TableHead className="hidden w-[100px] lg:table-cell">Image</TableHead>
         <SortableHeader field="courseName">Name</SortableHeader>
-        <SortableHeader field="status">Status</SortableHeader>
+        <SortableHeader className=" hidden sm:table-cell" field="status">
+          Status
+        </SortableHeader>
         <SortableHeader field="coursePrice" className="hidden md:table-cell">
           Price
         </SortableHeader>

@@ -16,6 +16,7 @@ import {
   FilterOption,
   SortOption,
 } from "@/features/courses/hooks/useMyTeacherCourses";
+import { PaginationControlProps, PaginationProps } from "@/features/pagination/types/pagination";
 
 interface TeacherCourseTemplateProps {
   teacherStatistic: TeacherStatisticsBodyType;
@@ -24,6 +25,8 @@ interface TeacherCourseTemplateProps {
   setFilterOptions: Dispatch<SetStateAction<FilterOption[]>>;
   setSortOption: Dispatch<SetStateAction<SortOption | null>>;
   currentSort: SortOption | null;
+  controls: PaginationControlProps;
+  pagination: PaginationProps;
 }
 
 const TeacherCourseLayout = ({
@@ -32,6 +35,8 @@ const TeacherCourseLayout = ({
   setFilterOptions,
   setSortOption,
   currentSort,
+  controls,
+  pagination,
 }: TeacherCourseTemplateProps) => {
   return (
     <div className="w-full flex flex-col gap-4 xl:gap-6">
@@ -52,6 +57,8 @@ const TeacherCourseLayout = ({
             courses={teacherMyCourses}
             setSortOption={setSortOption}
             currentSort={currentSort}
+            controls={controls}
+            pagination={pagination}
           />
         </TabsContent>
 
@@ -60,6 +67,8 @@ const TeacherCourseLayout = ({
             courses={teacherMyCourses}
             setSortOption={setSortOption}
             currentSort={currentSort}
+             controls={controls}
+            pagination={pagination}
           />
         </TabsContent>
 
@@ -68,6 +77,8 @@ const TeacherCourseLayout = ({
             courses={teacherMyCourses}
             setSortOption={setSortOption}
             currentSort={currentSort}
+             controls={controls}
+            pagination={pagination}
           />
         </TabsContent>
 
@@ -76,14 +87,18 @@ const TeacherCourseLayout = ({
             courses={teacherMyCourses}
             setSortOption={setSortOption}
             currentSort={currentSort}
+             controls={controls}
+            pagination={pagination}
           />
-        </TabsContent>
 
+        </TabsContent>
         <TabsContent value={COURSE_VERIFY.Values.REJECTED}>
           <TeacherTable
             courses={teacherMyCourses}
             setSortOption={setSortOption}
             currentSort={currentSort}
+             controls={controls}
+            pagination={pagination}
           />
         </TabsContent>
       </Tabs>
