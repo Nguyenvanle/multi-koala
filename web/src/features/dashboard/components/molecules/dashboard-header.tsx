@@ -27,6 +27,7 @@ export function DashboardHeader({
         title="Course Sales"
         value={`${statistics?.totalEnrollments} courses`}
         icon={<GraduationCap className="h-4 w-4 text-primary " />}
+        href={`/dashboard/courses?sort=sales`}
       />
       <CardInfo
         title="Average Rating"

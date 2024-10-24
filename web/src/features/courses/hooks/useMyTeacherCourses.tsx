@@ -5,7 +5,7 @@ import {
   TeacherMyCoursesResType,
 } from "@/features/courses/types/teacher-my-courses";
 import { nextjsApiService } from "@/services/next-api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
@@ -27,6 +27,7 @@ interface PaginationOptions {
 export default function useMyTeacherCourses(options: PaginationOptions = {}) {
   const { pageSize = 10, initialPage = 1 } = options;
   const router = useRouter();
+  const searchParams = useSearchParams()
 
   // States
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -69,6 +70,8 @@ export default function useMyTeacherCourses(options: PaginationOptions = {}) {
           .includes(filter.value.toLowerCase())
       );
     });
+
+
 
     // 3. Áp dụng sắp xếp
     if (sortOption) {
@@ -122,6 +125,17 @@ export default function useMyTeacherCourses(options: PaginationOptions = {}) {
 
     fetch();
   }, [data?.code, mutate, router]);
+
+  useEffect(() => {
+    const sort = searchParams.get('sort');
+    
+    if (sort === 'sales') {
+      setSortOption({
+        direction: "desc",
+        field: "totalEnrollments",
+      });
+    }
+  }, [searchParams]);
 
   // Pagination controls
   const paginationControls = {
