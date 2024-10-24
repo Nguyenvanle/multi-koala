@@ -7,6 +7,7 @@ import { useTeacherStatistics } from "@/features/users/hooks/useTeacherStatistic
 import { teacherService } from "@/features/users/services/teacher";
 import useSWR from "swr";
 import { UserBodyType } from '@/features/users/schema/user';
+import useEnrollCourses from "@/features/enroll-courses/hooks/useEnrollCourses";
 
 const fetcher = async (
   teacherId: string
@@ -30,7 +31,6 @@ export default function useDashboardHome() {
   }, []);
   const userId = user ? user.userId : null;
 
-
   const { data: rating, isLoading: ratingLoading } =
     useSWR<TeacherRatingBodyType | null>(
       userId ? `teacher-rating-${userId}` : null,
@@ -40,13 +40,17 @@ export default function useDashboardHome() {
 
   const { topCourses, isLoading: topCoursesLoading } = useMyPerformingCourses();
 
+  const { students, loading: recentEnrollLoading } = useEnrollCourses();
+
   return {
     statistics,
     userId,
-    teacherRating, 
+    teacherRating,
     topCourses,
+    students,
     statisticLoading,
     ratingLoading,
     topCoursesLoading,
+    recentEnrollLoading,
   };
 }

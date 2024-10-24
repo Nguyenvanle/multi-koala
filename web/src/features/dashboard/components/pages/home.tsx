@@ -11,17 +11,19 @@ export default function DashboardHomePage() {
     statistics,
     teacherRating,
     topCourses,
+    students,
     statisticLoading,
+    ratingLoading,
     topCoursesLoading,
+    recentEnrollLoading,
   } = useDashboardHome();
 
-  if (statistics && teacherRating && topCourses) {
-    console.log(`Teacher Statistic:`, statistics);
-    console.log(`AVG Rating:`, teacherRating);
-    console.log(`Top Courses:`, topCourses);
-  }
-
-  if (statisticLoading || topCoursesLoading)
+  if (
+    statisticLoading ||
+    topCoursesLoading ||
+    ratingLoading ||
+    recentEnrollLoading
+  )
     return (
       <div className="flex flex-col flex-1 gap-4 xl:gap-6">
         <Skeleton className="h-24" />
