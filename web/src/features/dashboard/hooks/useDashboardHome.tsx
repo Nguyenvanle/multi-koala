@@ -38,9 +38,15 @@ export default function useDashboardHome() {
     );
   const teacherRating = rating?.avgteacherRating ?? 0;
 
-  const { topCourses, isLoading: topCoursesLoading } = useMyPerformingCourses();
+  const { topCourses, isLoading: topCoursesLoading } = useMyPerformingCourses({
+    pageSize: 6,
+    initialPage: 1,
+  });
 
-  const { students, loading: recentEnrollLoading } = useEnrollCourses();
+  const { students, loading: recentEnrollLoading } = useEnrollCourses({
+    pageSize: 5,
+    initialPage: 1,
+  });
 
   return {
     statistics,

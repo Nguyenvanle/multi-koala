@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { CreateCourseFormData } from "@/features/courses/hooks/useCreateCourseForm";
-import { dateFormatter } from "@/utils/date-formater";
+import { dateFormatter } from "@/utils/date-formatter";
 
 export default function BasicInformationCard({
   form,

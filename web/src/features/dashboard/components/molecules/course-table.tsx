@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { RecentEnrollBodyType } from "@/features/enroll-courses/types/recent-enroll";
+import { dateFormatter } from "@/utils/date-formatter";
 
 interface CourseTableProps {
   courseSales: RecentEnrollBodyType[];
@@ -56,7 +57,7 @@ export function CourseTable({ courseSales }: CourseTableProps) {
               </Badge>
             </TableCell>
             <TableCell className="hidden xl:table-cell">
-              {new Date(sale.enrollAt).toLocaleDateString()}
+              {dateFormatter(new Date(sale.enrollAt))}
             </TableCell>
             <TableCell className="text-right">
               ${sale.coursePrice.toFixed(2)}

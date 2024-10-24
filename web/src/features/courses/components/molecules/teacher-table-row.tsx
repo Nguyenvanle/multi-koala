@@ -7,7 +7,7 @@ import {
   getStatusColor,
   statusLabels,
 } from "@/features/courses/utils/get-status-color";
-import { dateFormatter } from "@/utils/date-formater";
+import { dateFormatter } from "@/utils/date-formatter";
 
 interface TeacherTableRowProps {
   course: TeacherMyCourseBodyType;
