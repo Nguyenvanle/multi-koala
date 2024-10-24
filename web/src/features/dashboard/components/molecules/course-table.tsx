@@ -14,6 +14,7 @@ interface CourseTableProps {
   courseSales: RecentEnrollBodyType[];
 }
 
+
 export function CourseTable({ courseSales }: CourseTableProps) {
   const getSecondWord = (status: string) => {
     const words = status.split(" ");

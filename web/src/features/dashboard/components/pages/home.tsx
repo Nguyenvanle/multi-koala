@@ -12,10 +12,13 @@ export default function DashboardHomePage() {
     teacherRating,
     topCourses,
     students,
+
     statisticLoading,
     ratingLoading,
     topCoursesLoading,
     recentEnrollLoading,
+
+    handleSearch,
   } = useDashboardHome();
 
   if (
@@ -39,7 +42,10 @@ export default function DashboardHomePage() {
     <div className="flex flex-col flex-1 gap-4 xl:gap-6">
       <DashboardHeader statistics={statistics} teacherRating={teacherRating} />
       <div className="grid gap-4 xl:gap-6 grid-cols-1 xl:grid-cols-3">
-        <DashboardRecentlySoldCourses courseSales={students} />
+        <DashboardRecentlySoldCourses
+          courseSales={students}
+          handleSearch={handleSearch}
+        />
         <DashboardTopPerformingCourses topCourses={topCourses} />
       </div>
     </div>
