@@ -76,7 +76,7 @@ const Test = () => {
   const handleSubmit = async () => {
     // Chuyển đến trang hiển thị kết quả
     router.push(
-      `/${courseIdString}/${lessonIdString}/${testIdString}/${testResult}`
+      `/${courseIdString}/${lessonIdString}/${selectedTestId}/${testResult}`
     );
     // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
     setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
