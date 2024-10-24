@@ -37,6 +37,7 @@ const Test = () => {
   } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
 
   const initializeAnswerSubmitList = useCallback(
     (test) => {
@@ -61,23 +62,49 @@ const Test = () => {
     console.log(selectedTestId);
   };
 
-  const handleAnswerSelect = useCallback(async (questionId, answerId) => {
-    setSelectedAnswers((prevAnswers) => {
-      const updatedAnswers = {
-        ...prevAnswers,
-        [questionId]: answerId,
-      };
-      // Lưu vào AsyncStorage
-      AsyncStorage.setItem("selectedAnswers", JSON.stringify(updatedAnswers));
-      return updatedAnswers;
-    });
-  }, []);
+  const handleAnswerSelect = useCallback(
+    async (questionId, answerId) => {
+      setSelectedAnswers((prevAnswers) => {
+        const updatedAnswers = {
+          ...prevAnswers,
+          [questionId]: answerId,
+        };
+        // Tính điểm số mới
+        const correctAnswersCount = Object.keys(updatedAnswers).filter((id) => {
+          const question = selectedTest.questions.find(
+            (q) => q.questionId === id
+          );
+          return (
+            question &&
+            question.answers.some(
+              (answer) =>
+                answer.answerId === updatedAnswers[id] && answer.correct
+            )
+          );
+        }).length;
+
+        const totalQuestions = selectedTest.questions.length;
+        const newScore = calculateScore(correctAnswersCount, totalQuestions); // newScore là kiểu number
+        setScore(newScore); // Cập nhật điểm số
+
+        // Lưu vào AsyncStorage
+        AsyncStorage.setItem("selectedAnswers", JSON.stringify(updatedAnswers));
+        return updatedAnswers;
+      });
+    },
+    [selectedTest]
+  );
+
+  const calculateScore = (correctAnswersCount, totalQuestions) => {
+    if (totalQuestions === 0) return 0; // Tránh chia cho 0
+    return parseFloat(((correctAnswersCount / totalQuestions) * 10).toFixed(1)); // Chuyển đổi sang số
+  };
 
   const handleSubmit = async () => {
     // Chuyển đến trang hiển thị kết quả
-    router.push(
-      `/${courseIdString}/${lessonIdString}/${selectedTestId}/${testResult}`
-    );
+    // router.push(
+    //   `/${courseIdString}/${lessonIdString}/${selectedTestId}/${testResult}`
+    // );
     // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
     setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
     // Xóa dữ liệu đã lưu trong AsyncStorage
@@ -208,6 +235,13 @@ const Test = () => {
     );
   }
 
+  const getScoreColor = (score) => {
+    if (score >= 8.0) return "#0d9488"; // Màu cho score >= 8.0
+    if (score >= 6.5) return "#eab308"; // Màu cho score từ 6.5 đến 7.9
+    if (score >= 5.0) return "#f97316"; // Màu cho score từ 5.0 đến 6.4
+    return "#ef4444"; // Màu cho score < 4.9
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -254,29 +288,50 @@ const Test = () => {
               <View style={styles.resultContainer}>
                 <Text style={styles.resultText}>
                   You got{" "}
-                  <Text style={styles.highlightText}>
+                  <Text
+                    style={[
+                      styles.highlightText,
+                      { color: getScoreColor(score) },
+                    ]}
+                  >
                     {testResult.correctAnswers}
                   </Text>{" "}
                   questions correct out of{" "}
-                  <Text style={styles.highlightText}>
+                  <Text
+                    style={[
+                      styles.highlightText,
+                      { color: getScoreColor(score) },
+                    ]}
+                  >
                     {testResult.totalQuestion}
+                  </Text>
+                </Text>
+                <Text style={styles.resultText}>
+                  Your score is:{" "}
+                  <Text
+                    style={[
+                      styles.highlightText,
+                      { color: getScoreColor(score) },
+                    ]}
+                  >
+                    {score} / 10
                   </Text>
                 </Text>
               </View>
             )}
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-              disabled={loadingResult || showResult}
-            >
-              {loadingResult ? (
-                <ActivityIndicator size="small" color={Colors.white} />
-              ) : (
-                <Text style={styles.submitButtonText}>
-                  {showResult ? "Submitted" : "Submit"}
-                </Text>
-              )}
-            </TouchableOpacity>
+            {!showResult && (
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}
+                disabled={loadingResult}
+              >
+                {loadingResult ? (
+                  <ActivityIndicator size="small" color={Colors.white} />
+                ) : (
+                  <Text style={styles.submitButtonText}>Submit</Text>
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </ScrollView>
@@ -318,19 +373,19 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   resultContainer: {
-    alignSelf: "center",
-    marginBottom: 16,
+    marginTop: 32,
+    alignSelf: "stretch",
+    marginBottom: 56,
     padding: 16,
-    backgroundColor: Colors.teal_light,
-    borderRadius: 8,
+    backgroundColor: Colors.white,
+    borderRadius: 10,
   },
   resultText: {
     ...text.large,
-    color: Colors.black,
-    fontWeight: "500",
+    color: Colors.dark,
+    fontWeight: "400",
   },
   highlightText: {
-    color: Colors.teal_dark,
     fontWeight: "bold",
   },
   submitButton: {
