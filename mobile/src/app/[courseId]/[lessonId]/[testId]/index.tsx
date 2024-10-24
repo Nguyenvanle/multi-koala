@@ -12,6 +12,7 @@ import { router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
+import useTestStudent from "@/src/feature/test-result/hooks/useTestStudent";
 import { useTestList } from "@/src/feature/test/hooks/useTestList";
 import { QuestionDetails } from "@/src/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,47 +20,75 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
   const [selectedTestId, setSelectedTestId] = useState();
+  const [hasToken, setHasToken] = useState(false);
   const courseIdString = courseId as string;
   const lessonIdString = lessonId as string;
   const testIdString = testId as string;
+
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
   const [selectedTest, setSelectedTest] = useState(null);
+
+  // Initialize both hooks
   const {
     loadingResult,
     errorResult,
     errorResultMessage,
-    selectedAnswerList,
-    setSelectedAnswerList,
+    selectedAnswerList: guestAnswerList,
+    setSelectedAnswerList: setGuestAnswerList,
     testResult,
     setTestResult,
-    onSubmit, // Hàm này giờ đã sử dụng testIdString
-  } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
+    onSubmit,
+  } = useTestResult(selectedTest?.testId);
+
+  const {
+    loadingStudentResult,
+    errorStudentResult,
+    errorStudentResultMessage,
+    selectedAnswerList: studentAnswerList,
+    setSelectedAnswerList: setStudentAnswerList,
+    testStudentResult,
+    setTestStudentResult,
+    onStudentSubmit,
+  } = useTestStudent(selectedTest?.testId);
+
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
+
+  // Check for token on component mount
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("token");
+      setHasToken(!!token);
+    };
+    checkToken();
+  }, []);
 
   const initializeAnswerSubmitList = useCallback(
     (test) => {
       if (test && test.questions) {
         const initialList = test.questions.map((question) => ({
           questionId: question.questionId,
-          selectedAnswerId: selectedAnswers[question.questionId] || null, // Sử dụng selectedAnswers đã khôi phục
+          selectedAnswerId: selectedAnswers[question.questionId] || null,
         }));
-        setSelectedAnswerList(initialList);
+        // Update the appropriate answer list based on token presence
+        if (hasToken) {
+          setStudentAnswerList(initialList);
+        } else {
+          setGuestAnswerList(initialList);
+        }
       }
     },
-    [selectedAnswers]
-  ); // Dependency là selectedAnswers
+    [selectedAnswers, hasToken]
+  );
 
   const handleTestSelection = async (test) => {
     setSelectedTest(test);
     setShowResult(false);
-    setSelectedAnswers({}); // Reset selectedAnswers khi chọn bài kiểm tra mới
-    await loadSavedAnswers(); // Tải lại đáp án từ AsyncStorage
-    const selectedTestId = test.testId; // Lấy testId từ bài test đã chọn
-    setSelectedTestId(selectedTestId);
-    console.log(selectedTestId);
+    setSelectedAnswers({});
+    await loadSavedAnswers();
+    setSelectedTestId(test.testId);
   };
 
   const handleAnswerSelect = useCallback(
@@ -69,7 +98,7 @@ const Test = () => {
           ...prevAnswers,
           [questionId]: answerId,
         };
-        // Tính điểm số mới
+
         const correctAnswersCount = Object.keys(updatedAnswers).filter((id) => {
           const question = selectedTest.questions.find(
             (q) => q.questionId === id
@@ -84,10 +113,9 @@ const Test = () => {
         }).length;
 
         const totalQuestions = selectedTest.questions.length;
-        const newScore = calculateScore(correctAnswersCount, totalQuestions); // newScore là kiểu number
-        setScore(newScore); // Cập nhật điểm số
+        const newScore = calculateScore(correctAnswersCount, totalQuestions);
+        setScore(newScore);
 
-        // Lưu vào AsyncStorage
         AsyncStorage.setItem("selectedAnswers", JSON.stringify(updatedAnswers));
         return updatedAnswers;
       });
@@ -96,21 +124,21 @@ const Test = () => {
   );
 
   const calculateScore = (correctAnswersCount, totalQuestions) => {
-    if (totalQuestions === 0) return 0; // Tránh chia cho 0
-    return parseFloat(((correctAnswersCount / totalQuestions) * 10).toFixed(1)); // Chuyển đổi sang số
+    if (totalQuestions === 0) return 0;
+    return parseFloat(((correctAnswersCount / totalQuestions) * 10).toFixed(1));
   };
 
   const handleSubmit = async () => {
-    // Chuyển đến trang hiển thị kết quả
-    // router.push(
-    //   `/${courseIdString}/${lessonIdString}/${selectedTestId}/${testResult}`
-    // );
-    // Cập nhật selectedAnswerList với answerSubmitList trước khi gửi lên server
-    setSelectedAnswerList([]); // Cập nhật danh sách câu trả lời đã chọn
-    // Xóa dữ liệu đã lưu trong AsyncStorage
+    // Update the appropriate answer list before submission
+    if (hasToken) {
+      setStudentAnswerList([]);
+      await onStudentSubmit();
+    } else {
+      setGuestAnswerList([]);
+      await onSubmit();
+    }
+
     await AsyncStorage.removeItem("selectedAnswers");
-    // Gọi hàm onSubmit để gửi dữ liệu
-    onSubmit();
     setShowResult(true);
   };
 
@@ -242,6 +270,9 @@ const Test = () => {
     return "#ef4444"; // Màu cho score < 4.9
   };
 
+  const displayResult = hasToken ? testStudentResult : testResult;
+  const isLoading = hasToken ? loadingStudentResult : loadingResult;
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -284,7 +315,7 @@ const Test = () => {
               keyExtractor={(item) => item.questionId.toString()}
               scrollEnabled={false}
             />
-            {showResult && testResult && (
+            {showResult && displayResult && (
               <View style={styles.resultContainer}>
                 <Text style={styles.resultText}>
                   You got{" "}
@@ -294,7 +325,7 @@ const Test = () => {
                       { color: getScoreColor(score) },
                     ]}
                   >
-                    {testResult.correctAnswers}
+                    {displayResult.correctAnswers}
                   </Text>{" "}
                   questions correct out of{" "}
                   <Text
@@ -303,7 +334,7 @@ const Test = () => {
                       { color: getScoreColor(score) },
                     ]}
                   >
-                    {testResult.totalQuestion}
+                    {displayResult.totalQuestion}
                   </Text>
                 </Text>
                 <Text style={styles.resultText}>
@@ -323,9 +354,9 @@ const Test = () => {
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={handleSubmit}
-                disabled={loadingResult}
+                disabled={isLoading}
               >
-                {loadingResult ? (
+                {isLoading ? (
                   <ActivityIndicator size="small" color={Colors.white} />
                 ) : (
                   <Text style={styles.submitButtonText}>Submit</Text>
