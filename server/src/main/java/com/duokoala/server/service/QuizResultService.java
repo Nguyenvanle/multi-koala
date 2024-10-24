@@ -183,9 +183,13 @@ public class QuizResultService {
         List<QuizResult> quizResults = quizResultRepository.findAllWithDetails(teacherId);
         return quizResults.stream().map(qr -> {
             QuizResultReportResponse.QuizResultReportResponseBuilder reportBuilder = QuizResultReportResponse.builder();
+            reportBuilder.studentId(qr.getStudent().getUserId());
             reportBuilder.studentName(qr.getStudent().getFirstname() + " " + qr.getStudent().getLastname());
+            reportBuilder.courseId(qr.getTest().getLesson().getCourse().getCourseId());
             reportBuilder.courseName(qr.getTest().getLesson().getCourse().getCourseName());
+            reportBuilder.lessonId(qr.getTest().getLesson().getLessonId());
             reportBuilder.lessonName(qr.getTest().getLesson().getLessonName());
+            reportBuilder.testId(qr.getTest().getTestId());
             reportBuilder.testName(qr.getTest().getTestDescription());
             reportBuilder.correct(qr.getCorrectAnswers() + "/" + qr.getTotalQuestion());
             reportBuilder.score(qr.getTotalQuestion() == 0 ? "0" : String.format("%.2f%%", (1.0 * qr.getCorrectAnswers() / qr.getTotalQuestion() * 100)));
