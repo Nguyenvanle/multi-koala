@@ -21,6 +21,8 @@ export default function DashboardHomePage() {
     search,
     pagination,
     paginationControls,
+    topPagination,
+    topPaginationControls,
   } = useDashboardHome();
 
   if (
@@ -50,7 +52,7 @@ export default function DashboardHomePage() {
           controls={paginationControls}
           pagination={pagination}
         />
-        <DashboardTopPerformingCourses topCourses={topCourses} />
+        <DashboardTopPerformingCourses topCourses={topCourses} controls={topPaginationControls} pagination={topPagination} />
       </div>
     </div>
   );

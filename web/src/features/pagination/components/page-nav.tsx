@@ -89,7 +89,6 @@ export default function PageNavigation({
       <PaginationContent className="flex flex-0">
         <PaginationItem>
           <PaginationPrevious
-            href="#"
             onClick={(e) => {
               e.preventDefault();
               handlePrevious();
@@ -110,7 +109,6 @@ export default function PageNavigation({
           ) : (
             <PaginationItem key={pageNumber}>
               <PaginationLink
-                href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   handlePageClick(pageNumber);
@@ -125,7 +123,6 @@ export default function PageNavigation({
 
         <PaginationItem>
           <PaginationNext
-            href="#"
             onClick={(e) => {
               e.preventDefault();
               handleNext();

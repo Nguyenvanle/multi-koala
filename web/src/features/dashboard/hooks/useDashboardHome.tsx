@@ -38,12 +38,23 @@ export default function useDashboardHome() {
     );
   const teacherRating = rating?.avgteacherRating ?? 0;
 
-  const { topCourses, isLoading: topCoursesLoading } = useMyPerformingCourses({
-    pageSize: 7,
+  const {
+    topCourses,
+    isLoading: topCoursesLoading,
+    pagination: topPagination,
+    paginationControls: topPaginationControls,
+  } = useMyPerformingCourses({
+    pageSize: 6,
     initialPage: 1,
   });
 
-  const { students, loading: recentEnrollLoading, search, pagination, paginationControls } = useEnrollCourses({
+  const {
+    students,
+    loading: recentEnrollLoading,
+    search,
+    pagination,
+    paginationControls,
+  } = useEnrollCourses({
     pageSize: 5,
     initialPage: 1,
   });
@@ -64,5 +75,8 @@ export default function useDashboardHome() {
 
     pagination,
     paginationControls,
+
+    topPagination,
+    topPaginationControls,
   };
 }

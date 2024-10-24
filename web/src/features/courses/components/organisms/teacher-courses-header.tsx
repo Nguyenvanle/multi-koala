@@ -27,7 +27,7 @@ export const TeacherCoursesHeader = () => {
       <Breadcrumbs items={breadcrumbs} />
 
       <div className="flex gap-2">
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="h-8 gap-1">
               <ListFilter className="h-3.5 w-3.5" />
@@ -48,7 +48,7 @@ export const TeacherCoursesHeader = () => {
             <DropdownMenuCheckboxItem>In Editing</DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem>Rejected</DropdownMenuCheckboxItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         <Button className="h-8 gap-1" size="sm">
           <PlusCircle className="w-3.5 h-3.5" />
