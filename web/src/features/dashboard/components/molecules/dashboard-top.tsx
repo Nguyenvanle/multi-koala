@@ -39,7 +39,7 @@ export default function DashboardTopPerformingCourses({
                 <AvatarFallback>{course.courseName}</AvatarFallback>
               </Avatar>
               <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">
+                <p className="text-sm font-medium leading-none line-clamp-1">
                   {course.courseName}
                 </p>
                 <p className="text-sm text-muted-foreground">

@@ -20,7 +20,10 @@ export default function TeacherCoursesPage() {
     setFilterOptions,
     setSortOption,
     sortOption,
-  } = useMyTeacherCourses();
+  } = useMyTeacherCourses({
+    pageSize: 5,
+    initialPage: 1,
+  });
 
   // refetch
   useEffect(() => {

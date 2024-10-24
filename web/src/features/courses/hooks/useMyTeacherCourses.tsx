@@ -19,7 +19,15 @@ export type FilterOption = {
   value: string;
 };
 
-export default function useMyTeacherCourses() {
+interface PaginationOptions {
+  pageSize?: number;
+  initialPage?: number;
+}
+
+export default function useMyTeacherCourses(options: PaginationOptions = {}) {
+  const { pageSize = 10, initialPage = 1 } = options;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
   const { data, error, mutate } = useSWR(`teacher-my-statistics-courses`, () =>
     nextjsApiService.get<TeacherMyCoursesResType>(
       `/api/courses/my-statistic-courses`
@@ -33,6 +41,43 @@ export default function useMyTeacherCourses() {
     field: "courseUploadedAt",
   });
   const [filterOptions, setFilterOptions] = useState<FilterOption[]>([]);
+
+  const courses = useMemo(
+    () => (data?.result?.result as TeacherMyCoursesBodyType) || [],
+    [data?.result?.result]
+  );
+
+  // Tính toán tổng số trang
+  const totalPages = Math.ceil(courses.length / pageSize);
+
+  // Lấy danh sách Courses cho trang hiện tại
+  const paginatedCourses = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return courses.slice(startIndex, endIndex);
+  }, [courses, currentPage, pageSize]);
+
+  // Các hàm điều hướng trang
+  const goToPage = (page: number) => {
+    const validatedPage = Math.min(Math.max(1, page), totalPages);
+    setCurrentPage(validatedPage);
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const previousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const resetPage = () => {
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     const fetch = async () => {
@@ -57,8 +102,9 @@ export default function useMyTeacherCourses() {
     fetch();
   }, [data?.code, mutate, router]);
 
-  const filteredAndSortedCourses = useMemo(() => {
-    let result = data?.result?.result || [];
+  const processedCourses = useMemo(() => {
+    // Áp dụng phân trang
+    let result = paginatedCourses || [];
 
     // Áp dụng tìm kiếm
     if (searchTerm) {
@@ -88,10 +134,26 @@ export default function useMyTeacherCourses() {
     }
 
     return result;
-  }, [data?.result?.result, searchTerm, filterOptions, sortOption]);
+  }, [paginatedCourses, searchTerm, filterOptions, sortOption]);
 
   return {
-    courses: filteredAndSortedCourses,
+    courses: processedCourses,
+    // Metadata phân trang
+    pagination: {
+      currentPage,
+      totalPages,
+      pageSize,
+      totalItems: courses.length,
+      hasNextPage: currentPage < totalPages,
+      hasPreviousPage: currentPage > 1,
+    },
+    // Các hàm điều hướng
+    paginationControls: {
+      goToPage,
+      nextPage,
+      previousPage,
+      resetPage,
+    },
     loading: !error && !data,
     error: error?.message,
     sortOption,
