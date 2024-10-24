@@ -169,7 +169,7 @@ export function StudentDashboard() {
                     <div className="flex items-center">
                       <Avatar className="h-8 w-8 mr-2">
                         <AvatarImage
-                          src="/placeholder.svg?height=32&width=32"
+                          src="/images/fallback-image.jpg"
                           alt="@johndoe"
                         />
                         <AvatarFallback>JD</AvatarFallback>
@@ -188,7 +188,7 @@ export function StudentDashboard() {
                     <div className="flex items-center">
                       <Avatar className="h-8 w-8 mr-2">
                         <AvatarImage
-                          src="/placeholder.svg?height=32&width=32"
+                          src="/images/fallback-image.jpg"
                           alt="@janesmith"
                         />
                         <AvatarFallback>JS</AvatarFallback>
@@ -207,7 +207,7 @@ export function StudentDashboard() {
                     <div className="flex items-center">
                       <Avatar className="h-8 w-8 mr-2">
                         <AvatarImage
-                          src="/placeholder.svg?height=32&width=32"
+                          src="/images/fallback-image.jpg"
                           alt="@bobwilson"
                         />
                         <AvatarFallback>BW</AvatarFallback>
@@ -257,7 +257,7 @@ export function StudentDashboard() {
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2">
                       <AvatarImage
-                        src="/placeholder.svg?height=32&width=32"
+                        src="/images/fallback-image.jpg"
                         alt="@alicejohnson"
                       />
                       <AvatarFallback>AJ</AvatarFallback>
@@ -277,7 +277,7 @@ export function StudentDashboard() {
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2">
                       <AvatarImage
-                        src="/placeholder.svg?height=32&width=32"
+                        src="/images/fallback-image.jpg"
                         alt="@michaelbrown"
                       />
                       <AvatarFallback>MB</AvatarFallback>
@@ -297,7 +297,7 @@ export function StudentDashboard() {
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2">
                       <AvatarImage
-                        src="/placeholder.svg?height=32&width=32"
+                        src="/images/fallback-image.jpg"
                         alt="@emilydavis"
                       />
                       <AvatarFallback>ED</AvatarFallback>

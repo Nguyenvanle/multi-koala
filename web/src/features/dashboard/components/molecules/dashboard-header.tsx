@@ -25,12 +25,12 @@ export function DashboardHeader({
       />
       <CardInfo
         title="Course Sales"
-        value={`${statistics?.totalCourses} courses`}
+        value={`${statistics?.totalEnrollments} courses`}
         icon={<GraduationCap className="h-4 w-4 text-primary " />}
       />
       <CardInfo
         title="Average Rating"
-        value={`${(Number(teacherRating.toFixed(1)) * 5).toFixed(2)} ★`}
+        value={`${(Number(teacherRating.toFixed(1)) * 5).toFixed(2)}⭐`}
         icon={<Activity className="h-4 w-4 text-primary " />}
       />
     </div>

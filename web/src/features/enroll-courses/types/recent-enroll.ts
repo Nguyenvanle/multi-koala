@@ -7,7 +7,7 @@ const RecentEnrollBody = z.object({
   courseName: z.string(),
   process: z.number(),
   status: z.string(),
-  enrollAt: z.string().transform((date) => new Date(date)),
+  enrollAt: z.string(),
   coursePrice: z.number(),
 });
 export type RecentEnrollBodyType = z.infer<typeof RecentEnrollBody>;
