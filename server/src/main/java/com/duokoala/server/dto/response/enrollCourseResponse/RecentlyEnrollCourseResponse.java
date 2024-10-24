@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RecentlyEnrollCourseResponse {
+    String studentId;
     String studentName;
     String studentEmail;
+    String courseId;
     String courseName;
     float process;
     String status;

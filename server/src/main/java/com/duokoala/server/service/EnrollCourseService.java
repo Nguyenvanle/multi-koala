@@ -78,8 +78,10 @@ public class EnrollCourseService {
         String teacherId = authenticationService.getAuthenticatedTeacher().getUserId();
         return enrollCourseRepository.getRecentlyEnrollCourse(teacherId).stream()
                 .map(enrollCourse -> RecentlyEnrollCourseResponse.builder()
+                        .studentId(enrollCourse.getStudent().getUserId())
                         .studentName(enrollCourse.getStudent().getFirstname() + " " + enrollCourse.getStudent().getLastname())
                         .studentEmail(enrollCourse.getStudent().getEmail())
+                        .courseId(enrollCourse.getCourse().getCourseId())
                         .courseName(enrollCourse.getCourse().getCourseName())
                         .process(enrollCourse.getProcess())
                         .status(enrollCourse.getProcess() == 0 ? "Just started" : enrollCourse.getProcess() == 1 ? "Completed" : "In progress")

@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import { useGlobalSearchParams } from "expo-router";
-import { useTestList } from "@/src/feature/test/hooks/useTestList";
 import useTestResult from "@/src/feature/test-result/hooks/useTestResult";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "@/src/constants/Colors";
@@ -17,12 +16,8 @@ import { QuestionDetails } from "@/src/feature/test/types/test";
 import { text } from "@/src/constants/Styles";
 
 const Result = () => {
-  const { courseId, lessonId, testId } = useGlobalSearchParams();
-  const courseIdString = courseId as string;
-  const lessonIdString = lessonId as string;
+  const { testId } = useGlobalSearchParams();
   const testIdString = testId as string;
-  const { testList, errorMessageTest, loadingTest } =
-    useTestList(lessonIdString);
   const [selectedTest, setSelectedTest] = useState(null);
   const {
     loadingResult,
@@ -33,22 +28,9 @@ const Result = () => {
     testResult,
     setTestResult,
     onSubmit, // Hàm này giờ đã sử dụng testIdString
-  } = useTestResult(selectedTest?.testId); // Truyền testId của bài test đã chọn
+  } = useTestResult(selectedTest?.testIdString); // Truyền testId của bài test đã chọn
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
-
-  const initializeAnswerSubmitList = useCallback(
-    (test) => {
-      if (test && test.questions) {
-        const initialList = test.questions.map((question) => ({
-          questionId: question.questionId,
-          selectedAnswerId: selectedAnswers[question.questionId] || null, // Sử dụng selectedAnswers đã khôi phục
-        }));
-        setSelectedAnswerList(initialList);
-      }
-    },
-    [selectedAnswers]
-  ); // Dependency là selectedAnswers
 
   const handleAnswerSelect = useCallback(async (questionId, answerId) => {
     setSelectedAnswers((prevAnswers) => {
@@ -144,11 +126,11 @@ const Result = () => {
     [renderAnswerItem]
   );
 
-  if (loadingTest) {
+  if (loadingResult) {
     return <ActivityIndicator size="large" color={Colors.teal_dark} />;
   }
 
-  if (errorMessageTest) {
+  if (errorResultMessage) {
     return (
       <Text
         style={{
@@ -158,7 +140,7 @@ const Result = () => {
           marginTop: 20,
         }}
       >
-        {errorMessageTest}
+        {errorResultMessage}
       </Text>
     );
   }

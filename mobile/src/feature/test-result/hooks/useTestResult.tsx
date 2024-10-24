@@ -40,7 +40,6 @@ const useTestResult = (testId) => {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
           console.log(request.data.result);
-          // router.push(`/${testIdString}/${request.data.result.quizResultId}`);
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }
