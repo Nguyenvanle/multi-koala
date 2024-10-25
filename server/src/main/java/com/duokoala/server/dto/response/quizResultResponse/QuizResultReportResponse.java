@@ -11,9 +11,13 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResultReportResponse {
+     String studentId;
      String studentName;
+     String courseId;
      String courseName;
+     String lessonId;
      String lessonName;
+     String testId;
      String testName;
      String correct;
      String score;
