@@ -152,20 +152,11 @@ const Test = () => {
     if (!testResultList || testResultList.length === 0) {
       return (
         <View>
-          <Text
-            style={{
-              ...styles.resultText,
-              color: Colors.super_teal_dark,
-              fontWeight: "600",
-            }}
-          >
-            No previous test results available
-          </Text>
           <TouchableOpacity
             style={{ ...styles.submitButton, marginTop: 24, marginBottom: 60 }}
             onPress={handleRetakeTest}
           >
-            <Text style={styles.retakeButtonText}>Do this test</Text>
+            <Text style={styles.submitButtonText}>Take this test</Text>
           </TouchableOpacity>
         </View>
       );
@@ -227,6 +218,9 @@ const Test = () => {
                   {previousScore} / 10
                 </Text>
               </Text>
+              <Text style={{ alignSelf: "flex-end" }}>
+                {new Date(result.dateTaken).toLocaleDateString()}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -234,7 +228,7 @@ const Test = () => {
           style={{ ...styles.submitButton, marginTop: 24, marginBottom: 60 }}
           onPress={handleRetakeTest}
         >
-          <Text style={styles.submitButtonText}>Do this test again</Text>
+          <Text style={styles.submitButtonText}>Take this test again</Text>
         </TouchableOpacity>
       </View>
     );
