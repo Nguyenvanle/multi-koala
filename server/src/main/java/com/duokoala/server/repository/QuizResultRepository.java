@@ -13,8 +13,7 @@ import java.util.List;
 @Repository
     public interface QuizResultRepository extends JpaRepository<QuizResult,String> {
     List<QuizResult> findAllByStudent(Student student);
-    List<QuizResult> findAllByStudentAndTest(Student student, Test test);
-
+    List<QuizResult> findAllByStudentAndTestOrderByDateTakenDesc(Student student, Test test);
     @Query(nativeQuery = true,
 value = "select qr.* " +
         "from quiz_result qr " +
