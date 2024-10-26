@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum PerformanceCriteria {
-    REVIEW_COUNT(0.2),
-    REVIEW_AVERAGE(0.4),
+    REVIEW_COUNT(0.1),
+    REVIEW_AVERAGE(0.3),
     REGISTRATION_COUNT(0.2),
-    REVENUE(0.2);
+    REVENUE(0.4);
     double weight;
 
     public static double normalize(double value, double min, double max) {
