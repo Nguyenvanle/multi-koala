@@ -1,6 +1,5 @@
 package com.duokoala.server.repository;
 
-import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.EnrollCourse;
 import com.duokoala.server.entity.user.Student;
@@ -14,7 +13,9 @@ import java.util.List;
 @Repository
 public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, String> {
     List<EnrollCourse> findAllByStudent(Student student);
+
     int countByCourse(Course course);
+
     int countByCourseAndProcess(Course course, float process);
 
     @Query(nativeQuery = true,
@@ -23,4 +24,12 @@ public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, Stri
                     "WHERE c.uploaded_by_teacher_user_id = :teacherId " +
                     "ORDER by enroll_at DESC")
     List<EnrollCourse> getRecentlyEnrollCourse(@Param("teacherId") String teacherId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT COUNT(*) " +
+                    "FROM enroll_course " +
+                    "GROUP BY course_course_id " +
+                    "ORDER BY COUNT(*) DESC " +
+                    "LIMIT 1")
+    int findMaxCountEnrollCourseGroupByCourseId();
 }

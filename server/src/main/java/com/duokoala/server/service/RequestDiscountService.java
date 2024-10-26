@@ -6,7 +6,7 @@ import com.duokoala.server.dto.request.requestDiscountRequest.RequestDiscountUpd
 import com.duokoala.server.dto.response.requestDiscountResponse.RequestDiscountOnlyResponse;
 import com.duokoala.server.dto.response.requestDiscountResponse.RequestDiscountResponse;
 import com.duokoala.server.entity.RequestDiscount;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.RequestDiscountMapper;

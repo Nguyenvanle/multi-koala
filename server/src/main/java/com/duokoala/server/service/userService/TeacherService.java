@@ -5,7 +5,7 @@ import com.duokoala.server.dto.request.userRequest.TeacherUpdateRequest;
 import com.duokoala.server.dto.response.userResponse.teacherResponse.StatisticTeacherResponse;
 import com.duokoala.server.dto.response.userResponse.teacherResponse.TeacherResponse;
 import com.duokoala.server.entity.user.Teacher;
-import com.duokoala.server.enums.Role;
+import com.duokoala.server.enums.courseEnums.Role;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.TeacherMapper;
@@ -19,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 @Service

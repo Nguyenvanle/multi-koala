@@ -3,7 +3,7 @@ package com.duokoala.server.dto.response.requestDiscountResponse;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.dto.response.userResponse.teacherResponse.TeacherResponse;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

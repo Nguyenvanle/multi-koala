@@ -1,7 +1,7 @@
 package com.duokoala.server.entity;
 
 import com.duokoala.server.entity.user.Student;
-import com.duokoala.server.enums.Level;
+import com.duokoala.server.enums.courseEnums.Level;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

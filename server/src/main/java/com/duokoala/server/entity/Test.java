@@ -1,7 +1,6 @@
 package com.duokoala.server.entity;
 
-import com.duokoala.server.enums.Status;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.duokoala.server.enums.courseEnums.Status;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;

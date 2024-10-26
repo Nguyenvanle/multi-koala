@@ -4,7 +4,7 @@ import com.duokoala.server.dto.request.userRequest.AdminCreationRequest;
 import com.duokoala.server.dto.request.userRequest.AdminUpdateRequest;
 import com.duokoala.server.dto.response.userResponse.AdminResponse;
 import com.duokoala.server.entity.user.Admin;
-import com.duokoala.server.enums.Role;
+import com.duokoala.server.enums.courseEnums.Role;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.AdminMapper;
@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

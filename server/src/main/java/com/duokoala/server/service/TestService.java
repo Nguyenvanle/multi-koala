@@ -5,7 +5,7 @@ import com.duokoala.server.dto.request.testRequest.TestUpdateRequest;
 import com.duokoala.server.dto.response.TestResponse;
 import com.duokoala.server.entity.Question;
 import com.duokoala.server.entity.Test;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.TestMapper;
