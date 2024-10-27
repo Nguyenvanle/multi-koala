@@ -141,7 +141,7 @@ const FinishedCourses = () => {
               color: Colors.white,
             }}
           >
-            Continue
+            Preview
           </Text>
         </TouchableOpacity>
       </View>

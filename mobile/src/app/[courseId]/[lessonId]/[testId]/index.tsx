@@ -22,6 +22,7 @@ const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
   const [selectedTestId, setSelectedTestId] = useState();
   const [hasToken, setHasToken] = useState(false);
+  const [selectedResultIndex, setSelectedResultIndex] = useState(null);
   const courseIdString = courseId as string;
   const lessonIdString = lessonId as string;
   const testIdString = testId as string;
@@ -65,7 +66,8 @@ const Test = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const [isRetake, setIsRetake] = useState(false); // Thêm state để kiểm tra có đang thực hiện lại bài test không
+  const [isRetake, setIsRetake] = useState(false);
+  const [selectedResultAnswers, setSelectedResultAnswers] = useState(null);
 
   // Check for token on component mount
   useEffect(() => {
@@ -98,8 +100,21 @@ const Test = () => {
     setSelectedTest(test);
     setShowResult(false);
     setSelectedAnswers({});
+    setSelectedResultIndex(null);
+    setSelectedResultAnswers(null);
     await loadSavedAnswers();
     setSelectedTestId(test.testId);
+  };
+
+  const handleResultSelect = (index, result) => {
+    if (selectedResultIndex === index) {
+      setSelectedResultIndex(null);
+      setSelectedResultAnswers(null);
+    } else {
+      setSelectedResultIndex(index);
+      // Đảm bảo result.answers là một mảng các answerId
+      setSelectedResultAnswers(result?.answers || []);
+    }
   };
 
   const handleAnswerSelect = useCallback(
@@ -148,6 +163,50 @@ const Test = () => {
     initializeAnswerSubmitList(selectedTest); // Khởi tạo lại danh sách câu trả lời
   };
 
+  const renderAnswerItemForResult = useCallback(
+    ({ item, questionId, index, userAnswerId }) => {
+      if (!item) return null;
+
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const isUserSelected = userAnswerId === item.answerId;
+      const isCorrect = item.correct;
+
+      // Logic màu sắc cho từng trường hợp
+      let backgroundColor = Colors.white; // Màu mặc định
+      let textColor = Colors.black; // Màu chữ mặc định
+
+      if (isUserSelected && isCorrect) {
+        // Người dùng chọn đúng
+        backgroundColor = "#00FF9C";
+        textColor = Colors.teal_dark;
+      } else if (isUserSelected && !isCorrect) {
+        // Người dùng chọn sai
+        backgroundColor = "#fecaca";
+        textColor = Colors.red;
+      } else if (!isUserSelected && isCorrect) {
+        // Đáp án đúng nhưng người dùng không chọn
+        backgroundColor = "#FFF7D1";
+        textColor = "#FFB200";
+      }
+
+      return (
+        <View
+          key={item.answerId}
+          style={[
+            styles.answerButton,
+            { backgroundColor },
+            styles.resultAnswerButton,
+          ]}
+        >
+          <Text style={[styles.answerText, { color: textColor }]}>
+            {letters[index]}. {item.answerDescription}
+          </Text>
+        </View>
+      );
+    },
+    [selectedAnswers, showResult]
+  );
+
   const renderResults = () => {
     if (!testResultList || testResultList.length === 0) {
       return (
@@ -163,7 +222,13 @@ const Test = () => {
     }
 
     return (
-      <View>
+      <View style={{ marginBottom: 60 }}>
+        <TouchableOpacity
+          style={{ ...styles.submitButton, marginBottom: 24 }}
+          onPress={handleRetakeTest}
+        >
+          <Text style={styles.submitButtonText}>Take this test again</Text>
+        </TouchableOpacity>
         <Text
           style={{
             ...styles.resultText,
@@ -174,62 +239,120 @@ const Test = () => {
           Your previous test result
         </Text>
         {testResultList.map((result, index) => {
+          if (!result) return null;
+
           const previousScore = calculateScore(
-            result.correctAnswers,
-            result.totalQuestion
-          ); // Calculate the score using previous result
+            result.correctAnswers || 0,
+            result.totalQuestion || 0
+          );
+
           return (
-            <TouchableOpacity
-              key={index}
-              style={{
-                ...styles.resultContainer,
-                marginBottom: 8,
-                marginTop: 8,
-              }}
-            >
-              <Text style={styles.answerText}>
-                {index + 1}: You got{" "}
-                <Text
-                  style={[
-                    styles.highlightText,
-                    { color: getScoreColor(previousScore) },
-                  ]}
-                >
-                  {result.correctAnswers}
-                </Text>{" "}
-                questions correct out of{" "}
-                <Text
-                  style={[
-                    styles.highlightText,
-                    { color: getScoreColor(previousScore) },
-                  ]}
-                >
-                  {result.totalQuestion}
+            <View key={index}>
+              <TouchableOpacity
+                style={{
+                  ...styles.resultContainer,
+                  marginBottom: 8,
+                  marginTop: 8,
+                }}
+                onPress={() => handleResultSelect(index, result)}
+              >
+                <Text style={styles.answerText}>
+                  {index + 1}: You got{" "}
+                  <Text
+                    style={[
+                      styles.highlightText,
+                      { color: getScoreColor(previousScore) },
+                    ]}
+                  >
+                    {result.correctAnswers || 0}
+                  </Text>{" "}
+                  questions correct out of{" "}
+                  <Text
+                    style={[
+                      styles.highlightText,
+                      { color: getScoreColor(previousScore) },
+                    ]}
+                  >
+                    {result.totalQuestion || 0}
+                  </Text>
                 </Text>
-              </Text>
-              <Text style={styles.answerText}>
-                Your score is:{" "}
-                <Text
-                  style={[
-                    styles.highlightText,
-                    { color: getScoreColor(previousScore) },
-                  ]}
-                >
-                  {previousScore} / 10
+                <Text style={styles.answerText}>
+                  Your score is:{" "}
+                  <Text
+                    style={[
+                      styles.highlightText,
+                      { color: getScoreColor(previousScore) },
+                    ]}
+                  >
+                    {previousScore} / 10
+                  </Text>
                 </Text>
-              </Text>
-              <Text style={{ alignSelf: "flex-end" }}>
-                {new Date(result.dateTaken).toLocaleDateString()}
-              </Text>
-            </TouchableOpacity>
+                <Text style={{ alignSelf: "flex-end" }}>
+                  {result.dateTaken
+                    ? new Date(result.dateTaken).toLocaleDateString()
+                    : ""}
+                </Text>
+              </TouchableOpacity>
+              {selectedResultIndex === index && selectedTest && (
+                <View style={styles.resultDetailsContainer}>
+                  <Text style={styles.resultDetailTitle}>Test Details:</Text>
+                  {selectedTest.questions && (
+                    <FlatList
+                      data={selectedTest.questions}
+                      renderItem={({
+                        item: question,
+                        index: questionIndex,
+                      }) => {
+                        if (!question) return null;
+
+                        // Lấy đáp án người dùng từ result.answers array
+                        // Đảm bảo selectedResultAnswers là một mảng chứa các answerId
+                        const userAnswerId =
+                          selectedResultAnswers?.[questionIndex];
+
+                        return (
+                          <View style={styles.questionContainer}>
+                            <Text style={styles.questionText}>
+                              {questionIndex + 1}.{" "}
+                              {question.questionDescription}
+                            </Text>
+                            {question.answers && (
+                              <FlatList
+                                data={question.answers}
+                                renderItem={({
+                                  item: answerItem,
+                                  index: answerIndex,
+                                }) => {
+                                  if (!answerItem) return null;
+
+                                  return renderAnswerItemForResult({
+                                    item: answerItem,
+                                    questionId: question.questionId,
+                                    index: answerIndex,
+                                    userAnswerId: userAnswerId,
+                                  });
+                                }}
+                                keyExtractor={(answer) =>
+                                  answer?.answerId?.toString() ||
+                                  Math.random().toString()
+                                }
+                                scrollEnabled={false}
+                              />
+                            )}
+                          </View>
+                        );
+                      }}
+                      keyExtractor={(item) =>
+                        item?.questionId?.toString() || Math.random().toString()
+                      }
+                      scrollEnabled={false}
+                    />
+                  )}
+                </View>
+              )}
+            </View>
           );
         })}
-        <TouchableOpacity
-          style={{ ...styles.submitButton, marginTop: 24, marginBottom: 60 }}
-          onPress={handleRetakeTest}
-        >
-          <Text style={styles.submitButtonText}>Take this test again</Text>
-        </TouchableOpacity>
       </View>
     );
   };
@@ -281,7 +404,7 @@ const Test = () => {
           onPress={() =>
             !showResult && handleAnswerSelect(questionId, item.answerId)
           }
-          disabled={showResult}
+          disabled={showResult || selectedChoose}
         >
           <Text
             style={[
@@ -569,6 +692,35 @@ const styles = StyleSheet.create({
   retakeButtonText: {
     color: Colors.white,
     fontWeight: "bold",
+  },
+  resultDetailsContainer: {
+    backgroundColor: Colors.white,
+    padding: 16,
+    marginTop: 8,
+    marginBottom: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.grey,
+  },
+  resultDetailTitle: {
+    ...text.h4,
+    color: Colors.teal_dark,
+    marginBottom: 16,
+    fontWeight: "600",
+  },
+  questionContainer: {
+    marginBottom: 24,
+  },
+  questionText: {
+    ...text.p,
+    color: Colors.black,
+    fontWeight: "500",
+    marginBottom: 12,
+  },
+  resultAnswerButton: {
+    marginVertical: 4,
+    borderWidth: 1,
+    borderColor: Colors.grey,
   },
 });
 

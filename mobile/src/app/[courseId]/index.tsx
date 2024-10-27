@@ -135,6 +135,9 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
           }
         }}
       >
+        <Text style={{ ...text.large, marginRight: 8, fontWeight: "400" }}>
+          {index + 1}.
+        </Text>
         <Image
           source={{ uri: item.image.imageUrl }}
           style={styles.lessonThumbnail}

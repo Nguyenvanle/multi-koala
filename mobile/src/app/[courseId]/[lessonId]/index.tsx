@@ -139,6 +139,9 @@ const LessonDetails = () => {
         }}
         disabled={isSelected}
       >
+        <Text style={{ ...text.large, fontWeight: "400", marginRight: 8 }}>
+          {index + 1}.{" "}
+        </Text>
         <Image
           source={{ uri: item.image.imageUrl }}
           style={styles.lessonThumbnail}
@@ -180,6 +183,22 @@ const LessonDetails = () => {
             </View>
           ) : lesson && lesson.length > 0 ? (
             <>
+              {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
+              <TouchableOpacity
+                style={styles.buyButton}
+                onPress={() => {
+                  router.push(
+                    `/${courseIdString}/${lessonIdString}/${testDetails}/`
+                  );
+                }}
+              >
+                <Text style={styles.buyButtonText}>Take Exam</Text>
+              </TouchableOpacity>
+              <Text
+                style={{ ...text.h4, color: Colors.black, fontWeight: "400" }}
+              >
+                Lesson list
+              </Text>
               <FlatList
                 data={displayedLessons}
                 renderItem={renderLessonItem}
@@ -202,17 +221,6 @@ const LessonDetails = () => {
               No lessons available
             </Text>
           )}
-          {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
-          <TouchableOpacity
-            style={styles.buyButton}
-            onPress={() => {
-              router.push(
-                `/${courseIdString}/${lessonIdString}/${testDetails}/`
-              );
-            }}
-          >
-            <Text style={styles.buyButtonText}>Take Exam</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -233,7 +241,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     borderRadius: 10,
-    marginTop: 24,
+    marginVertical: 16,
   },
   buyButtonText: {
     ...text.h4,
