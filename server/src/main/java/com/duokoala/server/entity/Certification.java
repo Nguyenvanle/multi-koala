@@ -3,7 +3,7 @@ package com.duokoala.server.entity;
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

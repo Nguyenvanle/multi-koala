@@ -1,7 +1,7 @@
 package com.duokoala.server.dto.response;
 
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
-import com.duokoala.server.enums.Level;
+import com.duokoala.server.enums.courseEnums.Level;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,7 +7,7 @@ import com.duokoala.server.dto.response.discountCourseResponse.DiscountOnlyRespo
 import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Discount;
 import com.duokoala.server.entity.DiscountCourse;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.DiscountCourseMapper;
@@ -21,7 +21,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

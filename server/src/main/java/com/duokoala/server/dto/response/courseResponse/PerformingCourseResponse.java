@@ -1,15 +1,13 @@
 package com.duokoala.server.dto.response.courseResponse;
 
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PerformingCourseResponse {
     String courseId;
@@ -17,6 +15,7 @@ public class PerformingCourseResponse {
     ImageResponse image;
     float AVGCourseRating;
     int numberOfReviews;
+    int numberOfEnrollments;
     double income;
     boolean isDeleted;
 }

@@ -161,7 +161,7 @@ public class QuizResultService {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
         List<QuizResult> quizResults = quizResultRepository
-                .findAllByStudentAndTest(authenticationService.getAuthenticatedStudent(), test);
+                .findAllByStudentAndTestOrderByDateTakenDesc(authenticationService.getAuthenticatedStudent(), test);
         return quizResults
                 .stream()
                 .map(quizResult ->

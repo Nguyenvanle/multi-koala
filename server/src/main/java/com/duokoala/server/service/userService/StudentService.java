@@ -4,7 +4,7 @@ import com.duokoala.server.dto.request.userRequest.StudentCreationRequest;
 import com.duokoala.server.dto.request.userRequest.StudentUpdateRequest;
 import com.duokoala.server.dto.response.userResponse.StudentResponse;
 import com.duokoala.server.entity.user.Student;
-import com.duokoala.server.enums.Role;
+import com.duokoala.server.enums.courseEnums.Role;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.userMapper.StudentMapper;

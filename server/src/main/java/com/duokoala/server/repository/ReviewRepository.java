@@ -21,5 +21,16 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
                     "FROM review r JOIN course c ON r.course_course_id = c.course_id " +
                     "WHERE c.uploaded_by_teacher_user_id = :teacherId")
     Float getAvgTeacher(@Param("teacherId") String teacherId);
+
     int countReviewByCourse(Course course);
+
+    @Query(nativeQuery = true,
+            value = "SELECT COUNT(*) " +
+                    "FROM review " +
+                    "GROUP BY course_course_id " +
+                    "ORDER BY COUNT(*) DESC " +
+                    "LIMIT 1")
+    int findMaxCountReviewGroupByCourseId();
+
+
 }

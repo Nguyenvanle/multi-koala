@@ -5,8 +5,8 @@ import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.*;
 import com.duokoala.server.entity.Course;
-import com.duokoala.server.enums.Level;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Level;
+import com.duokoala.server.enums.courseEnums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.CourseMapper;
@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.duokoala.server.enums.courseEnums.PerformanceCriteria.calculatePerformanceScore;
 
 @Service
 @RequiredArgsConstructor
@@ -102,7 +104,8 @@ public class CourseService {
     public CourseResponse get(String courseId) {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
-        return courseMapper.toCourseResponse(course);
+        return courseMapper
+                .toCourseResponse(course);
     }
 
     public List<CourseResponse> getAll() {
@@ -112,13 +115,10 @@ public class CourseService {
 
     public CoursePriceResponse getCoursePrice() {
         return CoursePriceResponse.builder()
-
                 .maxCoursePrice(Optional.ofNullable(courseRepository.getMaxPrice()
                 ).orElse(0.0f))
-
                 .minCoursePrice(Optional.ofNullable(courseRepository.getMinPrice()
                 ).orElse(0.0f))
-
                 .build();
     }
 
@@ -167,7 +167,7 @@ public class CourseService {
     private StatisticCourseResponse getStatisticCourse(Course course) {
         var statistic = courseMapper.toStatisticCourseResponse(course);
         statistic.setTotalEnrollments(enrollCourseRepository.countByCourse(course));
-        statistic.setTotalCompleted(enrollCourseRepository.countByCourseAndProcess(course,1.0f));
+        statistic.setTotalCompleted(enrollCourseRepository.countByCourseAndProcess(course, 1.0f));
         statistic.setIncome(courseRepository.sumIncomeCourse(course.getCourseId()));
         return statistic;
     }
@@ -185,12 +185,32 @@ public class CourseService {
                 (reviewRepository.getAvgCourse(course.getCourseId()));
         courseResponse.setNumberOfReviews(reviewRepository.countReviewByCourse(course));
         courseResponse.setIncome(courseRepository.sumIncomeCourse(courseResponse.getCourseId()));
+        courseResponse.setNumberOfEnrollments(enrollCourseRepository.countByCourse(course));
         return courseResponse;
     }
 
     public List<PerformingCourseResponse> getMyPerformingCoursesList() {
-        List<Course> courses = courseRepository.findAllByUploadedByTeacher
-                (authenticationService.getAuthenticatedTeacher());
-        return courses.stream().map(this::getPerformingCourse).toList();
+        List<Course> courses = courseRepository.findAllByUploadedByTeacher(authenticationService.getAuthenticatedTeacher());
+        return courses.stream()
+//                .filter(c -> c.getStatus().equals(Status.APPROVED))
+                .map(this::getPerformingCourse)
+                .sorted((c1, c2) -> Double.compare(calculateScore(c2), calculateScore(c1)))
+                .toList();
+    }
+
+    public double calculateScore(PerformingCourseResponse performingCourse) {
+        return calculatePerformanceScore(
+                performingCourse.getNumberOfReviews(),
+                performingCourse.getAVGCourseRating(),
+                performingCourse.getNumberOfEnrollments(),
+                performingCourse.getIncome(),
+                0,
+                reviewRepository.findMaxCountReviewGroupByCourseId(),
+                0,
+                1.0,
+                0,
+                enrollCourseRepository.findMaxCountEnrollCourseGroupByCourseId(),
+                0,
+                courseRepository.getMaxPrice());
     }
 }

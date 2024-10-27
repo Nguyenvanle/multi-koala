@@ -1,6 +1,6 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.enums.OTPEnums.Type;
+import com.duokoala.server.enums.otpEnums.Type;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import jakarta.mail.MessagingException;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service

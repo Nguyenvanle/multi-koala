@@ -1,4 +1,4 @@
-package com.duokoala.server.enums.OTPEnums;
+package com.duokoala.server.enums.otpEnums;
 
 import lombok.Getter;
 

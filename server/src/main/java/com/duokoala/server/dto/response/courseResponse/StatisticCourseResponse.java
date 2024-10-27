@@ -1,7 +1,7 @@
 package com.duokoala.server.dto.response.courseResponse;
 
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

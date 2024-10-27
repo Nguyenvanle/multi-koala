@@ -4,11 +4,9 @@ import com.duokoala.server.dto.request.certificationRequest.CertificationCreateR
 import com.duokoala.server.dto.request.certificationRequest.CertificationApproveRequest;
 import com.duokoala.server.dto.request.certificationRequest.CertificationUpdateRequest;
 import com.duokoala.server.dto.response.certificationResponse.CertificationResponse;
-import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.entity.Certification;
-import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.media.Image;
-import com.duokoala.server.enums.Status;
+import com.duokoala.server.enums.courseEnums.Status;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.CertificationMapper;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

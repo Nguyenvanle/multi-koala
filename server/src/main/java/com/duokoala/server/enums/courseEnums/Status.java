@@ -1,4 +1,4 @@
-package com.duokoala.server.enums;
+package com.duokoala.server.enums.courseEnums;
 
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
