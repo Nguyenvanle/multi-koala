@@ -68,6 +68,7 @@ const Test = () => {
   const [score, setScore] = useState(0);
   const [isRetake, setIsRetake] = useState(false);
   const [selectedResultAnswers, setSelectedResultAnswers] = useState(null);
+  const [resultMessage, setResultMessage] = useState("");
 
   // Check for token on component mount
   useEffect(() => {
@@ -284,7 +285,7 @@ const Test = () => {
                       { color: getScoreColor(previousScore) },
                     ]}
                   >
-                    {previousScore} / 10
+                    {previousScore}
                   </Text>
                 </Text>
                 <Text style={{ alignSelf: "flex-end" }}>
@@ -376,6 +377,13 @@ const Test = () => {
       // Xóa câu trả lời đã chọn
       await AsyncStorage.removeItem("selectedAnswers");
       setShowResult(true);
+
+      // Check if the score is passing or failing
+      if (score >= 5) {
+        setResultMessage("Congratulations! You have passed the test.");
+      } else {
+        setResultMessage("Sorry! You failed the test.");
+      }
     } catch (error) {
       console.error("Error submitting answers:", error);
     }
@@ -569,6 +577,15 @@ const Test = () => {
                 />
                 {showResult && displayResult && (
                   <View style={styles.resultContainer}>
+                    <Text
+                      style={
+                        score >= 5
+                          ? styles.successMessage
+                          : styles.failureMessage
+                      }
+                    >
+                      {resultMessage}
+                    </Text>
                     <Text style={styles.resultText}>
                       You got{" "}
                       <Text
@@ -597,9 +614,11 @@ const Test = () => {
                           { color: getScoreColor(score) },
                         ]}
                       >
-                        {score} / 10
+                        {score}
                       </Text>
                     </Text>
+
+                    {/* Display result message */}
                   </View>
                 )}
                 {!showResult && (
@@ -721,6 +740,14 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     borderWidth: 1,
     borderColor: Colors.grey,
+  },
+  successMessage: {
+    ...text.h4,
+    color: Colors.super_teal_dark,
+  },
+  failureMessage: {
+    ...text.h4,
+    color: Colors.red,
   },
 });
 

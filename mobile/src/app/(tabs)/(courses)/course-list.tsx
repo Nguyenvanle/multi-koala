@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Styles, text } from "@/src/constants/Styles";
@@ -17,39 +18,56 @@ import FinishedCourses from "@/src/feature/course/components/courses/finished-co
 import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUser from "@/src/feature/user/hooks/useUser";
-import FavouriteCourses from "@/src/feature/course/components/courses/favourite-courses/FavouriteCourses";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import FilterModal from "@/src/feature/course/components/filter/filterCourse";
 
 const CourseList = (): React.JSX.Element => {
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tab } = useLocalSearchParams();
-  const [loading, setLoading] = useState(true); // State để theo dõi trạng thái tải
-  const { user, setUser } = useUser();
+  const [loading, setLoading] = useState(true);
+  const { user } = useUser();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const data = [
-    { id: 1, label: "See All", component: <AllCourses />, param: "all" },
+    {
+      id: 1,
+      label: "See All",
+      component: <AllCourses searchQuery={debouncedSearchQuery} />,
+      param: "all",
+    },
     {
       id: 2,
       label: "In Progress",
-      component: <InProgressCourses />,
+      component: <InProgressCourses searchQuery={debouncedSearchQuery} />,
       param: "inprogress",
     },
     {
       id: 3,
       label: "Finished",
-      component: <FinishedCourses />,
+      component: <FinishedCourses searchQuery={debouncedSearchQuery} />,
       param: "finished",
     },
   ];
 
+  // Debounce search query để tránh gọi API quá nhiều
   useEffect(() => {
-    // Hàm để lấy dữ liệu người dùng từ AsyncStorage
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500); // Đợi 500ms sau khi người dùng ngừng gõ
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  useEffect(() => {
     const fetchUserData = async () => {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        // Nếu có token, giả định người dùng đã đăng nhập
+        // Xử lý token nếu cần
       }
-      setLoading(false); // Đặt trạng thái tải về false khi hoàn tất
+      setLoading(false);
     };
 
     fetchUserData();
@@ -64,8 +82,12 @@ const CourseList = (): React.JSX.Element => {
     }
   }, [tab]);
 
-  const handlePress = (index: any) => {
+  const handlePress = (index: number) => {
     setSelectedIndex(index);
+  };
+
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
   };
 
   if (loading) {
@@ -88,6 +110,28 @@ const CourseList = (): React.JSX.Element => {
       )}
       {user ? (
         <View>
+          <View style={styles.searchContainer}>
+            <AntDesign
+              name="search1"
+              size={18}
+              color={Colors.dark_grey}
+              style={{ marginRight: 8 }}
+            />
+            <TextInput
+              placeholder="Search course..."
+              placeholderTextColor={Colors.dark_grey}
+              style={{ ...text.large, flex: 1 }}
+              value={searchQuery}
+              onChangeText={handleSearch}
+            />
+            <TouchableOpacity onPress={() => setModalOpen(true)}>
+              <Ionicons name="filter" size={24} color={Colors.dark_grey} />
+              <FilterModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={styles.tabContainer}>
             {data.map((item, index) => (
               <TouchableOpacity
@@ -126,6 +170,20 @@ const CourseList = (): React.JSX.Element => {
 };
 
 const styles = StyleSheet.create({
+  searchContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: 365,
+    height: 45,
+    padding: 8,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.background,
+    borderWidth: 1,
+    borderColor: Colors.grey,
+    borderRadius: 20,
+    marginTop: 8,
+  },
   tabContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

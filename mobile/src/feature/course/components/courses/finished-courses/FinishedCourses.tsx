@@ -13,10 +13,16 @@ import { Link, router, useGlobalSearchParams } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
 
-const FinishedCourses = () => {
+interface FinishedCoursesProps {
+  searchQuery?: string; // Made optional
+}
+
+const FinishedCourses: React.FC<FinishedCoursesProps> = ({
+  searchQuery = "", // Default value
+}) => {
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-  const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);
+  const { enrolled = [], errorMessage, loading } = useEnrolled(courseIdString); // Default empty array
 
   if (loading) {
     return (
@@ -26,10 +32,20 @@ const FinishedCourses = () => {
     );
   }
 
-  // Filter to only include courses with process equal to 1.0
-  const finishedCourses = enrolled.filter((item) => item.process === 1.0);
+  // Kiểm tra và lọc khóa học đã hoàn thành
+  const finishedCourses = enrolled.filter((item) => {
+    if (!item?.course?.courseName) return false;
+
+    const matchesSearch = searchQuery
+      ? item.course.courseName.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+    const isFinished = item.process === 1.0;
+    return matchesSearch && isFinished;
+  });
 
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
+    if (!item?.course) return null;
+
     return (
       <View>
         <Link href={`/${item.course.courseId}`} asChild>
@@ -43,7 +59,7 @@ const FinishedCourses = () => {
               }}
             >
               <Image
-                source={{ uri: item.course.image.imageUrl }}
+                source={{ uri: item.course?.image?.imageUrl }}
                 style={{
                   width: 350,
                   height: 200,
@@ -73,7 +89,7 @@ const FinishedCourses = () => {
                       fontWeight: "400",
                     }}
                   >
-                    {item.course.courseName}
+                    {item.course.courseName || "Untitled Course"}
                   </Text>
                 </View>
                 <View
@@ -89,7 +105,7 @@ const FinishedCourses = () => {
                       color: Colors.teal_dark,
                     }}
                   >
-                    {item.process * 100}%
+                    {((item.process || 0) * 100).toFixed(1)}%
                   </Text>
                 </View>
                 <View
@@ -101,7 +117,7 @@ const FinishedCourses = () => {
                 >
                   <Progress.Bar
                     width={350}
-                    progress={item.process}
+                    progress={item.process || 0}
                     color={Colors.teal_light}
                   />
                 </View>
@@ -113,8 +129,8 @@ const FinishedCourses = () => {
                       color: Colors.teal_dark,
                     }}
                   >
-                    {item.course.uploadedByTeacher?.firstname}{" "}
-                    {item.course.uploadedByTeacher?.lastname}
+                    {item.course.uploadedByTeacher?.firstname || ""}{" "}
+                    {item.course.uploadedByTeacher?.lastname || ""}
                   </Text>
                 </View>
               </View>
@@ -132,7 +148,9 @@ const FinishedCourses = () => {
             marginBottom: 8,
             justifyContent: "center",
           }}
-          onPress={() => router.push(`/${item.course.courseId}`)}
+          onPress={() =>
+            item.course?.courseId && router.push(`/${item.course.courseId}`)
+          }
         >
           <Text
             style={{
@@ -149,20 +167,22 @@ const FinishedCourses = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingVertical: 10,
-      }}
-    >
+    <View style={{ flex: 1, paddingVertical: 10 }}>
       {errorMessage ? (
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={finishedCourses} // Use the filtered data
+          data={finishedCourses}
           renderItem={renderCourseItem}
-          keyExtractor={(item) => item.course.courseId}
+          keyExtractor={(item) =>
+            item.course?.courseId || Math.random().toString()
+          }
+          ListEmptyComponent={() => (
+            <View style={{ padding: 16, alignItems: "center" }}>
+              <Text>No finished courses</Text>
+            </View>
+          )}
         />
       )}
     </View>

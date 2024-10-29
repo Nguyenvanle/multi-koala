@@ -13,10 +13,16 @@ import { Link, router, useGlobalSearchParams } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
 
-const InProgressCourses = () => {
+interface InProgressCoursesProps {
+  searchQuery?: string; // Made optional
+}
+
+const InProgressCourses: React.FC<InProgressCoursesProps> = ({
+  searchQuery = "", // Default value
+}) => {
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-  const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);
+  const { enrolled = [], errorMessage, loading } = useEnrolled(courseIdString); // Default empty array
 
   if (loading) {
     return (
@@ -26,10 +32,20 @@ const InProgressCourses = () => {
     );
   }
 
-  // Filter out courses where process is 1.0
-  const filteredEnrolled = enrolled.filter((item) => item.process < 1.0);
+  // Kiểm tra và lọc khóa học
+  const filteredEnrolled = enrolled.filter((item) => {
+    if (!item?.course?.courseName) return false;
+
+    const matchesSearch = searchQuery
+      ? item.course.courseName.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+    const inProgress = item.process != null && item.process < 1.0;
+    return matchesSearch && inProgress;
+  });
 
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
+    if (!item?.course) return null;
+
     return (
       <View>
         <Link href={`/${item.course.courseId}`} asChild>
@@ -43,7 +59,7 @@ const InProgressCourses = () => {
               }}
             >
               <Image
-                source={{ uri: item.course.image.imageUrl }}
+                source={{ uri: item.course?.image?.imageUrl }}
                 style={{
                   width: 350,
                   height: 200,
@@ -73,7 +89,7 @@ const InProgressCourses = () => {
                       fontWeight: "400",
                     }}
                   >
-                    {item.course.courseName}
+                    {item.course.courseName || "Untitled Course"}
                   </Text>
                 </View>
                 <View
@@ -89,7 +105,7 @@ const InProgressCourses = () => {
                       color: Colors.teal_dark,
                     }}
                   >
-                    {item.process * 100}%
+                    {((item.process || 0) * 100).toFixed(1)}%
                   </Text>
                 </View>
                 <View
@@ -101,7 +117,7 @@ const InProgressCourses = () => {
                 >
                   <Progress.Bar
                     width={350}
-                    progress={item.process}
+                    progress={item.process || 0}
                     color={Colors.teal_light}
                   />
                 </View>
@@ -113,8 +129,8 @@ const InProgressCourses = () => {
                       color: Colors.teal_dark,
                     }}
                   >
-                    {item.course.uploadedByTeacher?.firstname}{" "}
-                    {item.course.uploadedByTeacher?.lastname}
+                    {item.course.uploadedByTeacher?.firstname || ""}{" "}
+                    {item.course.uploadedByTeacher?.lastname || ""}
                   </Text>
                 </View>
               </View>
@@ -132,7 +148,9 @@ const InProgressCourses = () => {
             marginBottom: 8,
             justifyContent: "center",
           }}
-          onPress={() => router.push(`/${item.course.courseId}`)}
+          onPress={() =>
+            item.course?.courseId && router.push(`/${item.course.courseId}`)
+          }
         >
           <Text
             style={{
@@ -149,20 +167,22 @@ const InProgressCourses = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingVertical: 10,
-      }}
-    >
+    <View style={{ flex: 1, paddingVertical: 10 }}>
       {errorMessage ? (
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={filteredEnrolled} // Use the filtered data
+          data={filteredEnrolled}
           renderItem={renderCourseItem}
-          keyExtractor={(item) => item.course.courseId}
+          keyExtractor={(item) =>
+            item.course?.courseId || Math.random().toString()
+          }
+          ListEmptyComponent={() => (
+            <View style={{ padding: 16, alignItems: "center" }}>
+              <Text>No courses in progress</Text>
+            </View>
+          )}
         />
       )}
     </View>

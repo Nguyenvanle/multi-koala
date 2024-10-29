@@ -15,15 +15,15 @@ import useUser from "@/src/feature/user/hooks/useUser";
 import { CourseBody } from "../../../types/course";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 
-const AllCourses = () => {
+interface AllCoursesProps {
+  searchQuery: string;
+}
+
+const AllCourses: React.FC<AllCoursesProps> = ({ searchQuery }) => {
   const { courseId } = useGlobalSearchParams();
-
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-
   const { course, errorMessage, loading } = useCourse();
-
   const { user } = useUser();
-
   const { enrolled } = useEnrolled();
 
   if (loading) {
@@ -34,13 +34,17 @@ const AllCourses = () => {
     );
   }
 
-  // Lọc danh sách khóa học để loại bỏ những khóa học đã được đăng ký
+  // Lọc danh sách khóa học đã đăng ký
   const enrolledCourseIds = Array.isArray(enrolled)
     ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
     : [];
 
   const filteredCourses = course.filter((item: CourseBody) => {
-    return !enrolledCourseIds.includes(item.courseId);
+    const matchesSearch = item.courseName
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const notEnrolled = !enrolledCourseIds.includes(item.courseId);
+    return matchesSearch && notEnrolled;
   });
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
