@@ -29,28 +29,55 @@ const CourseList = (): React.JSX.Element => {
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
   const data = [
     {
       id: 1,
       label: "See All",
-      component: <AllCourses searchQuery={debouncedSearchQuery} />,
+      component: (
+        <AllCourses
+          searchQuery={debouncedSearchQuery}
+          filter={{ types: selectedTypes, fields: selectedFields }}
+        />
+      ),
       param: "all",
     },
     {
       id: 2,
       label: "In Progress",
-      component: <InProgressCourses searchQuery={debouncedSearchQuery} />,
+      component: (
+        <InProgressCourses
+          searchQuery={debouncedSearchQuery}
+          filter={{ types: selectedTypes, fields: selectedFields }}
+        />
+      ),
       param: "inprogress",
     },
     {
       id: 3,
       label: "Finished",
-      component: <FinishedCourses searchQuery={debouncedSearchQuery} />,
+      component: (
+        <FinishedCourses
+          searchQuery={debouncedSearchQuery}
+          filter={{ types: selectedTypes, fields: selectedFields }}
+        />
+      ),
       param: "finished",
     },
   ];
+
+  const handleFilterPress = () => {
+    setIsFilterVisible(true);
+  };
+
+  const handleApplyFilters = (types: string[], fields: string[]) => {
+    setSelectedTypes(types);
+    setSelectedFields(fields);
+    setIsFilterVisible(false); // Đóng modal sau khi áp dụng bộ lọc
+  };
 
   // Debounce search query để tránh gọi API quá nhiều
   useEffect(() => {
@@ -124,13 +151,14 @@ const CourseList = (): React.JSX.Element => {
               value={searchQuery}
               onChangeText={handleSearch}
             />
-            <TouchableOpacity onPress={() => setModalOpen(true)}>
+            <TouchableOpacity onPress={handleFilterPress}>
               <Ionicons name="filter" size={24} color={Colors.dark_grey} />
-              <FilterModal
-                isOpen={isModalOpen}
-                onClose={() => setModalOpen(false)}
-              />
             </TouchableOpacity>
+            <FilterModal
+              visible={isFilterVisible}
+              onClose={() => setIsFilterVisible(false)}
+              onApplyFilters={handleApplyFilters}
+            />
           </View>
           <View style={styles.tabContainer}>
             {data.map((item, index) => (

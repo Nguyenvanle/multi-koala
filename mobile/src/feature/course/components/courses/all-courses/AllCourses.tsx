@@ -12,14 +12,24 @@ import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
-import { CourseBody } from "../../../types/course";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
+import { CourseBody } from "../../../types/course";
+
+interface Filter {
+  types: string[];
+  fields: string[];
+}
 
 interface AllCoursesProps {
   searchQuery: string;
+  filter: Filter;
 }
 
-const AllCourses: React.FC<AllCoursesProps> = ({ searchQuery }) => {
+const AllCourses: React.FC<AllCoursesProps> = ({
+  searchQuery = "", // Default value
+  filter,
+}) => {
+  // Giả định bạn có course data
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { course, errorMessage, loading } = useCourse();
@@ -40,11 +50,27 @@ const AllCourses: React.FC<AllCoursesProps> = ({ searchQuery }) => {
     : [];
 
   const filteredCourses = course.filter((item: CourseBody) => {
+    if (!item?.courseName) return false;
+
     const matchesSearch = item.courseName
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const notEnrolled = !enrolledCourseIds.includes(item.courseId);
-    return matchesSearch && notEnrolled;
+
+    // Lọc theo loại và trường
+    const matchesType =
+      filter.types.length === 0 ||
+      filter.types.every((type) =>
+        item.types.some((courseType) => courseType.typeName === type)
+      );
+
+    const matchesField =
+      filter.fields.length === 0 ||
+      filter.fields.every((field) =>
+        item.fields.some((itemField) => itemField.fieldName === field)
+      );
+
+    return matchesSearch && notEnrolled && matchesType && matchesField;
   });
 
   const renderCourseItem = ({ item }: { item: CourseBody }) => (
@@ -79,7 +105,6 @@ const AllCourses: React.FC<AllCoursesProps> = ({ searchQuery }) => {
                   flexDirection: "row",
                   alignSelf: "baseline",
                   width: 345,
-
                   paddingTop: 8,
                   paddingBottom: 0,
                 }}
@@ -135,7 +160,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ searchQuery }) => {
                 },
                 {
                   text: "Log In",
-                  onPress: () => router.push("/(auth)/sign-in"), // Assuming you have a login route
+                  onPress: () => router.push("/(auth)/sign-in"),
                 },
               ]
             );
@@ -156,37 +181,34 @@ const AllCourses: React.FC<AllCoursesProps> = ({ searchQuery }) => {
   );
 
   return (
-    <View>
+    <View style={{ paddingVertical: 10 }}>
       {user ? (
-        <View
-          style={{
-            paddingVertical: 10,
-          }}
-        >
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={filteredCourses} // Sử dụng danh sách đã lọc
-            renderItem={renderCourseItem}
-            keyExtractor={(item) => item.courseId}
-          />
-        </View>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={filteredCourses}
+          renderItem={renderCourseItem}
+          keyExtractor={(item) => item.courseId}
+          ListEmptyComponent={
+            <Text
+              style={{
+                ...text.large,
+                marginTop: 8,
+                fontWeight: "400",
+                color: Colors.dark_grey,
+              }}
+            >
+              No courses available
+            </Text>
+          }
+        />
       ) : (
-        <View
-          style={{
-            flex: 0,
-            paddingVertical: 10,
-            height: 700,
-            top: -160,
-          }}
-        >
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={course}
-            renderItem={renderCourseItem}
-            keyExtractor={(item) => item.courseId}
-            style={{ height: 630 }}
-          />
-        </View>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={course}
+          renderItem={renderCourseItem}
+          keyExtractor={(item) => item.courseId}
+          ListEmptyComponent={<Text>No courses available</Text>}
+        />
       )}
     </View>
   );

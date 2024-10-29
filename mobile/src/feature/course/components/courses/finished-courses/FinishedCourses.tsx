@@ -13,12 +13,19 @@ import { Link, router, useGlobalSearchParams } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
 
+interface Filter {
+  types: string[];
+  fields: string[];
+}
+
 interface FinishedCoursesProps {
   searchQuery?: string; // Made optional
+  filter: Filter; // Added filter property
 }
 
 const FinishedCourses: React.FC<FinishedCoursesProps> = ({
   searchQuery = "", // Default value
+  filter, // Receive filter prop
 }) => {
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
@@ -39,8 +46,23 @@ const FinishedCourses: React.FC<FinishedCoursesProps> = ({
     const matchesSearch = searchQuery
       ? item.course.courseName.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
+
     const isFinished = item.process === 1.0;
-    return matchesSearch && isFinished;
+
+    // Lọc dựa trên types và fields
+    const matchesType =
+      filter.types.length === 0 ||
+      filter.types.every((type) =>
+        item.course.types.some((courseType) => courseType.typeName === type)
+      );
+
+    const matchesField =
+      filter.fields.length === 0 ||
+      filter.fields.every((field) =>
+        item.course.fields.some((itemField) => itemField.fieldName === field)
+      );
+
+    return matchesSearch && isFinished && matchesType && matchesField;
   });
 
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => {
@@ -179,9 +201,16 @@ const FinishedCourses: React.FC<FinishedCoursesProps> = ({
             item.course?.courseId || Math.random().toString()
           }
           ListEmptyComponent={() => (
-            <View style={{ padding: 16, alignItems: "center" }}>
-              <Text>No finished courses</Text>
-            </View>
+            <Text
+              style={{
+                ...text.large,
+                marginTop: 8,
+                fontWeight: "400",
+                color: Colors.dark_grey,
+              }}
+            >
+              No courses available
+            </Text>
           )}
         />
       )}

@@ -1,3 +1,13 @@
+export type TypeBody = {
+  typeName: string;
+  typeDescription: string;
+};
+
+export type FieldBody = {
+  fieldName: string;
+  fieldDescription: string;
+};
+
 export type EnrolledBody = {
   course: {
     courseId: string;
@@ -14,14 +24,8 @@ export type EnrolledBody = {
     };
     courseLevel: string;
     courseRating: number;
-    types: {
-      typeName: string;
-      typeDescription: string;
-    };
-    fields: {
-      fieldName: string;
-      fielDescription: string;
-    };
+    types: TypeBody[];
+    fields: FieldBody[];
     status: string;
   };
   process: number;
