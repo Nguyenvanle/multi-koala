@@ -100,7 +100,7 @@ const Account = () => {
                 paddingBottom: 24,
                 width: 300,
               }}
-              onPress={() => router.push("/(myProfile)/index")}
+              onPress={() => router.push("/(myProfile)/")}
             >
               <MaterialCommunityIcons
                 name="account-circle"
