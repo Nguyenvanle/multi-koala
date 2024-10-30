@@ -15,14 +15,26 @@ import {
   Platform,
   Dimensions,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const { loading, user, setUser, errorMessage, setErrorMessage, updateImage } =
     useUser();
+  const [showRolePicker, setShowRolePicker] = useState<boolean>(false);
+  const defaultRole =
+    user.roles.length > 0 ? user.roles[0].roleName : "STUDENT";
+
+  const getRoleLabel = (roles) => {
+    if (roles.length > 0) {
+      return roles[0].roleName; // Trả về tên vai trò đầu tiên
+    }
+    return "No role assigned"; // Trả về thông báo nếu không có vai trò
+  };
 
   // Xử lý loading state
   if (loading) {
@@ -70,11 +82,21 @@ const UserProfile: React.FC = () => {
     }));
   };
 
+  // Thêm hàm formatDate để chuyển đổi định dạng ngày tháng
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-      handleInputChange("userBirth", formattedDate);
+      // Lưu trữ dạng ISO string trong state
+      const isoDate = selectedDate.toISOString().split("T")[0];
+      handleInputChange("userBirth", isoDate);
     }
   };
 
@@ -172,38 +194,55 @@ const UserProfile: React.FC = () => {
 
           {/* Vai trò */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Vai trò</Text>
-            {Platform.OS === "ios" ? (
-              <View
-                style={[
-                  styles.input,
-                  !isEditing && styles.disabledInput,
-                  styles.pickerContainer,
-                ]}
+            <Text style={styles.label}>Role</Text>
+            <TouchableOpacity
+              onPress={() => isEditing && setShowRolePicker(true)}
+              style={[styles.input, !isEditing && styles.disabledInput]}
+            >
+              <Text style={[!isEditing && styles.disabledText]}>
+                {user && user.roles && user.roles.length > 0
+                  ? getRoleLabel(user.roles)
+                  : defaultRole}
+              </Text>
+            </TouchableOpacity>
+            {/* Modal cho iOS */}
+            {Platform.OS === "ios" && showRolePicker && (
+              <Modal
+                transparent={true}
+                visible={showRolePicker}
+                animationType="fade"
               >
-                <Picker
-                  selectedValue={user.roles}
-                  enabled={isEditing}
-                  onValueChange={(value) =>
-                    handleInputChange("roles", value as "student" | "teacher")
-                  }
-                >
-                  <Picker.Item label="Student" value="student" />
-                  <Picker.Item label="Teacher" value="teacher" />
-                </Picker>
-              </View>
-            ) : (
-              <Picker
-                style={styles.picker}
-                enabled={isEditing}
-                selectedValue={user.roles}
-                onValueChange={(value) =>
-                  handleInputChange("roles", value as "student" | "teacher")
-                }
-              >
-                <Picker.Item label="Student" value="student" />
-                <Picker.Item label="Teacher" value="teacher" />
-              </Picker>
+                <View style={styles.modalOverlay}>
+                  <View style={styles.modalContent}>
+                    <View style={styles.pickerHeader}>
+                      <TouchableOpacity
+                        onPress={() => setShowRolePicker(false)}
+                        style={styles.pickerButton}
+                      >
+                        <Text style={styles.pickerButtonText}>Close</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Picker
+                      selectedValue={user?.roles[0]?.roleName || defaultRole} // Sử dụng vai trò đầu tiên hoặc giá trị mặc định
+                      onValueChange={(value) => {
+                        handleInputChange("roles", value); // Cập nhật giá trị khi chọn vai trò
+                        setShowRolePicker(false);
+                      }}
+                    >
+                      {user?.roles?.map((role, index) => (
+                        <Picker.Item
+                          key={index}
+                          label={role.roleName}
+                          value={role.roleName.toLowerCase()} // Đảm bảo giá trị là chữ thường
+                        />
+                      )) || (
+                        <Picker.Item label="No roles available" value="" />
+                      )}{" "}
+                      {/* Thông báo nếu không có vai trò */}
+                    </Picker>
+                  </View>
+                </View>
+              </Modal>
             )}
           </View>
 
@@ -214,11 +253,20 @@ const UserProfile: React.FC = () => {
               onPress={() => isEditing && setShowDatePicker(true)}
               style={[styles.input, !isEditing && styles.disabledInput]}
             >
-              <Text>{user.userBirth || "Chưa cập nhật"}</Text>
+              <Text style={styles.disabledText}>
+                {formatDate(user.userBirth || "No update yet")}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          {showDatePicker && ""}
+          {showDatePicker && (
+            <DateTimePicker
+              value={new Date(user.userBirth)}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
 
           {/* Quê quán */}
           <CustomInput
@@ -245,7 +293,7 @@ const UserProfile: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
   },
   header: {
     justifyContent: "center",
@@ -313,10 +361,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    ...text.p,
-    fontWeight: "500",
-    marginBottom: 8,
-    color: Colors.black,
+    ...text.large,
+    fontWeight: "600",
+    marginBottom: 4,
+    color: Colors.teal_dark,
     marginHorizontal: 4,
   },
   input: {
@@ -325,14 +373,14 @@ const styles = StyleSheet.create({
     borderColor: Colors.grey,
     borderRadius: 6,
     padding: 12,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.white,
   },
   multilineInput: {
     height: 100,
     textAlignVertical: "top",
   },
   disabledInput: {
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.white,
     color: Colors.dark_grey,
   },
   pickerContainer: {
@@ -377,6 +425,34 @@ const styles = StyleSheet.create({
   retryButtonText: {
     color: "#fff",
     fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: 20,
+  },
+  pickerHeader: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e1e1e1",
+  },
+  pickerButton: {
+    padding: 8,
+  },
+  pickerButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+  },
+  disabledText: {
+    color: Colors.dark_grey,
   },
 });
 
