@@ -189,7 +189,7 @@ const FinishedCourses: React.FC<FinishedCoursesProps> = ({
   };
 
   return (
-    <View style={{ flex: 1, paddingVertical: 10 }}>
+    <View style={{ flex: 1, paddingVertical: 10, marginBottom: 53 }}>
       {errorMessage ? (
         <Text style={{ color: "red" }}>{errorMessage}</Text>
       ) : (

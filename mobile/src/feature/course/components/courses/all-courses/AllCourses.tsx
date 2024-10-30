@@ -183,32 +183,37 @@ const AllCourses: React.FC<AllCoursesProps> = ({
   return (
     <View style={{ paddingVertical: 10 }}>
       {user ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={filteredCourses}
-          renderItem={renderCourseItem}
-          keyExtractor={(item) => item.courseId}
-          ListEmptyComponent={
-            <Text
-              style={{
-                ...text.large,
-                marginTop: 8,
-                fontWeight: "400",
-                color: Colors.dark_grey,
-              }}
-            >
-              No courses available
-            </Text>
-          }
-        />
+        <View style={{ marginBottom: 50 }}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={filteredCourses}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+            ListEmptyComponent={
+              <Text
+                style={{
+                  ...text.large,
+                  marginTop: 8,
+                  fontWeight: "400",
+                  color: Colors.dark_grey,
+                }}
+              >
+                No courses available
+              </Text>
+            }
+          />
+        </View>
       ) : (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={course}
-          renderItem={renderCourseItem}
-          keyExtractor={(item) => item.courseId}
-          ListEmptyComponent={<Text>No courses available</Text>}
-        />
+        <View style={{ height: 700, top: -150 }}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={course}
+            renderItem={renderCourseItem}
+            keyExtractor={(item) => item.courseId}
+            ListEmptyComponent={<Text>No courses available</Text>}
+            style={{ marginBottom: 40 }}
+          />
+        </View>
       )}
     </View>
   );

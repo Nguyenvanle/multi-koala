@@ -101,7 +101,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
             )}
           </View>
 
-          {nextCourse ? (
+          {nextCourse && (
             <Link href={`/${nextCourse.course.courseId}`} asChild>
               <TouchableOpacity
                 style={{
@@ -182,10 +182,6 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                 </View>
               </TouchableOpacity>
             </Link>
-          ) : (
-            <Text style={{ ...text.h4, color: Colors.black, marginTop: 16 }}>
-              No courses enrolled.
-            </Text>
           )}
         </View>
       ) : (

@@ -78,7 +78,7 @@ const NewCourses = () => {
   return (
     <View>
       {user ? (
-        <View style={{ height: 250 }}>
+        <View style={{ height: 230 }}>
           <FlatList
             data={coursesToShow}
             renderItem={renderCourseItem}
