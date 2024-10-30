@@ -16,6 +16,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -181,27 +182,27 @@ const UserProfile: React.FC = () => {
                 ]}
               >
                 <Picker
-                  selectedValue={userInfo.role}
+                  selectedValue={user.roles}
                   enabled={isEditing}
                   onValueChange={(value) =>
-                    handleInputChange("role", value as "student" | "teacher")
+                    handleInputChange("roles", value as "student" | "teacher")
                   }
                 >
-                  <Picker.Item label="Học sinh" value="student" />
-                  <Picker.Item label="Giáo viên" value="teacher" />
+                  <Picker.Item label="Student" value="student" />
+                  <Picker.Item label="Teacher" value="teacher" />
                 </Picker>
               </View>
             ) : (
               <Picker
                 style={styles.picker}
                 enabled={isEditing}
-                selectedValue={userInfo.role}
+                selectedValue={user.roles}
                 onValueChange={(value) =>
-                  handleInputChange("role", value as "student" | "teacher")
+                  handleInputChange("roles", value as "student" | "teacher")
                 }
               >
-                <Picker.Item label="Học sinh" value="student" />
-                <Picker.Item label="Giáo viên" value="teacher" />
+                <Picker.Item label="Student" value="student" />
+                <Picker.Item label="Teacher" value="teacher" />
               </Picker>
             )}
           </View>
