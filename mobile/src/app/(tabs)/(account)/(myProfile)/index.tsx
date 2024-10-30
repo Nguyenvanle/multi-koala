@@ -26,15 +26,6 @@ const UserProfile: React.FC = () => {
   const { loading, user, setUser, errorMessage, setErrorMessage, updateImage } =
     useUser();
   const [showRolePicker, setShowRolePicker] = useState<boolean>(false);
-  const defaultRole =
-    user.roles.length > 0 ? user.roles[0].roleName : "STUDENT";
-
-  const getRoleLabel = (roles) => {
-    if (roles.length > 0) {
-      return roles[0].roleName; // Trả về tên vai trò đầu tiên
-    }
-    return "No role assigned"; // Trả về thông báo nếu không có vai trò
-  };
 
   // Xử lý loading state
   if (loading) {
@@ -200,13 +191,11 @@ const UserProfile: React.FC = () => {
               style={[styles.input, !isEditing && styles.disabledInput]}
             >
               <Text style={[!isEditing && styles.disabledText]}>
-                {user && user.roles && user.roles.length > 0
-                  ? getRoleLabel(user.roles)
-                  : defaultRole}
+                {user.roles[0].roleName}
               </Text>
             </TouchableOpacity>
             {/* Modal cho iOS */}
-            {Platform.OS === "ios" && showRolePicker && (
+            {/* {Platform.OS === "ios" && showRolePicker && (
               <Modal
                 transparent={true}
                 visible={showRolePicker}
@@ -223,7 +212,7 @@ const UserProfile: React.FC = () => {
                       </TouchableOpacity>
                     </View>
                     <Picker
-                      selectedValue={user?.roles[0]?.roleName || defaultRole} // Sử dụng vai trò đầu tiên hoặc giá trị mặc định
+                      selectedValue={user?.roles[0]?.roleName} // Sử dụng vai trò đầu tiên hoặc giá trị mặc định
                       onValueChange={(value) => {
                         handleInputChange("roles", value); // Cập nhật giá trị khi chọn vai trò
                         setShowRolePicker(false);
@@ -238,12 +227,11 @@ const UserProfile: React.FC = () => {
                       )) || (
                         <Picker.Item label="No roles available" value="" />
                       )}{" "}
-                      {/* Thông báo nếu không có vai trò */}
                     </Picker>
                   </View>
                 </View>
               </Modal>
-            )}
+            )} */}
           </View>
 
           {/* Ngày sinh */}
