@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
+
 import {
   Card,
   CardContent,
@@ -15,10 +16,17 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
 
-const chartData = [
+interface ChartData {
+  category: string;
+  students: number;
+  fill: string;
+  description: string;
+}
+
+const chartData: ChartData[] = [
   {
     category: "active",
     students: 275,
@@ -55,46 +63,49 @@ const chartData = [
 ];
 
 const chartConfig = {
-  students: {
-    label: "Students",
-  },
-  active: {
-    label: "Active Students",
-    color: "hsl(var(--chart-1))",
-  },
-  completed: {
-    label: "Completed Courses",
-    color: "hsl(var(--chart-2))",
-  },
-  inProgress: {
-    label: "In Progress",
-    color: "hsl(var(--chart-3))",
-  },
-  onHold: {
-    label: "On Hold",
-    color: "hsl(var(--chart-4))",
-  },
-  newlyEnrolled: {
-    label: "Newly Enrolled",
-    color: "hsl(var(--chart-5))",
-  },
+  students: { label: "Students" },
+  active: { label: "Active Students", color: "hsl(var(--chart-1))" },
+  completed: { label: "Completed Courses", color: "hsl(var(--chart-2))" },
+  inProgress: { label: "In Progress", color: "hsl(var(--chart-3))" },
+  onHold: { label: "On Hold", color: "hsl(var(--chart-4))" },
+  newlyEnrolled: { label: "Newly Enrolled", color: "hsl(var(--chart-5))" },
 } satisfies ChartConfig;
 
-// Custom tooltip component
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-        <p className="font-semibold text-gray-900">
-          {chartConfig[data.category as keyof typeof chartConfig]?.label}
-        </p>
-        <p className="text-gray-600">{data.students} students</p>
-        <p className="text-sm text-gray-500 mt-2">{data.description}</p>
+const CompactTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null;
+
+  const data = payload[0].payload;
+  const totalStudents = chartData.reduce((sum, item) => sum + item.students, 0);
+  const percentage = ((data.students / totalStudents) * 100).toFixed(1);
+
+  return (
+    <div className="rounded-lg border bg-background p-2 text-sm shadow-md">
+      <div className="font-medium">
+        {chartConfig[data.category as keyof typeof chartConfig]?.label}
       </div>
-    );
-  }
-  return null;
+      <div className="text-muted-foreground">
+        {data.students.toLocaleString()} ({percentage}%)
+      </div>
+      <div className="mt-1 text-xs text-muted-foreground">
+        {data.description}
+      </div>
+    </div>
+  );
+};
+
+const CustomBarLabel = ({ x, y, width, value, totalStudents }: any) => {
+  const percentage = ((value / totalStudents) * 100).toFixed(1);
+  return (
+    <text
+      x={x + width - 8}
+      y={y + 20}
+      textAnchor="end"
+      fill="currentColor"
+      className="text-xs tabular-nums"
+    >
+      {percentage}%
+    </text>
+  );
 };
 
 export default function StudentStatsBar() {
@@ -102,43 +113,24 @@ export default function StudentStatsBar() {
     return chartData.reduce((acc, curr) => acc + curr.students, 0);
   }, []);
 
-  const growthRate = 8.5;
-
   const currentDate = new Date();
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const currentMonth = monthNames[currentDate.getMonth()];
-  const currentYear = currentDate.getFullYear();
+  const monthYear = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(currentDate);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Student Enrollment Overview</CardTitle>
-        <CardDescription>{`${currentMonth} ${currentYear}`}</CardDescription>
+        <CardDescription>{monthYear}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: 20,
-            }}
+            margin={{ left: 20, right: 40, top: 20, bottom: 20 }}
             height={300}
           >
             <YAxis
@@ -156,21 +148,30 @@ export default function StudentStatsBar() {
               type="number"
               tickLine={false}
               axisLine={false}
+              tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip
-              cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
-              content={<CustomTooltip />}
+              cursor={{ fill: "var(--chart-tooltip-bg)" }}
+              content={<CompactTooltip />}
+              wrapperStyle={{ outline: "none" }}
+              position={{ y: 0 }}
             />
-            <Bar dataKey="students" radius={[0, 4, 4, 0]} fill="currentColor" />
+            <Bar dataKey="students" radius={[0, 4, 4, 0]}>
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.fill}>
+                  <CustomBarLabel totalStudents={totalStudents} />
+                </Cell>
+              ))}
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Student enrollment up by {growthRate}% this month{" "}
+        <div className="flex items-center gap-2 font-medium">
+          Student enrollment up by 8.5% this month{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
-        <div className="leading-none text-muted-foreground">
+        <div className="text-muted-foreground">
           Total Students: {totalStudents.toLocaleString()}
         </div>
       </CardFooter>

@@ -22,6 +22,9 @@ import {
   PaginationControlProps,
   PaginationProps,
 } from "@/features/pagination/types/pagination";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export interface TeacherTableProps {
   courses: TeacherMyCoursesBodyType;
@@ -43,11 +46,25 @@ export default function TeacherTable({
 
   return (
     <Card x-chunk="dashboard-06-chunk-0">
-      <CardHeader className="p-4 sm:p-6">
-        <CardTitle>Courses</CardTitle>
-        <CardDescription>
-          Manage your courses and view their sales performance.
-        </CardDescription>
+      <CardHeader className="flex flex-row justify-between p-4 sm:p-6">
+        <div className="flex flex-col">
+          <CardTitle>Courses</CardTitle>
+          <CardDescription>
+            Manage your courses and view their sales performance.
+          </CardDescription>
+        </div>
+
+        <div className="flex">
+          <Button className="h-8 gap-1" size="sm">
+            <PlusCircle className="w-3.5 h-3.5" />
+            <Link
+              href="/dashboard/courses/add"
+              className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
+            >
+              Add New Course
+            </Link>
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6 min-h-[366px] xl:min-h-[444px]">
         <Table divClassName="border rounded">
