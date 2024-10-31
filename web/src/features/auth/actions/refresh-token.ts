@@ -29,8 +29,8 @@ export const isTokenExpiringSoon = (
     }
     console.log("Action: Token exp ok", new Date().toLocaleTimeString());
     return false; // Token còn hạn dài
-  } catch (error) {
-    console.error("Action: Error decoding token:", error);
+  } catch (error:any) {
+    console.error("Action: Error decoding token:", error?.message);
     return true; // Nếu decode lỗi, coi như token không hợp lệ
   }
 };

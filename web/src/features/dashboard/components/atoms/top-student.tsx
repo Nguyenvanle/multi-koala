@@ -41,7 +41,7 @@ export default function TopPerformingStudents() {
                 <div className="flex items-center">
                   <Avatar className="h-8 w-8 mr-2">
                     <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
+                      src="/images/fallback-image.jpg"
                       alt="@johndoe"
                     />
                     <AvatarFallback>JD</AvatarFallback>
@@ -60,7 +60,7 @@ export default function TopPerformingStudents() {
                 <div className="flex items-center">
                   <Avatar className="h-8 w-8 mr-2">
                     <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
+                      src="/images/fallback-image.jpg"
                       alt="@janesmith"
                     />
                     <AvatarFallback>JS</AvatarFallback>
@@ -79,7 +79,7 @@ export default function TopPerformingStudents() {
                 <div className="flex items-center">
                   <Avatar className="h-8 w-8 mr-2">
                     <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
+                      src="/images/fallback-image.jpg"
                       alt="@bobwilson"
                     />
                     <AvatarFallback>BW</AvatarFallback>

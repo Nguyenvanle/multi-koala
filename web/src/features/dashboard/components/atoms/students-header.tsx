@@ -17,7 +17,7 @@ export default function StudentHeader() {
     <>
       <Breadcrumbs items={breadcrumbs} />
 
-      <div className="flex flex-row items-center gap-2 w-full md:max-w-96">
+      <div className="flex flex-row items-center gap-2 w-full sm:max-w-72">
         <div className="relative flex-grow ">
           <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 

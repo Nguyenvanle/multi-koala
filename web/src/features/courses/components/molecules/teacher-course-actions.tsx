@@ -9,9 +9,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
-export const TeacherCourseActions: React.FC<{ courseId: string }> = ({
-  courseId,
-}) => (
+export const TeacherCourseActions: React.FC<{ courseId: string }> = ({ courseId }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -21,6 +19,11 @@ export const TeacherCourseActions: React.FC<{ courseId: string }> = ({
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      <DropdownMenuItem>
+        <Link href={`/courses/${courseId}`} className="w-full">
+          View
+        </Link>
+      </DropdownMenuItem>
       <DropdownMenuItem>
         <Link href={`/dashboard/courses/${courseId}`} className="w-full">
           Edit

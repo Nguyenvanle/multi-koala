@@ -20,7 +20,12 @@ export default function TeacherCoursesPage() {
     setFilterOptions,
     setSortOption,
     sortOption,
-  } = useMyTeacherCourses();
+    pagination,
+    paginationControls,
+  } = useMyTeacherCourses({
+    pageSize: 4,
+    initialPage: 1,
+  });
 
   // refetch
   useEffect(() => {
@@ -47,6 +52,8 @@ export default function TeacherCoursesPage() {
       setFilterOptions={setFilterOptions}
       setSortOption={setSortOption}
       currentSort={sortOption}
+      controls={paginationControls}
+      pagination={pagination}
     />
   );
 }

@@ -12,7 +12,7 @@ interface BreadcrumbsProps {
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => (
-  <nav className="flex" aria-label="Breadcrumb">
+  <nav className="hidden sm:flex" aria-label="Breadcrumb">
     <ol className="inline-flex items-center space-x-1 ">
       {items.map((item, index) => (
         <li key={index} className="inline-flex items-center">
@@ -32,7 +32,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => (
           )}
           {/* Chỉ hiển thị ChevronRight nếu không phải phần tử cuối */}
           {index < items.length - 1 && (
-            <ChevronRight className="w-4 h-4 text-foreground mx-1" />
+            <ChevronRight className="inline-flex w-4 h-4 text-foreground mx-1" />
           )}
         </li>
       ))}
