@@ -1,10 +1,13 @@
 "use client";
 
+import * as React from "react";
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -28,12 +31,20 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
   // Tạo một table state bằng tanstack table
   const table = useReactTable({
     data, // table data
     columns, // columns data
     getCoreRowModel: getCoreRowModel(), // tính toán và tạo 1 table model state
     getPaginationRowModel: getPaginationRowModel(), // tính toán và tạo 1 table pagination model state
+    // Sorting
+    onSortingChange: setSorting, // nhận hành dộng người dùng ấn sort
+    getSortedRowModel: getSortedRowModel(), // tính toán và tạo 1 table sorted model state
+    state: {
+      sorting, // đưa sorting state vào tanstack table state
+    },
   });
 
   return (
