@@ -25,48 +25,67 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  // Tạo một table state bằng tanstack table
   const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
+    data, // table data
+    columns, // columns data
+    getCoreRowModel: getCoreRowModel(), // tính toán và tạo 1 table model state
   });
 
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
+          {table.getHeaderGroups().map(
+            (
+              headerGroup // Lấy mảng header cần hiển thị
+            ) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  // Lấy từng header cần hiển thị
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder // xác định xem có phải cột giữ chỗ hay ko
+                        ? null // Không hiển thị
+                        : flexRender(
+                            // Hiển thị với các thuộc tính:
+                            header.column.columnDef.header, // Lấy id header
+                            header.getContext() // Lấy state header
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            )
+          )}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+          {table.getRowModel().rows?.length ? ( // lấy mảng rows cần hiển thị
+            table.getRowModel().rows.map(
+              (
+                row // lấy từng row cần hiển thị
+              ) => (
+                <TableRow
+                  key={row.id} // lấy row id
+                  data-state={row.getIsSelected() && "selected"} // kiểm tra xem row có được chọn hay ko
+                >
+                  {row.getVisibleCells().map(
+                    // chỉ lấy những hàng cần hiển thị (bỏ những ô không chưa thông tin hoặc bị ẩn do bộ lọc)
+                    (cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          // hiển thị tương tự với header
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    )
+                  )}
+                </TableRow>
+              )
+            )
           ) : (
+            // Fallback data
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
