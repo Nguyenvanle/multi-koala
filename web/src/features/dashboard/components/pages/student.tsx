@@ -20,7 +20,7 @@ export default function DashboardStudentPage() {
         <TopPerformingStudents />
       </div> */}
 
-      <StudentTestResults />
+      {/* <StudentTestResults /> */}
     </div>
   );
 }
