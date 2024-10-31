@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   Card,
@@ -16,163 +16,147 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
+import { useMemo } from "react";
 
-interface ChartData {
-  category: string;
-  students: number;
-  fill: string;
-  description: string;
-}
+export const description = "A donut chart with text and percentages";
 
-const chartData: ChartData[] = [
-  {
-    category: "active",
-    students: 275,
-    fill: "hsl(var(--chart-1))",
-    description:
-      "Students currently participating in courses and regularly completing assignments",
-  },
-  {
-    category: "completed",
-    students: 200,
-    fill: "hsl(var(--chart-2))",
-    description:
-      "Students who have successfully finished all course requirements",
-  },
-  {
-    category: "inProgress",
-    students: 187,
-    fill: "hsl(var(--chart-3))",
-    description:
-      "Students who have started but not yet completed their coursework",
-  },
-  {
-    category: "onHold",
-    students: 73,
-    fill: "hsl(var(--chart-4))",
-    description: "Students who have temporarily paused their studies",
-  },
-  {
-    category: "newlyEnrolled",
-    students: 90,
-    fill: "hsl(var(--chart-5))",
-    description: "Students who have just joined within the last 30 days",
-  },
+const chartData = [
+  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
+  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
+  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
+  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
+  { browser: "other", visitors: 190, fill: "var(--color-other)" },
 ];
 
 const chartConfig = {
-  students: { label: "Students" },
-  active: { label: "Active Students", color: "hsl(var(--chart-1))" },
-  completed: { label: "Completed Courses", color: "hsl(var(--chart-2))" },
-  inProgress: { label: "In Progress", color: "hsl(var(--chart-3))" },
-  onHold: { label: "On Hold", color: "hsl(var(--chart-4))" },
-  newlyEnrolled: { label: "Newly Enrolled", color: "hsl(var(--chart-5))" },
+  visitors: {
+    label: "Visitors",
+  },
+  chrome: {
+    label: "Chrome",
+    color: "hsl(var(--chart-1))",
+  },
+  safari: {
+    label: "Safari",
+    color: "hsl(var(--chart-2))",
+  },
+  firefox: {
+    label: "Firefox",
+    color: "hsl(var(--chart-3))",
+  },
+  edge: {
+    label: "Edge",
+    color: "hsl(var(--chart-4))",
+  },
+  other: {
+    label: "Other",
+    color: "hsl(var(--chart-5))",
+  },
 } satisfies ChartConfig;
 
-const CompactTooltip = ({ active, payload }: any) => {
-  if (!active || !payload?.length) return null;
-
-  const data = payload[0].payload;
-  const totalStudents = chartData.reduce((sum, item) => sum + item.students, 0);
-  const percentage = ((data.students / totalStudents) * 100).toFixed(1);
-
-  return (
-    <div className="rounded-lg border bg-background p-2 text-sm shadow-md">
-      <div className="font-medium">
-        {chartConfig[data.category as keyof typeof chartConfig]?.label}
-      </div>
-      <div className="text-muted-foreground">
-        {data.students.toLocaleString()} ({percentage}%)
-      </div>
-      <div className="mt-1 text-xs text-muted-foreground">
-        {data.description}
-      </div>
-    </div>
-  );
-};
-
-const CustomBarLabel = ({ x, y, width, value, totalStudents }: any) => {
-  const percentage = ((value / totalStudents) * 100).toFixed(1);
-  return (
-    <text
-      x={x + width - 8}
-      y={y + 20}
-      textAnchor="end"
-      fill="currentColor"
-      className="text-xs tabular-nums"
-    >
-      {percentage}%
-    </text>
-  );
-};
-
-export default function StudentStatsBar() {
-  const totalStudents = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.students, 0);
+export default function StudentStatsPie() {
+  const totalVisitors = useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
   }, []);
 
-  const currentDate = new Date();
-  const monthYear = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    year: "numeric",
-  }).format(currentDate);
+  // Tính toán phần trăm cho mỗi trường
+  const chartDataWithPercentages = useMemo(() => {
+    return chartData.map((item) => ({
+      ...item,
+      percentage: ((item.visitors / totalVisitors) * 100).toFixed(1),
+    }));
+  }, [totalVisitors]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Student Enrollment Overview</CardTitle>
-        <CardDescription>{monthYear}</CardDescription>
+    <Card className="flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Pie Chart - Donut with Text</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            data={chartData}
-            layout="vertical"
-            margin={{ left: 20, right: 40, top: 20, bottom: 20 }}
-            height={300}
-          >
-            <YAxis
-              dataKey="category"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) =>
-                chartConfig[value as keyof typeof chartConfig]?.label
-              }
-            />
-            <XAxis
-              dataKey="students"
-              type="number"
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => value.toLocaleString()}
-            />
+      <CardContent className="flex-1 pb-0">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[250px] w-full"
+        >
+          <PieChart>
             <ChartTooltip
-              cursor={{ fill: "var(--chart-tooltip-bg)" }}
-              content={<CompactTooltip />}
-              wrapperStyle={{ outline: "none" }}
-              position={{ y: 0 }}
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="students" radius={[0, 4, 4, 0]}>
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.fill}>
-                  <CustomBarLabel totalStudents={totalStudents} />
-                </Cell>
-              ))}
-            </Bar>
-          </BarChart>
+            <Pie
+              data={chartDataWithPercentages}
+              dataKey="visitors"
+              nameKey="browser"
+              innerRadius={60}
+              strokeWidth={1}
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                percentage,
+                browser,
+              }: any) => {
+                const RADIAN = Math.PI / 180;
+                const radius = outerRadius * 1.2;
+                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    textAnchor={x > cx ? "start" : "end"}
+                    dominantBaseline="middle"
+                    className="text-xs fill-muted-foreground"
+                  >
+                    {`${percentage}%`}
+                  </text>
+                );
+              }}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-3xl font-bold"
+                        >
+                          {totalVisitors.toLocaleString()}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Visitors
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium">
-          Student enrollment up by 8.5% this month{" "}
-          <TrendingUp className="h-4 w-4" />
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="flex items-center gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
-        <div className="text-muted-foreground">
-          Total Students: {totalStudents.toLocaleString()}
+        <div className="leading-none text-muted-foreground">
+          Showing total visitors for the last 6 months
         </div>
       </CardFooter>
     </Card>
