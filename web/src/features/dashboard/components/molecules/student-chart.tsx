@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
 import {
@@ -13,8 +12,6 @@ import {
 } from "@/components/ui/card";
 import {
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -22,21 +19,13 @@ import {
   calculateTotalStudents,
   enrichDataWithPercentages,
 } from "@/features/dashboard/utils/chart";
-import {
-  CHART_CONFIG,
-  CHART_DATA,
-  getStatusDescription,
-} from "@/features/dashboard/constants/chart";
+import { CHART_CONFIG, CHART_DATA } from "@/features/dashboard/constants/chart";
 import {
   CenterLabel,
   PieChartLabel,
+  PieTooltip,
 } from "@/features/dashboard/components/atoms";
-import { formatString } from "@/features/field/libs/util";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { useMemo } from "react";
 
 interface VisitorsPieChartProps {
   title?: string;
@@ -51,11 +40,8 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
   trendingPercentage = 5.2,
   dateRange = "this month",
 }) => {
-  const totalStudents = React.useMemo(
-    () => calculateTotalStudents(CHART_DATA),
-    []
-  );
-  const chartDataWithPercentages = React.useMemo(
+  const totalStudents = useMemo(() => calculateTotalStudents(CHART_DATA), []);
+  const chartDataWithPercentages = useMemo(
     () => enrichDataWithPercentages(CHART_DATA, totalStudents),
     [totalStudents]
   );
@@ -99,36 +85,10 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
           </PieChart>
         </ChartContainer>
 
-        {/* Legend Section */}
         <div className="flex flex-0 flex-row flex-wrap sm:flex-col gap-4 mr-0 sm:mr-8 xl:mr-16 justify-center">
-          {chartDataWithPercentages.map((item, index) => {
-            return (
-              <div key={index} className="flex flex-col gap-1.5">
-                <div className="flex items-center  gap-2">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex flex-row gap-2 items-center ">
-                        <div
-                          className="h-4 w-4 rounded-sm"
-                          style={{
-                            backgroundColor: `hsl(var(--chart-${index + 1}))`,
-                          }}
-                        />
-                        <h4 className="font-medium">
-                          {formatString(item.browser)}
-                        </h4>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-xs text-muted-foreground">
-                        {getStatusDescription(item.browser)}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              </div>
-            );
-          })}
+          {chartDataWithPercentages.map((item, index) => (
+            <PieTooltip key={index} index={index} item={item} />
+          ))}
         </div>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-2">
