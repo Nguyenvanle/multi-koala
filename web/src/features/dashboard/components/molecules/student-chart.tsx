@@ -13,18 +13,30 @@ import {
 } from "@/components/ui/card";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import {
-  calculateTotalVisitors,
+  calculateTotalStudents,
   enrichDataWithPercentages,
 } from "@/features/dashboard/utils/chart";
-import { CHART_CONFIG, CHART_DATA } from "@/features/dashboard/constants/chart";
+import {
+  CHART_CONFIG,
+  CHART_DATA,
+  getStatusDescription,
+} from "@/features/dashboard/constants/chart";
 import {
   CenterLabel,
   PieChartLabel,
 } from "@/features/dashboard/components/atoms";
+import { formatString } from "@/features/field/libs/util";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface VisitorsPieChartProps {
   title?: string;
@@ -34,30 +46,30 @@ interface VisitorsPieChartProps {
 }
 
 const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
-  title = "Pie Chart - Donut with Text",
-  description = "January - June 2024",
+  title = "Student Status Analysis",
+  description = "October 2024",
   trendingPercentage = 5.2,
-  dateRange = "the last 6 months",
+  dateRange = "this month",
 }) => {
-  const totalVisitors = React.useMemo(
-    () => calculateTotalVisitors(CHART_DATA),
+  const totalStudents = React.useMemo(
+    () => calculateTotalStudents(CHART_DATA),
     []
   );
   const chartDataWithPercentages = React.useMemo(
-    () => enrichDataWithPercentages(CHART_DATA, totalVisitors),
-    [totalVisitors]
+    () => enrichDataWithPercentages(CHART_DATA, totalStudents),
+    [totalStudents]
   );
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-center">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
+      <CardContent className="flex flex-col sm:flex-row gap-6 pb-0">
         <ChartContainer
           config={CHART_CONFIG}
-          className="mx-auto aspect-square max-h-[250px] w-full"
+          className="flex flex-1 mx-auto aspect-square max-h-[250px] w-full"
         >
           <PieChart>
             <ChartTooltip
@@ -66,7 +78,7 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
             />
             <Pie
               data={chartDataWithPercentages}
-              dataKey="visitors"
+              dataKey="students"
               nameKey="browser"
               innerRadius={60}
               strokeWidth={1}
@@ -76,7 +88,8 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
                 content={({ viewBox }) =>
                   viewBox && "cx" in viewBox && "cy" in viewBox ? (
                     <CenterLabel
-                      totalVisitors={totalVisitors}
+                      title="Students"
+                      totalVisitors={totalStudents}
                       viewBox={viewBox}
                     />
                   ) : null
@@ -85,14 +98,46 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
             </Pie>
           </PieChart>
         </ChartContainer>
+
+        {/* Legend Section */}
+        <div className="flex flex-0 flex-row flex-wrap sm:flex-col gap-4 mr-0 sm:mr-8 xl:mr-16 justify-center">
+          {chartDataWithPercentages.map((item, index) => {
+            return (
+              <div key={index} className="flex flex-col gap-1.5">
+                <div className="flex items-center  gap-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex flex-row gap-2 items-center ">
+                        <div
+                          className="h-4 w-4 rounded-sm"
+                          style={{
+                            backgroundColor: `hsl(var(--chart-${index + 1}))`,
+                          }}
+                        />
+                        <h4 className="font-medium">
+                          {formatString(item.browser)}
+                        </h4>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs text-muted-foreground">
+                        {getStatusDescription(item.browser)}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col gap-2 text-sm mt-2">
         <div className="flex items-center gap-2 font-medium leading-none">
           Trending up by {trendingPercentage}% this month{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for {dateRange}
+          Showing total students for {dateRange}
         </div>
       </CardFooter>
     </Card>

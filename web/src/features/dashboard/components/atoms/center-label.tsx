@@ -1,11 +1,13 @@
 import { PolarViewBox, ViewBox } from "recharts/types/util/types";
 
 interface CenterLabelProps {
+  title: string;
   totalVisitors: number;
   viewBox?: PolarViewBox;
 }
 
 export const CenterLabel: React.FC<CenterLabelProps> = ({
+  title,
   totalVisitors,
   viewBox,
 }) => {
@@ -22,7 +24,7 @@ export const CenterLabel: React.FC<CenterLabelProps> = ({
         {totalVisitors.toLocaleString()}
       </tspan>
       <tspan x={centerX} y={centerY + 24} className="fill-muted-foreground">
-        Visitors
+        {title}
       </tspan>
     </text>
   );

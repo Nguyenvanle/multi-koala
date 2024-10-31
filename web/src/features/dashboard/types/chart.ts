@@ -1,6 +1,6 @@
 export interface ChartDataItem {
   browser: string;
-  visitors: number;
+  students: number;
   fill: string;
   percentage?: string;
 }

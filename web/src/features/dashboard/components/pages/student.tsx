@@ -16,7 +16,7 @@ export default function DashboardStudentPage() {
 
       <div className="grid gap-4 xl:gap-6 lg:grid-cols-2 ">
         <VisitorsPieChart />
-        <TopPerformingStudents />
+        {/* <TopPerformingStudents /> */}
       </div>
 
       {/* <RecentStudentActivities /> */}
