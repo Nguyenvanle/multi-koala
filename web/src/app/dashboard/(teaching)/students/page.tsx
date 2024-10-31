@@ -1,5 +1,16 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import DashboardStudentPage from "@/features/dashboard/components/pages/student";
 import { getMyReport } from "@/features/quiz-results/actions/my-report";
+import { quizColumns } from "@/features/quiz-results/components/atoms/columns";
+import { ReportTable } from "@/features/quiz-results/components/molecules/report-table";
+import { Suspense } from "react";
 
 async function getReports() {
   const res = await getMyReport();
@@ -12,5 +23,19 @@ export default async function Page() {
 
   const reports = await getReports();
 
-  return <pre>{JSON.stringify(reports, null, 2)}</pre>;
+  return (
+    <Card className="w-full">
+      <CardHeader className="pb-0">
+        <CardTitle>Student Test Results</CardTitle>
+        <CardDescription>
+          Recent test scores and performance data
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Suspense fallback={<Skeleton className="w-[50vw] h-[50vh] m-4" />}>
+          <ReportTable columns={quizColumns} data={reports} />
+        </Suspense>
+      </CardContent>
+    </Card>
+  );
 }
