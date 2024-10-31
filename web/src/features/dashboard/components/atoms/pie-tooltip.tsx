@@ -26,7 +26,7 @@ export const PieTooltip: React.FC<{
               <h4 className="font-medium">{formatString(item.browser)}</h4>
             </div>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="right">
             <p className="text-xs text-muted-foreground">
               {getStatusDescription(item.browser)}
             </p>

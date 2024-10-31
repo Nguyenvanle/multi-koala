@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import StudentHeader from "@/features/dashboard/components/atoms/students-header";
 import TopPerformingStudents from "@/features/dashboard/components/atoms/top-student";
+import StudentTestResults from "@/features/dashboard/components/atoms/recent-activity";
 
 const VisitorsPieChart = dynamic(
   () => import("@/features/dashboard/components/molecules/student-chart"),
@@ -14,12 +15,12 @@ export default function DashboardStudentPage() {
         <StudentHeader />
       </div>
 
-      <div className="grid gap-4 xl:gap-6 lg:grid-cols-2 ">
+      {/* <div className="grid gap-4 xl:gap-6 lg:grid-cols-2 ">
         <VisitorsPieChart />
-        {/* <TopPerformingStudents /> */}
-      </div>
+        <TopPerformingStudents />
+      </div> */}
 
-      {/* <RecentStudentActivities /> */}
+      <StudentTestResults />
     </div>
   );
 }
