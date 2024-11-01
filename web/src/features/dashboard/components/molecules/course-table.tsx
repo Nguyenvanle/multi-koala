@@ -1,0 +1,75 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { RecentEnrollBodyType } from "@/features/enroll-courses/types/recent-enroll";
+import { dateFormatter } from "@/utils/date-formatter";
+import {
+  PaginationControlProps,
+  PaginationProps,
+} from "@/features/pagination/types/pagination";
+import PageNavigation from "@/features/pagination/components/page-nav";
+
+interface CourseTableProps {
+  courseSales: RecentEnrollBodyType[];
+}
+
+export function CourseTable({ courseSales }: CourseTableProps) {
+  const getSecondWord = (status: string) => {
+    const words = status.split(" ");
+    return words.length > 1 ? words[1] : status; // Trả về từ thứ hai hoặc chuỗi gốc nếu không có từ thứ hai
+  };
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Course</TableHead>
+          <TableHead className="hidden sm:table-cell">Student</TableHead>
+          <TableHead className="hidden xl:table-cell">Status</TableHead>
+          <TableHead className="hidden xl:table-cell">Date</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {courseSales.map((sale, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <div className="line-clamp-2">{sale.courseName}</div>
+            </TableCell>
+            <TableCell className="hidden sm:table-cell ">
+              <div className="font-medium">{sale.studentName}</div>
+              <div className="hidden text-sm text-muted-foreground md:inline">
+                {sale.studentEmail}
+              </div>
+            </TableCell>
+            <TableCell className="hidden xl:table-cell">
+              <Badge
+                className="text-xs"
+                variant={
+                  sale.status.includes("Completed")
+                    ? "default"
+                    : sale.status.includes("progress")
+                      ? "pending"
+                      : "edit"
+                }
+              >
+                {getSecondWord(sale.status).toLowerCase()}
+              </Badge>
+            </TableCell>
+            <TableCell className="hidden xl:table-cell">
+              {dateFormatter(new Date(sale.enrollAt))}
+            </TableCell>
+            <TableCell className="text-right">
+              ${sale.coursePrice.toFixed(2)}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}

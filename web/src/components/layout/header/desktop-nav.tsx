@@ -16,10 +16,7 @@ export default function DesktopNav({ menuItems }: DesktopNavProps) {
   );
 
   if (hasTeacherOrAdminRole) {
-    menuItems = [
-      ...menuItems,
-      { href: "/dashboard/courses", label: "Dashboard" },
-    ];
+    menuItems = [...menuItems, { href: "/dashboard", label: "Dashboard" }];
   }
 
   // Hàm kiểm tra xem đường dẫn hiện tại có bắt đầu bằng href của menu item không
