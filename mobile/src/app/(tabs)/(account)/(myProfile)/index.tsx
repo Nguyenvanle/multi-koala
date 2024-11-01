@@ -16,6 +16,7 @@ import {
   Dimensions,
   ActivityIndicator,
   Modal,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -26,6 +27,7 @@ const UserProfile: React.FC = () => {
   const { loading, user, setUser, errorMessage, setErrorMessage, updateImage } =
     useUser();
   const [showRolePicker, setShowRolePicker] = useState<boolean>(false);
+  const [text, setText] = useState("");
 
   // Xử lý loading state
   if (loading) {
@@ -114,7 +116,10 @@ const UserProfile: React.FC = () => {
       <TextInput
         style={[
           styles.input,
-          multiline && styles.multilineInput,
+
+          multiline && {
+            height: Math.max(35, 40 + text.split("\n").length * 20),
+          },
           disabled && styles.disabledInput,
         ]}
         value={value}
@@ -127,75 +132,82 @@ const UserProfile: React.FC = () => {
   );
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        {/* Ảnh đại diện */}
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: user.image?.imageUrl || "https://via.placeholder.com/160",
-            }}
-            style={styles.image}
-          />
-          {isEditing && (
-            <TouchableOpacity style={styles.changeImageButton}>
-              <Text style={styles.changeImageText}>Đổi ảnh</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={[styles.button, isEditing && styles.saveButton]}
-            onPress={() => (isEditing ? handleSave() : setIsEditing(true))}
-          >
-            <Text style={styles.buttonText}>{isEditing ? "Save" : "Edit"}</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.formContainer}>
-          {/* Họ và Tên */}
-          <View style={styles.nameContainer}>
-            <View style={styles.nameInputContainer}>
-              <Text style={styles.label}>First name</Text>
-              <TextInput
-                style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user.firstname || ""}
-                onChangeText={(text) => handleInputChange("firstname", text)}
-                editable={isEditing}
-              />
-            </View>
-            <View style={styles.nameInputContainer}>
-              <Text style={styles.label}>Last name</Text>
-              <TextInput
-                style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user.lastname || ""}
-                onChangeText={(text) => handleInputChange("lastname", text)}
-                editable={isEditing}
-              />
-            </View>
+    <KeyboardAvoidingView
+      style={{ ...styles.container, marginBottom: 0 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
+    >
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {/* Ảnh đại diện */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={{
+                uri: user.image?.imageUrl || "https://via.placeholder.com/160",
+              }}
+              style={styles.image}
+            />
+            {isEditing && (
+              <TouchableOpacity style={styles.changeImageButton}>
+                <Text style={styles.changeImageText}>Đổi ảnh</Text>
+              </TouchableOpacity>
+            )}
           </View>
-
-          {/* Email */}
-          <CustomInput
-            label="Email"
-            value={user.email || ""}
-            onChangeText={(text) => handleInputChange("email", text)}
-            disabled={!isEditing}
-          />
-
-          {/* Vai trò */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Role</Text>
+          <View style={styles.header}>
             <TouchableOpacity
-              onPress={() => isEditing && setShowRolePicker(true)}
-              style={[styles.input, !isEditing && styles.disabledInput]}
+              style={[styles.button, isEditing && styles.saveButton]}
+              onPress={() => (isEditing ? handleSave() : setIsEditing(true))}
             >
-              <Text style={[!isEditing && styles.disabledText]}>
-                {user.roles[0].roleName}
+              <Text style={styles.buttonText}>
+                {isEditing ? "Save" : "Edit"}
               </Text>
             </TouchableOpacity>
-            {/* Modal cho iOS */}
-            {/* {Platform.OS === "ios" && showRolePicker && (
+          </View>
+
+          <View style={styles.formContainer}>
+            {/* Họ và Tên */}
+            <View style={styles.nameContainer}>
+              <View style={styles.nameInputContainer}>
+                <Text style={styles.label}>First name</Text>
+                <TextInput
+                  style={[styles.input, !isEditing && styles.disabledInput]}
+                  value={user.firstname || ""}
+                  onChangeText={(text) => handleInputChange("firstname", text)}
+                  editable={isEditing}
+                />
+              </View>
+              <View style={styles.nameInputContainer}>
+                <Text style={styles.label}>Last name</Text>
+                <TextInput
+                  style={[styles.input, !isEditing && styles.disabledInput]}
+                  value={user.lastname || ""}
+                  onChangeText={(text) => handleInputChange("lastname", text)}
+                  editable={isEditing}
+                />
+              </View>
+            </View>
+
+            {/* Email */}
+            <CustomInput
+              label="Email"
+              value={user.email || ""}
+              onChangeText={(text) => handleInputChange("email", text)}
+              disabled={!isEditing}
+            />
+
+            {/* Vai trò */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Role</Text>
+              <TouchableOpacity
+                onPress={() => isEditing && setShowRolePicker(true)}
+                style={[styles.input, !isEditing && styles.disabledInput]}
+              >
+                <Text style={[!isEditing && styles.disabledText]}>
+                  {user.roles[0].roleName}
+                </Text>
+              </TouchableOpacity>
+              {/* Modal cho iOS */}
+              {/* {Platform.OS === "ios" && showRolePicker && (
               <Modal
                 transparent={true}
                 visible={showRolePicker}
@@ -232,49 +244,50 @@ const UserProfile: React.FC = () => {
                 </View>
               </Modal>
             )} */}
-          </View>
+            </View>
 
-          {/* Ngày sinh */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Birthday</Text>
-            <TouchableOpacity
-              onPress={() => isEditing && setShowDatePicker(true)}
-              style={[styles.input, !isEditing && styles.disabledInput]}
-            >
-              <Text style={styles.disabledText}>
-                {formatDate(user.userBirth || "No update yet")}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            {/* Ngày sinh */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Birthday</Text>
+              <TouchableOpacity
+                onPress={() => isEditing && setShowDatePicker(true)}
+                style={[styles.input, !isEditing && styles.disabledInput]}
+              >
+                <Text style={styles.disabledText}>
+                  {formatDate(user.userBirth || "No update yet")}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          {showDatePicker && (
-            <DateTimePicker
-              value={new Date(user.userBirth)}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
+            {showDatePicker && (
+              <DateTimePicker
+                value={new Date(user.userBirth)}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
+
+            {/* Quê quán */}
+            <CustomInput
+              label="Home town"
+              value={user.userHometown || ""}
+              onChangeText={(text) => handleInputChange("userHometown", text)}
+              disabled={!isEditing}
             />
-          )}
 
-          {/* Quê quán */}
-          <CustomInput
-            label="Home town"
-            value={user.userHometown || ""}
-            onChangeText={(text) => handleInputChange("userHometown", text)}
-            disabled={!isEditing}
-          />
-
-          {/* Giới thiệu */}
-          <CustomInput
-            label="Description"
-            value={user.userBio || ""}
-            onChangeText={(text) => handleInputChange("userBio", text)}
-            disabled={!isEditing}
-            multiline
-          />
+            {/* Giới thiệu */}
+            <CustomInput
+              label="Description"
+              value={user.userBio || ""}
+              onChangeText={(text) => handleInputChange("userBio", text)}
+              disabled={!isEditing}
+              multiline
+            />
+          </View>
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -282,6 +295,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+    marginBottom: 70,
   },
   header: {
     justifyContent: "center",
@@ -364,7 +378,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   multilineInput: {
-    height: 100,
+    height: 300,
     textAlignVertical: "top",
   },
   disabledInput: {
