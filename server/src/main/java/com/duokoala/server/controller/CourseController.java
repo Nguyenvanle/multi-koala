@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseController {
     CourseService courseService;
 
@@ -27,11 +27,12 @@ public class CourseController {
                 .result(courseService.create(request))
                 .build();
     }
+
     @PutMapping("/courses/{courseId}")
     ApiResponse<CourseResponse> update(
             @PathVariable String courseId, @RequestBody CourseUpdateRequest request) {
         return ApiResponse.<CourseResponse>builder()
-                .result(courseService.update(courseId,request))
+                .result(courseService.update(courseId, request))
                 .build();
     }
 
@@ -39,7 +40,7 @@ public class CourseController {
     ApiResponse<CourseResponse> approve(
             @PathVariable String courseId, @RequestBody CourseApproveRequest request) {
         return ApiResponse.<CourseResponse>builder()
-                .result(courseService.approve(courseId,request))
+                .result(courseService.approve(courseId, request))
                 .build();
     }
 
@@ -60,9 +61,9 @@ public class CourseController {
     @PostMapping("/courses/{courseId}/update-image")
     ApiResponse<CourseResponse> uploadImage(
             @PathVariable String courseId
-            ,@RequestParam("file") MultipartFile file) throws IOException {
+            , @RequestParam("file") MultipartFile file) throws IOException {
         return ApiResponse.<CourseResponse>builder()
-                .result(courseService.uploadImage(courseId,file))
+                .result(courseService.uploadImage(courseId, file))
                 .build();
     }
 
@@ -72,6 +73,7 @@ public class CourseController {
                 .result(courseService.getAll())
                 .build();
     }
+
     @GetMapping("/courses/approved-courses")
     ApiResponse<List<CourseResponse>> getApprovedCourses() {
         return ApiResponse.<List<CourseResponse>>builder()
@@ -101,9 +103,10 @@ public class CourseController {
     }
 
     @GetMapping("/courses/my-performing-courses")
-    ApiResponse<List<PerformingCourseResponse>> getMyPerformingCoursesList() {
+    ApiResponse<List<PerformingCourseResponse>> getMyPerformingCoursesList(
+            @RequestParam(required = false, defaultValue = "1") int months) {
         return ApiResponse.<List<PerformingCourseResponse>>builder()
-                .result(courseService.getMyPerformingCoursesList())
+                .result(courseService.getMyPerformingCoursesList(months))
                 .build();
     }
 

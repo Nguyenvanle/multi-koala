@@ -189,8 +189,12 @@ public class CourseService {
         return courseResponse;
     }
 
-    public List<PerformingCourseResponse> getMyPerformingCoursesList() {
-        List<Course> courses = courseRepository.findAllByUploadedByTeacher(authenticationService.getAuthenticatedTeacher());
+    public List<PerformingCourseResponse> getMyPerformingCoursesList(int months) {
+        List<Course> courses = courseRepository.findAllByUploadedByTeacherAndEnrollCoursesEnrollAtAfter(
+                authenticationService.getAuthenticatedTeacher(),
+                LocalDateTime.now().minusMonths(months)
+        );
+//        List<Course> courses = courseRepository.findAllByUploadedByTeacher(authenticationService.getAuthenticatedTeacher());
         return courses.stream()
 //                .filter(c -> c.getStatus().equals(Status.APPROVED))
                 .map(this::getPerformingCourse)
