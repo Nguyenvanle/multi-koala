@@ -1,4 +1,5 @@
 package com.duokoala.server.entity;
+
 import com.duokoala.server.entity.media.Image;
 import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
@@ -43,4 +44,6 @@ public class Course {
     boolean isDeleted;
     @OneToMany(mappedBy = "course", orphanRemoval = true)
     Set<DiscountCourse> discountCourses;
+    @OneToMany(mappedBy = "course", orphanRemoval = true)
+    Set<EnrollCourse> enrollCourses;
 }

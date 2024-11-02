@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -35,4 +36,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
                     "JOIN course c ON c.course_id = ec.course_course_id " +
                     "WHERE c.course_id = :courseId")
     Double sumIncomeCourse(@Param("courseId") String courseId);
+
+    List<Course> findAllByUploadedByTeacherAndEnrollCoursesEnrollAtAfter(Teacher teacher, LocalDateTime date);
+
 }
