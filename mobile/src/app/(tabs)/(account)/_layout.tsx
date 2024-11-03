@@ -5,6 +5,7 @@ const AccountLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="account" options={{ headerShown: false }} />
+      <Stack.Screen name="(myProfile)" options={{ headerShown: false }} />
     </Stack>
   );
 };

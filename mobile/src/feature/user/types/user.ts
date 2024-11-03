@@ -1,3 +1,11 @@
+export type RoleBody = {
+  roleName: string;
+  roleDescription: string;
+  permissions: [];
+};
+
+export type RoleBodyList = RoleBody[];
+
 export type UserBody = {
   firstname: string;
   lastname: string;
@@ -6,7 +14,7 @@ export type UserBody = {
     imageUrl: string;
   };
   email: string;
-  roles: string;
+  roles: RoleBodyList;
   userBirth: string;
   token: string;
   userBio: string;
