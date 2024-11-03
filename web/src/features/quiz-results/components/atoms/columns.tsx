@@ -42,30 +42,63 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
   },
   {
     accessorKey: "courseName",
-    header: "Course",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course" />
+    ),
+    cell: ({ row }) => (
+      <div className="line-clamp-2 text-sm font-medium ">
+        {String(row.getValue("courseName"))}
+      </div>
+    ),
   },
   {
     accessorKey: "studentName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student" />
     ),
+    cell: ({ row }) => (
+      <div className="line-clamp-2 text-sm font-medium">
+        {String(row.getValue("studentName"))}
+      </div>
+    ),
   },
   {
     accessorKey: "lessonName",
-    header: "Lesson",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Lesson" />
+    ),
+    cell: ({ row }) => (
+      <div className="line-clamp-2 text-sm font-medium">
+        {String(row.getValue("lessonName"))}
+      </div>
+    ),
+    meta: {
+      className: "hidden md:table-cell",
+    },
   },
   {
     accessorKey: "testName",
-    header: "Test",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Test" />
+    ),
+    cell: ({ row }) => (
+      <div className="line-clamp-2 text-sm font-medium">
+        {String(row.getValue("testName"))}
+      </div>
+    ),
   },
-
   {
     accessorKey: "score",
-    header: () => <div className="text-center">Score</div>,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Score"
+        className="text-center justify-center"
+      />
+    ),
     cell: ({ row }) => {
-      const score = new String(row.getValue("score"));
-      const numberString = score.replace("%", "");
-      const numberValue = parseFloat(numberString);
+      const score = String(row.getValue("score")).replace("%", "");
+      const numberValue = parseFloat(score);
 
       return (
         <div className="text-center">
@@ -77,8 +110,9 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
                   ? "pending"
                   : "destructive"
             }
+            className="px-2 py-1 text-xs"
           >
-            {numberValue.toFixed(1)} %
+            {numberValue.toFixed(1)}%
           </Badge>
         </div>
       );
@@ -86,12 +120,18 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
   },
   {
     accessorKey: "correct",
-    header: () => <div className="text-right">Correct</div>,
-    cell: ({ row }) => {
-      const correct = new String(row.getValue("correct"));
-
-      return <div className="text-right">{correct}</div>;
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Correct"
+        className="text-center justify-center"
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="text-center text-sm font-medium">
+        {String(row.getValue("correct"))}
+      </div>
+    ),
   },
   {
     accessorKey: "dateTaken",
@@ -99,15 +139,14 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
       <DataTableColumnHeader
         column={column}
         title="Time"
-        className="justify-end"
+        className="justify-end text-right"
       />
     ),
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("dateTaken"));
-      const formatted = dateFormatter(date);
-
-      return <div className="text-right">{formatted}</div>;
-    },
+    cell: ({ row }) => (
+      <div className="text-right text-sm font-medium">
+        {dateFormatter(new Date(row.getValue("dateTaken")))}
+      </div>
+    ),
   },
   {
     id: "actions",
@@ -115,26 +154,35 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
       const report = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(report.studentId)}
-            >
-              Copy student ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View course details</DropdownMenuItem>
-            <DropdownMenuItem>View report details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 ">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(report.studentId)}
+              >
+                Copy student ID
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(report.courseId)}
+              >
+                Copy course ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>View course details</DropdownMenuItem>
+              <DropdownMenuItem>View report details</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
+    enableSorting: false,
+    enableHiding: false,
   },
 ];

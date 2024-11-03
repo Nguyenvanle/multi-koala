@@ -28,7 +28,7 @@ const UserMenu: React.FC = () => {
       label: "Logout",
       onclick: logout,
       destructive: true,
-    }, // Destructive flag added
+    },
   ];
 
   const formatRoleName = (roleName: string) => {

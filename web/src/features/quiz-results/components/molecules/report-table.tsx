@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { DataTablePagination } from "@/features/table/components/atoms/table-pagination";
 import { DataTableViewOptions } from "@/features/table/components/atoms/view-option";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,7 +36,9 @@ export function ReportTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "dateTaken", desc: true },
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -64,18 +67,36 @@ export function ReportTable<TData, TValue>({
     },
   });
 
+  const isLaptop = useMediaQuery("(min-width: 1024px)");
+
+  React.useEffect(() => {
+    if (isLaptop) {
+      table.setColumnVisibility({
+        lessonName: true,
+        correct: true,
+        dateTaken: true,
+      });
+    } else {
+      table.setColumnVisibility({
+        lessonName: false,
+        correct: false,
+        dateTaken: false,
+      });
+    }
+  }, [isLaptop, table]);
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 ">
         <Input
-          placeholder="Filter studentName..."
+          placeholder="Filter Student Name..."
           value={
             (table.getColumn("studentName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
             table.getColumn("studentName")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="lg:max-w-sm"
         />
         <DataTableViewOptions table={table} />
       </div>
