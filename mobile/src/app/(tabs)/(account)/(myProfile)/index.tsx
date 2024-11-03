@@ -98,105 +98,80 @@ const UserProfile: React.FC = () => {
     setIsEditing(false);
   };
 
-  const CustomInput = ({
-    label,
-    value,
-    onChangeText,
-    disabled = false,
-    multiline = false,
-  }: {
-    label: string;
-    value: string;
-    onChangeText: (text: string) => void;
-    disabled?: boolean;
-    multiline?: boolean;
-  }) => (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={[
-          styles.input,
-
-          multiline && {
-            height: Math.max(35, 40 + text.split("\n").length * 20),
-          },
-          disabled && styles.disabledInput,
-        ]}
-        value={value}
-        onChangeText={onChangeText}
-        editable={!disabled}
-        multiline={multiline}
-        numberOfLines={multiline ? 4 : 1}
-      />
-    </View>
-  );
-
   return (
     <KeyboardAvoidingView
-      style={{ ...styles.container, marginBottom: 0 }}
+      style={{ flex: 1, justifyContent: "center" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
+      keyboardVerticalOffset={90}
     >
-      <View style={styles.container}>
-        <View style={styles.content}>
-          {/* Ảnh đại diện */}
-          <View style={styles.imageContainer}>
-            <Image
-              source={{
-                uri: user.image?.imageUrl || "https://via.placeholder.com/160",
-              }}
-              style={styles.image}
-            />
-            {isEditing && (
-              <TouchableOpacity style={styles.changeImageButton}>
-                <Text style={styles.changeImageText}>Đổi ảnh</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          <View style={styles.header}>
-            <TouchableOpacity
-              style={[styles.button, isEditing && styles.saveButton]}
-              onPress={() => (isEditing ? handleSave() : setIsEditing(true))}
-            >
-              <Text style={styles.buttonText}>
-                {isEditing ? "Save" : "Edit"}
-              </Text>
+      <ScrollView style={styles.content}>
+        {/* Ảnh đại diện */}
+        <View style={styles.imageContainer}>
+          <Image
+            source={{
+              uri: user.image?.imageUrl || "https://via.placeholder.com/160",
+            }}
+            style={styles.image}
+          />
+          {isEditing && (
+            <TouchableOpacity style={styles.changeImageButton}>
+              <Text style={styles.changeImageText}>Change Image</Text>
             </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={[styles.button, isEditing && styles.saveButton]}
+            onPress={() => (isEditing ? handleSave() : setIsEditing(true))}
+          >
+            <Text style={styles.buttonText}>{isEditing ? "Save" : "Edit"}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.formContainer}>
+          {/* Họ và Tên */}
+          <View style={styles.nameContainer}>
+            <View style={styles.nameInputContainer}>
+              <Text style={styles.label}>Firstname</Text>
+              <TextInput
+                style={[styles.input, !isEditing && styles.disabledInput]}
+                value={user.firstname || ""}
+                onChangeText={(text) => handleInputChange("firstname", text)}
+                editable={isEditing}
+              />
+            </View>
+            <View style={styles.nameInputContainer}>
+              <Text style={styles.label}>Lastname</Text>
+              <TextInput
+                style={[styles.input, !isEditing && styles.disabledInput]}
+                value={user.lastname || ""}
+                onChangeText={(text) => handleInputChange("lastname", text)}
+                editable={isEditing}
+              />
+            </View>
           </View>
 
-          <View style={styles.formContainer}>
-            {/* Họ và Tên */}
-            <View style={styles.nameContainer}>
-              <View style={styles.nameInputContainer}>
-                <Text style={styles.label}>First name</Text>
-                <TextInput
-                  style={[styles.input, !isEditing && styles.disabledInput]}
-                  value={user.firstname || ""}
-                  onChangeText={(text) => handleInputChange("firstname", text)}
-                  editable={isEditing}
-                />
-              </View>
-              <View style={styles.nameInputContainer}>
-                <Text style={styles.label}>Last name</Text>
-                <TextInput
-                  style={[styles.input, !isEditing && styles.disabledInput]}
-                  value={user.lastname || ""}
-                  onChangeText={(text) => handleInputChange("lastname", text)}
-                  editable={isEditing}
-                />
-              </View>
-            </View>
-
-            {/* Email */}
-            <CustomInput
-              label="Email"
+          {/* Email */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.disabledInput]}
               value={user.email || ""}
               onChangeText={(text) => handleInputChange("email", text)}
-              disabled={!isEditing}
+              editable={isEditing}
+              numberOfLines={10}
             />
+          </View>
 
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+            }}
+          >
             {/* Vai trò */}
-            <View style={styles.inputContainer}>
+            <View style={{ ...styles.inputContainer, width: "48%" }}>
               <Text style={styles.label}>Role</Text>
               <TouchableOpacity
                 onPress={() => isEditing && setShowRolePicker(true)}
@@ -247,46 +222,57 @@ const UserProfile: React.FC = () => {
             </View>
 
             {/* Ngày sinh */}
-            <View style={styles.inputContainer}>
+            <View style={{ ...styles.inputContainer, width: "48%" }}>
               <Text style={styles.label}>Birthday</Text>
-              <TouchableOpacity
-                onPress={() => isEditing && setShowDatePicker(true)}
-                style={[styles.input, !isEditing && styles.disabledInput]}
-              >
-                <Text style={styles.disabledText}>
-                  {formatDate(user.userBirth || "No update yet")}
-                </Text>
-              </TouchableOpacity>
+              {!isEditing ? (
+                <TextInput
+                  onPress={() => isEditing && setShowDatePicker(true)}
+                  style={[{ ...styles.input }]}
+                >
+                  <Text style={styles.disabledText}>
+                    {formatDate(user.userBirth || "No update yet")}
+                  </Text>
+                </TextInput>
+              ) : (
+                <View style={styles.dateTimePickerWrapper}>
+                  <DateTimePicker
+                    value={new Date(user.userBirth)}
+                    mode="date"
+                    display="calendar"
+                    onChange={handleDateChange}
+                    // Không sử dụng pickerStyle vì không tồn tại
+                  />
+                </View>
+              )}
             </View>
+          </View>
 
-            {showDatePicker && (
-              <DateTimePicker
-                value={new Date(user.userBirth)}
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
-              />
-            )}
-
-            {/* Quê quán */}
-            <CustomInput
-              label="Home town"
+          {/* Quê quán */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Hometown</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.disabledInput]}
               value={user.userHometown || ""}
               onChangeText={(text) => handleInputChange("userHometown", text)}
-              disabled={!isEditing}
+              editable={isEditing}
+              numberOfLines={2}
             />
+          </View>
 
-            {/* Giới thiệu */}
-            <CustomInput
-              label="Description"
+          {/* Giới thiệu */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Description</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.disabledInput]}
               value={user.userBio || ""}
               onChangeText={(text) => handleInputChange("userBio", text)}
-              disabled={!isEditing}
+              editable={isEditing}
               multiline
+              numberOfLines={10}
             />
           </View>
         </View>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -295,12 +281,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-    marginBottom: 70,
   },
   header: {
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 24,
+    marginBottom: 16,
   },
   title: {
     fontSize: 20,
@@ -313,6 +298,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.teal_light,
     backgroundColor: Colors.teal_dark,
+    marginTop: 8,
   },
   saveButton: {
     backgroundColor: Colors.super_teal_dark,
@@ -325,12 +311,12 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: "center",
-    marginBottom: 24,
   },
   image: {
     width: 160,
     height: 160,
-    borderRadius: 80,
+    borderRadius: 120,
+    marginBottom: 8,
   },
   changeImageButton: {
     position: "absolute",
@@ -350,32 +336,35 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 500,
     alignSelf: "center",
+    gap: 16,
   },
   nameContainer: {
     flexDirection: "row",
     gap: 16,
-    marginBottom: 16,
   },
   nameInputContainer: {
     flex: 1,
+    gap: 4,
   },
   inputContainer: {
-    marginBottom: 16,
+    gap: 4,
   },
   label: {
     ...text.large,
     fontWeight: "600",
-    marginBottom: 4,
     color: Colors.teal_dark,
-    marginHorizontal: 4,
   },
   input: {
-    ...text.p,
     borderWidth: 1,
     borderColor: Colors.grey,
     borderRadius: 6,
     padding: 12,
     backgroundColor: Colors.white,
+  },
+  dateTimePickerWrapper: {
+    alignItems: "center",
+    paddingRight: 12,
+    padding: 2,
   },
   multilineInput: {
     height: 300,
