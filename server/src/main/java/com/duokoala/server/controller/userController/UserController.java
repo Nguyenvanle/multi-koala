@@ -30,7 +30,7 @@ public class UserController {
                 .build();
     }
 
-    @PutMapping("/{userId}/change-password")
+    @PutMapping("/change-password")
     ApiResponse<UserResponse> changePassword(@RequestBody ChangePasswordRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.changeMyPassword(request))
