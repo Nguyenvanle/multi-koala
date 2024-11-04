@@ -6,6 +6,7 @@ import { showToast } from "@/lib/utils";
 import { nextjsApiService } from "@/services/next-api";
 import { CourseDetailResType } from "@/features/courses/types/course";
 import { useParams } from "next/navigation";
+import { postImageCourse } from "@/features/courses/actions/post-image-course";
 
 const EditCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -27,6 +28,7 @@ const EditCourseSchema = z.object({
   types: z.array(z.string()),
   fields: z.array(z.string()),
   imageUrl: z.string().url().optional(),
+  imageFile: z.any().optional(),
 });
 
 export type EditCourseFormData = z.infer<typeof EditCourseSchema>;
@@ -49,6 +51,13 @@ export default function useEditCourseForm(initialData: EditCourseFormData) {
         ...data,
         courseResponsibilityEndAt: data.courseResponsibilityEndAt.toISOString(),
       };
+
+      const formData = new FormData();
+      if (submissionData.imageFile) {
+        formData.append("file", submissionData.imageFile);
+      }
+      const response = await postImageCourse(courseId as string, formData);
+      console.log(response);
 
       const { result } = await nextjsApiService.put<CourseDetailResType>(
         `/api/courses/${courseId}`,
