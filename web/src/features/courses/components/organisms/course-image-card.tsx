@@ -27,9 +27,9 @@ export default function CourseImageCard({
   form: UseFormReturn | any | undefined;
   initialImageUrl?: string;
 }) {
-  const [preview, setPreview] = useState<string | null>(null);
-  const defaultImageUrl =
-    "https://img.freepik.com/free-vector/app-development-concept-design_23-2148670525.jpg?t=st=1726903863~exp=1726907463~hmac=8832d5f008a90a10ba85a5baa57ce274a70f2d57ed166d12346d7307327e908c&w=996";
+  const [preview, setPreview] = useState<string | null>(
+    initialImageUrl || null
+  );
 
   useEffect(() => {
     if (initialImageUrl) {
@@ -61,13 +61,9 @@ export default function CourseImageCard({
         });
       } else if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview(reader.result as string);
-          form.setValue("imageUrl", reader.result as string);
-          form.clearErrors("imageUrl");
-        };
-        reader.readAsDataURL(file);
+        form.setValue("imageFile", file);
+        setPreview(URL.createObjectURL(file)); // Preview image
+        form.clearErrors("imageUrl");
       }
     },
     [form]
@@ -83,9 +79,9 @@ export default function CourseImageCard({
 
   const removeImage = useCallback(() => {
     setPreview(null);
-    form.setValue("imageUrl", defaultImageUrl);
+    form.setValue("imageFile", undefined);
     form.clearErrors("imageUrl");
-  }, [form, defaultImageUrl]);
+  }, [form]);
 
   return (
     <Card className="flex flex-col flex-0">
