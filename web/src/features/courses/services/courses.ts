@@ -14,7 +14,13 @@ import { apiService } from "@/services/api";
 
 export const courseService = {
   getAll: async () => {
-    return await apiService.get<CourseResType>("/courses");
+    const res = await apiService.get<CourseResType>("/courses");
+
+    return {
+      code: res.code,
+      message: res.message,
+      result: res.result?.result.filter(course => !course.deleted)
+    };
   },
 
   getMyCourses: async (token: string) => {
@@ -33,7 +39,13 @@ export const courseService = {
   },
 
   getDetail: async (courseId: string) => {
-    return await apiService.get<CourseDetailResType>(`/courses/${courseId}`);
+    const res = await apiService.get<CourseDetailResType>(`/courses/${courseId}`);
+
+    return {
+      code: res.code,
+      message: res.message,
+      result: res.result?.result.deleted ? null : res.result?.result
+    }
   },
 
   // need refactor

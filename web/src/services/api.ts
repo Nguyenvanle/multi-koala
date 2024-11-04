@@ -1,6 +1,4 @@
-import { ApiCache } from "@/services/cache";
 import { ApiRequest } from "@/services/request";
-import { API_CONFIG } from "@/types/api/config";
 
 export class ApiService {
   private static instance: ApiService;
@@ -38,6 +36,13 @@ export class ApiService {
     config?: RequestInit
   ): Promise<ApiResponse<T>> {
     return this.request.request<T>("PUT", url, data, config);
+  }
+
+  public async delete<T>(
+    url: string,
+    config?: RequestInit
+  ): Promise<ApiResponse<T>> {
+    return this.request.request<T>("DELETE", url, undefined, config);
   }
 }
 
