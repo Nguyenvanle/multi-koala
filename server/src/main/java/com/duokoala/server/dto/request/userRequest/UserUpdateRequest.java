@@ -1,6 +1,9 @@
 package com.duokoala.server.dto.request.userRequest;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -10,12 +13,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    String password;
+    //    String password;
     String firstname;
     String lastname;
     LocalDate userBirth;
     String userBio;
     String userHometown;
-//    String imageUrl;
+    //    String imageUrl;
     boolean isFirstLogin;
 }

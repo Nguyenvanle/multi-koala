@@ -47,15 +47,15 @@ public class StudentService {
     public StudentResponse updateStudent(String studentId, StudentUpdateRequest request) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
-        studentMapper.updateStudent(student,request);
+        studentMapper.updateStudent(student, request);
 //        userService.updateAvatarByUserId(student.getImage(), request.getImageUrl());
-        student.setPassword(userService.encodePassword(request.getPassword()));
+//        student.setPassword(userService.encodePassword(request.getPassword()));
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }
 
     public StudentResponse updateMyInfo(StudentUpdateRequest request) {
         var studentId = authenticationService.getAuthenticatedStudent().getUserId();
-        return updateStudent(studentId,request);
+        return updateStudent(studentId, request);
     }
 
     public StudentResponse getStudent(String studentId) {
