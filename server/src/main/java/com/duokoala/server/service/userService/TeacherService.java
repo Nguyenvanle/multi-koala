@@ -57,7 +57,7 @@ public class TeacherService {
                 .orElseThrow(() -> new AppException(ErrorCode.TEACHER_NOT_FOUND));
         teacherMapper.updateTeacher(teacher, request);
 //        userService.updateAvatarByUserId(teacher.getImage(), request.getImageUrl());
-        teacher.setPassword(userService.encodePassword(request.getPassword()));
+//        teacher.setPassword(userService.encodePassword(request.getPassword()));
         return teacherMapper.toTeacherResponse(teacherRepository.save(teacher)
                 /*,getAvgRatingTeacher(teacherId)*/);
     }

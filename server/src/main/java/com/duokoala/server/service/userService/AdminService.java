@@ -53,7 +53,7 @@ public class AdminService {
                 .orElseThrow(() -> new AppException(ErrorCode.ADMIN_NOT_FOUND));
         adminMapper.updateAdmin(admin, request);
 //        userService.updateAvatarByUserId(admin.getImage(), request.getImageUrl());
-        admin.setPassword(userService.encodePassword(request.getPassword()));
+//        admin.setPassword(userService.encodePassword(request.getPassword()));
         return adminMapper.toAdminResponse(adminRepository.save(admin));
     }
 

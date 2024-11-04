@@ -1,5 +1,6 @@
 package com.duokoala.server.controller.userController;
 
+import com.duokoala.server.dto.request.userRequest.ChangePasswordRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.userResponse.UserResponse;
 import com.duokoala.server.service.userService.UserService;
@@ -15,7 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserController {
     UserService userService;
@@ -23,9 +24,16 @@ public class UserController {
     @PostMapping("/{userId}/update-image")
     ApiResponse<UserResponse> uploadImage(
             @PathVariable String userId
-            ,@RequestParam("file") MultipartFile file) throws IOException {
+            , @RequestParam("file") MultipartFile file) throws IOException {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.uploadImage(userId,file))
+                .result(userService.uploadImage(userId, file))
+                .build();
+    }
+
+    @PutMapping("/change-password")
+    ApiResponse<UserResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.changeMyPassword(request))
                 .build();
     }
 }
