@@ -1,4 +1,5 @@
 package com.duokoala.server.entity;
+
 import com.duokoala.server.entity.user.Student;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,7 @@ public class QuizResult {
     int answeredQuestions;
     int correctAnswers;
     LocalDateTime dateTaken;
+    boolean isPassed;
     @ManyToOne
     Test test;
     @ManyToOne
