@@ -26,7 +26,8 @@ const CourseList = (): React.JSX.Element => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tab } = useLocalSearchParams();
   const [loading, setLoading] = useState(true);
-  const { user } = useUser();
+  const { loadingUser, isRefreshing, user, refreshUser, lastUpdate } =
+    useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [isFilterVisible, setIsFilterVisible] = useState(false);

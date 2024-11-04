@@ -16,7 +16,14 @@ import MyCourses from "@/src/feature/course/components/home/my-courses/MyCoures"
 import NewCourses from "@/src/feature/course/components/home/new-courses/NewCourse";
 
 const Home = ({ courseId }: { courseId: string }) => {
-  const { user } = useUser();
+  const {
+    loadingUser,
+    isRefreshing,
+    user,
+    setUser,
+    setErrorMessage,
+    refreshUser,
+  } = useUser();
   const { enrolled, errorMessage, loading } = useEnrolled(courseId);
 
   return (

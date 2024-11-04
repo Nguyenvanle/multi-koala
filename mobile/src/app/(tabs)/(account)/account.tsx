@@ -24,8 +24,17 @@ import {
 } from "@expo/vector-icons";
 
 const Account = () => {
-  const { loading, user, setUser, errorMessage, setErrorMessage } = useUser();
+  const {
+    loadingUser,
+    isRefreshing,
+    user,
+    setUser,
+    errorMessage,
+    setErrorMessage,
+    refreshUser,
+  } = useUser();
   const { handleLogout } = useLogOut();
+
   return (
     <SafeAreaView
       style={{
@@ -50,7 +59,7 @@ const Account = () => {
         >
           <CircleStyle />
 
-          {loading ? (
+          {loadingUser ? (
             <View style={{ paddingTop: 16, justifyContent: "center" }}>
               <ActivityIndicator size={"large"} color={Colors.teal_dark} />
             </View>

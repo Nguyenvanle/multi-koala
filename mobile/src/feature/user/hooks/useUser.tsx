@@ -1,59 +1,61 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { UserBody } from "../types/user";
 import { userServices } from "../services/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const POLLING_INTERVAL = 3000; // 3 seconds polling interval
+
 const useUser = () => {
-  const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<UserBody>();
+  const [loadingUser, setLoadingUser] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false); // New state for refresh loading
+  const [user, setUser] = useState<UserBody | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        setLoading(true);
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-          setErrorMessage("No token found. Please log in.");
-          return;
-        }
-
-        const response = await userServices.getuser({ token });
-        if (response.data.result) {
-          setUser(response.data.result);
-        } else {
-          setErrorMessage("User does not exist or invalid response.");
-        }
-      } catch (error) {
-        setErrorMessage("Failed to fetch user data. " + error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUser();
-  }, []);
-
-  const updateImage = async (uri: string) => {
+  const refreshUser = useCallback(async () => {
     try {
+      setLoadingUser(true);
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         setErrorMessage("No token found. Please log in.");
         return;
       }
+
+      const response = await userServices.getUser({ token });
+      if (response && response.data && response.data.result) {
+        setUser(response.data.result);
+      } else {
+        setErrorMessage("User does not exist or invalid response.");
+      }
     } catch (error) {
-      setErrorMessage("Error updating image: " + error);
+      setErrorMessage("Failed to fetch user data. " + error);
+    } finally {
+      setLoadingUser(false);
     }
-  };
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        setLoadingUser(true);
+        await refreshUser();
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+
+    getUser();
+  }, [refreshTrigger]);
 
   return {
-    loading,
-    setLoading,
+    loadingUser,
+    isRefreshing,
     user,
     setUser,
     errorMessage,
     setErrorMessage,
-    updateImage,
+    refreshUser,
   };
 };
 

@@ -5,50 +5,46 @@ import { userUpdateServices } from "./../services/user-update";
 
 const useUserUpdate = () => {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [userUpdate, setUserUpdate] = useState<UserBody>();
   const [errorMessageUpdate, setErrorMessageUpdate] = useState<string>("");
-  const [updated, setUpdated] = useState<UserPost | null>(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
-  useEffect(() => {
-    const getUserUpdate = async () => {
-      try {
-        setLoadingUpdate(true);
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-          setErrorMessageUpdate("No token found. Please log in.");
-          return;
-        }
-        if (updated) {
-          const response = await userUpdateServices.getUserUpdate(
-            { submitUpdate: updated }, // Wrap updated in an object
-            { token }
-          );
-          if (response.data.result) {
-            setUserUpdate(response.data.result);
-          } else {
-            setErrorMessageUpdate("User does not exist or invalid response.");
-          }
-        } else {
-          setErrorMessageUpdate("No update data available.");
-        }
-      } catch (error) {
-        setErrorMessageUpdate("Failed to fetch user data. " + error);
-      } finally {
-        setLoadingUpdate(false);
+  const updateUser = async (updatedData: UserPost) => {
+    try {
+      setLoadingUpdate(true);
+      setErrorMessageUpdate("");
+      setUpdateSuccess(false);
+
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        setErrorMessageUpdate("No token found. Please log in.");
+        return null;
       }
-    };
 
-    getUserUpdate();
-  }, [updated]);
+      const response = await userUpdateServices.getUserUpdate(
+        updatedData,
+        token
+      );
+
+      if (response && response.data && response.data.result) {
+        setUpdateSuccess(true);
+        return response.data.result;
+      } else {
+        setErrorMessageUpdate("Failed to update user data.");
+        return null;
+      }
+    } catch (error) {
+      setErrorMessageUpdate("Failed to update user data. " + error);
+      return null;
+    } finally {
+      setLoadingUpdate(false);
+    }
+  };
 
   return {
     loadingUpdate,
-    userUpdate,
-    setUserUpdate,
     errorMessageUpdate,
-    setErrorMessageUpdate,
-    updated,
-    setUpdated,
+    updateSuccess,
+    updateUser,
   };
 };
 

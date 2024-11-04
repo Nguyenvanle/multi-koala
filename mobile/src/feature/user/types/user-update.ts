@@ -14,15 +14,16 @@ export type ImageBody = {
 export type UserBody = {
   firstname: string;
   lastname: string;
-  userBirth: string;
-  userBio: string;
-  userHometown: string;
-  email: string;
   image: {
     imageId: string;
     imageUrl: string;
   };
+  email: string;
   roles: RoleBodyList;
+  userBirth: string;
+  token: string;
+  userBio: string;
+  userHometown: string;
   firstLogin: boolean;
 };
 
@@ -41,12 +42,9 @@ export type UserListRes = {
 };
 
 export type UserPost = {
-  password: "12345678";
   firstname: string;
   lastname: string;
   userBirth: string;
-  email: string;
   userBio: string;
   userHometown: string;
-  firstLogin: boolean;
 };

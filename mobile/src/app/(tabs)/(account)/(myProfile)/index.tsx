@@ -13,63 +13,29 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
-  Dimensions,
   ActivityIndicator,
-  Modal,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useUserUpdate from "@/src/feature/user/hooks/useUserUpdate";
+import { UserPost } from "@/src/feature/user/types/user-update";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [initialUserInfo, setInitialUserInfo] = useState<UserBody | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-  const { loading, user, setUser, errorMessage, setErrorMessage, updateImage } =
-    useUser();
-  const [showRolePicker, setShowRolePicker] = useState<boolean>(false);
   const {
-    loadingUpdate,
-    userUpdate,
-    setUserUpdate,
-    errorMessageUpdate,
-    setErrorMessageUpdate,
-    updated,
-    setUpdated,
-  } = useUserUpdate();
-
-  useEffect(() => {
-    if (user) {
-      setInitialUserInfo(user); // Lưu thông tin người dùng ban đầu
-      fetchUserInfo(user); // Gọi hàm để lấy thông tin người dùng
-    }
-  }, [user]);
-
-  const fetchUserInfo = (user: UserBody) => {
-    const userInfo = {
-      firstname: user.firstname,
-      lastname: user.lastname,
-      userBirth: user.userBirth,
-      email: user.email,
-      userBio: user.userBio,
-      userHometown: user.userHometown,
-      firstLogin: user.firstLogin,
-    };
-    console.log(userInfo);
-  };
-
-  const handleSave = () => {
-    const updatedUserInfo = {
-      ...user,
-      userBirth: user.userBirth, // Nếu cần format thêm
-    };
-
-    // Gửi thông tin người dùng lên server
-    setUserUpdate(updatedUserInfo);
-
-    setIsEditing(false);
-  };
+    loadingUser: userLoading,
+    user,
+    setUser,
+    errorMessage,
+    setErrorMessage,
+    refreshUser,
+  } = useUser();
+  const { loadingUpdate, errorMessageUpdate, updateSuccess, updateUser } =
+    useUserUpdate();
 
   const handleInputChange = (name: keyof UserBody, value: string) => {
     setUser((prev) => ({
@@ -107,12 +73,12 @@ const UserProfile: React.FC = () => {
     }
   };
 
-  // Xử lý loading state
-  if (loading) {
+  // In your render method, you might want to show a loading indicator
+  if (loadingUpdate) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Colors.teal_dark} />
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Updating...</Text>
       </View>
     );
   }
@@ -134,6 +100,47 @@ const UserProfile: React.FC = () => {
       </View>
     );
   }
+
+  const handleSave = async () => {
+    try {
+      const updateData: UserPost = {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        userBio: user.userBio,
+        userBirth: user.userBirth,
+        userHometown: user.userHometown,
+      };
+
+      const updatedUser = await updateUser(updateData);
+
+      if (updatedUser) {
+        setUser(updatedUser);
+        await refreshUser();
+        setIsEditing(false);
+
+        Alert.alert(
+          "Update Success",
+          "Your profile has been updated. Please login again to continue.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                // Thêm logic đăng xuất ở đây nếu cần
+                router.replace("/(auth)/sign-in");
+                AsyncStorage.removeItem("token");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Update Failed",
+        errorMessageUpdate || "Failed to update user information"
+      );
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -191,18 +198,17 @@ const UserProfile: React.FC = () => {
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            {/* Email */}
+            {/* Vai trò */}
             <View style={{ ...styles.inputContainer, width: "48%" }}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={styles.label}>Role</Text>
               <TextInput
-                style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user.email || ""}
-                onChangeText={(text) => handleInputChange("email", text)}
-                editable={isEditing}
-                numberOfLines={10}
+                style={[styles.input, styles.disabledInput]} // Áp dụng styles.disabledInput luôn
+                value={user.roles[0].roleName || ""}
+                onChangeText={null} // Không xử lý thay đổi văn bản
+                editable={false} // Không cho phép chỉnh sửa
+                selectTextOnFocus={false} // Không cho phép chọn văn bản
               />
             </View>
-
             {/* Ngày sinh */}
             <View style={{ ...styles.inputContainer, width: "48%" }}>
               <Text style={styles.label}>Birthday</Text>
@@ -228,6 +234,19 @@ const UserProfile: React.FC = () => {
               )}
             </View>
           </View>
+
+          {/* Email */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={[styles.input, styles.disabledInput]}
+              value={user.email || ""}
+              onChangeText={null}
+              editable={false}
+              selectTextOnFocus={false}
+            />
+          </View>
+
           {/* Quê quán */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Hometown</Text>
