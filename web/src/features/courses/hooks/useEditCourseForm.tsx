@@ -35,7 +35,12 @@ export default function useEditCourseForm(initialData: EditCourseFormData) {
   const { courseId } = useParams();
   const form = useForm<EditCourseFormData>({
     resolver: zodResolver(EditCourseSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      courseResponsibilityEndAt: new Date(
+        initialData.courseResponsibilityEndAt
+      ),
+    },
   });
 
   const onSubmit = async (data: EditCourseFormData) => {
