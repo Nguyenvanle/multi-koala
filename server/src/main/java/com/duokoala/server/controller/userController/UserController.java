@@ -31,9 +31,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/change-password")
-    ApiResponse<UserResponse> changePassword(
-            @PathVariable String userId
-            , @RequestBody ChangePasswordRequest request) {
+    ApiResponse<UserResponse> changePassword(@RequestBody ChangePasswordRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.changeMyPassword(request))
                 .build();
