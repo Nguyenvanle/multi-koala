@@ -1,6 +1,5 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultSubmitRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.quizResultResponse.QuizResultReportResponse;
@@ -19,21 +18,21 @@ import java.util.List;
 public class QuizResultController {
     QuizResultService quizResultService;
 
-    @PostMapping("/tests/{testId}/quiz-results")
-    ApiResponse<QuizResultResponse> create(
-            @PathVariable String testId,
-            @RequestBody QuizResultCreateRequest request) {
-        return ApiResponse.<QuizResultResponse>builder()
-                .result(quizResultService.create(testId, request))
-                .build();
-    }
+//    @PostMapping("/tests/{testId}/quiz-results")
+//    ApiResponse<QuizResultResponse> create(
+//            @PathVariable String testId,
+//            @RequestBody QuizResultCreateRequest request) {
+//        return ApiResponse.<QuizResultResponse>builder()
+//                .result(quizResultService.create(testId, request))
+//                .build();
+//    }
 
     @PostMapping("/tests/{testId}/submit-quiz")
     ApiResponse<QuizResultResponse> submit(
             @PathVariable String testId,
             @RequestBody QuizResultSubmitRequest request) {
         return ApiResponse.<QuizResultResponse>builder()
-                .result(quizResultService.submitQuiz(testId,request))
+                .result(quizResultService.submitQuiz(testId, request))
                 .build();
     }
 

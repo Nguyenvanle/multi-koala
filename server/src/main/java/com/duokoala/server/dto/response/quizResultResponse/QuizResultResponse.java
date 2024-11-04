@@ -1,7 +1,9 @@
 package com.duokoala.server.dto.response.quizResultResponse;
+
 import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class QuizResultResponse {
     int answeredQuestions;
     int correctAnswers;
     LocalDateTime dateTaken;
+    boolean passed;
     List<QuestionSubmitResponse> questions;
 //    TestResponse test;
 //    StudentResponse student;

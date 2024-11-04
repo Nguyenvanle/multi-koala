@@ -1,11 +1,10 @@
 package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.questionRequest.QuestionSubmitRequest;
-import com.duokoala.server.dto.request.quizResultRequest.QuizResultCreateRequest;
 import com.duokoala.server.dto.request.quizResultRequest.QuizResultSubmitRequest;
+import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import com.duokoala.server.dto.response.quizResultResponse.QuizResultReportResponse;
 import com.duokoala.server.dto.response.quizResultResponse.QuizResultResponse;
-import com.duokoala.server.dto.response.questionResponse.QuestionSubmitResponse;
 import com.duokoala.server.entity.*;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
@@ -54,9 +53,13 @@ public class QuizResultService {
                 .totalQuestion(totalQuestion)
                 .answeredQuestions(answeredQuestion)
                 .correctAnswers(correctAnswers)
+                .isPassed(correctAnswers >= test.getPassingScore())
                 .test(test)
                 .dateTaken(LocalDateTime.now())
                 .build();
+
+        log.info(correctAnswers + ">=" + test.getPassingScore());
+        log.info("isPassed: " + quizResult.isPassed());
         try {
             quizResult.setStudent(authenticationService.getAuthenticatedStudent());
         } catch (Exception e) {
@@ -121,17 +124,17 @@ public class QuizResultService {
         return response;
     }
 
-    public QuizResultResponse create(
-            String testId,
-            QuizResultCreateRequest request) {
-        QuizResult quizResult = quizResultMapper.toQuizResult(request);
-        quizResult.setTotalQuestion(questionRepository.countQuestionsByTestId(testId));
-        quizResult.setDateTaken(LocalDateTime.now());
-        quizResult.setStudent(authenticationService.getAuthenticatedStudent());
-        quizResult.setTest(testRepository.findById(testId)
-                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
-        return quizResultMapper.toQuizResultResponse(quizResultRepository.save(quizResult));
-    }
+//    public QuizResultResponse create(
+//            String testId,
+//            QuizResultCreateRequest request) {
+//        QuizResult quizResult = quizResultMapper.toQuizResult(request);
+//        quizResult.setTotalQuestion(questionRepository.countQuestionsByTestId(testId));
+//        quizResult.setDateTaken(LocalDateTime.now());
+//        quizResult.setStudent(authenticationService.getAuthenticatedStudent());
+//        quizResult.setTest(testRepository.findById(testId)
+//                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
+//        return quizResultMapper.toQuizResultResponse(quizResultRepository.save(quizResult));
+//    }
 
     public QuizResultResponse getQuizResultResponse(String quizResultId) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId)
