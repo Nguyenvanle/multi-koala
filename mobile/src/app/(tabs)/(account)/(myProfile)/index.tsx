@@ -3,7 +3,7 @@ import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { UserBody } from "@/src/feature/user/types/user";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -20,14 +20,92 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import useUserUpdate from "@/src/feature/user/hooks/useUserUpdate";
 
 const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [initialUserInfo, setInitialUserInfo] = useState<UserBody | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const { loading, user, setUser, errorMessage, setErrorMessage, updateImage } =
     useUser();
   const [showRolePicker, setShowRolePicker] = useState<boolean>(false);
-  const [text, setText] = useState("");
+  const {
+    loadingUpdate,
+    userUpdate,
+    setUserUpdate,
+    errorMessageUpdate,
+    setErrorMessageUpdate,
+    updated,
+    setUpdated,
+  } = useUserUpdate();
+
+  useEffect(() => {
+    if (user) {
+      setInitialUserInfo(user); // Lưu thông tin người dùng ban đầu
+      fetchUserInfo(user); // Gọi hàm để lấy thông tin người dùng
+    }
+  }, [user]);
+
+  const fetchUserInfo = (user: UserBody) => {
+    const userInfo = {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      userBirth: user.userBirth,
+      email: user.email,
+      userBio: user.userBio,
+      userHometown: user.userHometown,
+      firstLogin: user.firstLogin,
+    };
+    console.log(userInfo);
+  };
+
+  const handleSave = () => {
+    const updatedUserInfo = {
+      ...user,
+      userBirth: user.userBirth, // Nếu cần format thêm
+    };
+
+    // Gửi thông tin người dùng lên server
+    setUserUpdate(updatedUserInfo);
+
+    setIsEditing(false);
+  };
+
+  const handleInputChange = (name: keyof UserBody, value: string) => {
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Kiểm tra user null/undefined
+  if (!user) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>
+          Không tìm thấy thông tin người dùng
+        </Text>
+      </View>
+    );
+  }
+
+  // Thêm hàm formatDate để chuyển đổi định dạng ngày tháng
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      // Lưu trữ dạng ISO string trong state
+      const isoDate = selectedDate.toISOString().split("T")[0];
+      handleInputChange("userBirth", isoDate);
+    }
+  };
 
   // Xử lý loading state
   if (loading) {
@@ -56,47 +134,6 @@ const UserProfile: React.FC = () => {
       </View>
     );
   }
-
-  // Kiểm tra user null/undefined
-  if (!user) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>
-          Không tìm thấy thông tin người dùng
-        </Text>
-      </View>
-    );
-  }
-
-  const handleInputChange = (name: keyof UserBody, value: string) => {
-    setUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Thêm hàm formatDate để chuyển đổi định dạng ngày tháng
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      // Lưu trữ dạng ISO string trong state
-      const isoDate = selectedDate.toISOString().split("T")[0];
-      handleInputChange("userBirth", isoDate);
-    }
-  };
-
-  const handleSave = () => {
-    // Tại đây sẽ thêm logic để lưu thông tin vào backend
-    setIsEditing(false);
-  };
 
   return (
     <KeyboardAvoidingView
@@ -151,74 +188,19 @@ const UserProfile: React.FC = () => {
             </View>
           </View>
 
-          {/* Email */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={[styles.input, !isEditing && styles.disabledInput]}
-              value={user.email || ""}
-              onChangeText={(text) => handleInputChange("email", text)}
-              editable={isEditing}
-              numberOfLines={10}
-            />
-          </View>
-
           <View
-            style={{
-              flexDirection: "row",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-            }}
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            {/* Vai trò */}
+            {/* Email */}
             <View style={{ ...styles.inputContainer, width: "48%" }}>
-              <Text style={styles.label}>Role</Text>
-              <TouchableOpacity
-                onPress={() => isEditing && setShowRolePicker(true)}
+              <Text style={styles.label}>Email</Text>
+              <TextInput
                 style={[styles.input, !isEditing && styles.disabledInput]}
-              >
-                <Text style={[!isEditing && styles.disabledText]}>
-                  {user.roles[0].roleName}
-                </Text>
-              </TouchableOpacity>
-              {/* Modal cho iOS */}
-              {/* {Platform.OS === "ios" && showRolePicker && (
-              <Modal
-                transparent={true}
-                visible={showRolePicker}
-                animationType="fade"
-              >
-                <View style={styles.modalOverlay}>
-                  <View style={styles.modalContent}>
-                    <View style={styles.pickerHeader}>
-                      <TouchableOpacity
-                        onPress={() => setShowRolePicker(false)}
-                        style={styles.pickerButton}
-                      >
-                        <Text style={styles.pickerButtonText}>Close</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <Picker
-                      selectedValue={user?.roles[0]?.roleName} // Sử dụng vai trò đầu tiên hoặc giá trị mặc định
-                      onValueChange={(value) => {
-                        handleInputChange("roles", value); // Cập nhật giá trị khi chọn vai trò
-                        setShowRolePicker(false);
-                      }}
-                    >
-                      {user?.roles?.map((role, index) => (
-                        <Picker.Item
-                          key={index}
-                          label={role.roleName}
-                          value={role.roleName.toLowerCase()} // Đảm bảo giá trị là chữ thường
-                        />
-                      )) || (
-                        <Picker.Item label="No roles available" value="" />
-                      )}{" "}
-                    </Picker>
-                  </View>
-                </View>
-              </Modal>
-            )} */}
+                value={user.email || ""}
+                onChangeText={(text) => handleInputChange("email", text)}
+                editable={isEditing}
+                numberOfLines={10}
+              />
             </View>
 
             {/* Ngày sinh */}
@@ -246,7 +228,6 @@ const UserProfile: React.FC = () => {
               )}
             </View>
           </View>
-
           {/* Quê quán */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Hometown</Text>

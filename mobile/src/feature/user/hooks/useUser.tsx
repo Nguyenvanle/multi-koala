@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { UserBody } from "../../user/types/user";
-import { userServices } from "../../user/services/user";
+import { UserBody } from "../types/user";
+import { userServices } from "../services/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ImagePicker from "expo-image-picker";
 
 const useUser = () => {
   const [loading, setLoading] = useState(false);
@@ -49,6 +48,7 @@ const useUser = () => {
 
   return {
     loading,
+    setLoading,
     user,
     setUser,
     errorMessage,
