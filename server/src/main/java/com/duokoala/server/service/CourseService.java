@@ -175,7 +175,9 @@ public class CourseService {
     public List<StatisticCourseResponse> getMyStatisticCoursesList() {
         var courses = courseRepository.findAllByUploadedByTeacher
                 (authenticationService.getAuthenticatedTeacher());
-        return courses.stream().map(this::getStatisticCourse).toList();
+        return courses.stream()
+                .filter(course -> !course.isDeleted())
+                .map(this::getStatisticCourse).toList();
     }
 
     private PerformingCourseResponse getPerformingCourse(Course course) {
