@@ -43,7 +43,7 @@ const DeleteDialog: React.FC<{ courseId: string }> = ({ courseId }) => {
         <Button
           type="button"
           variant="destructive"
-          className="w-full sm:w-auto "
+          className="w-full sm:w-auto h-8"
         >
           <CircleX className="mr-2 h-4 w-4" />
           Delete

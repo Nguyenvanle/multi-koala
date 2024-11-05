@@ -1,10 +1,11 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H1, H4 } from "@/components/ui/typography";
 import { CoursesListEmpty } from "@/features/courses/components/molecules";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
-import { BookOpen } from "lucide-react";
+import { BookOpen, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
 interface LessonsCardProps {
@@ -20,8 +21,18 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
 }) => {
   return (
     <Card className="flex flex-0 flex-col w-full rounded overflow-hidden gap-2">
-      <CardHeader className="flex flex-0 pb-0">
+      <CardHeader className="flex flex-1 justify-between flex-row pb-0 space-y-0">
         <CardTitle>Lessons</CardTitle>
+
+        <Button className="h-8 gap-1" size="sm">
+          <PlusCircle className="w-3.5 h-3.5" />
+          <Link
+            href="/dashboard/courses/add"
+            className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
+          >
+            Add New Lesson
+          </Link>
+        </Button>
       </CardHeader>
       <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (

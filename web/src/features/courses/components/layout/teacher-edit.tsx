@@ -86,13 +86,13 @@ export default function CourseEditForm({
                 type="button"
                 onClick={handleReset}
                 variant="outline"
-                className="w-full sm:w-auto "
+                className="w-full sm:w-auto h-8"
                 disabled={isFormUnchanged}
               >
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
-              <Button type="submit" className="w-full sm:w-auto">
+              <Button type="submit" className="w-full sm:w-auto h-8">
                 <CirclePlus className="mr-2 h-4 w-4" />
                 Submit
               </Button>
