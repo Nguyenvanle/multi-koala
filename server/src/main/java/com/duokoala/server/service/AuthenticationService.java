@@ -2,7 +2,6 @@ package com.duokoala.server.service;
 
 import com.duokoala.server.dto.request.authRequest.*;
 import com.duokoala.server.dto.response.authResponse.AuthenticationResponse;
-import com.duokoala.server.dto.response.authResponse.ForgetPasswordResponse;
 import com.duokoala.server.dto.response.authResponse.IntrospectResponse;
 import com.duokoala.server.entity.InvalidatedToken;
 import com.duokoala.server.entity.user.Admin;
