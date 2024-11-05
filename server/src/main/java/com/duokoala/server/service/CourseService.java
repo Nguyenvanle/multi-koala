@@ -196,9 +196,8 @@ public class CourseService {
                 authenticationService.getAuthenticatedTeacher(),
                 LocalDateTime.now().minusMonths(months)
         );
-//        List<Course> courses = courseRepository.findAllByUploadedByTeacher(authenticationService.getAuthenticatedTeacher());
         return courses.stream()
-//                .filter(c -> c.getStatus().equals(Status.APPROVED))
+                .filter(course -> !course.isDeleted())
                 .map(this::getPerformingCourse)
                 .sorted((c1, c2) -> Double.compare(calculateScore(c2), calculateScore(c1)))
                 .toList();
