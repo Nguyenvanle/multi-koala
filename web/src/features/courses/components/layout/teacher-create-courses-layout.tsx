@@ -55,7 +55,7 @@ export default function CreateCoursePage() {
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col xl:flex-row justify-between gap-4 xl:gap-6 ">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
             <Breadcrumbs items={breadcrumbs} />
             <div className="flex gap-2">
               <Button

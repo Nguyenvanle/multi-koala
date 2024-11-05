@@ -5,22 +5,17 @@ import {
   CourseResType,
 } from "@/features/courses/types/course";
 import { CourseCreatePayloadType } from "@/features/courses/types/course-create";
+import { CourseDeleteResType } from "@/features/courses/types/course-delete";
 import { MyPerformingCoursesResType } from "@/features/courses/types/course-perform";
-import { TeacherMyCoursesResType } from "@/features/courses/types/teacher-my-courses";
 import { DiscountResType } from "@/features/discount/types/discount";
 import { RatingResType } from "@/features/rating/types/rating";
 import { TeacherStatisticsResType } from "@/features/users/types/teacher-statistic";
+import { BaseResType } from "@/schemas/base-res";
 import { apiService } from "@/services/api";
 
 export const courseService = {
   getAll: async () => {
-    const res = await apiService.get<CourseResType>("/courses");
-
-    return {
-      code: res.code,
-      message: res.message,
-      result: res.result?.result.filter(course => !course.deleted)
-    };
+    return await apiService.get<CourseResType>("/courses");
   },
 
   getMyCourses: async (token: string) => {
@@ -39,13 +34,15 @@ export const courseService = {
   },
 
   getDetail: async (courseId: string) => {
-    const res = await apiService.get<CourseDetailResType>(`/courses/${courseId}`);
+    const res = await apiService.get<CourseDetailResType>(
+      `/courses/${courseId}`
+    );
 
     return {
       code: res.code,
       message: res.message,
-      result: res.result?.result.deleted ? null : res.result?.result
-    }
+      result: res.result?.result.deleted ? null : res.result?.result,
+    };
   },
 
   // need refactor
@@ -92,6 +89,17 @@ export const courseService = {
     return await apiService.put<CourseDetailResType>(
       `/courses/${courseId}`,
       data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  },
+
+  deleteCourse: async (token: string, courseId: string) => {
+    return await apiService.delete<CourseDeleteResType>(
+      `/courses/${courseId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
