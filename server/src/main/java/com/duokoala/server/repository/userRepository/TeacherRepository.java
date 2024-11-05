@@ -14,13 +14,15 @@ public interface TeacherRepository extends JpaRepository<Teacher, String> {
 
     @Query(nativeQuery = true,
             value = "SELECT COUNT(DISTINCT c.course_id) " +
-                    "FROM course c WHERE c.uploaded_by_teacher_user_id = :teacherId")
+                    "FROM course c WHERE c.uploaded_by_teacher_user_id = :teacherId " +
+                    "AND c.is_deleted = false")
     int countTotalCourses(@Param("teacherId") String teacherId);
 
     @Query(nativeQuery = true,
             value = "SELECT COUNT(DISTINCT " +
                     "CASE WHEN c.status = 'approved' THEN c.course_id END) " +
-                    "FROM course c WHERE c.uploaded_by_teacher_user_id = :teacherId")
+                    "FROM course c WHERE c.uploaded_by_teacher_user_id = :teacherId " +
+                    "AND c.is_deleted = false")
     int countTotalApprovedCourses(@Param("teacherId") String teacherId);
 
     @Query(nativeQuery = true,
