@@ -57,7 +57,7 @@ const DeleteDialog: React.FC<{ courseId: string }> = ({ courseId }) => {
             course and remove your data from our servers.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="gap-2 sm:gap-0">
           <DialogClose asChild>
             <Button variant="destructive" onClick={handleDelete} type="submit">
               Delete
