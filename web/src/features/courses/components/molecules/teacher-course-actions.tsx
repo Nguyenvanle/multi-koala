@@ -29,7 +29,6 @@ export const TeacherCourseActions: React.FC<{ courseId: string }> = ({ courseId 
           Edit
         </Link>
       </DropdownMenuItem>
-      <DropdownMenuItem>Delete</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 );

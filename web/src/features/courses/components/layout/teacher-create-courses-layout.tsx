@@ -55,35 +55,30 @@ export default function CreateCoursePage() {
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col xl:flex-row justify-between gap-4 xl:gap-6 ">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
             <Breadcrumbs items={breadcrumbs} />
             <div className="flex gap-2">
               <Button
                 type="button"
                 onClick={handleReset}
                 variant="outline"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto h-8"
               >
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
-              <Button type="submit" className="w-full sm:w-auto">
+              <Button type="submit" className="w-full sm:w-auto h-8">
                 <CirclePlus className="mr-2 h-4 w-4" />
                 Submit
               </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-6">
-            <div className="flex flex-1 flex-col gap-4 xl:gap-6">
-              <CourseImageCard form={form} />
+          <div className="flex flex-col gap-4 xl:gap-6">
+            <BasicInformationCard form={form} />
 
-              <CourseTypesCard form={form} courseTypes={courseTypes} />
-              <CourseFieldsCard form={form} fields={fields} />
-            </div>
-            <div className="flex flex-col gap-4 xl:gap-6">
-              <BasicInformationCard form={form} />
-            </div>
+            <CourseTypesCard form={form} courseTypes={courseTypes} />
+            <CourseFieldsCard form={form} fields={fields} />
           </div>
         </form>
       </Form>

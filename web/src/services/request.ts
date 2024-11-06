@@ -1,7 +1,3 @@
-// src/services/api/request.ts
-
-import { ApiCache } from "@/services/cache";
-import { shouldCache } from "@/services/cache-rule";
 import { API_CONFIG } from "@/types/api/config";
 
 export class ApiRequest {

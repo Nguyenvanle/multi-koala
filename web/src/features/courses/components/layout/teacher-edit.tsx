@@ -8,7 +8,7 @@ import {
 } from "@/features/courses/components/atoms/create-course-data-handler";
 import useCourseType from "@/features/course-type/hooks/useCourseType";
 import useField from "@/features/field/hooks/useField";
-import { Book, CirclePlus, Home, ListRestart } from "lucide-react";
+import { Book, CirclePlus, CircleX, Home, ListRestart } from "lucide-react";
 import {
   BasicInformationCard,
   CourseFieldsCard,
@@ -22,6 +22,7 @@ import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
+import DeleteDialog from "@/features/courses/components/atoms/delete-dialog";
 
 const breadcrumbs = [
   {
@@ -77,20 +78,21 @@ export default function CourseEditForm({
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col xl:flex-row justify-between gap-4 xl:gap-6 ">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
             <Breadcrumbs items={breadcrumbs} />
             <div className="flex gap-2">
+              <DeleteDialog courseId={courseId as string} />
               <Button
                 type="button"
                 onClick={handleReset}
                 variant="outline"
-                className="w-full sm:w-auto "
+                className="w-full sm:w-auto h-8"
                 disabled={isFormUnchanged}
               >
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
-              <Button type="submit" className="w-full sm:w-auto">
+              <Button type="submit" className="w-full sm:w-auto h-8">
                 <CirclePlus className="mr-2 h-4 w-4" />
                 Submit
               </Button>

@@ -15,19 +15,19 @@ export function DashboardHeader({
     <div className="w-full grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <CardInfo
         title="Total Revenue"
-        value={`${statistics?.totalPrices.toFixed(2)} USD`}
+        value={`${statistics?.totalPrices.toFixed(2) ?? 0} USD`}
         icon={<BookOpen className="h-4 w-4 text-primary " />}
         href={`/dashboard/courses?sort=sales`}
       />
       <CardInfo
         title="Active Students"
-        value={`${statistics?.totalStudents} students`}
+        value={`${statistics?.totalStudents ?? 0} students`}
         icon={<Users className="h-4 w-4 text-primary" />}
         href={`/dashboard/students`}
       />
       <CardInfo
         title="Course Sales"
-        value={`${statistics?.totalEnrollments} courses`}
+        value={`${statistics?.totalEnrollments ?? 0} courses`}
         icon={<GraduationCap className="h-4 w-4 text-primary " />}
       />
       <CardInfo
