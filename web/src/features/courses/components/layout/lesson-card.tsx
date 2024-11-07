@@ -34,6 +34,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
             lessons={lessons}
             visibleLessons={visibleLessons}
             onLoadMore={onLoadMore}
+            isPublic={isPublic}
           />
         ) : (
           <div className="h-[20vh] content-center">

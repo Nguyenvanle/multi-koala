@@ -17,12 +17,14 @@ interface LessonListProps {
   lessons: LessonDetailResult[];
   visibleLessons: number;
   onLoadMore: () => void;
+  isPublic?: boolean;
 }
 
 export const LessonList: React.FC<LessonListProps> = ({
   lessons,
   visibleLessons,
   onLoadMore,
+  isPublic,
 }) => {
   const { user } = useAuth();
   const userId = user?.userId; // Lấy userId từ context
@@ -58,13 +60,14 @@ export const LessonList: React.FC<LessonListProps> = ({
       {lessons.slice(0, visibleLessons).map((lesson, index) => {
         // Kiểm tra xem người dùng có phải là chủ nhân bài học không
         const isOwner = lesson.course.uploadedByTeacher.userId === userId;
-        
+
         return (
           <LessonCard
             key={lesson.lessonId}
             {...lesson}
             isLocked={!lesson.demo && !isOwner} // Nếu không phải demo và không phải chủ nhân, thì khóa bài học
             lessonNumber={index + 1}
+            isPublic={isPublic}
           />
         );
       })}

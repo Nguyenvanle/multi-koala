@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H4, P, Small } from "@/components/ui/typography";
-import { CirclePlay, Lock } from "lucide-react";
+import { CirclePlay, Lock, Settings } from "lucide-react";
 import { LessonBody } from "@/features/lessons/schema/lessons";
 import { convertDuration } from "@/lib/utils";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import { useParams, usePathname } from "next/navigation";
 interface LessonCardProps extends LessonBody {
   isLocked: boolean;
   lessonNumber: number; // Add this line
+  isPublic?: boolean;
 }
 
 export default function LessonCard({
@@ -21,6 +22,7 @@ export default function LessonCard({
   video,
   isLocked,
   lessonNumber,
+  isPublic,
 }: LessonCardProps) {
   const path = usePathname();
   const { courseId } = useParams();
@@ -70,8 +72,10 @@ export default function LessonCard({
 
         {isLocked ? (
           <Lock className="text-gray-400" size={24} />
-        ) : (
+        ) : isPublic ? (
           <CirclePlay className="text-primary" size={24} />
+        ) : (
+          <Settings size={24} />
         )}
       </CardHeader>
     </Card>
@@ -90,6 +94,24 @@ export default function LessonCard({
         </div>
         {cardContent}
       </div>
+    );
+  }
+
+  if (!isPublic) {
+    return (
+      <Link
+        href={`/dashboard/courses/${courseId}/lessons/${lessonId}`}
+        className="block"
+      >
+        <div className="flex flex-1 flex-row items-center">
+          <div className="flex min-w-6">
+            <Small className="mr-2 text-muted-foreground font-bold">
+              {lessonNumber}
+            </Small>
+          </div>
+          {cardContent}
+        </div>
+      </Link>
     );
   }
 
