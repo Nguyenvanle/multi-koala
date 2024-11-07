@@ -1,8 +1,10 @@
 import { getLesson } from "@/features/lessons/actions/get-lesson";
+import EditLessonForm from "@/features/lessons/components/templates/edit-form";
+import { Suspense } from "react";
 
 async function fetchLesson(lessonId: string) {
   const res = await getLesson(lessonId);
-  return res.lesson ? res.lesson : {};
+  return res.lesson;
 }
 
 export default async function TeachingEditLesson({
@@ -13,11 +15,10 @@ export default async function TeachingEditLesson({
   const lesson = await fetchLesson(params.lessonId);
 
   return (
-    <div>
-      <h1>TeachingEditLesson</h1>
-      <p>Course: {params.courseId}</p>
-      <p>Lesson: {params.lessonId}</p>
-      <pre>{JSON.stringify(lesson, null, 2)}</pre>
+    <div className="flex flex-col w-full gap-4">
+      <Suspense>
+        <EditLessonForm initData={lesson} />
+      </Suspense>
     </div>
   );
 }

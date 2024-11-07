@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function LessonDescriptionField({
   form,
@@ -25,9 +25,8 @@ export default function LessonDescriptionField({
             <FormMessage />
           </div>
           <FormControl>
-            <Input
+            <Textarea
               placeholder="Describe the content of your lesson."
-              type="text"
               {...field}
             />
           </FormControl>

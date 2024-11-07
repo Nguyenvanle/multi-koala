@@ -3,6 +3,10 @@ import {
   AddFormValues,
 } from "@/features/lessons/types/add-form";
 import {
+  EditFormResType,
+  EditFormType,
+} from "@/features/lessons/types/edit-form";
+import {
   LessonDetailResponse,
   LessonResponse,
 } from "@/features/lessons/types/lessons-res";
@@ -21,7 +25,9 @@ export const lessonService = {
   },
 
   getDetail: async (lessonId: string) => {
-    return await apiService.get<LessonDetailResponse>(`/lessons/${lessonId}`);
+    return await apiService.get<LessonDetailResponse>(`/lessons/${lessonId}`, {
+      next: { tags: ["/lessons/${lessonId}"] },
+    });
   },
 
   getAllByCourseId: async (courseId: string) => {
@@ -32,5 +38,9 @@ export const lessonService = {
     return await apiService.get<LessonDetailResponse>(
       `/courses/${courseId}/lessons/${lessonId}`
     );
+  },
+
+  updateLesson: async (lessonId: string, data: EditFormType) => {
+    return await apiService.put<EditFormResType>(`/lessons/${lessonId}`, data);
   },
 };
