@@ -49,7 +49,6 @@ const Form: React.FC = () => {
             fontWeight: "bold",
             color: Colors.teal_dark,
             paddingTop: 20,
-            height: 120,
             paddingHorizontal: 20,
           }}
         >

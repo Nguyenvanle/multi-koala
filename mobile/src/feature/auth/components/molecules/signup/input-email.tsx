@@ -6,17 +6,43 @@ import {
   Platform,
   TextInput,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Label from "@/src/components/atoms/label";
 import LinkLabel from "@/src/feature/auth/components/atoms/link-label";
 import { text } from "@/src/constants/Styles";
 import InputLabel from "@/src/feature/auth/components/atoms/input-label";
 import { Colors } from "@/src/constants/Colors";
 import useRegisterForm from "@/src/feature/auth/hooks/useRegisterForm";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const InputEmail = () => {
   const { loading, error, email, setEmail, onSubmit, errorMessage } =
     useRegisterForm();
+
+  const handleEmailChange = async (value) => {
+    setEmail(value);
+    try {
+      await AsyncStorage.setItem("userEmail", value);
+    } catch (error) {
+      console.error("Error saving email to AsyncStorage", error);
+    }
+  };
+
+  useEffect(() => {
+    const getEmailFromStorage = async () => {
+      try {
+        const storedEmail = await AsyncStorage.getItem("userEmail");
+        if (storedEmail) {
+          setEmail(storedEmail);
+        }
+      } catch (error) {
+        console.error("Error fetching email from AsyncStorage", error);
+      }
+    };
+
+    getEmailFromStorage();
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
@@ -31,7 +57,7 @@ const InputEmail = () => {
         placeholder="Email"
         placeholderTextColor={Colors.grey}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={handleEmailChange} // Update this line
         keyboardType="email-address"
         autoCapitalize="none"
         textContentType="emailAddress"

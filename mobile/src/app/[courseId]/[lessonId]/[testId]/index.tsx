@@ -17,6 +17,7 @@ import { useTestList } from "@/src/feature/test/hooks/useTestList";
 import { QuestionDetails } from "@/src/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useTestResultList from "@/src/feature/test-result/hooks/useTestResultList";
+import { useDetails } from "@/src/feature/course/hooks/useDetails";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -26,6 +27,8 @@ const Test = () => {
   const courseIdString = courseId as string;
   const lessonIdString = lessonId as string;
   const testIdString = testId as string;
+  const { courseDetails, loading, errorMessageDetails } =
+    useDetails(courseIdString);
 
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
@@ -224,12 +227,15 @@ const Test = () => {
 
     return (
       <View style={{ marginBottom: 60 }}>
-        <TouchableOpacity
-          style={{ ...styles.submitButton, marginBottom: 24 }}
-          onPress={handleRetakeTest}
-        >
-          <Text style={styles.submitButtonText}>Take this test again</Text>
-        </TouchableOpacity>
+        {courseDetails.process === 1 && (
+          <TouchableOpacity
+            style={{ ...styles.submitButton, marginBottom: 24 }}
+            onPress={handleRetakeTest}
+          >
+            <Text style={styles.submitButtonText}>Take this test again</Text>
+          </TouchableOpacity>
+        )}
+
         <Text
           style={{
             ...styles.resultText,
@@ -308,8 +314,7 @@ const Test = () => {
 
                         // Lấy đáp án người dùng từ result.answers array
                         // Đảm bảo selectedResultAnswers là một mảng chứa các answerId
-                        const userAnswerId =
-                          selectedResultAnswers?.[questionIndex];
+                        const userAnswerId = selectedAnswers?.[questionIndex];
 
                         return (
                           <View style={styles.questionContainer}>

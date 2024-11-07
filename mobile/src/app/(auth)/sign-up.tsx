@@ -18,23 +18,7 @@ import useRegisterForm from "@/src/feature/auth/hooks/useRegisterForm";
 import { router } from "expo-router";
 
 const SignUp: React.FC = () => {
-  const {
-    loading,
-    error,
-    onSubmit,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    errorMessage,
-    setErrorMessage,
-  } = useRegisterForm();
+  const { loading, errorMessage } = useRegisterForm();
 
   return (
     <SafeAreaView style={Styles.container}>
