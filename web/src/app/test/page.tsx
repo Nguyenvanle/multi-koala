@@ -1,5 +1,5 @@
-import { DialogContainer } from "@/features/dialog-form/components/atoms/dialog";
+import VideoUploadForm from "@/features/file-upload/components/atoms/video-upload";
 
 export default function Test() {
-  return <DialogContainer />;
+  return <></>;
 }

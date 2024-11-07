@@ -18,15 +18,9 @@ export default function useEditLessonForm(initData: LessonDetailResult) {
 
   const onSubmit = async (values: EditFormType) => {
     try {
-      console.log(values);
-      console.log(initData);
-
+      const formData = new FormData();
       if (values.imageFile) {
-        const formData = new FormData();
-        if (values.imageFile) {
-          formData.append("file", values.imageFile);
-        }
-
+        formData.append("file", values.imageFile);
         const response = await postImageLesson(initData.lessonId, formData);
         console.log("Lesson image res:", response);
       }
@@ -43,7 +37,7 @@ export default function useEditLessonForm(initData: LessonDetailResult) {
 
       showToast(
         "Lesson edited",
-        `${JSON.stringify(lesson, null, 2)}`,
+        `Your lesson has been edited successfully.`,
         "default"
       );
     } catch (error) {

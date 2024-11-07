@@ -11,9 +11,11 @@ import {
 import { Form } from "@/components/ui/form";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { CourseImageCard } from "@/features/courses/components/organisms";
+import VideoUploadForm from "@/features/file-upload/components/atoms/video-upload";
 import DemoField from "@/features/lessons/components/atoms/demo-field";
 import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-description";
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
+import VideoLessonField from "@/features/lessons/components/atoms/video-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { CirclePlus, Home, ListRestart } from "lucide-react";
@@ -59,26 +61,21 @@ export default function EditLessonForm({
 
           <Card className="flex flex-col gap-4">
             <CardHeader className="pb-0">
-              <CardTitle>Basic Lesson Info</CardTitle>
+              <CardTitle>Basic Information</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <LessonNameField form={form} />
-              <LessonDescriptionField form={form} />
-              <DemoField form={form} />
-            </CardContent>
-          </Card>
-
-          <Card className="flex flex-col gap-4">
-            <CardHeader className="pb-0">
-              <CardTitle>Lesson Image</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent className="grid grid-cols-2 gap-4">
               <CourseImageCard
                 form={form}
                 initialImageUrl={initData.image?.imageUrl}
               />
+              <div className="flex flex-col gap-4">
+                <LessonNameField form={form} />
+                <DemoField form={form} />
+                <LessonDescriptionField form={form} />
+              </div>
             </CardContent>
           </Card>
+          <VideoUploadForm initData={initData} />
         </form>
       </Form>
     </div>

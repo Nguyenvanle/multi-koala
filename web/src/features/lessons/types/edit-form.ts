@@ -5,6 +5,7 @@ import { z } from "zod";
 
 export const EditFormBody = formSchema.extend({
   imageFile: z.any().optional(),
+  videoFile: z.any().optional(),
 });
 export type EditFormType = z.infer<typeof EditFormBody>;
 
