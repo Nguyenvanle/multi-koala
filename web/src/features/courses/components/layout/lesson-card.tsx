@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { H1, H4 } from "@/components/ui/typography";
 import { CoursesListEmpty } from "@/features/courses/components/molecules";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
+import LessonDialogForm from "@/features/lessons/components/molecules/add-dialog";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { BookOpen, PlusCircle } from "lucide-react";
 import Link from "next/link";
@@ -26,17 +27,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
       <CardHeader className="flex flex-0 justify-between items-center flex-row pb-0 space-y-0">
         <CardTitle>Lessons</CardTitle>
 
-        {!isPublic && (
-          <Button className="h-8 gap-1" size="sm">
-            <PlusCircle className="w-3.5 h-3.5" />
-            <Link
-              href="/dashboard/courses/add"
-              className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
-            >
-              Add New Lesson
-            </Link>
-          </Button>
-        )}
+        {!isPublic && <LessonDialogForm />}
       </CardHeader>
       <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (

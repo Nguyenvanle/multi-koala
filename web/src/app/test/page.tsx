@@ -1,5 +1,5 @@
-import DemoPage from "@/features/table/components/pages/payment";
+import { DialogContainer } from "@/features/dialog-form/components/atoms/dialog";
 
 export default function Test() {
-  return <DemoPage />;
+  return <DialogContainer />;
 }
