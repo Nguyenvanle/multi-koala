@@ -56,7 +56,7 @@ export const LessonList: React.FC<LessonListProps> = ({
   }, [handleObserver]);
 
   return (
-    <ScrollArea className="min-h-[200px] max-h-[260px] lg:max-h-[56vh] w-full items-start pr-4">
+    <ScrollArea className="min-h-[200px] max-h-[260px] lg:max-h-[66vh] w-full items-start pr-4">
       {lessons.slice(0, visibleLessons).map((lesson, index) => {
         // Kiểm tra xem người dùng có phải là chủ nhân bài học không
         const isOwner = lesson.course.uploadedByTeacher.userId === userId;

@@ -66,7 +66,7 @@ export default function LessonCard({
               ? `${hours}h ${minutes}m ${seconds}s`
               : minutes > 0
                 ? `${minutes}m ${seconds}s`
-                : ` ${seconds}s`}
+                : ` ${seconds.toFixed(0)}s`}
           </Small>
         </div>
 

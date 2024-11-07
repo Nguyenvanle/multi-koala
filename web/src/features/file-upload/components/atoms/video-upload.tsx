@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Upload, CheckCircle2, AlertCircle, Trash2 } from "lucide-react";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
-import { postImageLesson } from "@/features/lessons/actions/post-image-lesson";
 import { postVideoLesson } from "@/features/lessons/actions/post-video-lesson";
 import { showToast } from "@/lib/utils";
 
@@ -32,8 +31,10 @@ export default function VideoUploadForm({
   >("idle");
 
   useEffect(() => {
-    setPreview(initData?.video?.videoUrl ?? null);
-  }, [initData]);
+    if (initData?.video?.videoUrl !== preview) {
+      setPreview(initData?.video?.videoUrl ?? null);
+    }
+  }, [initData, preview]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const videoFile = acceptedFiles[0];
@@ -124,9 +125,15 @@ export default function VideoUploadForm({
               <p>{file.name}</p>
             </div>
           ) : (
-            <div className="space-y-2">
-              <Upload className="mx-auto text-gray-400" size={24} />
-              <p>Drag and drop a video file here, or click to select</p>
+            <div className="flex flex-col items-center justify-center text-center p-6">
+              <Upload className="w-10 h-10 mb-4 text-muted-foreground" />
+              <p className="mb-2 text-sm text-muted-foreground">
+                <span className="font-semibold">Click to upload</span> or drag
+                and drop
+              </p>
+              <p className="text-xs text-muted-foreground">
+                MP4, MOV, AVI, and other video formats supported
+              </p>
             </div>
           )}
         </div>

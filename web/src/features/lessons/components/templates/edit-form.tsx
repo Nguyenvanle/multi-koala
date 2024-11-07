@@ -15,7 +15,6 @@ import VideoUploadForm from "@/features/file-upload/components/atoms/video-uploa
 import DemoField from "@/features/lessons/components/atoms/demo-field";
 import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-description";
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
-import VideoLessonField from "@/features/lessons/components/atoms/video-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { CirclePlus, Home, ListRestart } from "lucide-react";
@@ -60,8 +59,6 @@ export default function EditLessonForm({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <VideoUploadForm initData={initData} />
-
             <div className="flex flex-col gap-4">
               <CourseImageCard
                 form={form}
@@ -77,6 +74,10 @@ export default function EditLessonForm({
                   <LessonDescriptionField form={form} />
                 </CardContent>
               </Card>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <VideoUploadForm initData={initData} />
             </div>
           </div>
         </form>

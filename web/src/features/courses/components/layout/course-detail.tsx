@@ -58,7 +58,9 @@ const CourseDetailLayout: React.FC<CourseDetailLayoutProps> = ({
       <div className="w-full p-4 xl:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6 ">
         <div className="flex flex-col gap-4 xl:gap-6">
           <DisplayCard
-            courseImage={course?.image?.imageUrl ?? "/images/smile.png"}
+            courseImage={
+              course?.image?.imageUrl ?? "/images/fallback-image.jpg"
+            }
             courseName={course?.courseName ?? "No course name available"}
           />
           <LessonsCardPage lessons={lessons ?? []} />
