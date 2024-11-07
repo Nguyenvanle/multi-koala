@@ -80,7 +80,6 @@ export default function EditLessonForm({
             </div>
 
             <div className="flex flex-col gap-4">
-              <pre>{JSON.stringify(initTestData, null, 2)}</pre>
               <VideoUploadForm initData={initData} />
             </div>
           </div>

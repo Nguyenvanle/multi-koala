@@ -10,7 +10,6 @@ async function fetchLesson(lessonId: string) {
 
 async function fetchTests(lessonId: string) {
   const res = await getTests(lessonId);
-  console.log(res.tests);
   return res.tests;
 }
 
