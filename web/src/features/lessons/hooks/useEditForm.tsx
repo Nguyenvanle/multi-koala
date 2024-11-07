@@ -8,6 +8,8 @@ import { showToast } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function useEditLessonForm(initData: LessonDetailResult) {
   const { lessonId } = useParams();
@@ -15,8 +17,10 @@ export default function useEditLessonForm(initData: LessonDetailResult) {
     resolver: zodResolver(EditFormBody),
     defaultValues: initData,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (values: EditFormType) => {
+    setIsSubmitting(true);
     try {
       const formData = new FormData();
       if (values.imageFile) {
@@ -47,8 +51,10 @@ export default function useEditLessonForm(initData: LessonDetailResult) {
         "There was an error editing your lesson. Please try again.",
         "destructive"
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return { form, onSubmit };
+  return { form, onSubmit, isSubmitting };
 }

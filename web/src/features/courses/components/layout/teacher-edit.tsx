@@ -8,7 +8,14 @@ import {
 } from "@/features/courses/components/atoms/create-course-data-handler";
 import useCourseType from "@/features/course-type/hooks/useCourseType";
 import useField from "@/features/field/hooks/useField";
-import { Book, CirclePlus, CircleX, Home, ListRestart } from "lucide-react";
+import {
+  Book,
+  CirclePlus,
+  CircleX,
+  Home,
+  ListRestart,
+  Loader2,
+} from "lucide-react";
 import {
   BasicInformationCard,
   CourseFieldsCard,
@@ -102,9 +109,17 @@ export default function CourseEditForm({
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
-              <Button type="submit" className="w-full sm:w-auto h-8">
-                <CirclePlus className="mr-2 h-4 w-4" />
-                Submit
+              <Button
+                type="submit"
+                className="w-full sm:w-auto h-8"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <CirclePlus className="mr-2 h-4 w-4" />
+                )}
+                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </div>
           </div>

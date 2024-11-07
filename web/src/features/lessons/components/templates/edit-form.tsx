@@ -18,7 +18,8 @@ import LessonNameField from "@/features/lessons/components/atoms/name-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { TestBodyType } from "@/features/test/types/test-result";
-import { CirclePlus, Home, ListRestart } from "lucide-react";
+import { CirclePlus, Home, ListRestart, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const breadcrumbs = [
   {
@@ -37,7 +38,8 @@ export default function EditLessonForm({
   initData: LessonDetailResult;
   initTestData: TestBodyType[];
 }) {
-  const { form, onSubmit } = useEditLessonForm(initData);
+  const { form, onSubmit, isSubmitting } = useEditLessonForm(initData);
+
   return (
     <div className="w-full">
       <Form {...form}>
@@ -54,9 +56,17 @@ export default function EditLessonForm({
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
-              <Button type="submit" className="w-full sm:w-auto h-8">
-                <CirclePlus className="mr-2 h-4 w-4" />
-                Submit
+              <Button
+                type="submit"
+                className="w-full sm:w-auto h-8"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <CirclePlus className="mr-2 h-4 w-4" />
+                )}
+                {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </div>
           </div>
