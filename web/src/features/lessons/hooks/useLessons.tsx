@@ -49,7 +49,7 @@ export default function useLessons(courseId: string) {
   useEffect(() => {
     if (sortedLessons) {
       const totalDuration = sortedLessons.reduce((total, lesson) => {
-        return total + (lesson.video.videoDuration || 0);
+        return total + (lesson.video?.videoDuration ?? 0);
       }, 0);
 
       setDuration(totalDuration);

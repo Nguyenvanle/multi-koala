@@ -26,7 +26,9 @@ export default function LessonCard({
   const { courseId } = useParams();
   const [imageLoading, setImageLoading] = useState(true);
 
-  const { hours, minutes, seconds } = convertDuration(video.videoDuration);
+  const { hours, minutes, seconds } = convertDuration(
+    video?.videoDuration ?? 0
+  );
   const isSelectedLesson = path === `/courses/${courseId}/${lessonId}`;
 
   const cardContent = (
@@ -40,22 +42,18 @@ export default function LessonCard({
           <Skeleton className="h-20 w-20 rounded-none absolute top-0 left-0 z-10" />
         )}
 
-        {!image.imageUrl.includes("https://img.freepik.com") ? (
-          <Skeleton className="h-20 w-20 rounded-none top-0 left-0 z-10" />
-        ) : (
-          <Image
-            src={image.imageUrl}
-            alt={lessonId}
-            width={80}
-            height={80}
-            quality={100}
-            priority
-            onLoad={() => setImageLoading(false)}
-            className={`h-20 w-20 object-cover ${
-              imageLoading ? "invisible" : "visible"
-            }`}
-          />
-        )}
+        <Image
+          src={image?.imageUrl ?? "/images/fallback-image.jpg"}
+          alt={lessonId}
+          width={80}
+          height={80}
+          quality={100}
+          priority
+          onLoad={() => setImageLoading(false)}
+          className={`h-20 w-20 object-cover ${
+            imageLoading ? "invisible" : "visible"
+          }`}
+        />
       </CardContent>
 
       <CardHeader className="flex flex-1 flex-row gap-4 items-center px-2 py-0 content-between pr-4">
@@ -65,8 +63,8 @@ export default function LessonCard({
             {hours > 0
               ? `${hours}h ${minutes}m ${seconds}s`
               : minutes > 0
-              ? `${minutes}m ${seconds}s`
-              : ` ${seconds}s`}
+                ? `${minutes}m ${seconds}s`
+                : ` ${seconds}s`}
           </Small>
         </div>
 

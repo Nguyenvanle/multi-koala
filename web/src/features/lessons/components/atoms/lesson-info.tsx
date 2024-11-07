@@ -13,7 +13,7 @@ export const LessonInfo: React.FC<{
   lesson: LessonBody;
 }> = ({ lesson }) => {
   // Calculate hours, minutes, and seconds
-  const totalSeconds = lesson.video.videoDuration;
+  const totalSeconds = lesson.video?.videoDuration ?? 0;
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
@@ -32,7 +32,7 @@ export const LessonInfo: React.FC<{
     <Card className="overflow-hidden">
       <CardHeader className="relative p-0">
         <Image
-          src={lesson.image.imageUrl}
+          src={lesson.image?.imageUrl ?? "/images/fallback-image.jpg"}
           alt={lesson.lessonName}
           width={800}
           height={400}
