@@ -1,13 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { H1, H4 } from "@/components/ui/typography";
-import { CoursesListEmpty } from "@/features/courses/components/molecules";
+import { H4 } from "@/components/ui/typography";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import LessonDialogForm from "@/features/lessons/components/molecules/add-dialog";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
-import { BookOpen, PlusCircle } from "lucide-react";
-import Link from "next/link";
+import { BookOpen } from "lucide-react";
 
 interface LessonsCardProps {
   lessons: LessonDetailResult[] | null;

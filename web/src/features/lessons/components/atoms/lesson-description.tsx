@@ -20,7 +20,10 @@ export default function LessonDescriptionField({
       name="lessonDescription"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Lesson Name</FormLabel>
+          <div className="flex flex-row justify-between">
+            <FormLabel>Description</FormLabel>
+            <FormMessage />
+          </div>
           <FormControl>
             <Input
               placeholder="Describe the content of your lesson."
@@ -28,8 +31,6 @@ export default function LessonDescriptionField({
               {...field}
             />
           </FormControl>
-
-          <FormMessage />
         </FormItem>
       )}
     />

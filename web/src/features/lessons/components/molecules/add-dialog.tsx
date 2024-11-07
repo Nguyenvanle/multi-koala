@@ -12,17 +12,27 @@ import {
 } from "@/components/ui/dialog";
 import LessonAddForm from "@/features/lessons/components/molecules/add-form";
 import { PlusCircle } from "lucide-react";
+import { useState } from "react";
 
 export default function LessonDialogForm() {
+  const [open, setOpen] = useState(false);
+
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className="h-8 gap-1" size="sm">
           <PlusCircle className="w-3.5 h-3.5" />
           Add New Lesson
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
@@ -30,10 +40,7 @@ export default function LessonDialogForm() {
           </DialogDescription>
         </DialogHeader>
 
-        <LessonAddForm />
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        <LessonAddForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

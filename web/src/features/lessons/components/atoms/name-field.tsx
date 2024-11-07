@@ -22,7 +22,10 @@ export default function LessonNameField({
       name="lessonName"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Lesson Name</FormLabel>
+          <div className="flex flex-row justify-between">
+            <FormLabel>Lesson Name</FormLabel>
+            <FormMessage />
+          </div>
           <FormControl>
             <Input
               placeholder="This is the name that represents your lesson."
@@ -30,8 +33,6 @@ export default function LessonNameField({
               {...field}
             />
           </FormControl>
-
-          <FormMessage />
         </FormItem>
       )}
     />
