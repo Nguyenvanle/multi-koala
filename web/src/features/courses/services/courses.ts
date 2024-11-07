@@ -64,7 +64,7 @@ export const courseService = {
 
   getMyPerformingCourses: async (token: string) => {
     return await apiService.get<MyPerformingCoursesResType>(
-      `/courses/my-performing-courses`,
+      `/courses/my-performing-courses?months=12`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

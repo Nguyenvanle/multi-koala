@@ -52,12 +52,15 @@ export default function useEditCourseForm(initialData: EditCourseFormData) {
         courseResponsibilityEndAt: data.courseResponsibilityEndAt.toISOString(),
       };
 
-      const formData = new FormData();
-      if (submissionData.imageFile) {
-        formData.append("file", submissionData.imageFile);
+      if (submissionData.imageFile !== initialData.imageFile) {
+        const formData = new FormData();
+        if (submissionData.imageFile) {
+          formData.append("file", submissionData.imageFile);
+        }
+
+        const response = await postImageCourse(courseId as string, formData);
+        console.log(response);
       }
-      const response = await postImageCourse(courseId as string, formData);
-      console.log(response);
 
       const { result } = await nextjsApiService.put<CourseDetailResType>(
         `/api/courses/${courseId}`,
@@ -75,6 +78,7 @@ export default function useEditCourseForm(initialData: EditCourseFormData) {
         );
       }
     } catch (error) {
+      console.log("Update Form Error:", error);
       showToast("Error", "Failed to update course", "destructive");
     }
   };

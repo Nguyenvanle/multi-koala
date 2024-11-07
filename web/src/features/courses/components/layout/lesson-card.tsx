@@ -12,27 +12,31 @@ interface LessonsCardProps {
   lessons: LessonDetailResult[] | null;
   visibleLessons: number;
   onLoadMore: () => void;
+  isPublic?: boolean;
 }
 
 export const LessonsCard: React.FC<LessonsCardProps> = ({
   lessons,
   visibleLessons,
   onLoadMore,
+  isPublic = true,
 }) => {
   return (
-    <Card className="flex flex-0 flex-col w-full rounded overflow-hidden gap-2">
-      <CardHeader className="flex flex-1 justify-between flex-row pb-0 space-y-0">
+    <Card className="flex flex-0 flex-col w-full rounded overflow-hidden gap-4">
+      <CardHeader className="flex flex-0 justify-between items-center flex-row pb-0 space-y-0">
         <CardTitle>Lessons</CardTitle>
 
-        <Button className="h-8 gap-1" size="sm">
-          <PlusCircle className="w-3.5 h-3.5" />
-          <Link
-            href="/dashboard/courses/add"
-            className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
-          >
-            Add New Lesson
-          </Link>
-        </Button>
+        {!isPublic && (
+          <Button className="h-8 gap-1" size="sm">
+            <PlusCircle className="w-3.5 h-3.5" />
+            <Link
+              href="/dashboard/courses/add"
+              className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
+            >
+              Add New Lesson
+            </Link>
+          </Button>
+        )}
       </CardHeader>
       <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (

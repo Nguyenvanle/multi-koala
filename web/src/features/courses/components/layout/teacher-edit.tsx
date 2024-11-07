@@ -23,6 +23,8 @@ import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
 import DeleteDialog from "@/features/courses/components/atoms/delete-dialog";
+import { KeyedMutator, useSWRConfig } from "swr";
+import { useEffect } from "react";
 
 const breadcrumbs = [
   {
@@ -58,6 +60,14 @@ export default function CourseEditForm({
     duration,
     loading: lessonsLoading,
   } = useLessons(courseId as string);
+
+  // refetch
+  const { mutate } = useSWRConfig();
+  useEffect(() => {
+    console.log("Refetching...");
+    mutate(`get-top-courses`);
+    mutate(`teacher-my-statistics-courses`);
+  }, [onSubmit, mutate, form]);
 
   // loading
   if (fieldsLoading || typesLoading) {
@@ -108,7 +118,7 @@ export default function CourseEditForm({
               <BasicInformationCard form={form} />
             </div>
             <div className="flex flex-col gap-4 xl:gap-6">
-              <LessonsCardPage lessons={lessons || []} />
+              <LessonsCardPage lessons={lessons || []} isPublic={false} />
               <CourseTypesCard form={form} courseTypes={courseTypes} />
               <CourseFieldsCard form={form} fields={fields} />
             </div>

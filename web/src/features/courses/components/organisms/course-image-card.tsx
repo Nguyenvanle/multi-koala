@@ -101,6 +101,7 @@ export default function CourseImageCard({
                           src={preview}
                           alt="Course preview"
                           className="rounded-md object-cover"
+                          sizes="100vw"
                           fill
                           priority
                         />

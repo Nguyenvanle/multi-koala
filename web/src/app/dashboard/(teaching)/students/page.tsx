@@ -17,8 +17,7 @@ import { Suspense } from "react";
 
 async function getReports() {
   const res = await getMyReport();
-  if (!res.reports) throw new Error("Failed to fetch data");
-  return res.reports;
+  return res.reports ? res.reports : [];
 }
 
 const breadcrumbs = [
