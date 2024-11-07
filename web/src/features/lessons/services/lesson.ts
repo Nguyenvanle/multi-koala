@@ -10,6 +10,7 @@ import {
   LessonDetailResponse,
   LessonResponse,
 } from "@/features/lessons/types/lessons-res";
+import { TestResType } from "@/features/test/types/test-result";
 import { apiService } from "@/services/api";
 
 export const lessonService = {
@@ -38,6 +39,10 @@ export const lessonService = {
     return await apiService.get<LessonDetailResponse>(
       `/courses/${courseId}/lessons/${lessonId}`
     );
+  },
+
+  getTestByLessonId: async (lessonId: string) => {
+    return await apiService.get<TestResType>(`/lessons/${lessonId}/tests`);
   },
 
   updateLesson: async (lessonId: string, data: EditFormType) => {

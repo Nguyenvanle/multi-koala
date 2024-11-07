@@ -17,6 +17,7 @@ import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-d
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
+import { TestBodyType } from "@/features/test/types/test-result";
 import { CirclePlus, Home, ListRestart } from "lucide-react";
 
 const breadcrumbs = [
@@ -31,8 +32,10 @@ const breadcrumbs = [
 
 export default function EditLessonForm({
   initData,
+  initTestData,
 }: {
   initData: LessonDetailResult;
+  initTestData: TestBodyType[];
 }) {
   const { form, onSubmit } = useEditLessonForm(initData);
   return (
@@ -77,6 +80,7 @@ export default function EditLessonForm({
             </div>
 
             <div className="flex flex-col gap-4">
+              <pre>{JSON.stringify(initTestData, null, 2)}</pre>
               <VideoUploadForm initData={initData} />
             </div>
           </div>
