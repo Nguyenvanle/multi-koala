@@ -1,32 +1,38 @@
+"use client";
+
+import { postLesson } from "@/features/lessons/actions/post-lessons";
 import { formSchema } from "@/features/lessons/types/add-form";
 import { showToast } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function useAddForm() {
+  const { courseId } = useParams();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log(values);
+      const { lesson } = await postLesson(courseId as string, values);
+      console.log(lesson);
+      location.reload();
       showToast(
-        "Form submitted",
-        "Your form has been submitted successfully: " +
-          JSON.stringify(values, null, 2),
+        "Lesson added",
+        "Your lesson has been added successfully.",
         "default"
       );
     } catch (error) {
       console.error("Form submission error", error);
       showToast(
-        "Form submission error",
-        "There was an error submitting your form. Please try again.",
+        "Lesson not added",
+        "There was an error adding your lesson. Please try again.",
         "destructive"
       );
     }
-  }
+  };
 
   return { form, onSubmit };
 }

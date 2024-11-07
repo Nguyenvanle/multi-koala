@@ -34,13 +34,17 @@ export default function LessonDialogForm() {
         onPointerDownOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Add New Lesson</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here
+            Fill in the form below to add a new lesson to this course.
           </DialogDescription>
         </DialogHeader>
 
-        <LessonAddForm onSuccess={() => setOpen(false)} />
+        <LessonAddForm
+          onSuccess={() => {
+            setOpen(false);
+          }}
+        />
       </DialogContent>
     </Dialog>
   );
