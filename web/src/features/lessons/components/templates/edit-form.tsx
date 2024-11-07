@@ -59,23 +59,26 @@ export default function EditLessonForm({
             </div>
           </div>
 
-          <Card className="flex flex-col gap-4">
-            <CardHeader className="pb-0">
-              <CardTitle>Basic Information</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
+            <VideoUploadForm initData={initData} />
+
+            <div className="flex flex-col gap-4">
               <CourseImageCard
                 form={form}
                 initialImageUrl={initData.image?.imageUrl}
               />
-              <div className="flex flex-col gap-4">
-                <LessonNameField form={form} />
-                <DemoField form={form} />
-                <LessonDescriptionField form={form} />
-              </div>
-            </CardContent>
-          </Card>
-          <VideoUploadForm initData={initData} />
+              <Card className="flex flex-col gap-4">
+                <CardHeader className="pb-0">
+                  <CardTitle>Basic Information</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                  <LessonNameField form={form} />
+                  <DemoField form={form} />
+                  <LessonDescriptionField form={form} />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </form>
       </Form>
     </div>

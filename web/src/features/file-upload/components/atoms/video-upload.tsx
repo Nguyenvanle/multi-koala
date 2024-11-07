@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import {
   Card,
@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Upload, CheckCircle2, AlertCircle, Trash2 } from "lucide-react";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
+import { postImageLesson } from "@/features/lessons/actions/post-image-lesson";
+import { postVideoLesson } from "@/features/lessons/actions/post-video-lesson";
+import { showToast } from "@/lib/utils";
 
 export default function VideoUploadForm({
   initData,
@@ -21,12 +24,16 @@ export default function VideoUploadForm({
 }) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
-    initData?.video.videoUrl ?? null
+    initData?.video?.videoUrl ?? null
   );
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState<
     "idle" | "uploading" | "success" | "error"
   >("idle");
+
+  useEffect(() => {
+    setPreview(initData?.video?.videoUrl ?? null);
+  }, [initData]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const videoFile = acceptedFiles[0];
@@ -42,22 +49,31 @@ export default function VideoUploadForm({
     multiple: false,
   });
 
-  const handleUpload = () => {
-    if (!file) return;
+  const handleUpload = async () => {
+    try {
+      if (!file) return;
 
-    setUploadStatus("uploading");
+      setUploadStatus("uploading");
 
-    // Simulating upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(interval);
+      const formData = new FormData();
+      formData.append("file", file);
+      if (initData?.lessonId) {
+        const { lesson } = await postVideoLesson(initData.lessonId, formData);
+        if (lesson) {
+          console.log(lesson);
           setUploadStatus("success");
-          return 100;
+          showToast(
+            "Upload video successfully",
+            "Your video has been uploaded successfully",
+            "default"
+          );
         }
-        return prevProgress + 10;
-      });
-    }, 500);
+      }
+    } catch (error) {
+      console.error(error);
+      setUploadStatus("error");
+      showToast("Upload failed. Please try again.", "error");
+    }
   };
 
   const handleDelete = () => {
