@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RecommendRepository extends JpaRepository<Recommend,String> {
+public interface RecommendRepository extends JpaRepository<Recommend, String> {
     boolean existsByStudent(Student student);
+
+    Recommend findByStudent(Student student);
 }

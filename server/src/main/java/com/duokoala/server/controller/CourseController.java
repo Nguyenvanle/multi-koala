@@ -110,6 +110,14 @@ public class CourseController {
                 .build();
     }
 
+    @GetMapping("/courses/my-recommend-courses")
+    ApiResponse<List<CourseResponse>> getMyRecommendCoursesList() {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.recommendCourses())
+                .build();
+    }
+
+
     @GetMapping("/courses/{courseId}/discount-applied")
     ApiResponse<DiscountAppliedResponse> getDiscountApplied(@PathVariable String courseId) {
         return ApiResponse.<DiscountAppliedResponse>builder()

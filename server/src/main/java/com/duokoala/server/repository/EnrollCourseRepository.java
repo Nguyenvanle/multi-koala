@@ -12,6 +12,8 @@ import java.util.List;
 
 @Repository
 public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, String> {
+    List<EnrollCourse> findTop3ByStudentOrderByEnrollAtDesc(Student student);
+
     List<EnrollCourse> findAllByStudent(Student student);
 
     int countByCourse(Course course);
