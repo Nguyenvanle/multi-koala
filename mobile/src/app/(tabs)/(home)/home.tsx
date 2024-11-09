@@ -5,7 +5,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Styles, text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import { router } from "expo-router";
@@ -14,16 +14,10 @@ import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import MyCourses from "@/src/feature/course/components/home/my-courses/MyCoures";
 import NewCourses from "@/src/feature/course/components/home/new-courses/NewCourse";
+import { UserContext } from "@/src/context/user/userContext";
 
 const Home = ({ courseId }: { courseId: string }) => {
-  const {
-    loadingUser,
-    isRefreshing,
-    user,
-    setUser,
-    setErrorMessage,
-    refreshUser,
-  } = useUser();
+  const { user } = useContext(UserContext); // Sử dụng UserContext
   const { enrolled, errorMessage, loading } = useEnrolled(courseId);
 
   return (

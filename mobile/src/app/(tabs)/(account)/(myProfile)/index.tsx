@@ -2,8 +2,8 @@
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useUser from "@/src/feature/user/hooks/useUser";
-import { UserBody } from "@/src/feature/user/types/user";
-import React, { useEffect, useState } from "react";
+import { UserBody, UserRes } from "@/src/feature/user/types/user";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -22,14 +22,19 @@ import useUserUpdate from "@/src/feature/user/hooks/useUserUpdate";
 import { UserPost } from "@/src/feature/user/types/user-update";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "@/src/context/user/userContext";
+import API_CONFIG from "@/src/types/api/config";
 
 const UserProfile: React.FC = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("UserProfile must be used within a UserProvider");
+  }
+  const { user, setUser } = context;
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const {
     loadingUser: userLoading,
-    user,
-    setUser,
     errorMessage,
     setErrorMessage,
     refreshUser,
@@ -38,10 +43,13 @@ const UserProfile: React.FC = () => {
     useUserUpdate();
 
   const handleInputChange = (name: keyof UserBody, value: string) => {
-    setUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUser((prevUser) => {
+      if (!prevUser) return undefined;
+      return {
+        ...prevUser,
+        [name]: value,
+      };
+    });
   };
 
   // Kiểm tra user null/undefined
@@ -67,9 +75,13 @@ const UserProfile: React.FC = () => {
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      // Lưu trữ dạng ISO string trong state
-      const isoDate = selectedDate.toISOString().split("T")[0];
-      handleInputChange("userBirth", isoDate);
+      setUser((prevUser) => {
+        if (!prevUser) return undefined;
+        return {
+          ...prevUser,
+          userBirth: selectedDate.toISOString().split("T")[0],
+        };
+      });
     }
   };
 
@@ -102,6 +114,8 @@ const UserProfile: React.FC = () => {
   }
 
   const handleSave = async () => {
+    if (!user) return;
+
     try {
       const updateData: UserPost = {
         firstname: user.firstname,
@@ -117,27 +131,13 @@ const UserProfile: React.FC = () => {
         setUser(updatedUser);
         await refreshUser();
         setIsEditing(false);
-
-        Alert.alert(
-          "Update Success",
-          "Your profile has been updated. Please login again to continue.",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                // Thêm logic đăng xuất ở đây nếu cần
-                router.replace("/(auth)/sign-in");
-                AsyncStorage.removeItem("token");
-              },
-            },
-          ],
-          { cancelable: false }
-        );
       }
     } catch (error) {
       Alert.alert(
         "Update Failed",
-        errorMessageUpdate || "Failed to update user information"
+        error instanceof Error
+          ? error.message
+          : "Failed to update user information"
       );
     }
   };
@@ -202,7 +202,11 @@ const UserProfile: React.FC = () => {
             <View style={{ ...styles.inputContainer, width: "48%" }}>
               <Text style={styles.label}>Role</Text>
               <TextInput
-                style={[styles.input, styles.disabledInput]} // Áp dụng styles.disabledInput luôn
+                style={[
+                  styles.input,
+                  styles.disabledInput,
+                  isEditing && styles.disabledInputNone,
+                ]} // Áp dụng styles.disabledInput luôn
                 value={user.roles[0].roleName || ""}
                 onChangeText={null} // Không xử lý thay đổi văn bản
                 editable={false} // Không cho phép chỉnh sửa
@@ -222,11 +226,12 @@ const UserProfile: React.FC = () => {
                   </Text>
                 </TextInput>
               ) : (
-                <View style={styles.dateTimePickerWrapper}>
+                <View style={{ alignSelf: "baseline" }}>
                   <DateTimePicker
+                    style={styles.dateTimePickerWrapper}
                     value={new Date(user.userBirth)}
                     mode="date"
-                    display="calendar"
+                    display="default"
                     onChange={handleDateChange}
                     // Không sử dụng pickerStyle vì không tồn tại
                   />
@@ -238,8 +243,13 @@ const UserProfile: React.FC = () => {
           {/* Email */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email</Text>
+
             <TextInput
-              style={[styles.input, styles.disabledInput]}
+              style={[
+                styles.input,
+                styles.disabledInput,
+                isEditing && styles.disabledInputNone,
+              ]}
               value={user.email || ""}
               onChangeText={null}
               editable={false}
@@ -361,10 +371,16 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: Colors.white,
   },
+  disabledInputNone: {
+    color: Colors.dark_grey,
+    borderWidth: 0,
+    borderRadius: 6,
+    padding: 12,
+    backgroundColor: Colors.background,
+  },
   dateTimePickerWrapper: {
-    alignItems: "center",
-    paddingRight: 12,
     padding: 2,
+    width: "100%",
   },
   multilineInput: {
     height: 300,

@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../front-end/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
@@ -17,19 +17,16 @@ import Button from "../../atoms/button";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
+import { UserContext } from "@/src/context/user/userContext";
 
 interface HeaderUserProps {
   courseId: string;
 }
 
 const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
+  const { user } = useContext(UserContext); // Sử dụng UserContext
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-  const {
-    loadingUser: userLoading,
-    isRefreshing,
-    user,
-    refreshUser,
-  } = useUser();
+  const { loadingUser: userLoading, isRefreshing, refreshUser } = useUser();
   const {
     enrolled,
     errorMessage,
@@ -38,10 +35,9 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
   const [nextCourse, setNextCourse] = useState<EnrolledBody | null>(null);
 
   useEffect(() => {
-    refreshUser();
-    checkCompleted(); // Gọi hàm kiểm tra khi dữ liệu enrolled thay đổi
-    setTimeout[1000];
-  }, [enrolled]);
+    refreshUser(); // Gọi lại hàm refreshUser để cập nhật thông tin người dùng
+    checkCompleted();
+  }, [enrolled]); // Nếu enrolled có thay đổi, refreshUser sẽ được gọi
 
   if (userLoading || isRefreshing) {
     return (
@@ -69,6 +65,16 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
       }
     }
   };
+  if (userLoading || isRefreshing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.teal_dark} />
+        <Text style={styles.loadingText}>
+          {userLoading ? "Loading..." : "Updating..."}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View

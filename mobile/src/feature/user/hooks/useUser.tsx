@@ -3,8 +3,6 @@ import { UserBody } from "../types/user";
 import { userServices } from "../services/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const POLLING_INTERVAL = 3000; // 3 seconds polling interval
-
 const useUser = () => {
   const [loadingUser, setLoadingUser] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false); // New state for refresh loading

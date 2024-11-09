@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Styles, text } from "@/src/constants/Styles";
 import useUser from "@/src/feature/user/hooks/useUser";
 import useLogOut from "@/src/feature/auth/hooks/useLogOut";
@@ -22,12 +22,14 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { UserContext } from "@/src/context/user/userContext";
 
 const Account = () => {
+  const { user } = useContext(UserContext); // Sử dụng UserContext
+
   const {
     loadingUser,
     isRefreshing,
-    user,
     setUser,
     errorMessage,
     setErrorMessage,
