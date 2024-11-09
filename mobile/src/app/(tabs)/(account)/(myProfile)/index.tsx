@@ -2,8 +2,8 @@
 import { Colors } from "@/src/constants/Colors";
 import { text } from "@/src/constants/Styles";
 import useUser from "@/src/feature/user/hooks/useUser";
-import { UserBody } from "@/src/feature/user/types/user";
-import React, { useState } from "react";
+import { UserBody, UserRes } from "@/src/feature/user/types/user";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,28 +13,84 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
-  Dimensions,
   ActivityIndicator,
-  Modal,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import useUserUpdate from "@/src/feature/user/hooks/useUserUpdate";
+import { UserPost } from "@/src/feature/user/types/user-update";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "@/src/context/user/userContext";
+import API_CONFIG from "@/src/types/api/config";
 
 const UserProfile: React.FC = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("UserProfile must be used within a UserProvider");
+  }
+  const { user, setUser } = context;
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-  const { loading, user, setUser, errorMessage, setErrorMessage, updateImage } =
-    useUser();
-  const [showRolePicker, setShowRolePicker] = useState<boolean>(false);
-  const [text, setText] = useState("");
+  const {
+    loadingUser: userLoading,
+    errorMessage,
+    setErrorMessage,
+    refreshUser,
+  } = useUser();
+  const { loadingUpdate, errorMessageUpdate, updateSuccess, updateUser } =
+    useUserUpdate();
 
-  // Xử lý loading state
-  if (loading) {
+  const handleInputChange = (name: keyof UserBody, value: string) => {
+    setUser((prevUser) => {
+      if (!prevUser) return undefined;
+      return {
+        ...prevUser,
+        [name]: value,
+      };
+    });
+  };
+
+  // Kiểm tra user null/undefined
+  if (!user) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>
+          Không tìm thấy thông tin người dùng
+        </Text>
+      </View>
+    );
+  }
+
+  // Thêm hàm formatDate để chuyển đổi định dạng ngày tháng
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setUser((prevUser) => {
+        if (!prevUser) return undefined;
+        return {
+          ...prevUser,
+          userBirth: selectedDate.toISOString().split("T")[0],
+        };
+      });
+    }
+  };
+
+  // In your render method, you might want to show a loading indicator
+  if (loadingUpdate) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Colors.teal_dark} />
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>Updating...</Text>
       </View>
     );
   }
@@ -57,45 +113,33 @@ const UserProfile: React.FC = () => {
     );
   }
 
-  // Kiểm tra user null/undefined
-  if (!user) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>
-          Không tìm thấy thông tin người dùng
-        </Text>
-      </View>
-    );
-  }
+  const handleSave = async () => {
+    if (!user) return;
 
-  const handleInputChange = (name: keyof UserBody, value: string) => {
-    setUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    try {
+      const updateData: UserPost = {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        userBio: user.userBio,
+        userBirth: user.userBirth,
+        userHometown: user.userHometown,
+      };
 
-  // Thêm hàm formatDate để chuyển đổi định dạng ngày tháng
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
+      const updatedUser = await updateUser(updateData);
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      // Lưu trữ dạng ISO string trong state
-      const isoDate = selectedDate.toISOString().split("T")[0];
-      handleInputChange("userBirth", isoDate);
+      if (updatedUser) {
+        setUser(updatedUser);
+        await refreshUser();
+        setIsEditing(false);
+      }
+    } catch (error) {
+      Alert.alert(
+        "Update Failed",
+        error instanceof Error
+          ? error.message
+          : "Failed to update user information"
+      );
     }
-  };
-
-  const handleSave = () => {
-    // Tại đây sẽ thêm logic để lưu thông tin vào backend
-    setIsEditing(false);
   };
 
   return (
@@ -151,76 +195,24 @@ const UserProfile: React.FC = () => {
             </View>
           </View>
 
-          {/* Email */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={[styles.input, !isEditing && styles.disabledInput]}
-              value={user.email || ""}
-              onChangeText={(text) => handleInputChange("email", text)}
-              editable={isEditing}
-              numberOfLines={10}
-            />
-          </View>
-
           <View
-            style={{
-              flexDirection: "row",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-            }}
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             {/* Vai trò */}
             <View style={{ ...styles.inputContainer, width: "48%" }}>
               <Text style={styles.label}>Role</Text>
-              <TouchableOpacity
-                onPress={() => isEditing && setShowRolePicker(true)}
-                style={[styles.input, !isEditing && styles.disabledInput]}
-              >
-                <Text style={[!isEditing && styles.disabledText]}>
-                  {user.roles[0].roleName}
-                </Text>
-              </TouchableOpacity>
-              {/* Modal cho iOS */}
-              {/* {Platform.OS === "ios" && showRolePicker && (
-              <Modal
-                transparent={true}
-                visible={showRolePicker}
-                animationType="fade"
-              >
-                <View style={styles.modalOverlay}>
-                  <View style={styles.modalContent}>
-                    <View style={styles.pickerHeader}>
-                      <TouchableOpacity
-                        onPress={() => setShowRolePicker(false)}
-                        style={styles.pickerButton}
-                      >
-                        <Text style={styles.pickerButtonText}>Close</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <Picker
-                      selectedValue={user?.roles[0]?.roleName} // Sử dụng vai trò đầu tiên hoặc giá trị mặc định
-                      onValueChange={(value) => {
-                        handleInputChange("roles", value); // Cập nhật giá trị khi chọn vai trò
-                        setShowRolePicker(false);
-                      }}
-                    >
-                      {user?.roles?.map((role, index) => (
-                        <Picker.Item
-                          key={index}
-                          label={role.roleName}
-                          value={role.roleName.toLowerCase()} // Đảm bảo giá trị là chữ thường
-                        />
-                      )) || (
-                        <Picker.Item label="No roles available" value="" />
-                      )}{" "}
-                    </Picker>
-                  </View>
-                </View>
-              </Modal>
-            )} */}
+              <TextInput
+                style={[
+                  styles.input,
+                  styles.disabledInput,
+                  isEditing && styles.disabledInputNone,
+                ]} // Áp dụng styles.disabledInput luôn
+                value={user.roles[0].roleName || ""}
+                onChangeText={null} // Không xử lý thay đổi văn bản
+                editable={false} // Không cho phép chỉnh sửa
+                selectTextOnFocus={false} // Không cho phép chọn văn bản
+              />
             </View>
-
             {/* Ngày sinh */}
             <View style={{ ...styles.inputContainer, width: "48%" }}>
               <Text style={styles.label}>Birthday</Text>
@@ -234,17 +226,35 @@ const UserProfile: React.FC = () => {
                   </Text>
                 </TextInput>
               ) : (
-                <View style={styles.dateTimePickerWrapper}>
+                <View style={{ alignSelf: "baseline" }}>
                   <DateTimePicker
+                    style={styles.dateTimePickerWrapper}
                     value={new Date(user.userBirth)}
                     mode="date"
-                    display="calendar"
+                    display="default"
                     onChange={handleDateChange}
                     // Không sử dụng pickerStyle vì không tồn tại
                   />
                 </View>
               )}
             </View>
+          </View>
+
+          {/* Email */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+
+            <TextInput
+              style={[
+                styles.input,
+                styles.disabledInput,
+                isEditing && styles.disabledInputNone,
+              ]}
+              value={user.email || ""}
+              onChangeText={null}
+              editable={false}
+              selectTextOnFocus={false}
+            />
           </View>
 
           {/* Quê quán */}
@@ -361,10 +371,16 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: Colors.white,
   },
+  disabledInputNone: {
+    color: Colors.dark_grey,
+    borderWidth: 0,
+    borderRadius: 6,
+    padding: 12,
+    backgroundColor: Colors.background,
+  },
   dateTimePickerWrapper: {
-    alignItems: "center",
-    paddingRight: 12,
     padding: 2,
+    width: "100%",
   },
   multilineInput: {
     height: 300,

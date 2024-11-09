@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Styles, text } from "@/src/constants/Styles";
 import useUser from "@/src/feature/user/hooks/useUser";
 import useLogOut from "@/src/feature/auth/hooks/useLogOut";
@@ -22,10 +22,21 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { UserContext } from "@/src/context/user/userContext";
 
 const Account = () => {
-  const { loading, user, setUser, errorMessage, setErrorMessage } = useUser();
+  const { user } = useContext(UserContext); // Sử dụng UserContext
+
+  const {
+    loadingUser,
+    isRefreshing,
+    setUser,
+    errorMessage,
+    setErrorMessage,
+    refreshUser,
+  } = useUser();
   const { handleLogout } = useLogOut();
+
   return (
     <SafeAreaView
       style={{
@@ -50,7 +61,7 @@ const Account = () => {
         >
           <CircleStyle />
 
-          {loading ? (
+          {loadingUser ? (
             <View style={{ paddingTop: 16, justifyContent: "center" }}>
               <ActivityIndicator size={"large"} color={Colors.teal_dark} />
             </View>

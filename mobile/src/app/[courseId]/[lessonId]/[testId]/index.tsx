@@ -17,6 +17,7 @@ import { useTestList } from "@/src/feature/test/hooks/useTestList";
 import { QuestionDetails } from "@/src/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useTestResultList from "@/src/feature/test-result/hooks/useTestResultList";
+import { useDetails } from "@/src/feature/course/hooks/useDetails";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -26,6 +27,8 @@ const Test = () => {
   const courseIdString = courseId as string;
   const lessonIdString = lessonId as string;
   const testIdString = testId as string;
+  const { courseDetails, loading, errorMessageDetails } =
+    useDetails(courseIdString);
 
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
@@ -69,6 +72,7 @@ const Test = () => {
   const [isRetake, setIsRetake] = useState(false);
   const [selectedResultAnswers, setSelectedResultAnswers] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
+  const [testHistory, setTestHistory] = useState({});
 
   // Check for token on component mount
   useEffect(() => {
@@ -105,6 +109,12 @@ const Test = () => {
     setSelectedResultAnswers(null);
     await loadSavedAnswers();
     setSelectedTestId(test.testId);
+
+    // Load lịch sử làm bài của test được chọn
+    const testHistory = await loadTestHistory(test.testId);
+    if (testHistory && testHistory.length > 0) {
+      setTestResultList(testHistory);
+    }
   };
 
   const handleResultSelect = (index, result) => {
@@ -209,7 +219,14 @@ const Test = () => {
   );
 
   const renderResults = () => {
-    if (!testResultList || testResultList.length === 0) {
+    const currentTestHistory = testHistory[selectedTest?.testId] || [];
+
+    // Sửa lại cách so sánh ngày bằng cách sử dụng getTime()
+    const sortedHistory = [...currentTestHistory].sort((a, b) => {
+      return new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime();
+    });
+
+    if (sortedHistory.length === 0) {
       return (
         <View>
           <TouchableOpacity
@@ -224,12 +241,14 @@ const Test = () => {
 
     return (
       <View style={{ marginBottom: 60 }}>
-        <TouchableOpacity
-          style={{ ...styles.submitButton, marginBottom: 24 }}
-          onPress={handleRetakeTest}
-        >
-          <Text style={styles.submitButtonText}>Take this test again</Text>
-        </TouchableOpacity>
+        {courseDetails.process === 1 && (
+          <TouchableOpacity
+            style={{ ...styles.submitButton, marginBottom: 24 }}
+            onPress={handleRetakeTest}
+          >
+            <Text style={styles.submitButtonText}>Take this test again</Text>
+          </TouchableOpacity>
+        )}
         <Text
           style={{
             ...styles.resultText,
@@ -237,15 +256,10 @@ const Test = () => {
             fontWeight: "600",
           }}
         >
-          Your previous test result
+          Your previous test results
         </Text>
-        {testResultList.map((result, index) => {
-          if (!result) return null;
-
-          const previousScore = calculateScore(
-            result.correctAnswers || 0,
-            result.totalQuestion || 0
-          );
+        {sortedHistory.map((result, index) => {
+          const previousScore = result.score;
 
           return (
             <View key={index}>
@@ -258,27 +272,7 @@ const Test = () => {
                 onPress={() => handleResultSelect(index, result)}
               >
                 <Text style={styles.answerText}>
-                  {index + 1}: You got{" "}
-                  <Text
-                    style={[
-                      styles.highlightText,
-                      { color: getScoreColor(previousScore) },
-                    ]}
-                  >
-                    {result.correctAnswers || 0}
-                  </Text>{" "}
-                  questions correct out of{" "}
-                  <Text
-                    style={[
-                      styles.highlightText,
-                      { color: getScoreColor(previousScore) },
-                    ]}
-                  >
-                    {result.totalQuestion || 0}
-                  </Text>
-                </Text>
-                <Text style={styles.answerText}>
-                  Your score is:{" "}
+                  {index + 1}. Your score:{" "}
                   <Text
                     style={[
                       styles.highlightText,
@@ -289,66 +283,49 @@ const Test = () => {
                   </Text>
                 </Text>
                 <Text style={{ alignSelf: "flex-end" }}>
-                  {result.dateTaken
-                    ? new Date(result.dateTaken).toLocaleDateString()
-                    : ""}
+                  {new Date(result.dateTaken).toLocaleDateString()}
                 </Text>
               </TouchableOpacity>
-              {selectedResultIndex === index && selectedTest && (
+              {selectedResultIndex === index && (
                 <View style={styles.resultDetailsContainer}>
                   <Text style={styles.resultDetailTitle}>Test Details:</Text>
-                  {selectedTest.questions && (
-                    <FlatList
-                      data={selectedTest.questions}
-                      renderItem={({
-                        item: question,
-                        index: questionIndex,
-                      }) => {
-                        if (!question) return null;
+                  <FlatList
+                    data={result.questions}
+                    renderItem={({ item: question, index: questionIndex }) => {
+                      const userAnswerId = result.answers[question.questionId];
 
-                        // Lấy đáp án người dùng từ result.answers array
-                        // Đảm bảo selectedResultAnswers là một mảng chứa các answerId
-                        const userAnswerId =
-                          selectedResultAnswers?.[questionIndex];
-
-                        return (
-                          <View style={styles.questionContainer}>
-                            <Text style={styles.questionText}>
-                              {questionIndex + 1}.{" "}
-                              {question.questionDescription}
-                            </Text>
-                            {question.answers && (
-                              <FlatList
-                                data={question.answers}
-                                renderItem={({
-                                  item: answerItem,
-                                  index: answerIndex,
-                                }) => {
-                                  if (!answerItem) return null;
-
-                                  return renderAnswerItemForResult({
-                                    item: answerItem,
-                                    questionId: question.questionId,
-                                    index: answerIndex,
-                                    userAnswerId: userAnswerId,
-                                  });
-                                }}
-                                keyExtractor={(answer) =>
-                                  answer?.answerId?.toString() ||
-                                  Math.random().toString()
-                                }
-                                scrollEnabled={false}
-                              />
-                            )}
-                          </View>
-                        );
-                      }}
-                      keyExtractor={(item) =>
-                        item?.questionId?.toString() || Math.random().toString()
-                      }
-                      scrollEnabled={false}
-                    />
-                  )}
+                      return (
+                        <View style={styles.questionContainer}>
+                          <Text style={styles.questionText}>
+                            {questionIndex + 1}. {question.questionDescription}
+                          </Text>
+                          <FlatList
+                            data={question.answers}
+                            renderItem={({
+                              item: answer,
+                              index: answerIndex,
+                            }) =>
+                              renderAnswerItemForResult({
+                                item: answer,
+                                questionId: question.questionId,
+                                index: answerIndex,
+                                userAnswerId: userAnswerId,
+                              })
+                            }
+                            keyExtractor={(answer) =>
+                              answer?.answerId?.toString() ||
+                              Math.random().toString()
+                            }
+                            scrollEnabled={false}
+                          />
+                        </View>
+                      );
+                    }}
+                    keyExtractor={(item) =>
+                      item?.questionId?.toString() || Math.random().toString()
+                    }
+                    scrollEnabled={false}
+                  />
                 </View>
               )}
             </View>
@@ -366,19 +343,27 @@ const Test = () => {
 
   const handleSubmit = async () => {
     try {
+      let result;
       if (hasToken) {
         setStudentAnswerList([]);
-        await onStudentSubmit();
+        result = await onStudentSubmit();
       } else {
         setGuestAnswerList([]);
-        await onSubmit();
+        result = await onSubmit();
       }
 
-      // Xóa câu trả lời đã chọn
+      // Lưu lịch sử làm bài
+      await saveTestHistory(
+        selectedTest.testId,
+        selectedAnswers,
+        score,
+        new Date().toISOString()
+      );
+
+      // Xóa câu trả lời tạm thời
       await AsyncStorage.removeItem("selectedAnswers");
       setShowResult(true);
 
-      // Check if the score is passing or failing
       if (score >= 5) {
         setResultMessage("Congratulations! You have passed the test.");
       } else {
@@ -386,6 +371,52 @@ const Test = () => {
       }
     } catch (error) {
       console.error("Error submitting answers:", error);
+    }
+  };
+
+  // Function để lưu lịch sử làm bài vào AsyncStorage
+  const saveTestHistory = async (testId, answers, score, date) => {
+    try {
+      // Lấy lịch sử hiện tại
+      const currentHistory = await AsyncStorage.getItem("testHistory");
+      const parsedHistory = currentHistory ? JSON.parse(currentHistory) : {};
+
+      // Thêm kết quả mới vào lịch sử
+      const testResults = parsedHistory[testId] || [];
+      testResults.push({
+        answers,
+        score,
+        dateTaken: date || new Date().toISOString(),
+        questions: selectedTest.questions, // Lưu lại cả câu hỏi để hiển thị sau này
+      });
+
+      // Cập nhật lịch sử
+      const updatedHistory = {
+        ...parsedHistory,
+        [testId]: testResults,
+      };
+
+      // Lưu vào AsyncStorage
+      await AsyncStorage.setItem("testHistory", JSON.stringify(updatedHistory));
+      setTestHistory(updatedHistory);
+    } catch (error) {
+      console.error("Error saving test history:", error);
+    }
+  };
+
+  // Function để lấy lịch sử làm bài
+  const loadTestHistory = async (testId) => {
+    try {
+      const history = await AsyncStorage.getItem("testHistory");
+      if (history) {
+        const parsedHistory = JSON.parse(history);
+        setTestHistory(parsedHistory);
+        return parsedHistory[testId] || [];
+      }
+      return [];
+    } catch (error) {
+      console.error("Error loading test history:", error);
+      return [];
     }
   };
 
