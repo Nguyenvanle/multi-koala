@@ -20,10 +20,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useUserUpdate from "@/src/feature/user/hooks/useUserUpdate";
 import { UserPost } from "@/src/feature/user/types/user-update";
-import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "@/src/context/user/userContext";
-import API_CONFIG from "@/src/types/api/config";
 
 const UserProfile: React.FC = () => {
   const context = useContext(UserContext);

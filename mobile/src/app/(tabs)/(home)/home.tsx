@@ -18,7 +18,6 @@ import { UserContext } from "@/src/context/user/userContext";
 
 const Home = ({ courseId }: { courseId: string }) => {
   const { user } = useContext(UserContext); // Sử dụng UserContext
-  const { enrolled, errorMessage, loading } = useEnrolled(courseId);
 
   return (
     <SafeAreaView
@@ -63,7 +62,9 @@ const Home = ({ courseId }: { courseId: string }) => {
               paddingBottom: 8,
             }}
           >
-            <Text style={{ ...text.h4, fontWeight: "500" }}>New Courses</Text>
+            <Text style={{ ...text.h4, fontWeight: "500" }}>
+              Recommend Courses
+            </Text>
             <TouchableOpacity
               onPress={() => router.push("/(courses)/course-list?tab=all")}
             >
