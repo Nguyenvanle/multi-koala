@@ -6,6 +6,7 @@ import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseRespons
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.service.EnrollCourseService;
+import com.duokoala.server.service.LessonStudentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +19,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EnrollCourseController {
     EnrollCourseService enrollCourseService;
+    LessonStudentService lessonStudentService;
 
     @PostMapping("/courses/{courseId}/enroll-courses")
     ApiResponse<EnrollCourseResponse> create(@PathVariable String courseId) {
@@ -26,12 +28,18 @@ public class EnrollCourseController {
                 .build();
     }
 
+//    @PostMapping("/enroll-courses/update-student-enroll")
+//    ApiResponse<Void> updateStudentEnroll() {
+//        lessonStudentService.updateStudentEnroll();
+//        return ApiResponse.<Void>builder().build();
+//    }
+
     @PutMapping("/enroll-courses/{enrollCourseId}")
     ApiResponse<EnrollCourseResponse> update(
             @PathVariable String enrollCourseId,
             @RequestBody EnrollCourseUpdateRequest request) {
         return ApiResponse.<EnrollCourseResponse>builder()
-                .result(enrollCourseService.update(enrollCourseId,request))
+                .result(enrollCourseService.update(enrollCourseId, request))
                 .build();
     }
 

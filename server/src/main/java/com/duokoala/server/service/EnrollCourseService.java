@@ -11,7 +11,6 @@ import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.EnrollCourseMapper;
 import com.duokoala.server.repository.CourseRepository;
 import com.duokoala.server.repository.EnrollCourseRepository;
-import com.duokoala.server.repository.LessonRepository;
 import com.duokoala.server.repository.LessonStudentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +34,6 @@ public class EnrollCourseService {
     AuthenticationService authenticationService;
     LessonStudentService lessonStudentService;
     LessonStudentRepository lessonStudentRepository;
-    LessonRepository lessonRepository;
-
 
     @Transactional
     public EnrollCourseResponse create(String courseId) {
@@ -104,4 +101,5 @@ public class EnrollCourseService {
                         .coursePrice(enrollCourse.getCourse().getCoursePrice())
                         .build()).toList();
     }
+
 }
