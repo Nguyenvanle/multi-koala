@@ -1,6 +1,7 @@
 package com.duokoala.server.entity;
 
 import com.duokoala.server.entity.user.Student;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,6 +20,7 @@ public class LessonStudent {
     String lessonStudentId;
     float process;
     LocalDateTime lastUpdate;
+    @JsonIgnore
     @ManyToOne
     Student student;
     @ManyToOne

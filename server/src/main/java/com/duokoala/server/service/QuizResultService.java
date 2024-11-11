@@ -57,13 +57,10 @@ public class QuizResultService {
                 .test(test)
                 .dateTaken(LocalDateTime.now())
                 .build();
-
-        log.info(correctAnswers + ">=" + test.getPassingScore());
-        log.info("isPassed: " + quizResult.isPassed());
         try {
             quizResult.setStudent(authenticationService.getAuthenticatedStudent());
         } catch (Exception e) {
-            // Handle exception or log it
+            log.warn("Student not found");
         }
         return quizResult;
     }
@@ -123,18 +120,6 @@ public class QuizResultService {
         response.setQuestions(questionResponses);
         return response;
     }
-
-//    public QuizResultResponse create(
-//            String testId,
-//            QuizResultCreateRequest request) {
-//        QuizResult quizResult = quizResultMapper.toQuizResult(request);
-//        quizResult.setTotalQuestion(questionRepository.countQuestionsByTestId(testId));
-//        quizResult.setDateTaken(LocalDateTime.now());
-//        quizResult.setStudent(authenticationService.getAuthenticatedStudent());
-//        quizResult.setTest(testRepository.findById(testId)
-//                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
-//        return quizResultMapper.toQuizResultResponse(quizResultRepository.save(quizResult));
-//    }
 
     public QuizResultResponse getQuizResultResponse(String quizResultId) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId)
