@@ -77,13 +77,14 @@ public class LessonStudentService {
         enrollCourse.setProcess((float) numberOfPassLesson / numberOfLesson);
         enrollCourseRepository.save(enrollCourse);
     }
-//    public void updateStudentEnroll() {
-//        List<EnrollCourse> enrollCourses = enrollCourseRepository.findAll();
-//        for (EnrollCourse enroll : enrollCourses) {
-//            List<LessonStudent> lessonStudents = enroll.getCourse().getLessons().stream()
-//                    .map(lesson -> create(lesson, enroll.getStudent()))
-//                    .toList();
-//            lessonStudentRepository.saveAll(lessonStudents);
-//        }
-//    }
+
+    public void updateStudentEnroll() { //query use only one to insert data
+        List<EnrollCourse> enrollCourses = enrollCourseRepository.findAll();
+        for (EnrollCourse enroll : enrollCourses) {
+            List<LessonStudent> lessonStudents = enroll.getCourse().getLessons().stream()
+                    .map(lesson -> create(lesson, enroll.getStudent()))
+                    .toList();
+            lessonStudentRepository.saveAll(lessonStudents);
+        }
+    }
 }
