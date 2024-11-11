@@ -1,13 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { CourseImageCard } from "@/features/courses/components/organisms";
@@ -18,9 +12,10 @@ import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-d
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
+import TestList from "@/features/test/components/atoms/test-list";
 import { TestBodyType } from "@/features/test/types/test-result";
 import { CirclePlus, Home, ListRestart, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
 
 const breadcrumbs = [
   {
@@ -41,11 +36,15 @@ export default function EditLessonForm({
 }) {
   const { form, onSubmit, isSubmitting } = useEditLessonForm(initData);
 
+  useEffect(() => {
+    console.log(initTestData);
+  }, [initTestData]);
+
   return (
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
+          <div className="flex flex-col lg:flex-row justify-between gap-4 xl:gap-6 ">
             <Breadcrumbs items={breadcrumbs} />
             <div className="flex gap-2">
               <DeleteLessonDialog
@@ -76,7 +75,7 @@ export default function EditLessonForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="flex flex-col gap-4">
               <CourseImageCard
                 form={form}
@@ -96,6 +95,10 @@ export default function EditLessonForm({
 
             <div className="flex flex-col gap-4">
               <VideoUploadForm initData={initData} />
+              <TestList
+                tests={initTestData}
+                viewDetailHref={`/dashboard/courses/${initData.course.courseId}/lessons/${initData.lessonId}/tests`}
+              />
             </div>
           </div>
         </form>
