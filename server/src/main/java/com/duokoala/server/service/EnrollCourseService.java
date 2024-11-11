@@ -5,16 +5,21 @@ import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseRespons
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.entity.EnrollCourse;
+import com.duokoala.server.entity.LessonStudent;
 import com.duokoala.server.exception.AppException;
 import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.EnrollCourseMapper;
 import com.duokoala.server.repository.CourseRepository;
 import com.duokoala.server.repository.EnrollCourseRepository;
+import com.duokoala.server.repository.LessonRepository;
+import com.duokoala.server.repository.LessonStudentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,12 +27,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class EnrollCourseService {
     EnrollCourseRepository enrollCourseRepository;
     EnrollCourseMapper enrollCourseMapper;
     CourseRepository courseRepository;
     AuthenticationService authenticationService;
+    LessonStudentService lessonStudentService;
+    LessonStudentRepository lessonStudentRepository;
+    LessonRepository lessonRepository;
 
+
+    @Transactional
     public EnrollCourseResponse create(String courseId) {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
@@ -39,13 +50,17 @@ public class EnrollCourseService {
                 .process(0)
                 .build();
         try {
-
             enrollCourseRepository.save(enrollCourse);
+            List<LessonStudent> lessonStudents = course.getLessons().stream()
+                    .map(lesson -> lessonStudentService.create(lesson, student))
+                    .toList();
+            lessonStudentRepository.saveAll(lessonStudents);
         } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.ENROLL_COURSE_EXISTED);
         }
         return enrollCourseMapper.toEnrollCourseResponse(enrollCourse);
     }
+
 
     public EnrollCourseResponse update(
             String enrollCourseId,

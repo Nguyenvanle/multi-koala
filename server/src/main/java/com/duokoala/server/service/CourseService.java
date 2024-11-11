@@ -71,9 +71,6 @@ public class CourseService {
         course.setTypes(new HashSet<>(types));
         var fields = fieldRepository.findAllById(request.getFields());
         course.setFields(new HashSet<>(fields));
-//        Image image = new Image();
-//        image.setImageUrl(request.getImageUrl());
-//        course.setImage(image);
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
