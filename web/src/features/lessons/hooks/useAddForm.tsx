@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function useAddForm() {
+  const router = useRouter();
   const { courseId } = useParams();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -18,7 +19,6 @@ export default function useAddForm() {
     try {
       const { lesson } = await postLesson(courseId as string, values);
       console.log(lesson);
-      location.reload();
       showToast(
         "Lesson added",
         "Your lesson has been added successfully.",

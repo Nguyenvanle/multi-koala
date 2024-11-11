@@ -2,6 +2,7 @@ import {
   AddFormResType,
   AddFormValues,
 } from "@/features/lessons/types/add-form";
+import { DeleteLessonResType } from "@/features/lessons/types/delete-lesson";
 import {
   EditFormResType,
   EditFormType,
@@ -32,7 +33,12 @@ export const lessonService = {
   },
 
   getAllByCourseId: async (courseId: string) => {
-    return await apiService.get<LessonResponse>(`/courses/${courseId}/lessons`);
+    return await apiService.get<LessonResponse>(
+      `/courses/${courseId}/lessons`,
+      {
+        next: { tags: ["/courses/${courseId}/lessons"] },
+      }
+    );
   },
 
   getDetailByCourseId: async (courseId: string, lessonId: string) => {
@@ -47,5 +53,9 @@ export const lessonService = {
 
   updateLesson: async (lessonId: string, data: EditFormType) => {
     return await apiService.put<EditFormResType>(`/lessons/${lessonId}`, data);
+  },
+
+  deleteLesson: async (lessonId: string) => {
+    return await apiService.delete<DeleteLessonResType>(`/lessons/${lessonId}`);
   },
 };

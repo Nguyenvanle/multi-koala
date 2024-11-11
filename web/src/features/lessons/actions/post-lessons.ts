@@ -2,6 +2,7 @@
 
 import { lessonService } from "@/features/lessons/services/lesson";
 import { AddFormValues } from "@/features/lessons/types/add-form";
+import { revalidateTag } from "next/cache";
 
 export async function postLesson(courseId: string, data: AddFormValues) {
   const res = await lessonService.create(courseId, data);
@@ -13,6 +14,8 @@ export async function postLesson(courseId: string, data: AddFormValues) {
   }
 
   const lesson = res.result.result;
+
+  revalidateTag("/courses/${courseId}/lessons");
 
   return { lesson };
 }

@@ -66,15 +66,19 @@ export default function CourseEditForm({
     lessons,
     duration,
     loading: lessonsLoading,
+    mutate: mutateLessons,
   } = useLessons(courseId as string);
 
   // refetch
   const { mutate } = useSWRConfig();
   useEffect(() => {
     console.log("Refetching...");
-    mutate(`get-top-courses`);
-    mutate(`teacher-my-statistics-courses`);
-  }, [onSubmit, mutate, form]);
+    Promise.all([
+      mutate(`get-top-courses`),
+      mutate(`teacher-my-statistics-courses`),
+      mutate(`lessons/${courseId}`),
+    ]);
+  }, [onSubmit, mutate, courseId]);
 
   // loading
   if (fieldsLoading || typesLoading) {

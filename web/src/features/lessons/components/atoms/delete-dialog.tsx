@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -9,36 +8,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { deleteCourse } from "@/features/courses/actions/delete-course";
+import { deleteLesson } from "@/features/lessons/actions/delete-lesson";
 import { showToast } from "@/lib/utils";
 import { CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 
-const DeleteDialog: React.FC<{ courseId: string }> = ({ courseId }) => {
+const DeleteLessonDialog: React.FC<{ lessonId: string; courseId: string }> = ({
+  lessonId,
+  courseId,
+}) => {
   const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
   const handleDelete = async () => {
     try {
-      const res = await deleteCourse(courseId);
-
-      console.log(res);
-
+      setIsDeleting(true);
+      const res = await deleteLesson(lessonId);
       if (res) {
+        setOpen(false);
         showToast(
-          "Course deleted successfully",
-          "Your course has been deleted",
+          "Lesson deleted successfully",
+          "Your lesson has been deleted",
           "default"
         );
+        router.back();
       }
-
-      router.push("/dashboard/courses");
     } catch (error: any) {
       console.error("DeleteDialog -", error);
-      showToast("Course not deleted", "Error deleting course", "destructive");
+      showToast("Lesson not deleted", "Error deleting lesson", "destructive");
+    } finally {
+      setIsDeleting(false);
     }
   };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -58,19 +64,24 @@ const DeleteDialog: React.FC<{ courseId: string }> = ({ courseId }) => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">
-          <DialogClose asChild>
-            <Button variant="destructive" onClick={handleDelete} type="submit">
-              Delete
-            </Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button variant="outline" type="submit">
-              Cancel
-            </Button>
-          </DialogClose>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
-export default DeleteDialog;
+
+export default DeleteLessonDialog;

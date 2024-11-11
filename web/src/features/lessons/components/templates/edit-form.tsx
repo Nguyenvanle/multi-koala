@@ -12,6 +12,7 @@ import { Form } from "@/components/ui/form";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { CourseImageCard } from "@/features/courses/components/organisms";
 import VideoUploadForm from "@/features/file-upload/components/atoms/video-upload";
+import DeleteLessonDialog from "@/features/lessons/components/atoms/delete-dialog";
 import DemoField from "@/features/lessons/components/atoms/demo-field";
 import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-description";
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
@@ -47,9 +48,13 @@ export default function EditLessonForm({
           <div className="flex flex-col sm:flex-row justify-between gap-4 xl:gap-6 ">
             <Breadcrumbs items={breadcrumbs} />
             <div className="flex gap-2">
+              <DeleteLessonDialog
+                lessonId={initData.lessonId}
+                courseId={initData.course.courseId}
+              />
               <Button
                 type="button"
-                // onClick={handleReset}
+                onClick={() => form.reset()}
                 variant="outline"
                 className="w-full sm:w-auto h-8"
               >
