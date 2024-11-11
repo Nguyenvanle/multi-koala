@@ -19,14 +19,16 @@ export default function LessonDescriptionField({
       control={form.control}
       name="lessonDescription"
       render={({ field }) => (
-        <FormItem>
-          <div className="flex flex-row justify-between">
+        <FormItem className="w-full">
+          <div className="flex flex-row justify-between w-full">
             <FormLabel>Description</FormLabel>
             <FormMessage />
           </div>
           <FormControl>
             <Textarea
               placeholder="Describe the content of your lesson."
+              className="w-full resize-y"
+              rows={4} // Set initial height to 3 rows
               {...field}
             />
           </FormControl>

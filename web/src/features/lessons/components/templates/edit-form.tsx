@@ -36,10 +36,6 @@ export default function EditLessonForm({
 }) {
   const { form, onSubmit, isSubmitting } = useEditLessonForm(initData);
 
-  useEffect(() => {
-    console.log(initTestData);
-  }, [initTestData]);
-
   return (
     <div className="w-full">
       <Form {...form}>
@@ -95,10 +91,27 @@ export default function EditLessonForm({
 
             <div className="flex flex-col gap-4">
               <VideoUploadForm initData={initData} />
-              <TestList
-                tests={initTestData}
-                viewDetailHref={`/dashboard/courses/${initData.course.courseId}/lessons/${initData.lessonId}/tests`}
-              />
+
+              <Card className="flex flex-col gap-4">
+                <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-0">
+                  <CardTitle>Exams</CardTitle>
+                  <div>
+                    <Button
+                      className="w-full sm:w-auto h-8"
+                      variant={"outline"}
+                    >
+                      <CirclePlus className="mr-2 h-4 w-4" />
+                      Add New Exam
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                  <TestList
+                    tests={initTestData}
+                    viewDetailHref={`/dashboard/courses/${initData.course.courseId}/lessons/${initData.lessonId}/tests`}
+                  />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </form>
