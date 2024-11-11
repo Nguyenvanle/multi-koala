@@ -2,6 +2,7 @@ package com.duokoala.server.service;
 
 import com.duokoala.server.dto.response.LessonStudentResponse;
 import com.duokoala.server.entity.Course;
+import com.duokoala.server.entity.EnrollCourse;
 import com.duokoala.server.entity.Lesson;
 import com.duokoala.server.entity.LessonStudent;
 import com.duokoala.server.entity.user.Student;
@@ -11,6 +12,7 @@ import com.duokoala.server.mapper.LessonStudentMapper;
 import com.duokoala.server.repository.CourseRepository;
 import com.duokoala.server.repository.EnrollCourseRepository;
 import com.duokoala.server.repository.LessonStudentRepository;
+import com.duokoala.server.repository.QuizResultRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +28,8 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class LessonStudentService {
-    EnrollCourseRepository enrollCourseRepository;
+    private final EnrollCourseRepository enrollCourseRepository;
+    private final QuizResultRepository quizResultRepository;
     LessonStudentRepository lessonStudentRepository;
     CourseRepository courseRepository;
     AuthenticationService authenticationService;
@@ -49,7 +52,31 @@ public class LessonStudentService {
         return lessonStudents.stream().map(lessonStudentMapper::toLessonStudentResponse).collect(Collectors.toList());
     }
 
+    public void updateMyProcessLesson(Lesson lesson) {
+        Student student = authenticationService.getAuthenticatedStudent();
+        LessonStudent lessonStudent = lessonStudentRepository.findByStudentAndLesson(student, lesson)
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_LESSON_NOT_FOUND));
+        int numberOfTest = lesson.getTests().size();
+        if (numberOfTest == 0) return;
+        int numberOfPasTest = quizResultRepository
+                .countPassedTestInLesson(student.getUserId(), lesson.getLessonId());
+        lessonStudent.setProcess((float) numberOfPasTest / numberOfTest);
+        lessonStudent.setLastUpdate(LocalDateTime.now());
+        if (lessonStudent.getProcess() == 1.0)
+            updateProcessCourse(lesson.getCourse());
+        lessonStudentRepository.save(lessonStudent);
+    }
 
+    public void updateProcessCourse(Course course) {
+        Student student = authenticationService.getAuthenticatedStudent();
+        EnrollCourse enrollCourse = enrollCourseRepository.findByStudentAndCourse(student, course)
+                .orElseThrow(() -> new AppException(ErrorCode.ENROLL_COURSE_NOT_FOUND));
+        int numberOfLesson = course.getLessons().size();
+        int numberOfPassLesson = lessonStudentRepository
+                .countByStudentAndLessonCourseAndProcess(student, course, 1);
+        enrollCourse.setProcess((float) numberOfPassLesson / numberOfLesson);
+        enrollCourseRepository.save(enrollCourse);
+    }
 //    public void updateStudentEnroll() {
 //        List<EnrollCourse> enrollCourses = enrollCourseRepository.findAll();
 //        for (EnrollCourse enroll : enrollCourses) {

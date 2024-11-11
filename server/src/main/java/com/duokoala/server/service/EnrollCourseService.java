@@ -1,6 +1,5 @@
 package com.duokoala.server.service;
 
-import com.duokoala.server.dto.request.enrollCourseRequest.EnrollCourseUpdateRequest;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
@@ -56,17 +55,6 @@ public class EnrollCourseService {
             throw new AppException(ErrorCode.ENROLL_COURSE_EXISTED);
         }
         return enrollCourseMapper.toEnrollCourseResponse(enrollCourse);
-    }
-
-
-    public EnrollCourseResponse update(
-            String enrollCourseId,
-            EnrollCourseUpdateRequest request) {
-        var enrollCourse = enrollCourseRepository.findById(enrollCourseId)
-                .orElseThrow(() -> new AppException(ErrorCode.ENROLL_COURSE_NOT_FOUND));
-        enrollCourseMapper.updateEnrollCourse(enrollCourse, request);
-        return enrollCourseMapper
-                .toEnrollCourseResponse(enrollCourseRepository.save(enrollCourse));
     }
 
     public EnrollCourseResponse get(String enrollCourseId) {

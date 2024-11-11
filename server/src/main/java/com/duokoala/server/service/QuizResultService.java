@@ -33,6 +33,7 @@ public class QuizResultService {
     AnswerRepository answerRepository;
     QuestionService questionService;
     StudentAnswerRepository studentAnswerRepository;
+    LessonStudentService lessonStudentService;
 
     @Transactional
     public QuizResultResponse submitQuiz(String testId, QuizResultSubmitRequest request) {
@@ -60,7 +61,7 @@ public class QuizResultService {
         try {
             quizResult.setStudent(authenticationService.getAuthenticatedStudent());
         } catch (Exception e) {
-            log.warn("Student not found");
+            //nothing to do
         }
         return quizResult;
     }
@@ -106,10 +107,13 @@ public class QuizResultService {
 
     private void saveQuizResultAndAnswers(QuizResult quizResult, List<StudentAnswer> studentAnswers) {
         if (quizResult.getStudent() != null) {
-            quizResultRepository.save(quizResult);
+            if (quizResult.isPassed())
+                quizResultRepository.save(quizResult);
             studentAnswerRepository.saveAll(studentAnswers);
+            lessonStudentService.updateMyProcessLesson(quizResult.getTest().getLesson());
         }
     }
+
 
     private List<QuestionSubmitResponse> createQuestionResponses(List<QuestionSubmitRequest> questionList) {
         return questionList.stream().map(questionService::convertToSubmitResponse).toList();
