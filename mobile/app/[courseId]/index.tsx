@@ -17,11 +17,11 @@ import { useDetails } from "../../feature/course/hooks/useDetails";
 import { useCourseRating } from "@/feature/course/hooks/useCourseRating";
 import { useCourseDiscount } from "@/feature/discount/hooks/useCourseDiscount";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
-import { LessonBody } from "../../feature/lesson/types/lesson";
+import { LessonBody, ResultBody } from "../../feature/lesson/types/lesson";
 import useUser from "@/feature/user/hooks/useUser";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 
-const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
+const CourseDetails = () => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
   const starImgFilled =
@@ -40,7 +40,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
 
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
 
-  const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
+  const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
 
   const { courseDetails, loading, errorMessageDetails } =
     useDetails(courseIdString);
@@ -121,7 +121,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
     item,
     index,
   }: {
-    item: LessonBody;
+    item: ResultBody;
     index: number;
   }) => {
     const isClickable = index < 3 || isEnrolled; // Cho phép truy cập vào chi tiết bài học nếu đã đăng ký hoặc là bài học đầu tiên
@@ -131,7 +131,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
         style={[styles.lessonItem, !isClickable && { opacity: 0.5 }]}
         onPress={() => {
           if (isClickable) {
-            router.push(`/${courseIdString}/${item.lessonId}`);
+            router.push(`/${courseIdString}/${item.lessonStudentId}`);
           }
         }}
       >
@@ -139,16 +139,17 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
           {index + 1}.
         </Text>
         <Image
-          source={{ uri: item.image.imageUrl }}
+          source={{ uri: item.lesson.image.imageUrl }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
           <Text style={styles.lessonTitle} numberOfLines={2}>
-            {item.lessonName}
+            {item.lesson.lessonName}
           </Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.video.videoDuration / 60)}:
-            {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
+            {Math.floor(item.lesson.video.videoDuration / 60)}:
+            {(item.lesson.video.videoDuration % 60).toString().padStart(2, "0")}{" "}
+            mins
           </Text>
         </View>
       </TouchableOpacity>
@@ -260,7 +261,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
           </Text>
         </View>
 
-        {loadinglesson ? (
+        {loadingLesson ? (
           <View style={{ paddingTop: 16, justifyContent: "center" }}>
             <ActivityIndicator color={Colors.teal_dark} />
           </View>
@@ -269,7 +270,7 @@ const CourseDetails = ({ lessons = [] }: { lessons: LessonBody[] }) => {
             <FlatList
               data={displayedLessons}
               renderItem={renderLessonItem}
-              keyExtractor={(item) => item.lessonId}
+              keyExtractor={(item) => item.lesson.lessonId}
               scrollEnabled={false}
             />
             {lesson && lesson.length > 3 && (

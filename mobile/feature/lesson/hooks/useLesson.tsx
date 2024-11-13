@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
-import { LessonBodyList } from "../types/lesson";
 import { lessonServices } from "../services/lesson";
+import { ResultBodyList } from "../types/lesson";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useLesson = (courseId: string) => {
-  const [lesson, setLesson] = useState<LessonBodyList>();
+  const [lesson, setLesson] = useState<ResultBodyList>();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loadinglesson, setLoadingLesson] = useState<boolean>(true);
+  const [loadingLesson, setLoadingLesson] = useState<boolean>(true);
 
   useEffect(() => {
     const getLesson = async () => {
       try {
         setLoadingLesson(true);
-        const data = await lessonServices.getLesson(courseId);
-        if (data.data.result) {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          setErrorMessage("No token found. Please log in.");
+          return;
+        }
+        const data = await lessonServices.getLesson(courseId, token);
+        if (data && data.data && data.data.result) {
           setLesson(data.data.result);
+          console.log(data.data.result);
         } else {
           setErrorMessage("Get lesson failed.");
         }
@@ -25,5 +32,5 @@ export const useLesson = (courseId: string) => {
     getLesson(); // Gọi hàm getRating
   }, [courseId]); // Thêm courseId vào dependency array
 
-  return { lesson, errorMessage, loadinglesson }; // Trả về giá trị
+  return { lesson, errorMessage, loadingLesson }; // Trả về giá trị
 };
