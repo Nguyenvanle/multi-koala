@@ -12,6 +12,7 @@ import * as Progress from "react-native-progress";
 import { Link, router, useGlobalSearchParams } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
+import { useLesson } from "@/feature/lesson/hooks/useLesson";
 
 interface Filter {
   types: string[];
@@ -30,6 +31,7 @@ const InProgressCourses: React.FC<InProgressCoursesProps> = ({
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { enrolled = [], errorMessage, loading } = useEnrolled(courseIdString); // Default empty array
+  const { lesson, loadingLesson } = useLesson(courseIdString);
 
   if (loading) {
     return (

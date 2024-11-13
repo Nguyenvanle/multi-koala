@@ -131,7 +131,7 @@ const CourseDetails = () => {
         style={[styles.lessonItem, !isClickable && { opacity: 0.5 }]}
         onPress={() => {
           if (isClickable) {
-            router.push(`/${courseIdString}/${item.lessonStudentId}`);
+            router.push(`/${courseIdString}/${item.lesson.lessonId}`);
           }
         }}
       >

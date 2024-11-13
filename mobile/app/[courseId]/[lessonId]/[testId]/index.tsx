@@ -18,6 +18,7 @@ import { QuestionDetails } from "@/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useTestResultList from "@/feature/test-result/hooks/useTestResultList";
 import { useDetails } from "@/feature/course/hooks/useDetails";
+import { useLesson } from "@/feature/lesson/hooks/useLesson";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -73,6 +74,7 @@ const Test = () => {
   const [selectedResultAnswers, setSelectedResultAnswers] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [testHistory, setTestHistory] = useState({});
+  const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
 
   // Check for token on component mount
   useEffect(() => {

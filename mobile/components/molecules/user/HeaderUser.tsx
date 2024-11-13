@@ -55,14 +55,12 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
       const latestCourse = enrolled[i];
       if (latestCourse.process === 1) {
         // Kiểm tra nếu khóa học hiện tại hoàn thành
-        if (i + 1 < enrolled.length) {
-          // Kiểm tra nếu có khóa học tiếp theo
-          setNextCourse(enrolled[i + 1]); // Cập nhật khóa học tiếp theo
-        } else {
-          setNextCourse(null); // Không có khóa học tiếp theo
-        }
-        break; // Chỉ cần tìm khóa học hoàn thành đầu tiên
+        // Kiểm tra nếu có khóa học tiếp theo
+        setNextCourse(enrolled[i + 1]); // Cập nhật khóa học tiếp theo
+      } else {
+        setNextCourse(enrolled[i]); // Không có khóa học tiếp theo
       }
+      break;
     }
   };
   if (userLoading || isRefreshing) {
