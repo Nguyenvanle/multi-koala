@@ -31,7 +31,6 @@ const InProgressCourses: React.FC<InProgressCoursesProps> = ({
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { enrolled = [], errorMessage, loading } = useEnrolled(courseIdString); // Default empty array
-  const { lesson, loadingLesson } = useLesson(courseIdString);
 
   if (loading) {
     return (

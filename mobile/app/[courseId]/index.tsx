@@ -221,13 +221,13 @@ const CourseDetails = () => {
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
-                <TouchableOpacity key={type.typeName} style={styles.typeButton}>
+                <View key={type.typeName} style={styles.typeButton}>
                   <Text
                     style={{ ...styles.fieldName, color: Colors.teal_dark }}
                   >
                     {type.typeName}
                   </Text>
-                </TouchableOpacity>
+                </View>
               ))}
           </View>
           <View
@@ -235,12 +235,9 @@ const CourseDetails = () => {
           >
             {Array.isArray(courseDetails.fields) &&
               courseDetails.fields.map((field: any) => (
-                <TouchableOpacity
-                  key={field.fieldName}
-                  style={styles.fieldButton}
-                >
+                <View key={field.fieldName} style={styles.fieldButton}>
                   <Text style={styles.fieldName}>{field.fieldName}</Text>
-                </TouchableOpacity>
+                </View>
               ))}
           </View>
 

@@ -19,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useTestResultList from "@/feature/test-result/hooks/useTestResultList";
 import { useDetails } from "@/feature/course/hooks/useDetails";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
+import { ResultBody } from "@/feature/lesson/types/lesson";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -30,6 +31,7 @@ const Test = () => {
   const testIdString = testId as string;
   const { courseDetails, loading, errorMessageDetails } =
     useDetails(courseIdString);
+  const [courseCompleted, setCourseCompleted] = useState<number>();
 
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
@@ -176,6 +178,18 @@ const Test = () => {
     initializeAnswerSubmitList(selectedTest); // Khởi tạo lại danh sách câu trả lời
   };
 
+  const checkCompleted = () => {
+    for (let i = 0; i < lesson?.length; i++) {
+      const latestCourse = lesson[i].lesson.course.courseId;
+      if (latestCourse === courseIdString) {
+        // Kiểm tra nếu khóa học hiện tại hoàn thành
+        // Kiểm tra nếu có khóa học tiếp theo
+        setCourseCompleted(lesson[i].process); // Cập nhật khóa học tiếp theo
+      }
+      break;
+    }
+  };
+
   const renderAnswerItemForResult = useCallback(
     ({ item, questionId, index, userAnswerId }) => {
       if (!item) return null;
@@ -243,7 +257,7 @@ const Test = () => {
 
     return (
       <View style={{ marginBottom: 60 }}>
-        {courseDetails.process === 1 && (
+        {checkCompleted && (
           <TouchableOpacity
             style={{ ...styles.submitButton, marginBottom: 24 }}
             onPress={handleRetakeTest}
