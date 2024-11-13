@@ -23,8 +23,6 @@ export default async function TeachingEditLesson({
     fetchTests(params.lessonId),
   ]);
 
-  console.log("sv:", tests);
-
   return (
     <div className="flex flex-col w-full gap-4">
       <Suspense>

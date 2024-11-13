@@ -15,7 +15,7 @@ import LessonNameField from "@/features/lessons/components/atoms/name-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import ExamDialogForm from "@/features/test/components/molecules/add-dialog";
-import TestList from "@/features/test/components/atoms/test-list";
+import TestList from "@/features/test/components/molecules/test-list";
 import { TestBodyType } from "@/features/test/types/test-result";
 import { CirclePlus, Home, ListRestart, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -119,7 +119,10 @@ export default function EditLessonForm({
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                   {testLoading ? (
-                    <Skeleton className="w-full h-32"></Skeleton>
+                    <>
+                      <Skeleton className="w-full h-32"></Skeleton>
+                      <Skeleton className="w-full h-32"></Skeleton>
+                    </>
                   ) : (
                     <TestList
                       tests={tests}
