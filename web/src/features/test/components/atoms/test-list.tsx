@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TestBodyType } from "@/features/test/types/test-result";
@@ -17,9 +19,9 @@ interface TestListProps {
 }
 
 export default function TestList({ tests, viewDetailHref }: TestListProps) {
-  if (!tests) {
+  if (!tests || tests.length === 0) {
     return (
-      <Card className="w-full max-w-3xl mx-auto">
+      <Card className="w-full ">
         <CardContent className="flex flex-col items-center justify-center py-12">
           <ClipboardX className="h-16 w-16 text-gray-400 mb-4" />
           <h3 className="text-xl font-semibold text-gray-700 mb-2">
@@ -35,7 +37,7 @@ export default function TestList({ tests, viewDetailHref }: TestListProps) {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto space-y-4">
+    <div className="w-full space-y-4">
       {tests.map((test) => (
         <Card key={test.testId}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

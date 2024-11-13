@@ -48,7 +48,9 @@ export const lessonService = {
   },
 
   getTestByLessonId: async (lessonId: string) => {
-    return await apiService.get<TestResType>(`/lessons/${lessonId}/tests`);
+    return await apiService.get<TestResType>(`/lessons/${lessonId}/tests`, {
+      next: { tags: ["/lessons/${lessonId}/tests"] },
+    });
   },
 
   updateLesson: async (lessonId: string, data: EditFormType) => {

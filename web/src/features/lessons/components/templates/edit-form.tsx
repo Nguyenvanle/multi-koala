@@ -3,19 +3,22 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
 import { CourseImageCard } from "@/features/courses/components/organisms";
 import VideoUploadForm from "@/features/file-upload/components/atoms/video-upload";
+import { getTests } from "@/features/lessons/actions/get-test";
 import DeleteLessonDialog from "@/features/lessons/components/atoms/delete-dialog";
 import DemoField from "@/features/lessons/components/atoms/demo-field";
 import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-description";
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
+import ExamDialogForm from "@/features/test/components/molecules/add-dialog";
 import TestList from "@/features/test/components/atoms/test-list";
 import { TestBodyType } from "@/features/test/types/test-result";
 import { CirclePlus, Home, ListRestart, Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const breadcrumbs = [
   {
@@ -27,14 +30,31 @@ const breadcrumbs = [
   { label: "Edit Lesson" },
 ];
 
+async function fetchTests(lessonId: string) {
+  const res = await getTests(lessonId);
+  return res.tests;
+}
+
 export default function EditLessonForm({
   initData,
   initTestData,
+  isPublic = true,
 }: {
   initData: LessonDetailResult;
   initTestData: TestBodyType[];
+  isPublic?: boolean;
 }) {
   const { form, onSubmit, isSubmitting } = useEditLessonForm(initData);
+  const [testLoading, setTestLoading] = useState(true);
+  const [tests, setTests] = useState<TestBodyType[]>([]);
+
+  useEffect(() => {
+    const tests = fetchTests(initData.lessonId);
+    tests.then((res) => {
+      setTests(res);
+      setTestLoading(false);
+    });
+  }, [initData.lessonId, initTestData]);
 
   return (
     <div className="w-full">
@@ -95,21 +115,17 @@ export default function EditLessonForm({
               <Card className="flex flex-col gap-4">
                 <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-0">
                   <CardTitle>Exams</CardTitle>
-                  <div>
-                    <Button
-                      className="w-full sm:w-auto h-8"
-                      variant={"outline"}
-                    >
-                      <CirclePlus className="mr-2 h-4 w-4" />
-                      Add New Exam
-                    </Button>
-                  </div>
+                  <div>{!isPublic && <ExamDialogForm />}</div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
-                  <TestList
-                    tests={initTestData}
-                    viewDetailHref={`/dashboard/courses/${initData.course.courseId}/lessons/${initData.lessonId}/tests`}
-                  />
+                  {testLoading ? (
+                    <Skeleton className="w-full h-32"></Skeleton>
+                  ) : (
+                    <TestList
+                      tests={tests}
+                      viewDetailHref={`/dashboard/courses/${initData.course.courseId}/lessons/${initData.lessonId}/tests`}
+                    />
+                  )}
                 </CardContent>
               </Card>
             </div>
