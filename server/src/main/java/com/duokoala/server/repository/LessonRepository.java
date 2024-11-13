@@ -1,5 +1,6 @@
 package com.duokoala.server.repository;
 
+import com.duokoala.server.entity.Course;
 import com.duokoala.server.entity.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,6 @@ public interface LessonRepository extends JpaRepository<Lesson, String> {
                     "FROM lesson " +
                     "WHERE course_course_id = :courseId")
     List<Lesson> getListByCourseId(@Param("courseId") String courseId);
+
+    List<Lesson> getAllByCourse(Course course);
 }

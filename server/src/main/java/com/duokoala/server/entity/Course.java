@@ -5,11 +5,13 @@ import com.duokoala.server.entity.user.Admin;
 import com.duokoala.server.entity.user.Teacher;
 import com.duokoala.server.enums.courseEnums.Level;
 import com.duokoala.server.enums.courseEnums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -46,4 +48,7 @@ public class Course {
     Set<DiscountCourse> discountCourses;
     @OneToMany(mappedBy = "course", orphanRemoval = true)
     Set<EnrollCourse> enrollCourses;
+    @JsonIgnore
+    @OneToMany(mappedBy = "course", orphanRemoval = true)
+    List<Lesson> lessons;
 }

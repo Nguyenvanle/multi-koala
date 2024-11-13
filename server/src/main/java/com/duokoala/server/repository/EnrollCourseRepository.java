@@ -9,12 +9,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, String> {
     List<EnrollCourse> findTop3ByStudentOrderByEnrollAtDesc(Student student);
 
     List<EnrollCourse> findAllByStudent(Student student);
+
+    Optional<EnrollCourse> findByStudentAndCourse(Student student, Course course);
 
     int countByCourse(Course course);
 

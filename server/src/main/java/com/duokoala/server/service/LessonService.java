@@ -33,17 +33,8 @@ public class LessonService {
 
     public LessonResponse create(String courseId, LessonCreateRequest request) {
         Lesson lesson = lessonMapper.toLesson(request);
-//        Image image = Image.builder()
-//                .imageUrl(request.getImageUrl())
-//                .build();
-//        Video video = Video.builder()
-//                .videoUrl(request.getVideoUrl())
-//                .videoDuration(request.getVideoDuration())
-//                .build();
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
-//        lesson.setImage(image);
-//        lesson.setVideo(video);
         lesson.setLessonUploadedAt(LocalDateTime.now());
         lesson.setCourse(course);
         lesson.setDeleted(false);
@@ -53,10 +44,7 @@ public class LessonService {
     public LessonResponse update(String lessonId, LessonUpdateRequest request) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
-        lessonMapper.updateLesson(lesson,request);
-//        lesson.getImage().setImageUrl(request.getImageUrl());
-//        lesson.getVideo().setVideoUrl(request.getVideoUrl());
-//        lesson.getVideo().setVideoDuration(request.getVideoDuration());
+        lessonMapper.updateLesson(lesson, request);
         return lessonMapper.toLessonResponse(lessonRepository.save(lesson));
     }
 

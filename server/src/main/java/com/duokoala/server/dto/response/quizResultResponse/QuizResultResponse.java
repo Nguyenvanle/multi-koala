@@ -20,6 +20,4 @@ public class QuizResultResponse {
     LocalDateTime dateTaken;
     boolean passed;
     List<QuestionSubmitResponse> questions;
-//    TestResponse test;
-//    StudentResponse student;
 }

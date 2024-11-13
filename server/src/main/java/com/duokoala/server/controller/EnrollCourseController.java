@@ -1,15 +1,18 @@
 package com.duokoala.server.controller;
 
-import com.duokoala.server.dto.request.enrollCourseRequest.EnrollCourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
 import com.duokoala.server.service.EnrollCourseService;
+import com.duokoala.server.service.LessonStudentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -18,6 +21,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EnrollCourseController {
     EnrollCourseService enrollCourseService;
+    LessonStudentService lessonStudentService;
 
     @PostMapping("/courses/{courseId}/enroll-courses")
     ApiResponse<EnrollCourseResponse> create(@PathVariable String courseId) {
@@ -26,13 +30,11 @@ public class EnrollCourseController {
                 .build();
     }
 
-    @PutMapping("/enroll-courses/{enrollCourseId}")
-    ApiResponse<EnrollCourseResponse> update(
-            @PathVariable String enrollCourseId,
-            @RequestBody EnrollCourseUpdateRequest request) {
-        return ApiResponse.<EnrollCourseResponse>builder()
-                .result(enrollCourseService.update(enrollCourseId,request))
-                .build();
+    @PostMapping("/enroll-courses/update-student-enroll")
+        //use only one time
+    ApiResponse<Void> updateStudentEnroll() {
+        lessonStudentService.updateStudentEnroll();
+        return ApiResponse.<Void>builder().build();
     }
 
     @GetMapping("/enroll-courses/{enrollCourseId}")
