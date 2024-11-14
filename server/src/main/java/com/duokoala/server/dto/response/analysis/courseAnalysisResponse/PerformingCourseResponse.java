@@ -1,4 +1,4 @@
-package com.duokoala.server.dto.response.courseResponse;
+package com.duokoala.server.dto.response.analysis.courseAnalysisResponse;
 
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
 import lombok.*;

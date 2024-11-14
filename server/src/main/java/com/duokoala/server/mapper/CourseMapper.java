@@ -2,9 +2,9 @@ package com.duokoala.server.mapper;
 
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
+import com.duokoala.server.dto.response.analysis.courseAnalysisResponse.PerformingCourseResponse;
+import com.duokoala.server.dto.response.analysis.courseAnalysisResponse.StatisticCourseResponse;
 import com.duokoala.server.dto.response.courseResponse.CourseResponse;
-import com.duokoala.server.dto.response.courseResponse.PerformingCourseResponse;
-import com.duokoala.server.dto.response.courseResponse.StatisticCourseResponse;
 import com.duokoala.server.entity.Course;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,6 +16,7 @@ public interface CourseMapper {
     @Mapping(target = "types", ignore = true)
     @Mapping(target = "fields", ignore = true)
     Course toCourse(CourseCreateRequest request);
+
     CourseResponse toCourseResponse(Course course);
 
     @Mapping(target = "types", ignore = true)
