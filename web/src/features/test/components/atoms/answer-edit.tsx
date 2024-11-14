@@ -45,10 +45,12 @@ export function AnswerEditor({
         />
         <Label htmlFor="correct">Correct Answer</Label>
       </div>
-      <Button onClick={handleSave}>
-        <Check className="mr-2 h-4 w-4" />
-        Save Answer
-      </Button>
+      <div className="flex flex-row justify-end">
+        <Button onClick={handleSave} variant={"default"}>
+          <Check className="mr-2 h-4 w-4" />
+          Save Answer
+        </Button>
+      </div>
     </div>
   );
 }

@@ -17,23 +17,15 @@ export const QuestionNavItem = ({
   <button
     onClick={onClick}
     className={cn(
-      "w-full text-left px-3 py-2 rounded-md transition-colors",
+      "w-full text-left px-3 py-2 rounded-md transition-colors border",
       "hover:bg-primary hover:text-primary-foreground",
       "flex items-center justify-between group",
       isActive && "bg-primary text-primary-foreground",
       "mb-1"
     )}
   >
-    <div className="flex items-center gap-2">
+    <div className="flex flex-1 justify-center gap-2">
       <span className="font-medium">{index + 1}</span>
-      <span className="text-sm truncate max-w-[180px]">
-        {question.questionDescription || "Untitled Question"}
-      </span>
     </div>
-    {isEditing && (
-      <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">
-        Editing
-      </span>
-    )}
   </button>
 );

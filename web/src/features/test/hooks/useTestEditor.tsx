@@ -1,10 +1,10 @@
+import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { TestBodyType } from "@/features/test/types/test-result";
-import { useState } from "react";
 
-// Mock function to simulate saving dataz
+// Mock function to simulate saving data
 export const saveTestData = async (data: TestBodyType) => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -85,6 +85,42 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     }));
   };
 
+  const handleDeleteQuestion = (questionId: string) => {
+    setTestData((prevData) => ({
+      ...prevData,
+      questions: prevData.questions.filter((q) => q.questionId !== questionId),
+    }));
+
+    // Update active question if necessary
+    if (activeQuestionId === questionId) {
+      const remainingQuestions = testData.questions.filter(
+        (q) => q.questionId !== questionId
+      );
+      setActiveQuestionId(remainingQuestions[0]?.questionId || null);
+    }
+
+    toast({
+      title: "Question deleted",
+      description: "The question has been removed from the test.",
+    });
+  };
+
+  const handleUpdateTestSettings = (
+    testDescription: string,
+    passingScore: number
+  ) => {
+    setTestData((prevData) => ({
+      ...prevData,
+      testDescription,
+      passingScore,
+    }));
+
+    toast({
+      title: "Settings updated",
+      description: "Test settings have been updated successfully.",
+    });
+  };
+
   const handleSaveTest = async () => {
     const result = await saveTestData(testData);
     if (result.success) {
@@ -120,6 +156,8 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     handleAnswerEdit,
     handleAddAnswer,
     handleRemoveAnswer,
+    handleDeleteQuestion,
+    handleUpdateTestSettings,
     handleSaveTest,
     scrollToQuestion,
   };
