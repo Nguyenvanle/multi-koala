@@ -260,10 +260,4 @@ public class CourseService {
                 0,
                 courseRepository.getMaxPrice());
     }
-
-    public List<Course> convertPerformingToCourses(List<PerformingCourseResponse> performingCourses) {
-        List<String> courseIds = performingCourses.stream()
-                .map(PerformingCourseResponse::getCourseId).toList();
-        return courseRepository.findAllById(courseIds);
-    }
 }
