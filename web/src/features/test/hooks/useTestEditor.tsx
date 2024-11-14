@@ -20,6 +20,23 @@ export default function useTestEditor(initialTestData: TestBodyType) {
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(
     testData.questions[0]?.questionId || null
   );
+  
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
+
+  const onDeleteQuestion = (questionId: string) => {
+    setQuestionToDelete(questionId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (questionToDelete) {
+      handleDeleteQuestion(questionToDelete);
+      setDeleteDialogOpen(false);
+      setQuestionToDelete(null);
+    }
+  };
 
   const handleQuestionEdit = (questionId: string) => {
     setEditingQuestionId(questionId);
@@ -160,5 +177,12 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     handleUpdateTestSettings,
     handleSaveTest,
     scrollToQuestion,
+
+    settingsOpen,
+    deleteDialogOpen,
+    setSettingsOpen,
+    setDeleteDialogOpen,
+    onDeleteQuestion,
+    confirmDelete,
   };
 }

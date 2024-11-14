@@ -1,25 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
 import { Pencil, Save, Trash2, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TestBodyType } from "@/features/test/types/test-result";
 import { cn } from "@/lib/utils";
@@ -37,79 +21,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import EnhancedCardHeader from "@/features/test/components/atoms/header";
-
-const TestSettingsDialog = ({
-  open,
-  onOpenChange,
-  testData,
-  onSave,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  testData: TestBodyType;
-  onSave: (testDescription: string, passingScore: number) => void;
-}) => {
-  const [testDescription, setTestDescription] = useState(
-    testData.testDescription
-  );
-  const [passingScore, setPassingScore] = useState(
-    testData.passingScore.toString()
-  );
-
-  const handleSave = () => {
-    onSave(testDescription, Number(passingScore));
-    onOpenChange(false);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Test Settings</DialogTitle>
-          <DialogDescription>
-            Update test name and passing score
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="testDescription">Test Name</Label>
-            <Input
-              id="testDescription"
-              value={testDescription}
-              onChange={(e) => setTestDescription(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="passingScore">Passing Score</Label>
-            <Input
-              id="passingScore"
-              type="number"
-              min="0"
-              max="100"
-              value={passingScore}
-              onChange={(e) => setPassingScore(e.target.value)}
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={handleSave}>Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
+import { TestSettingsDialog } from "@/features/test/components/atoms/setting-dialog";
 
 export default function TestEditor({
   initialTestData,
 }: {
   initialTestData: TestBodyType;
 }) {
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
-
   const {
     testData,
     activeQuestionId,
@@ -124,20 +43,14 @@ export default function TestEditor({
     scrollToQuestion,
     handleUpdateTestSettings,
     handleDeleteQuestion,
+
+    settingsOpen,
+    setSettingsOpen,
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+    onDeleteQuestion,
+    confirmDelete,
   } = useTestEditor(initialTestData);
-
-  const onDeleteQuestion = (questionId: string) => {
-    setQuestionToDelete(questionId);
-    setDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (questionToDelete) {
-      handleDeleteQuestion(questionToDelete);
-      setDeleteDialogOpen(false);
-      setQuestionToDelete(null);
-    }
-  };
 
   return (
     <div className="flex gap-4 h-[calc(100vh-120px)] w-full">
