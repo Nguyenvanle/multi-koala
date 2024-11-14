@@ -105,6 +105,7 @@ public class QuizResultService {
                 .build();
     }
 
+    @Transactional
     private void saveQuizResultAndAnswers(QuizResult quizResult, List<StudentAnswer> studentAnswers) {
         if (quizResult.getStudent() != null) {
             if (quizResult.isPassed())

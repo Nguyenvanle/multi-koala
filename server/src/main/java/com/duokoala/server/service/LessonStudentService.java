@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,6 +53,7 @@ public class LessonStudentService {
         return lessonStudents.stream().map(lessonStudentMapper::toLessonStudentResponse).collect(Collectors.toList());
     }
 
+    @Transactional
     public void updateMyProcessLesson(Lesson lesson) {
         Student student = authenticationService.getAuthenticatedStudent();
         LessonStudent lessonStudent = lessonStudentRepository.findByStudentAndLesson(student, lesson)
@@ -67,6 +69,7 @@ public class LessonStudentService {
         lessonStudentRepository.save(lessonStudent);
     }
 
+    @Transactional
     public void updateProcessCourse(Course course) {
         Student student = authenticationService.getAuthenticatedStudent();
         EnrollCourse enrollCourse = enrollCourseRepository.findByStudentAndCourse(student, course)
@@ -75,6 +78,7 @@ public class LessonStudentService {
         int numberOfPassLesson = lessonStudentRepository
                 .countByStudentAndLessonCourseAndProcess(student, course, 1);
         enrollCourse.setProcess((float) numberOfPassLesson / numberOfLesson);
+        enrollCourse.setLastUpdate(LocalDateTime.now());
         enrollCourseRepository.save(enrollCourse);
     }
 
