@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
 @EnableWebSecurity
 @EnableMethodSecurity
 //handle security endpoint and allow permission
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
     private final String[] PUBLIC_ENDPOINTS = {"/**"};
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
