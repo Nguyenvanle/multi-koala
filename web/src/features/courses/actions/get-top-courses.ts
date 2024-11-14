@@ -3,14 +3,14 @@
 import { courseService } from "@/features/courses/services/courses";
 import { cookies } from "next/headers";
 
-export async function getTopCourses() {
+export async function getTopCourses(months: string) {
   const accessToken = cookies().get("token")?.value;
 
   if (!accessToken) {
     throw new Error("No token in cookies");
   }
 
-  const res = await courseService.getMyPerformingCourses(accessToken);
+  const res = await courseService.getMyPerformingCourses(accessToken, months);
 
   if (!res.result?.result) {
     throw new Error(

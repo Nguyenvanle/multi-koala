@@ -16,8 +16,9 @@ export default function useMyPerformingCourses(
 ) {
   const { pageSize = 10, initialPage = 1 } = options;
   const [currentPage, setCurrentPage] = useState(initialPage);
+  const [months, setMonths] = useState("3");
   const { data, error, isLoading } = useSWR(`get-top-courses`, () =>
-    getTopCourses()
+    getTopCourses(months)
   );
 
   // Sắp xếp các khóa học theo income giảm dần
@@ -81,5 +82,8 @@ export default function useMyPerformingCourses(
     },
     isLoading: isLoading || error,
     error: error,
+
+    months,
+    setMonths,
   };
 }

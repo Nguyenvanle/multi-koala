@@ -14,20 +14,36 @@ import {
   PaginationControlProps,
   PaginationProps,
 } from "@/features/pagination/types/pagination";
-import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 interface DashboardTopPerformingCoursesProps {
   topCourses: MyPerformingCoursesBodyType[] | undefined;
   controls: PaginationControlProps;
   pagination: PaginationProps;
+  months: string;
+  setMonths: (months: string) => void;
 }
 
 export default function DashboardTopPerformingCourses({
   topCourses,
   controls,
   pagination,
+  months,
+  setMonths,
 }: DashboardTopPerformingCoursesProps) {
+  const [value, setValue] = useState("1");
+
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between gap-2 space-y-0">
@@ -35,12 +51,24 @@ export default function DashboardTopPerformingCourses({
           <CardTitle>Top Performing Courses</CardTitle>
           <CardDescription>Your highest earning course.</CardDescription>
         </div>
-        <Link href="/dashboard/courses">
-          <Button variant="outline" size="sm">
-            <span className="hidden md:flex">View More</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </Button>
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" onClick={() => setMonths("6")}>
+              <span className="hidden md:flex">Select period</span>
+              <ChevronDown className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuRadioGroup value={value} onValueChange={setValue}>
+              <DropdownMenuRadioItem value="1">1 month</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="3">3 months</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="6">6 months</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="12">
+                12 months
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </CardHeader>
       <CardContent className="flex flex-col gap-8 min-h-[412px]">
         {topCourses?.length === 0 || !topCourses ? (

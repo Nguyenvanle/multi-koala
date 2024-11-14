@@ -43,6 +43,8 @@ export default function useDashboardHome() {
     isLoading: topCoursesLoading,
     pagination: topPagination,
     paginationControls: topPaginationControls,
+    months,
+    setMonths,
   } = useMyPerformingCourses({
     pageSize: 6,
     initialPage: 1,
@@ -78,5 +80,8 @@ export default function useDashboardHome() {
 
     topPagination,
     topPaginationControls,
+
+    months,
+    setMonths,
   };
 }
