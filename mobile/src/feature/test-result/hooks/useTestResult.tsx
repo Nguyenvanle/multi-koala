@@ -5,7 +5,6 @@ import {
   TestResultBody,
 } from "../types/test-result";
 import { useGlobalSearchParams } from "expo-router";
-import { useTestDetails } from "../../test/hooks/useTestDetails";
 import { testResultService } from "./../services/test-result";
 
 const useTestResult = (testId) => {

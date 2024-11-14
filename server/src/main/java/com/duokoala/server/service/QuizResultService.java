@@ -33,6 +33,7 @@ public class QuizResultService {
     AnswerRepository answerRepository;
     QuestionService questionService;
     StudentAnswerRepository studentAnswerRepository;
+    LessonStudentService lessonStudentService;
 
     @Transactional
     public QuizResultResponse submitQuiz(String testId, QuizResultSubmitRequest request) {
@@ -57,13 +58,10 @@ public class QuizResultService {
                 .test(test)
                 .dateTaken(LocalDateTime.now())
                 .build();
-
-        log.info(correctAnswers + ">=" + test.getPassingScore());
-        log.info("isPassed: " + quizResult.isPassed());
         try {
             quizResult.setStudent(authenticationService.getAuthenticatedStudent());
         } catch (Exception e) {
-            // Handle exception or log it
+            //nothing to do
         }
         return quizResult;
     }
@@ -109,10 +107,13 @@ public class QuizResultService {
 
     private void saveQuizResultAndAnswers(QuizResult quizResult, List<StudentAnswer> studentAnswers) {
         if (quizResult.getStudent() != null) {
-            quizResultRepository.save(quizResult);
+            if (quizResult.isPassed())
+                quizResultRepository.save(quizResult);
             studentAnswerRepository.saveAll(studentAnswers);
+            lessonStudentService.updateMyProcessLesson(quizResult.getTest().getLesson());
         }
     }
+
 
     private List<QuestionSubmitResponse> createQuestionResponses(List<QuestionSubmitRequest> questionList) {
         return questionList.stream().map(questionService::convertToSubmitResponse).toList();
@@ -123,18 +124,6 @@ public class QuizResultService {
         response.setQuestions(questionResponses);
         return response;
     }
-
-//    public QuizResultResponse create(
-//            String testId,
-//            QuizResultCreateRequest request) {
-//        QuizResult quizResult = quizResultMapper.toQuizResult(request);
-//        quizResult.setTotalQuestion(questionRepository.countQuestionsByTestId(testId));
-//        quizResult.setDateTaken(LocalDateTime.now());
-//        quizResult.setStudent(authenticationService.getAuthenticatedStudent());
-//        quizResult.setTest(testRepository.findById(testId)
-//                .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
-//        return quizResultMapper.toQuizResultResponse(quizResultRepository.save(quizResult));
-//    }
 
     public QuizResultResponse getQuizResultResponse(String quizResultId) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId)

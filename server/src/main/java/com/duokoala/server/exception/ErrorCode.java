@@ -56,6 +56,7 @@ public enum ErrorCode {
     REQUEST_DISCOUNT_NOT_FOUND(404, "Not found: Request discount does not exist", HttpStatus.NOT_FOUND),
     OTP_EXPIRED(404, "OTP is expired", HttpStatus.NOT_FOUND),
     ANSWER_NOT_FOUND(404, "Not Found: Answer does not exist", HttpStatus.NOT_FOUND),
+    STUDENT_LESSON_NOT_FOUND(404, "Not found: Student for Lesson does not exist", HttpStatus.NOT_FOUND),
 
     UNAUTHENTICATED(401, "Unauthorized: Authentication is required", HttpStatus.UNAUTHORIZED),
     TOKEN_INVALID(401, "Invalid token", HttpStatus.UNAUTHORIZED),

@@ -4,32 +4,51 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Colors } from "@/src/constants/Colors";
 import CircleStyle from "../front-end/CircleStyle";
 import { button, text } from "@/src/constants/Styles";
-import { Link, router, useGlobalSearchParams } from "expo-router";
+import { Link, router } from "expo-router";
 import * as Progress from "react-native-progress";
 import Feather from "@expo/vector-icons/Feather";
 import Button from "../../atoms/button";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { useEnrolled } from "@/src/feature/course/hooks/useEnrrolled";
 import { EnrolledBody } from "@/src/feature/course/types/course-enrolled";
+import { UserContext } from "@/src/context/user/userContext";
 
 interface HeaderUserProps {
   courseId: string;
 }
 
 const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
+  const { user } = useContext(UserContext); // Sử dụng UserContext
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-  const { user } = useUser();
-  const { enrolled, errorMessage, loading } = useEnrolled(courseIdString);
+  const { loadingUser: userLoading, isRefreshing, refreshUser } = useUser();
+  const {
+    enrolled,
+    errorMessage,
+    loading: enrolledLoading,
+  } = useEnrolled(courseIdString);
   const [nextCourse, setNextCourse] = useState<EnrolledBody | null>(null);
 
   useEffect(() => {
-    checkCompleted(); // Gọi hàm kiểm tra khi dữ liệu enrolled thay đổi
-  }, [enrolled]);
+    refreshUser(); // Gọi lại hàm refreshUser để cập nhật thông tin người dùng
+    checkCompleted();
+  }, [enrolled]); // Nếu enrolled có thay đổi, refreshUser sẽ được gọi
+
+  if (userLoading || isRefreshing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.teal_dark} />
+        <Text style={styles.loadingText}>
+          {userLoading ? "Loading..." : "Updating..."}
+        </Text>
+      </View>
+    );
+  }
 
   const checkCompleted = () => {
     for (let i = 0; i < enrolled?.length; i++) {
@@ -46,11 +65,13 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
       }
     }
   };
-
-  if (loading) {
+  if (userLoading || isRefreshing) {
     return (
-      <View style={{ paddingTop: 16, justifyContent: "center" }}>
-        <ActivityIndicator size={"large"} color={Colors.teal_dark} />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.teal_dark} />
+        <Text style={styles.loadingText}>
+          {userLoading ? "Loading..." : "Updating..."}
+        </Text>
       </View>
     );
   }
@@ -233,3 +254,42 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
 };
 
 export default HeaderUser;
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 240,
+    padding: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: Colors.teal_dark,
+  },
+  userInfoContainer: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    padding: 8,
+    width: 364,
+  },
+  userTextContainer: {
+    justifyContent: "center",
+    alignItems: "baseline",
+    flexDirection: "column",
+  },
+  userImage: {
+    width: 75,
+    height: 75,
+    borderRadius: 35,
+    justifyContent: "flex-end",
+  },
+  // ... other styles
+});

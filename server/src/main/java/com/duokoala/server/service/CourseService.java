@@ -5,6 +5,10 @@ import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.courseResponse.*;
 import com.duokoala.server.entity.Course;
+import com.duokoala.server.entity.EnrollCourse;
+import com.duokoala.server.entity.Field;
+import com.duokoala.server.entity.Type;
+import com.duokoala.server.entity.user.Student;
 import com.duokoala.server.enums.courseEnums.Level;
 import com.duokoala.server.enums.courseEnums.Status;
 import com.duokoala.server.exception.AppException;
@@ -22,18 +26,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static com.duokoala.server.enums.courseEnums.PerformanceCriteria.calculatePerformanceScore;
+import static com.duokoala.server.enums.courseEnums.PerformanceCriteria.calculateRelevanceTypeFiledScore;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseService {
+    private final RecommendRepository recommendRepository;
     private final ReviewRepository reviewRepository;
     CourseRepository courseRepository;
     CourseMapper courseMapper;
@@ -68,9 +71,6 @@ public class CourseService {
         course.setTypes(new HashSet<>(types));
         var fields = fieldRepository.findAllById(request.getFields());
         course.setFields(new HashSet<>(fields));
-//        Image image = new Image();
-//        image.setImageUrl(request.getImageUrl());
-//        course.setImage(image);
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
@@ -203,6 +203,44 @@ public class CourseService {
                 .toList();
     }
 
+    public List<CourseResponse> recommendCourses() {
+        Student student = authenticationService.getAuthenticatedStudent();
+
+        List<EnrollCourse> enrollCourses = enrollCourseRepository
+                .findTop3ByStudentOrderByEnrollAtDesc(student);
+
+        List<Course> courses = enrollCourses.stream()
+                .map(EnrollCourse::getCourse).toList();
+
+        List<Type> types = courses.stream()
+                .map(Course::getTypes)
+                .flatMap(Set::stream)
+                .toList();
+
+        List<Field> fields = courses.stream()
+                .map(Course::getFields)
+                .flatMap(Set::stream)
+                .toList();
+
+        return courseRepository.findAll().stream()
+                .filter(course -> !course.isDeleted())
+                .map(this::getPerformingCourse)
+                .sorted((c1, c2) -> Double.compare(calculateScore(c2), calculateScore(c1)))
+                .map(PerformingCourseResponse::getCourseId)
+                .map(courseRepository::findById)
+                .filter(Optional::isPresent)
+                .sorted((c1, c2) -> {
+                    Course course1 = c1.get();
+                    Course course2 = c2.get();
+                    return Double.compare(calculateRelevanceTypeFiledScore(course2, types, fields),
+                            calculateRelevanceTypeFiledScore(course1, types, fields));
+                })
+                .map(Optional::get)
+                .limit(10)
+                .map(courseMapper::toCourseResponse)
+                .toList();
+    }
+
     public double calculateScore(PerformingCourseResponse performingCourse) {
         return calculatePerformanceScore(
                 performingCourse.getNumberOfReviews(),
@@ -217,5 +255,11 @@ public class CourseService {
                 enrollCourseRepository.findMaxCountEnrollCourseGroupByCourseId(),
                 0,
                 courseRepository.getMaxPrice());
+    }
+
+    public List<Course> convertPerformingToCourses(List<PerformingCourseResponse> performingCourses) {
+        List<String> courseIds = performingCourses.stream()
+                .map(PerformingCourseResponse::getCourseId).toList();
+        return courseRepository.findAllById(courseIds);
     }
 }

@@ -6,6 +6,11 @@ export type RoleBody = {
 
 export type RoleBodyList = RoleBody[];
 
+export type ImageBody = {
+  imageId: string;
+  imageUrl: string;
+};
+
 export type UserBody = {
   firstname: string;
   lastname: string;
@@ -34,4 +39,12 @@ export type UserListRes = {
   code: number;
   message: string;
   result: UserListBody;
+};
+
+export type UserPost = {
+  firstname: string;
+  lastname: string;
+  userBirth: string;
+  userBio: string;
+  userHometown: string;
 };

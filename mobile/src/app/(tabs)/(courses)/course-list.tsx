@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -17,16 +17,16 @@ import InProgressCourses from "@/src/feature/course/components/courses/progress-
 import FinishedCourses from "@/src/feature/course/components/courses/finished-courses/FinishedCourses";
 import HeaderUser from "@/src/components/molecules/user/HeaderUser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import useUser from "@/src/feature/user/hooks/useUser";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import FilterModal from "@/src/feature/course/components/filter/filterCourse";
+import { UserContext } from "@/src/context/user/userContext";
 
 const CourseList = (): React.JSX.Element => {
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { tab } = useLocalSearchParams();
   const [loading, setLoading] = useState(true);
-  const { user } = useUser();
+  const { user } = useContext(UserContext); // Sử dụng UserContext
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [isFilterVisible, setIsFilterVisible] = useState(false);

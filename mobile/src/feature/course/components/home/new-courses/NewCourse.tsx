@@ -14,9 +14,13 @@ import { useCourse } from "../../../hooks/useCourse";
 import useUser from "@/src/feature/user/hooks/useUser";
 import { CourseBody } from "../../../types/course";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
+import { useRecommendCourse } from "../../../hooks/useRecommendCourse";
+import { ResultBody } from "../../../types/recommend-course";
 
 const NewCourses = () => {
   const { course, loading, errorMessage } = useCourse();
+  const { recommend, errorMessageRecommend, loadingRecommend } =
+    useRecommendCourse();
   const { user } = useUser();
   const { enrolled } = useEnrolled();
 
@@ -27,6 +31,7 @@ const NewCourses = () => {
       </View>
     );
   }
+
   if (errorMessage) {
     return (
       <Text style={{ ...text.large, color: Colors.red, fontWeight: "400" }}>
@@ -36,7 +41,6 @@ const NewCourses = () => {
   }
 
   const getFilteredCourses = (courses, enrolled, user) => {
-    // Lọc danh sách khóa học để loại bỏ những khóa học đã được đăng ký
     const enrolledCourseIds = Array.isArray(enrolled)
       ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
       : [];
@@ -45,16 +49,13 @@ const NewCourses = () => {
       return !enrolledCourseIds.includes(item.courseId);
     });
 
-    // Số lượng khóa học hiển thị dựa trên việc người dùng có tồn tại hay không
-    const numberOfCoursesToShow = user ? 10 : 5; // Nếu có người dùng, hiển thị 10 khóa học, ngược lại hiển thị 5 khóa học
-
-    // Lấy khóa học theo số lượng đã xác định
+    const numberOfCoursesToShow = user ? 10 : 5;
     return filteredCourses.slice(0, numberOfCoursesToShow);
   };
-  // Gọi hàm getFilteredCourses với các tham số
+
   const coursesToShow = getFilteredCourses(course, enrolled, user);
 
-  const renderCourseItem = ({ item }: { item: CourseBody }) => (
+  const renderCourseItem = ({ item }: { item: CourseBody | ResultBody }) => (
     <View style={styles.container}>
       <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>
@@ -80,7 +81,7 @@ const NewCourses = () => {
       {user ? (
         <View style={{ height: 230 }}>
           <FlatList
-            data={coursesToShow}
+            data={Array.isArray(recommend) ? recommend : []} // Ensure recommend is an array
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
             showsVerticalScrollIndicator={false}
@@ -102,7 +103,6 @@ const NewCourses = () => {
 };
 
 const styles = StyleSheet.create({
-  // Các style đã được giữ nguyên
   price: {
     ...text.large,
     color: Colors.teal_dark,

@@ -1,17 +1,11 @@
-import {
-  View,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
-  StyleSheet,
-} from "react-native";
-import React, { useState } from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
 import { text } from "@/src/constants/Styles";
 import { Colors } from "@/src/constants/Colors";
 import useRegisterForm from "../../../hooks/useRegisterForm";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const FormSigUp = () => {
+const FormSignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const {
     loading,
@@ -31,16 +25,45 @@ const FormSigUp = () => {
     setErrorMessage,
   } = useRegisterForm();
 
+  useEffect(() => {
+    const getEmailFromStorage = async () => {
+      try {
+        const storedEmail = await AsyncStorage.getItem("userEmail");
+        if (storedEmail) {
+          setEmail(storedEmail);
+        }
+      } catch (error) {
+        console.error("Error fetching email from AsyncStorage", error);
+      }
+    };
+
+    getEmailFromStorage();
+  }, []);
+
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 0, justifyContent: "center", alignItems: "center" }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100} // Điều chỉnh khoảng cách nếu cần
+    <View
+      style={{
+        flex: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 24,
+      }}
     >
       <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>Email</Text>
       </View>
-      <Text style={{ ...text.p, fontWeight: "500" }}>{email}</Text>
+      <TextInput
+        style={{
+          ...text.large,
+          fontWeight: "500",
+          width: 350,
+          marginVertical: 10,
+          paddingLeft: 10,
+          color: Colors.teal_dark,
+        }}
+        value={email}
+        editable={false}
+      />
       <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>Username</Text>
       </View>
@@ -93,11 +116,11 @@ const FormSigUp = () => {
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
-export default FormSigUp;
+export default FormSignUp;
 
 export const styles = StyleSheet.create({
   input: {

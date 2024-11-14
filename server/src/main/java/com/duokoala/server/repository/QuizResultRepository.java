@@ -11,16 +11,27 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-    public interface QuizResultRepository extends JpaRepository<QuizResult,String> {
+public interface QuizResultRepository extends JpaRepository<QuizResult, String> {
     List<QuizResult> findAllByStudent(Student student);
+
     List<QuizResult> findAllByStudentAndTestOrderByDateTakenDesc(Student student, Test test);
+
     @Query(nativeQuery = true,
-value = "select qr.* " +
-        "from quiz_result qr " +
-        "join test t ON qr.test_test_id = t.test_id " +
-        "join lesson l ON t.lesson_lesson_id = l.lesson_id " +
-        "join course c ON l.course_course_id = c.course_id " +
-        "where c.uploaded_by_teacher_user_id = :teacherId " +
-        "ORDER BY qr.date_taken DESC")
-List<QuizResult> findAllWithDetails(@Param("teacherId") String teacherId);
+            value = "select qr.* " +
+                    "from quiz_result qr " +
+                    "join test t ON qr.test_test_id = t.test_id " +
+                    "join lesson l ON t.lesson_lesson_id = l.lesson_id " +
+                    "join course c ON l.course_course_id = c.course_id " +
+                    "where c.uploaded_by_teacher_user_id = :teacherId " +
+                    "ORDER BY qr.date_taken DESC")
+    List<QuizResult> findAllWithDetails(@Param("teacherId") String teacherId);
+
+    @Query(nativeQuery = true,
+            value = "select count(DISTINCT(test_test_id)) " +
+                    "from quiz_result qr " +
+                    "where qr.is_passed = TRUE " +
+                    "AND qr.student_user_id = :studentId " +
+                    "AND qr.test_test_id " +
+                    "IN (SELECT test_id FROM test WHERE lesson_lesson_id = :lessonId)")
+    int countPassedTestInLesson(@Param("studentId") String studentId, @Param("lessonId") String lessonId);
 }
