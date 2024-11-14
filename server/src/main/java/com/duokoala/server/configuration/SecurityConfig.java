@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,15 +40,24 @@ public class SecurityConfig {
                         jwtConfigurer.decoder(customJwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);//avoid attacked web
-        httpSecurity.cors(corsConfig -> corsConfig.configurationSource(request -> {
-            CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.addAllowedOrigin("http://localhost:3000"); //cấu hình cho phép truy cập từ domain này
-            corsConfiguration.addAllowedOrigin("http://localhost:8081"); //cấu hình cho phép truy cập từ domain này            corsConfiguration.addAllowedMethod("*"); //cấu hình cho phép sử dụng method nào
-            corsConfiguration.addAllowedHeader("*"); //cấu hình cho phép sử dụng header nào
-            corsConfiguration.setAllowCredentials(true); //cấu hình cho phép sử dụng credentials
-            return corsConfiguration;
-        })); //cấu hình cors
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource())); // Apply CORS
         return httpSecurity.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("http://localhost:3000"); // Allow specific domain
+        corsConfiguration.addAllowedOrigin("http://localhost:8081"); // Allow specific domain
+        corsConfiguration.addAllowedMethod("GET"); // Allow specific methods
+        corsConfiguration.addAllowedMethod("POST");
+        corsConfiguration.addAllowedMethod("PUT");
+        corsConfiguration.addAllowedMethod("DELETE");
+        corsConfiguration.addAllowedHeader("*"); // Allow all headers
+        corsConfiguration.setAllowCredentials(true); // Allow credentials
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 
     @Bean
