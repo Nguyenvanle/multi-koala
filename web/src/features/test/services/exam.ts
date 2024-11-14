@@ -11,4 +11,8 @@ export const examService = {
       data
     );
   },
+
+  async update(testId: string, data: ExamAddFormBodyType) {
+    return await apiService.put<ExamAddFormResType>(`/tests/${testId}`, data);
+  },
 };

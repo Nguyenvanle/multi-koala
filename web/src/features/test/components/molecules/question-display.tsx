@@ -11,6 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AnswerEditor } from "@/features/test/components/atoms/answer-edit";
+import { ImageEmptyState } from "@/features/test/components/atoms/image-empty";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -71,7 +72,7 @@ export function QuestionDisplay({
         <Label>
           <CardDescription>Upload image</CardDescription>
         </Label>
-        {question.image && (
+        {question.image ? (
           <Image
             src={question.image.imageUrl}
             alt="Question"
@@ -79,6 +80,8 @@ export function QuestionDisplay({
             width={700}
             height={400}
           />
+        ) : (
+          <ImageEmptyState />
         )}
       </div>
       <div className="flex flex-col gap-2">

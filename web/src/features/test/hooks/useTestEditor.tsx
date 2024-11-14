@@ -2,14 +2,30 @@ import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
-import { TestBodyType } from "@/features/test/types/test-result";
+import { TestBody, TestBodyType } from "@/features/test/types/test-result";
+import { examService } from "@/features/test/services/exam";
 
-// Mock function to simulate saving data
 export const saveTestData = async (data: TestBodyType) => {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  console.log("Saving test data:", data);
-  return { success: true };
+  try {
+    const validate = TestBody.safeParse(data);
+    if (validate.success) {
+      const res = await examService.update(data.testId, data);
+
+      if (res.code === 200) {
+        console.log("Saving test data:", res);
+        return { success: true };
+      } else {
+        console.error("Fail to save test data:", res);
+        return { success: false };
+      }
+    } else {
+      console.log("Validation error:", validate.error);
+      return { success: false };
+    }
+  } catch (error) {
+    console.error("Error saving test data:", error);
+    return { success: false };
+  }
 };
 
 export default function useTestEditor(initialTestData: TestBodyType) {
