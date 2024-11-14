@@ -40,8 +40,8 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);//avoid attacked web
         httpSecurity.cors(corsConfig -> corsConfig.configurationSource(request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.addAllowedOrigin("http://localhost:3000"); //cấu hình cho phép truy cập từ domain này
-            corsConfiguration.addAllowedOrigin("http://localhost:8081"); //cấu hình cho phép truy cập từ domain này            corsConfiguration.addAllowedMethod("*"); //cấu hình cho phép sử dụng method nào
+            corsConfiguration.addAllowedOrigin("*"); //cấu hình cho phép truy cập từ domain nào
+            corsConfiguration.addAllowedMethod("*"); //cấu hình cho phép sử dụng method nào
             corsConfiguration.addAllowedHeader("*"); //cấu hình cho phép sử dụng header nào
             corsConfiguration.setAllowCredentials(true); //cấu hình cho phép sử dụng credentials
             return corsConfiguration;
