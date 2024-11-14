@@ -1,4 +1,5 @@
 package com.duokoala.server.entity;
+
 import com.duokoala.server.entity.user.Student;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,7 @@ public class EnrollCourse {
     @GeneratedValue(strategy = GenerationType.UUID)
     String enrollCourseId;
     LocalDateTime enrollAt;
+    LocalDateTime lastUpdate;
     float process;
     @ManyToOne
     Student student;
