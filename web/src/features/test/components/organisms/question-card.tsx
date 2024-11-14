@@ -4,7 +4,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { cn } from "@/lib/utils";
 import { AnswerBodyType } from "@/features/test/types/answer";
-import { QuestionEditor } from "@/features/test/components/atoms/question-edit";
+import { QuestionEditor } from "@/features/test/components/molecules/question-edit";
 import { QuestionDisplay } from "@/features/test/components/molecules/question-display";
 
 interface QuestionCardProps {

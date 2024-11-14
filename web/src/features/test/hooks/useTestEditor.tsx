@@ -7,6 +7,7 @@ import { examService } from "@/features/test/services/exam";
 
 export const saveTestData = async (data: TestBodyType) => {
   try {
+    console.log(data);
     const validate = TestBody.safeParse(data);
     if (validate.success) {
       const res = await examService.update(data.testId, data);

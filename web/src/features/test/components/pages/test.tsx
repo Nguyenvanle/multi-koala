@@ -27,9 +27,10 @@ export default function TestEditor({
     handleSaveTest,
     scrollToQuestion,
     handleUpdateTestSettings,
+
     settingsOpen,
-    setSettingsOpen,
     deleteDialogOpen,
+    setSettingsOpen,
     setDeleteDialogOpen,
     onDeleteQuestion,
     confirmDelete,
