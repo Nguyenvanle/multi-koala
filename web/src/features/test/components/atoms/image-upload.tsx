@@ -17,9 +17,7 @@ export default function QuestionImageUpload({
   onImageChange,
 }: {
   question: QuestionBodyType;
-  onImageChange: (
-    imageData: { imageId: string; imageUrl: string } | null
-  ) => void;
+  onImageChange: (imageData: File | null) => void;
 }) {
   const [preview, setPreview] = useState<string | null>(
     question.image?.imageUrl || null
@@ -48,15 +46,11 @@ export default function QuestionImageUpload({
 
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        // Here you would typically upload the file to your server
-        // For now, we'll use a mock upload that returns a URL
         try {
-          // Mock upload - replace with actual upload logic
-          const imageId = Date.now().toString();
           const imageUrl = URL.createObjectURL(file);
 
           setPreview(imageUrl);
-          onImageChange({ imageId, imageUrl });
+          onImageChange(file);
         } catch (error) {
           console.error("Error uploading image:", error);
         }

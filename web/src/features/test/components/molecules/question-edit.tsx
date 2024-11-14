@@ -6,6 +6,7 @@ import QuestionImageUpload from "@/features/test/components/atoms/image-upload";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { Save, X } from "lucide-react";
 import { useState } from "react";
+import { set } from "zod";
 
 export function QuestionEditor({
   question,
@@ -18,17 +19,17 @@ export function QuestionEditor({
 }) {
   const [editedQuestion, setEditedQuestion] =
     useState<QuestionBodyType>(question);
+  const [image, setImage] = useState<File | null>(null);
 
-  const handleImageChange = (
-    imageData: { imageId: string; imageUrl: string } | null
-  ) => {
-    setEditedQuestion({
-      ...editedQuestion,
-      image: imageData,
-    });
+  const handleImageChange = async (imageData: File | null) => {
+    setImage(imageData);
   };
 
   const handleSave = () => {
+    const formData = new FormData();
+    formData.append("file", image || "");
+    console.log(formData.get("file"));
+
     onSave(editedQuestion);
   };
 
