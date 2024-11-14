@@ -14,7 +14,7 @@ import {
   PaginationControlProps,
   PaginationProps,
 } from "@/features/pagination/types/pagination";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ClipboardX } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSWRConfig } from "swr";
 
 interface DashboardTopPerformingCoursesProps {
   topCourses: MyPerformingCoursesBodyType[] | undefined;
@@ -35,6 +36,21 @@ interface DashboardTopPerformingCoursesProps {
   setMonths: (months: string) => void;
 }
 
+export const EmptyState = () => (
+  <Card className="w-full">
+    <CardContent className="flex flex-col items-center justify-center py-12">
+      <ClipboardX className="h-16 w-16 text-gray-400 mb-4" />
+      <h3 className="text-xl text-center font-semibold text-gray-700 mb-2">
+        No Course Available On Around This Time
+      </h3>
+      <p className="text-gray-500 text-center">
+        There is currently no course data to display. Please check another time
+        or create a new course.
+      </p>
+    </CardContent>
+  </Card>
+);
+
 export default function DashboardTopPerformingCourses({
   topCourses,
   controls,
@@ -42,7 +58,15 @@ export default function DashboardTopPerformingCourses({
   months,
   setMonths,
 }: DashboardTopPerformingCoursesProps) {
-  const [value, setValue] = useState("1");
+  const { mutate } = useSWRConfig();
+
+  useEffect(() => {
+    const fetchTopCourses = async () => {
+      const res = await mutate(`get-top-courses`);
+      console.log(res);
+    };
+    fetchTopCourses();
+  }, [mutate, months]);
 
   return (
     <Card>
@@ -53,13 +77,13 @@ export default function DashboardTopPerformingCourses({
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" onClick={() => setMonths("6")}>
-              <span className="hidden md:flex">Select period</span>
+            <Button variant="outline" size="sm">
+              <span className="hidden md:flex">{months} month</span>
               <ChevronDown className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuRadioGroup value={value} onValueChange={setValue}>
+            <DropdownMenuRadioGroup value={months} onValueChange={setMonths}>
               <DropdownMenuRadioItem value="1">1 month</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="3">3 months</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="6">6 months</DropdownMenuRadioItem>
@@ -72,10 +96,7 @@ export default function DashboardTopPerformingCourses({
       </CardHeader>
       <CardContent className="flex flex-col gap-8 min-h-[412px]">
         {topCourses?.length === 0 || !topCourses ? (
-          <p className="text-sm text-muted-foreground font-medium leading-none">
-            You don&#39;t have any courses yet. Create a new course to see
-            updated information
-          </p>
+          <EmptyState />
         ) : (
           topCourses.map((course, index) => (
             <div key={index} className="flex items-center gap-4">
