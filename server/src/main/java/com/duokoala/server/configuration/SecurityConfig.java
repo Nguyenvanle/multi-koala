@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
 @EnableWebSecurity
 @EnableMethodSecurity
 //handle security endpoint and allow permission
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
     private final String[] PUBLIC_ENDPOINTS = {"/**"};
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -40,8 +41,8 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);//avoid attacked web
         httpSecurity.cors(corsConfig -> corsConfig.configurationSource(request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.addAllowedOrigin("http://localhost:3000"); //cấu hình cho phép truy cập từ domain này
-            corsConfiguration.addAllowedOrigin("http://localhost:8081"); //cấu hình cho phép truy cập từ domain này            corsConfiguration.addAllowedMethod("*"); //cấu hình cho phép sử dụng method nào
+            corsConfiguration.addAllowedOrigin("*"); //cấu hình cho phép truy cập từ domain nào
+            corsConfiguration.addAllowedMethod("*"); //cấu hình cho phép sử dụng method nào
             corsConfiguration.addAllowedHeader("*"); //cấu hình cho phép sử dụng header nào
             corsConfiguration.setAllowCredentials(true); //cấu hình cho phép sử dụng credentials
             return corsConfiguration;
