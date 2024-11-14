@@ -24,7 +24,6 @@ import java.util.Map;
 //handle security endpoint and allow permission
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {"/**"};
-
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -32,20 +31,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request -> //config endpoint
-                request.requestMatchers(/*HttpMethod.POST,*/PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated());
+                        request.requestMatchers(/*HttpMethod.POST,*/PUBLIC_ENDPOINTS).permitAll()
+                                .anyRequest().authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 ->//config jwt
                 oauth2.jwt(jwtConfigurer ->
                         jwtConfigurer.decoder(customJwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);//avoid attacked web
-
-        httpSecurity.cors(cors -> cors. //config cors //allow access to sources
-                configurationSource(request ->
-                        new CorsConfiguration().applyPermitDefaultValues()));
-
+        httpSecurity.cors(corsConfig -> corsConfig.configurationSource(request -> {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.addAllowedOrigin("*"); //cấu hình cho phép truy cập từ domain nào
+            corsConfiguration.addAllowedMethod("*"); //cấu hình cho phép sử dụng method nào
+            corsConfiguration.addAllowedHeader("*"); //cấu hình cho phép sử dụng header nào
+            corsConfiguration.setAllowCredentials(true); //cấu hình cho phép sử dụng credentials
+            return corsConfiguration;
+        })); //cấu hình cors
         return httpSecurity.build();
     }
+
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -62,7 +65,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public Cloudinary getCloudinary(){
+    public Cloudinary getCloudinary() {
         Map config = new HashMap();
         config.put("cloud_name", "dkz1esxyw");
         config.put("api_key", "137167157615336");
