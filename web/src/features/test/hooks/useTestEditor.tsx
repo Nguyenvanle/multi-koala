@@ -3,22 +3,14 @@ import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { TestBody, TestBodyType } from "@/features/test/types/test-result";
-import { examService } from "@/features/test/services/exam";
+import { putExam } from "@/features/test/actions/put-exam";
 
 export const saveTestData = async (data: TestBodyType) => {
   try {
     console.log(data);
     const validate = TestBody.safeParse(data);
     if (validate.success) {
-      const res = await examService.update(data.testId, data);
-
-      if (res.code === 200) {
-        console.log("Saving test data:", res);
-        return { success: true };
-      } else {
-        console.error("Fail to save test data:", res);
-        return { success: false };
-      }
+      return await putExam(data);
     } else {
       console.log("Validation error:", validate.error);
       return { success: false };
@@ -37,7 +29,7 @@ export default function useTestEditor(initialTestData: TestBodyType) {
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(
     testData.questions[0]?.questionId || null
   );
-  
+
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);

@@ -52,6 +52,7 @@ export function QuestionDisplay({
           <ImageEmptyState />
         )}
       </div>
+
       <div className="flex flex-col gap-2">
         <Label>
           <CardDescription>Question content</CardDescription>
