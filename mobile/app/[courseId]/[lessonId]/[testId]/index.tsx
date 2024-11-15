@@ -182,14 +182,16 @@ const Test = () => {
   };
 
   const checkCompleted = () => {
-    for (let i = 0; i < lesson?.length; i++) {
-      const latestCourse = lesson[i].lesson.course.courseId;
-      if (latestCourse === courseIdString) {
-        // Kiểm tra nếu khóa học hiện tại hoàn thành
-        // Kiểm tra nếu có khóa học tiếp theo
-        setCourseCompleted(lesson[i].process); // Cập nhật khóa học tiếp theo
+    if (lesson) {
+      for (let i = 0; i < lesson?.length; i++) {
+        const latestCourse = lesson[i].lesson.course.courseId;
+        if (latestCourse === courseIdString) {
+          // Kiểm tra nếu khóa học hiện tại hoàn thành
+          // Kiểm tra nếu có khóa học tiếp theo
+          setCourseCompleted(lesson[i].process); // Cập nhật khóa học tiếp theo
+        }
+        break;
       }
-      break;
     }
   };
 
