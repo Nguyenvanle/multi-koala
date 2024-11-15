@@ -1,23 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { CardDescription, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AnswerEditor } from "@/features/test/components/atoms/answer-edit";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { ImageEmptyState } from "@/features/test/components/atoms/image-empty";
+import { AnswerDisplay } from "@/features/test/components/molecules/answer-display";
+import useQuestionDisplay from "@/features/test/hooks/useQuestionDisplay";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
-import { cn } from "@/lib/utils";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 
 export function QuestionDisplay({
   question,
@@ -30,42 +21,18 @@ export function QuestionDisplay({
   onAddAnswer: () => void;
   onRemoveAnswer: (answerId: string) => void;
 }) {
-  const [selectedAnswerId, setSelectedAnswerId] = useState<string>("");
-  const [openDialogId, setOpenDialogId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const correctAnswer = question.answers.find((a) => a.correct);
-    setSelectedAnswerId(correctAnswer?.answerId || "");
-  }, [question.answers]);
-
-  const handleAnswerSelect = (selectedAnswerId: string) => {
-    setSelectedAnswerId(selectedAnswerId);
-    question.answers.forEach((answer) => {
-      onAnswerEdit(answer.answerId, {
-        ...answer,
-        correct: answer.answerId === selectedAnswerId,
-      });
-    });
-  };
-
-  const handleAnswerEdit = (
-    answerId: string,
-    updatedAnswer: AnswerBodyType
-  ) => {
-    if (updatedAnswer.correct && answerId !== selectedAnswerId) {
-      question.answers.forEach((answer) => {
-        if (answer.answerId !== answerId) {
-          onAnswerEdit(answer.answerId, {
-            ...answer,
-            correct: false,
-          });
-        }
-      });
-      setSelectedAnswerId(answerId);
-    }
-    onAnswerEdit(answerId, updatedAnswer);
-    setOpenDialogId(null); // Đóng dialog sau khi edit
-  };
+  const {
+    selectedAnswerId,
+    handleAnswerSelect,
+    handleAnswerEdit,
+    openDialogId,
+    setOpenDialogId,
+  } = useQuestionDisplay({
+    question,
+    onAnswerEdit,
+    onAddAnswer,
+    onRemoveAnswer,
+  });
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -104,62 +71,14 @@ export function QuestionDisplay({
             onValueChange={handleAnswerSelect}
           >
             {question.answers.map((answer) => (
-              <div
+              <AnswerDisplay
                 key={answer.answerId}
-                className="flex items-center space-x-2 border-b p-2 hover:bg-muted"
-              >
-                <RadioGroupItem
-                  value={answer.answerId}
-                  id={answer.answerId}
-                  hidden
-                />
-                <div
-                  className={cn(
-                    "w-2 h-full rounded",
-                    answer.correct ? "bg-primary" : "bg-destructive"
-                  )}
-                />
-                <Label htmlFor={answer.answerId} className="flex-grow">
-                  {answer.answerDescription}
-                </Label>
-                <Dialog
-                  open={openDialogId === answer.answerId}
-                  onOpenChange={(open) => {
-                    setOpenDialogId(open ? answer.answerId : null);
-                  }}
-                >
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:bg-transparent"
-                    >
-                      <Pencil className="h-4 w-4 hover:text-primary" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Edit Answer</DialogTitle>
-                      <DialogDescription>
-                        Edit the description and correctness of the answer.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <AnswerEditor
-                      answer={answer}
-                      onSave={(updatedAnswer) =>
-                        handleAnswerEdit(answer.answerId, updatedAnswer)
-                      }
-                    />
-                  </DialogContent>
-                </Dialog>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onRemoveAnswer(answer.answerId)}
-                >
-                  <Trash2 className="h-4 w-4 hover:text-destructive" />
-                </Button>
-              </div>
+                answer={answer}
+                openDialogId={openDialogId}
+                setOpenDialogId={setOpenDialogId}
+                handleAnswerEdit={handleAnswerEdit}
+                onRemoveAnswer={onRemoveAnswer}
+              />
             ))}
           </RadioGroup>
         </div>
