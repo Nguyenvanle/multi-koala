@@ -12,13 +12,7 @@ export const examService = {
     );
   },
 
-  async update(
-    testId: string,
-    // data: ExamAddFormBodyType
-    data: {
-      testDescription: string;
-    }
-  ) {
+  async update(testId: string, data: ExamAddFormBodyType) {
     return await apiService.put<ExamAddFormResType>(`/tests/${testId}`, data);
   },
 };

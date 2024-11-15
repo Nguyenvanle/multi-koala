@@ -10,11 +10,7 @@ export const saveTestData = async (data: TestBodyType) => {
     console.log(data);
     const validate = TestBody.safeParse(data);
     if (validate.success) {
-      const uploadData = {
-        testDescription: data.testDescription,
-      };
-      console.log(uploadData);
-      const res = await examService.update(data.testId, uploadData);
+      const res = await examService.update(data.testId, data);
 
       if (res.code === 200) {
         console.log("Saving test data:", res);

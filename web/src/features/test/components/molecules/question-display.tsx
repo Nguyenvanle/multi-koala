@@ -14,6 +14,7 @@ import { AnswerEditor } from "@/features/test/components/atoms/answer-edit";
 import { ImageEmptyState } from "@/features/test/components/atoms/image-empty";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
+import { cn } from "@/lib/utils";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -107,7 +108,17 @@ export function QuestionDisplay({
                 key={answer.answerId}
                 className="flex items-center space-x-2 border-b p-2 hover:bg-muted"
               >
-                <RadioGroupItem value={answer.answerId} id={answer.answerId} />
+                <RadioGroupItem
+                  value={answer.answerId}
+                  id={answer.answerId}
+                  hidden
+                />
+                <div
+                  className={cn(
+                    "w-2 h-full rounded",
+                    answer.correct ? "bg-primary" : "bg-destructive"
+                  )}
+                />
                 <Label htmlFor={answer.answerId} className="flex-grow">
                   {answer.answerDescription}
                 </Label>
