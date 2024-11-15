@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Image,
 } from "react-native";
 import { useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
@@ -18,6 +19,9 @@ import { QuestionDetails } from "@/feature/test/types/test";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useTestResultList from "@/feature/test-result/hooks/useTestResultList";
 import { useDetails } from "@/feature/course/hooks/useDetails";
+import { useLesson } from "@/feature/lesson/hooks/useLesson";
+import { ResultBody } from "@/feature/lesson/types/lesson";
+import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -29,6 +33,7 @@ const Test = () => {
   const testIdString = testId as string;
   const { courseDetails, loading, errorMessageDetails } =
     useDetails(courseIdString);
+  const [courseCompleted, setCourseCompleted] = useState<number>();
 
   const { testList, errorMessageTest, loadingTest } =
     useTestList(lessonIdString);
@@ -73,6 +78,8 @@ const Test = () => {
   const [selectedResultAnswers, setSelectedResultAnswers] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [testHistory, setTestHistory] = useState({});
+  const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Check for token on component mount
   useEffect(() => {
@@ -174,6 +181,20 @@ const Test = () => {
     initializeAnswerSubmitList(selectedTest); // Khởi tạo lại danh sách câu trả lời
   };
 
+  const checkCompleted = () => {
+    if (lesson) {
+      for (let i = 0; i < lesson?.length; i++) {
+        const latestCourse = lesson[i].lesson.course.courseId;
+        if (latestCourse === courseIdString) {
+          // Kiểm tra nếu khóa học hiện tại hoàn thành
+          // Kiểm tra nếu có khóa học tiếp theo
+          setCourseCompleted(lesson[i].process); // Cập nhật khóa học tiếp theo
+        }
+        break;
+      }
+    }
+  };
+
   const renderAnswerItemForResult = useCallback(
     ({ item, questionId, index, userAnswerId }) => {
       if (!item) return null;
@@ -241,7 +262,7 @@ const Test = () => {
 
     return (
       <View style={{ marginBottom: 60 }}>
-        {courseDetails.process === 1 && (
+        {checkCompleted && (
           <TouchableOpacity
             style={{ ...styles.submitButton, marginBottom: 24 }}
             onPress={handleRetakeTest}
@@ -341,15 +362,32 @@ const Test = () => {
     }
   }, [selectedTest?.testId]);
 
+  const displayResult = hasToken ? testStudentResult : testResult;
+  const isLoading = hasToken ? loadingStudentResult : loadingResult;
+
+  // Thêm useEffect để theo dõi displayResult
+  useEffect(() => {
+    const currentResult = hasToken ? testStudentResult : testResult;
+    if (isSubmitting && currentResult) {
+      console.log("Display Result Updated:", currentResult.passed);
+      if (currentResult.passed === true) {
+        setResultMessage("Congratulations! You have passed the test.");
+      } else {
+        setResultMessage("Sorry! You failed the test.");
+      }
+      setIsSubmitting(false);
+    }
+  }, [testStudentResult, testResult, hasToken, isSubmitting]);
+
   const handleSubmit = async () => {
     try {
-      let result;
+      setIsSubmitting(true);
       if (hasToken) {
         setStudentAnswerList([]);
-        result = await onStudentSubmit();
+        await onStudentSubmit();
       } else {
         setGuestAnswerList([]);
-        result = await onSubmit();
+        await onSubmit();
       }
 
       // Lưu lịch sử làm bài
@@ -363,14 +401,9 @@ const Test = () => {
       // Xóa câu trả lời tạm thời
       await AsyncStorage.removeItem("selectedAnswers");
       setShowResult(true);
-
-      if (score >= 5) {
-        setResultMessage("Congratulations! You have passed the test.");
-      } else {
-        setResultMessage("Sorry! You failed the test.");
-      }
     } catch (error) {
       console.error("Error submitting answers:", error);
+      setIsSubmitting(false);
     }
   };
 
@@ -475,6 +508,17 @@ const Test = () => {
           >
             {item.questionDescription}
           </Text>
+          {item?.image !== null && (
+            <Image
+              source={{ uri: item?.image?.imageUrl }}
+              style={{
+                borderWidth: 1,
+                borderColor: Colors.grey,
+                height: 300,
+                borderRadius: 20,
+              }}
+            />
+          )}
           <FlatList
             data={item.answers}
             renderItem={(
@@ -561,9 +605,6 @@ const Test = () => {
     return "#ef4444"; // Màu cho score < 4.9
   };
 
-  const displayResult = hasToken ? testStudentResult : testResult;
-  const isLoading = hasToken ? loadingStudentResult : loadingResult;
-
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -610,7 +651,7 @@ const Test = () => {
                   <View style={styles.resultContainer}>
                     <Text
                       style={
-                        score >= 5
+                        displayResult.passed === true
                           ? styles.successMessage
                           : styles.failureMessage
                       }

@@ -1,14 +1,20 @@
 export type AnswerDetails = {
   answerId: string;
   answerDescription: string;
+  selected: boolean;
   correct: boolean;
 };
 
 export type AnswerDetailsList = AnswerDetails[];
 
+export type ImageBody = {
+  imageId: string;
+  imageUrl: string;
+};
+
 export type QuestionDetails = {
   questionId: string;
-  image: string;
+  image: ImageBody;
   questionDescription: string;
   answers: AnswerDetailsList;
 };

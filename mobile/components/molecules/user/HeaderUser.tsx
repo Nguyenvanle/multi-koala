@@ -51,20 +51,21 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
   }
 
   const checkCompleted = () => {
-    for (let i = 0; i < enrolled?.length; i++) {
-      const latestCourse = enrolled[i];
-      if (latestCourse.process === 1) {
-        // Kiểm tra nếu khóa học hiện tại hoàn thành
-        if (i + 1 < enrolled.length) {
+    if (enrolled) {
+      for (let i = 0; i < enrolled?.length; i++) {
+        const latestCourse = enrolled[i];
+        if (latestCourse.process === 1) {
+          // Kiểm tra nếu khóa học hiện tại hoàn thành
           // Kiểm tra nếu có khóa học tiếp theo
           setNextCourse(enrolled[i + 1]); // Cập nhật khóa học tiếp theo
         } else {
-          setNextCourse(null); // Không có khóa học tiếp theo
+          setNextCourse(enrolled[i]); // Không có khóa học tiếp theo
         }
-        break; // Chỉ cần tìm khóa học hoàn thành đầu tiên
+        break;
       }
     }
   };
+
   if (userLoading || isRefreshing) {
     return (
       <View style={styles.loadingContainer}>
@@ -109,9 +110,19 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                 {user.firstname} {user.lastname}
               </Text>
             </View>
-            {user.image && (
+            {user.image ? (
               <Image
                 source={{ uri: user.image.imageUrl }}
+                style={{
+                  width: 75,
+                  height: 75,
+                  borderRadius: 35,
+                  justifyContent: "flex-end",
+                }}
+              />
+            ) : (
+              <Image
+                source={require("@/assets/images/koala.png")}
                 style={{
                   width: 75,
                   height: 75,
@@ -122,7 +133,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
             )}
           </View>
 
-          {nextCourse && (
+          {nextCourse && enrolled?.length > 0 && (
             <Link href={`/${nextCourse.course.courseId}`} asChild>
               <TouchableOpacity
                 style={{

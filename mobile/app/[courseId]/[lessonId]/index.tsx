@@ -19,13 +19,11 @@ import { Video, ResizeMode } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
 import useUser from "@/feature/user/hooks/useUser";
-import { LessonBody } from "@/feature/lesson/types/lesson";
+import { LessonBody, ResultBody } from "@/feature/lesson/types/lesson";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
 
 const LessonDetails = () => {
-  const { user } = useUser();
-
   const { courseId, testId, lessonId } = useGlobalSearchParams();
 
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
@@ -39,7 +37,7 @@ const LessonDetails = () => {
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
 
-  const { lesson, errorMessage, loadinglesson } = useLesson(courseIdString);
+  const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
 
   const [showAllLessons, setShowAllLessons] = useState(false);
 
@@ -120,11 +118,11 @@ const LessonDetails = () => {
     item,
     index,
   }: {
-    item: LessonBody;
+    item: ResultBody;
     index: number;
   }) => {
     const isFirstThree = index < 3 || isEnrolled; // Hiển thị tất cả nếu đã đăng ký
-    const isSelected = item.lessonId === lessonIdString; // Kiểm tra xem bài học này có được chọn không
+    const isSelected = item.lesson.lessonId === lessonIdString; // Kiểm tra xem bài học này có được chọn không
     return (
       <TouchableOpacity
         style={[
@@ -134,7 +132,7 @@ const LessonDetails = () => {
         ]}
         onPress={() => {
           if (isFirstThree) {
-            router.replace(`/${courseIdString}/${item.lessonId}`);
+            router.replace(`/${courseIdString}/${item.lesson.lessonId}`);
           }
         }}
         disabled={isSelected}
@@ -143,14 +141,15 @@ const LessonDetails = () => {
           {index + 1}.{" "}
         </Text>
         <Image
-          source={{ uri: item.image.imageUrl }}
+          source={{ uri: item.lesson.image.imageUrl }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
-          <Text style={styles.lessonTitle}>{item.lessonName}</Text>
+          <Text style={styles.lessonTitle}>{item.lesson.lessonName}</Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.video.videoDuration / 60)}:
-            {(item.video.videoDuration % 60).toString().padStart(2, "0")} mins
+            {Math.floor(item.lesson.video.videoDuration / 60)}:
+            {(item.lesson.video.videoDuration % 60).toString().padStart(2, "0")}{" "}
+            mins
           </Text>
         </View>
       </TouchableOpacity>
@@ -177,7 +176,7 @@ const LessonDetails = () => {
           <Text style={styles.description}>
             {lessonDetails.lessonDescription}
           </Text>
-          {loadinglesson ? (
+          {loadingLesson ? (
             <View style={{ paddingTop: 16, justifyContent: "center" }}>
               <ActivityIndicator color={Colors.teal_dark} />
             </View>
@@ -202,7 +201,7 @@ const LessonDetails = () => {
               <FlatList
                 data={displayedLessons}
                 renderItem={renderLessonItem}
-                keyExtractor={(item) => item.lessonId}
+                keyExtractor={(item) => item.lesson.lessonId}
                 scrollEnabled={false}
               />
               {lesson.length > 3 && (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Text,
   StyleSheet,
@@ -7,32 +7,31 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import useRegisterForm from "@/feature/auth/hooks/useRegisterForm";
 import FormSigUp from "@/feature/auth/components/molecules/form/form-signup";
 import Button from "@/components/atoms/button";
 import CircleStyle from "@/components/molecules/front-end/CircleStyle";
 import { Styles, text } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
+import useSignUp from "@/feature/auth/hooks/useSignUp";
 
 const Form: React.FC = () => {
-  const [confirmPassword, setConfirmPassword] = useState("");
   const {
-    loading,
-    error,
-    onSubmit,
+    loadingSignUp,
+    errorMessageSignUp,
+    username,
+    setUserName,
+    password,
+    setPassWord,
     email,
     setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    errorMessage,
-    setErrorMessage,
-  } = useRegisterForm();
+    firstname,
+    setFirstname,
+    lastname,
+    setLastname,
+    confirm,
+    setConfirm,
+    onSubmit,
+  } = useSignUp();
 
   return (
     <SafeAreaView style={Styles.container}>
@@ -54,12 +53,25 @@ const Form: React.FC = () => {
         >
           Sign Up
         </Text>
-        <FormSigUp />
+        <FormSigUp
+          username={username}
+          password={password}
+          firstname={firstname}
+          lastname={lastname}
+          email={email}
+          confirm={confirm}
+          setUserName={setUserName}
+          setPassWord={setPassWord}
+          setFirstname={setFirstname}
+          setLastname={setLastname}
+          setEmail={setEmail}
+          setConfirm={setConfirm}
+        />
         <Button
           style={{ ...styles.loginButton }}
-          onPress={onSubmit}
-          title="Sign Up"
+          title={loadingSignUp ? "Signing Up..." : "Sign Up"}
           textStyle={{ ...text.h4, color: Colors.white }}
+          onPress={onSubmit}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
