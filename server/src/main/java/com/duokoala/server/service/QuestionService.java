@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +81,7 @@ public class QuestionService {
         question.setTest(testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
         question.setActive(true);
+        question.setQuestionUploadedAt(LocalDateTime.now());
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
         int indexAnswer = 0;
@@ -98,12 +100,29 @@ public class QuestionService {
 
     @Transactional//create new quest and disable old question
     public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
-        Question question = questionRepository.findById(questionId)
+        Question oldQuestion = questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-        question.setActive(false);
-        questionRepository.save(question);
-        return create(question.getTest().getTestId(),
-                questionMapper.toQuestionCreateRequest(request));
+        oldQuestion.setActive(false);
+        questionRepository.save(oldQuestion);
+
+        Question question = questionMapper.toQuestion(request);
+        question.setTest(oldQuestion.getTest());
+        question.setActive(true);
+        question.setQuestionUploadedAt(oldQuestion.getQuestionUploadedAt());
+        question = questionRepository.save(question);
+        List<Answer> answers = new ArrayList<>();
+        int indexAnswer = 0;
+        for (String answerDescription : request.getAnswers()) {
+            Answer answer = Answer.builder()
+                    .answerDescription(answerDescription)
+                    .question(question)
+                    .build();
+            answer.setCorrect(indexAnswer == request.getCorrectIndex());
+            answers.add(answer);
+            indexAnswer++;
+        }
+        question.setAnswers(answers);
+        return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 
     @Transactional

@@ -78,7 +78,7 @@ public class TestService {
     private TestResponse mapTestToTestResponse(Test test) {
         test.setQuestions(test.getQuestions().stream()
                 .filter(Question::isActive)
-                .toList());
+                .sorted((q1, q2) -> q2.getQuestionUploadedAt().compareTo(q1.getQuestionUploadedAt())).toList());
         return testMapper.toTestResponse(test);
     }
 
