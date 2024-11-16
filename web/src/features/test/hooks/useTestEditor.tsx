@@ -1,25 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { TestBody, TestBodyType } from "@/features/test/types/test-result";
-import { putExam } from "@/features/test/actions/put-exam";
-
-export const saveTestData = async (data: TestBodyType) => {
-  try {
-    console.log(data);
-    const validate = TestBody.safeParse(data);
-    if (validate.success) {
-      return await putExam(data);
-    } else {
-      console.log("Validation error:", validate.error);
-      return { success: false };
-    }
-  } catch (error) {
-    console.error("Error saving test data:", error);
-    return { success: false };
-  }
-};
+import { handleSaveTest as handleSaveTestUtil } from "@/features/test/utils/save-test";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -33,6 +17,10 @@ export default function useTestEditor(initialTestData: TestBodyType) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
+
+  useEffect(() => {
+    console.log("Initial test data loaded:", initialTestData);
+  }, [initialTestData]);
 
   const onDeleteQuestion = (questionId: string) => {
     setQuestionToDelete(questionId);
@@ -148,20 +136,7 @@ export default function useTestEditor(initialTestData: TestBodyType) {
   };
 
   const handleSaveTest = async () => {
-    const result = await saveTestData(testData);
-    if (result.success) {
-      toast({
-        title: "Test saved successfully",
-        description: "All changes have been saved.",
-      });
-    } else {
-      toast({
-        title: "Error saving test",
-        description:
-          "There was a problem saving your changes. Please try again.",
-        variant: "destructive",
-      });
-    }
+    await handleSaveTestUtil(testData);
   };
 
   const scrollToQuestion = (questionId: string) => {

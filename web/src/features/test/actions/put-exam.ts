@@ -17,3 +17,4 @@ export async function putExam(data: TestBodyType) {
     return { success: false };
   }
 }
+
