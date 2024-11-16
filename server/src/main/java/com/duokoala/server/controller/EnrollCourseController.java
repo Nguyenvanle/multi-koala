@@ -1,9 +1,11 @@
 package com.duokoala.server.controller;
 
 import com.duokoala.server.dto.response.ApiResponse;
+import com.duokoala.server.dto.response.analysis.studentAnalysisResponse.StudentReportAnalysisResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
+import com.duokoala.server.service.AnalysisService;
 import com.duokoala.server.service.EnrollCourseService;
 import com.duokoala.server.service.LessonStudentService;
 import lombok.AccessLevel;
@@ -22,6 +24,7 @@ import java.util.List;
 public class EnrollCourseController {
     EnrollCourseService enrollCourseService;
     LessonStudentService lessonStudentService;
+    AnalysisService analysisService;
 
     @PostMapping("/courses/{courseId}/enroll-courses")
     ApiResponse<EnrollCourseResponse> create(@PathVariable String courseId) {
@@ -50,6 +53,15 @@ public class EnrollCourseController {
                 .result(enrollCourseService.getMyEnrollCourse())
                 .build();
     }
+
+
+    @GetMapping("/enroll-courses/enroll-courses/my-student-chart")
+    ApiResponse<StudentReportAnalysisResponse> getStudentChart() {
+        return ApiResponse.<StudentReportAnalysisResponse>builder()
+                .result(analysisService.getStudentReportAnalysis())
+                .build();
+    }
+
 
     @GetMapping("/enroll-courses")
     ApiResponse<List<EnrollCourseResponse>> getAll() {
