@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { putImage } from "@/features/test/actions/put-image";
 import QuestionImageUpload from "@/features/test/components/atoms/image-upload";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { Save, X } from "lucide-react";
 import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 import { set } from "zod";
 
 export function QuestionEditor({
@@ -20,17 +22,37 @@ export function QuestionEditor({
   const [editedQuestion, setEditedQuestion] =
     useState<QuestionBodyType>(question);
   const [image, setImage] = useState<File | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleImageChange = async (imageData: File | null) => {
     setImage(imageData);
   };
 
-  const handleSave = () => {
-    const formData = new FormData();
-    formData.append("file", image || "");
-    console.log(formData.get("file"));
+  const handleSave = async () => {
+    setIsEditing(true);
+    try {
+      if (image) {
+        const formData = new FormData();
+        formData.append("file", image);
+        const res = await putImage(editedQuestion.questionId, formData);
 
-    onSave(editedQuestion);
+        if (res.success) {
+          setEditedQuestion(res.result);
+          console.log(editedQuestion);
+          toast({
+            title: "Question added",
+            description: "A new question has been added to the test.",
+          });
+        } else {
+          throw new Error("Failed to upload image");
+        }
+      }
+      onSave(editedQuestion);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -69,8 +91,14 @@ export function QuestionEditor({
           Cancel
         </Button>
         <Button onClick={handleSave}>
-          <Save className="mr-2 h-4 w-4" />
-          Save
+          {isEditing ? (
+            "Saving..."
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Save
+            </>
+          )}
         </Button>
       </div>
     </div>

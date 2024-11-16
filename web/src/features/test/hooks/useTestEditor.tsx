@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
-import { QuestionBodyType } from "@/features/test/types/question";
-import { TestBody, TestBodyType } from "@/features/test/types/test-result";
-import { handleSaveTest as handleSaveTestUtil } from "@/features/test/utils/save-test";
+import {
+  PostQuestionBodyType,
+  QuestionBodyType,
+} from "@/features/test/types/question";
+import { TestBodyType } from "@/features/test/types/test-result";
+import { putExam } from "@/features/test/actions/put-exam";
+import { examService } from "@/features/test/services/exam";
+import { postQuestion } from "@/features/test/actions/post-question";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -18,9 +23,47 @@ export default function useTestEditor(initialTestData: TestBodyType) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
 
-  useEffect(() => {
-    console.log("Initial test data loaded:", initialTestData);
-  }, [initialTestData]);
+  const handleAddQuestion = async () => {
+    const newQuestion: PostQuestionBodyType = {
+      questionDescription: "",
+      answers: ["A", "B", "C", "D"],
+      correctIndex: 0,
+    };
+
+    try {
+      const res = await postQuestion(testData.testId, newQuestion);
+
+      console.log(res);
+
+      if (res.success) {
+        setTestData((prevData) => ({
+          ...prevData,
+          questions: [...prevData.questions, res.result?.result!],
+        }));
+
+        // Set newly created question as active and scroll to it
+        setActiveQuestionId(res.result?.result?.questionId || null);
+        setEditingQuestionId(res.result?.result?.questionId || null);
+
+        // Scroll after a short delay to ensure the DOM has updated
+        setTimeout(() => {
+          const element = document.getElementById(
+            `question-${res.result?.result?.questionId || null}`
+          );
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 100);
+
+        toast({
+          title: "Question added",
+          description: "A new question has been added to the test.",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding question:", error);
+    }
+  };
 
   const onDeleteQuestion = (questionId: string) => {
     setQuestionToDelete(questionId);
@@ -119,24 +162,45 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     });
   };
 
-  const handleUpdateTestSettings = (
+  const handleUpdateTestSettings = async (
     testDescription: string,
     passingScore: number
   ) => {
-    setTestData((prevData) => ({
-      ...prevData,
-      testDescription,
-      passingScore,
-    }));
+    try {
+      const res = await putExam(testData.testId, {
+        testDescription,
+        passingScore,
+      });
 
-    toast({
-      title: "Settings updated",
-      description: "Test settings have been updated successfully.",
-    });
-  };
+      if (res.success) {
+        console.log("Test settings updated:", res);
 
-  const handleSaveTest = async () => {
-    await handleSaveTestUtil(testData);
+        setTestData((prevData) => ({
+          ...prevData,
+          testDescription,
+          passingScore,
+        }));
+        toast({
+          title: "Settings updated",
+          description: "Test settings have been updated successfully.",
+        });
+      } else {
+        console.error("Error updating test settings:", res);
+        toast({
+          title: "Error updating settings",
+          description: "An error occurred while updating test settings.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } catch (error) {
+      console.error("Error updating test settings:", error);
+      toast({
+        title: "Error updating settings",
+        description: "An error occurred while updating test settings.",
+        variant: "destructive",
+      });
+    }
   };
 
   const scrollToQuestion = (questionId: string) => {
@@ -159,8 +223,8 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     handleRemoveAnswer,
     handleDeleteQuestion,
     handleUpdateTestSettings,
-    handleSaveTest,
     scrollToQuestion,
+    handleAddQuestion, // Export new function
 
     settingsOpen,
     deleteDialogOpen,

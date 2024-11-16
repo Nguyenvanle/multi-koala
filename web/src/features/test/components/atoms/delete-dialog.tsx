@@ -15,11 +15,7 @@ interface DeleteDialogProps {
   onConfirm: () => void;
 }
 
-export const DeleteDialog = ({
-  open,
-  onOpenChange,
-  onConfirm,
-}: DeleteDialogProps) => (
+export const DeleteDialog = ({ open, onOpenChange, onConfirm }: DeleteDialogProps) => (
   <AlertDialog open={open} onOpenChange={onOpenChange}>
     <AlertDialogContent>
       <AlertDialogHeader>
@@ -30,8 +26,13 @@ export const DeleteDialog = ({
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
+        <AlertDialogAction
+          onClick={onConfirm}
+          className="bg-destructive hover:bg-red-600"
+        >
+          Delete
+        </AlertDialogAction>
         <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

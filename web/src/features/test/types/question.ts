@@ -21,6 +21,7 @@ export const PutQuestionBody = z.object({
   correctIndex: z.number(),
 });
 export type PutQuestionBodyType = z.infer<typeof PutQuestionBody>;
+export type PostQuestionBodyType = z.infer<typeof PutQuestionBody>;
 
 export const QuestionRes = BaseResponseSchema.extend({
   result: QuestionBody,

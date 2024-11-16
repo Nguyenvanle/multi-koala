@@ -3,6 +3,8 @@ import { getTests } from "@/features/lessons/actions/get-test";
 import TestEditor from "@/features/test/components/pages/test";
 import { Pencil } from "lucide-react";
 
+export const revalidate = 60;
+
 async function fetchTests(lessonId: string) {
   const res = await getTests(lessonId);
   return res.tests;

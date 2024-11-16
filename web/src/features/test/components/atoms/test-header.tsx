@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Settings, Save } from "lucide-react";
+import { Settings, Save, Plus } from "lucide-react";
 
 interface TestHeaderProps {
   onSettingsClick: () => void;
-  onSaveClick: () => void;
+  handleAddQuestion: () => void;
 }
 
 export const TestHeader = ({
   onSettingsClick,
-  onSaveClick,
+  handleAddQuestion,
 }: TestHeaderProps) => (
   <div className="flex flex-row justify-between pr-4">
     <h1 className="text-2xl font-bold">Edit Test</h1>
@@ -17,9 +17,9 @@ export const TestHeader = ({
         <Settings className="mr-2 h-4 w-4" />
         Settings
       </Button>
-      <Button className="h-8" onClick={onSaveClick}>
-        <Save className="mr-2 h-4 w-4" />
-        Save Test
+      <Button variant="outline" className="h-8" onClick={handleAddQuestion}>
+        <Plus className="mr-2 h-4 w-4" />
+        New Question
       </Button>
     </div>
   </div>

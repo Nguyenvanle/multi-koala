@@ -102,8 +102,7 @@ function validateQuestionData(question: QuestionBodyType): {
 }
 
 export async function putSingleQuestion(
-  question: QuestionBodyType,
-  lessonId: string
+  question: QuestionBodyType
 ): Promise<SingleQuestionResponse> {
   try {
     // Validate question data before sending
@@ -161,15 +160,14 @@ export async function putSingleQuestion(
 }
 
 export async function putQuestions(
-  data: QuestionBodyType[],
-  lessonId: string
+  data: QuestionBodyType[]
 ): Promise<PutQuestionResponse> {
   const errors: QuestionError[] = [];
   const results: { success: boolean; questionId: string }[] = [];
 
   try {
     for (const question of data) {
-      const singleResult = await putSingleQuestion(question, lessonId);
+      const singleResult = await putSingleQuestion(question);
 
       if (singleResult.success) {
         results.push({ success: true, questionId: question.questionId });

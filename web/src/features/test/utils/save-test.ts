@@ -62,7 +62,7 @@ export const saveTestData = async (
     // Determine whether to use single or multiple question update
     if (data.questions.length === 1) {
       // Single question update
-      const result = await putSingleQuestion(data.questions[0], data.testId);
+      const result = await putSingleQuestion(data.questions[0]);
       return {
         ...result,
         totalAttempted: 1,
@@ -70,7 +70,7 @@ export const saveTestData = async (
       };
     } else {
       // Multiple questions update
-      return await putQuestions(data.questions, data.testId);
+      return await putQuestions(data.questions);
     }
   } catch (error) {
     console.error("Error saving test data:", error);

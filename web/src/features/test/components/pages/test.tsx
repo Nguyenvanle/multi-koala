@@ -24,9 +24,9 @@ export default function TestEditor({
     handleAnswerEdit,
     handleAddAnswer,
     handleRemoveAnswer,
-    handleSaveTest,
     scrollToQuestion,
     handleUpdateTestSettings,
+    handleAddQuestion,
 
     settingsOpen,
     deleteDialogOpen,
@@ -41,7 +41,7 @@ export default function TestEditor({
       <div className="flex flex-col flex-1 gap-4">
         <TestHeader
           onSettingsClick={() => setSettingsOpen(true)}
-          onSaveClick={handleSaveTest}
+          handleAddQuestion={handleAddQuestion}
         />
 
         <ScrollArea className="h-[calc(100vh-100px)] pr-4">

@@ -1,7 +1,14 @@
 import {
   ExamAddFormBodyType,
   ExamAddFormResType,
+  ExamUpdateFormBodyType,
+  ExamUpdateFormResType,
 } from "@/features/test/types/exam";
+import {
+  PostQuestionBodyType,
+  QuestionBodyType,
+  QuestionResType,
+} from "@/features/test/types/question";
 import { apiService } from "@/services/api";
 
 export const examService = {
@@ -12,7 +19,17 @@ export const examService = {
     );
   },
 
-  async update(testId: string, data: ExamAddFormBodyType) {
-    return await apiService.put<ExamAddFormResType>(`/tests/${testId}`, data);
+  async createQuestion(testId: string, data: PostQuestionBodyType) {
+    return await apiService.post<QuestionResType>(
+      `/tests/${testId}/questions`,
+      data
+    );
+  },
+
+  async update(testId: string, data: ExamUpdateFormBodyType) {
+    return await apiService.put<ExamUpdateFormResType>(
+      `/tests/${testId}`,
+      data
+    );
   },
 };
