@@ -9,6 +9,7 @@ import { TestBodyType } from "@/features/test/types/test-result";
 import { putExam } from "@/features/test/actions/put-exam";
 import { examService } from "@/features/test/services/exam";
 import { postQuestion } from "@/features/test/actions/post-question";
+import { putSingleQuestion } from "@/features/test/actions/put-question";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -82,17 +83,41 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     setEditingQuestionId(questionId);
   };
 
-  const handleQuestionSave = (
+  const handleQuestionSave = async (
     questionId: string,
     updatedQuestion: QuestionBodyType
   ) => {
-    setTestData((prevData) => ({
-      ...prevData,
-      questions: prevData.questions.map((q) =>
-        q.questionId === questionId ? updatedQuestion : q
-      ),
-    }));
-    setEditingQuestionId(null);
+    try {
+      const res = await putSingleQuestion(updatedQuestion);
+      if (res.success) {
+        setTestData((prevData) => ({
+          ...prevData,
+          questions: prevData.questions.map((q) =>
+            q.questionId === questionId ? updatedQuestion : q
+          ),
+        }));
+        setEditingQuestionId(null);
+
+        toast({
+          title: "Question updated",
+          description: "The question has been updated successfully.",
+        });
+      } else {
+        console.error("Error updating question:", res);
+        toast({
+          title: "Error updating question",
+          description: "An error occurred while updating the question.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating question:", error);
+      toast({
+        title: "Error updating question",
+        description: "An error occurred while updating the question.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleAnswerEdit = (

@@ -6,9 +6,8 @@ import { putImage } from "@/features/test/actions/put-image";
 import QuestionImageUpload from "@/features/test/components/atoms/image-upload";
 import { QuestionBodyType } from "@/features/test/types/question";
 import { Save, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { set } from "zod";
 
 export function QuestionEditor({
   question,
@@ -28,6 +27,10 @@ export function QuestionEditor({
     setImage(imageData);
   };
 
+  useEffect(() => {
+    console.log(editedQuestion);
+  }, [editedQuestion]);
+
   const handleSave = async () => {
     setIsEditing(true);
     try {
@@ -37,8 +40,11 @@ export function QuestionEditor({
         const res = await putImage(editedQuestion.questionId, formData);
 
         if (res.success) {
-          setEditedQuestion(res.result);
-          console.log(editedQuestion);
+          setEditedQuestion({
+            ...editedQuestion,
+            image: res.result.image,
+          });
+          console.log("question edit:", res.result);
           toast({
             title: "Question added",
             description: "A new question has been added to the test.",
