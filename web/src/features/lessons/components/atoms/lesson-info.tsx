@@ -13,7 +13,7 @@ export const LessonInfo: React.FC<{
   lesson: LessonBody;
 }> = ({ lesson }) => {
   // Calculate hours, minutes, and seconds
-  const totalSeconds = lesson.video.videoDuration;
+  const totalSeconds = lesson.video?.videoDuration ?? 0;
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
@@ -32,7 +32,7 @@ export const LessonInfo: React.FC<{
     <Card className="overflow-hidden">
       <CardHeader className="relative p-0">
         <Image
-          src={lesson.image.imageUrl}
+          src={lesson.image?.imageUrl ?? "/images/fallback-image.jpg"}
           alt={lesson.lessonName}
           width={800}
           height={400}
@@ -51,9 +51,9 @@ export const LessonInfo: React.FC<{
           <div className="flex items-center">
             <Clock className="mr-2 h-4 w-4 text-primary" />
             <span>
-              {hours > 0 ? `${hours}h ` : ""}
-              {minutes > 0 ? `${minutes}m ` : ""}
-              {seconds}s
+              {hours > 0 ? `${hours.toFixed(0)}h ` : ""}
+              {minutes > 0 ? `${minutes.toFixed(0)}m ` : ""}
+              {seconds.toFixed(0)}s
             </span>
           </div>
           <div className="flex items-center">
@@ -72,8 +72,8 @@ export const LessonInfo: React.FC<{
         <div className="mt-2 flex flex-1 justify-between items-center gap-4">
           <div className="flex flex-wrap gap-2 flex-0">
             <Badge variant="secondary" className="self-baseline">
-              Duration: {hours > 0 ? `${hours}h ` : ""}
-              {minutes}m {seconds}s
+              Duration: {hours > 0 ? `${hours.toFixed(0)}h ` : ""}
+              {minutes.toFixed(0)}m {seconds.toFixed(0)}s
             </Badge>
             <Badge variant="outline" className="self-baseline">
               Course: {lesson.course.courseName}

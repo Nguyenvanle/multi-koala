@@ -7,6 +7,7 @@ import { nextjsApiService } from "@/services/next-api";
 import { CourseDetailResType } from "@/features/courses/types/course";
 import { useParams } from "next/navigation";
 import { postImageCourse } from "@/features/courses/actions/post-image-course";
+import { useState } from "react";
 
 const EditCourseSchema = z.object({
   courseName: z.string().min(1, "Course name is required"),
@@ -44,20 +45,25 @@ export default function useEditCourseForm(initialData: EditCourseFormData) {
       ),
     },
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (data: EditCourseFormData) => {
+    setIsSubmitting(true);
     try {
       const submissionData = {
         ...data,
         courseResponsibilityEndAt: data.courseResponsibilityEndAt.toISOString(),
       };
 
-      const formData = new FormData();
-      if (submissionData.imageFile) {
-        formData.append("file", submissionData.imageFile);
+      if (submissionData.imageFile !== initialData.imageFile) {
+        const formData = new FormData();
+        if (submissionData.imageFile) {
+          formData.append("file", submissionData.imageFile);
+        }
+
+        const response = await postImageCourse(courseId as string, formData);
+        console.log(response);
       }
-      const response = await postImageCourse(courseId as string, formData);
-      console.log(response);
 
       const { result } = await nextjsApiService.put<CourseDetailResType>(
         `/api/courses/${courseId}`,
@@ -75,7 +81,10 @@ export default function useEditCourseForm(initialData: EditCourseFormData) {
         );
       }
     } catch (error) {
+      console.log("Update Form Error:", error);
       showToast("Error", "Failed to update course", "destructive");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

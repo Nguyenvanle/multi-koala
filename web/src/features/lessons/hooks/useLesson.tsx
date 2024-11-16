@@ -1,6 +1,7 @@
 import { lessonService } from "@/features/lessons/services/lesson";
 
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function useLesson(lessonId: string) {

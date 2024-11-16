@@ -46,7 +46,7 @@ const MyCourses = ({ courseId }: { courseId: string }) => {
   );
   return (
     <View style={styles.container}>
-      {user ? (
+      {enrolled ? (
         <FlatList
           horizontal={true}
           data={enrolled}
@@ -55,18 +55,7 @@ const MyCourses = ({ courseId }: { courseId: string }) => {
           style={{ paddingHorizontal: 16 }}
         />
       ) : (
-        <TouchableOpacity
-          onPress={() => router.push("/(auth)/sign-in")}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: 300,
-          }}
-        >
-          <Text style={{ ...styles.clampedText, color: Colors.red }}>
-            Please sign in to connect your courses
-          </Text>
-        </TouchableOpacity>
+        ""
       )}
     </View>
   );
@@ -82,7 +71,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 8,
-    height: 221,
   },
   courseContainer: {
     alignItems: "center",

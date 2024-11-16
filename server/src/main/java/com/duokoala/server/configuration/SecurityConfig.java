@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,6 @@ import java.util.Map;
 //handle security endpoint and allow permission
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {"/**"};
-
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -32,20 +33,33 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request -> //config endpoint
-                request.requestMatchers(/*HttpMethod.POST,*/PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated());
+                        request.requestMatchers(/*HttpMethod.POST,*/PUBLIC_ENDPOINTS).permitAll()
+                                .anyRequest().authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 ->//config jwt
                 oauth2.jwt(jwtConfigurer ->
                         jwtConfigurer.decoder(customJwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);//avoid attacked web
-
-        httpSecurity.cors(cors -> cors. //config cors //allow access to sources
-                configurationSource(request ->
-                        new CorsConfiguration().applyPermitDefaultValues()));
-
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource())); // Apply CORS
         return httpSecurity.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("http://localhost:3000"); // Allow specific domain
+        corsConfiguration.addAllowedOrigin("http://localhost:8081"); // Allow specific domain
+        corsConfiguration.addAllowedMethod("GET"); // Allow specific methods
+        corsConfiguration.addAllowedMethod("POST");
+        corsConfiguration.addAllowedMethod("PUT");
+        corsConfiguration.addAllowedMethod("DELETE");
+        corsConfiguration.addAllowedHeader("*"); // Allow all headers
+        corsConfiguration.setAllowCredentials(true); // Allow credentials
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -62,7 +76,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public Cloudinary getCloudinary(){
+    public Cloudinary getCloudinary() {
         Map config = new HashMap();
         config.put("cloud_name", "dkz1esxyw");
         config.put("api_key", "137167157615336");

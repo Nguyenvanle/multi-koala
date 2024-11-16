@@ -8,7 +8,14 @@ import {
 } from "@/features/courses/components/atoms/create-course-data-handler";
 import useCourseType from "@/features/course-type/hooks/useCourseType";
 import useField from "@/features/field/hooks/useField";
-import { Book, CirclePlus, CircleX, Home, ListRestart } from "lucide-react";
+import {
+  Book,
+  CirclePlus,
+  CircleX,
+  Home,
+  ListRestart,
+  Loader2,
+} from "lucide-react";
 import {
   BasicInformationCard,
   CourseFieldsCard,
@@ -23,6 +30,8 @@ import { LessonsCardPage } from "@/features/courses/components/pages/lessons";
 import useLessons from "@/features/lessons/hooks/useLessons";
 import { useParams } from "next/navigation";
 import DeleteDialog from "@/features/courses/components/atoms/delete-dialog";
+import { KeyedMutator, useSWRConfig } from "swr";
+import { useEffect } from "react";
 
 const breadcrumbs = [
   {
@@ -57,7 +66,19 @@ export default function CourseEditForm({
     lessons,
     duration,
     loading: lessonsLoading,
+    mutate: mutateLessons,
   } = useLessons(courseId as string);
+
+  // refetch
+  const { mutate } = useSWRConfig();
+  useEffect(() => {
+    console.log("Refetching...");
+    Promise.all([
+      mutate(`get-top-courses`),
+      mutate(`teacher-my-statistics-courses`),
+      mutate(`lessons/${courseId}`),
+    ]);
+  }, [onSubmit, mutate, courseId]);
 
   // loading
   if (fieldsLoading || typesLoading) {
@@ -92,9 +113,17 @@ export default function CourseEditForm({
                 <ListRestart className="mr-2 h-4 w-4" />
                 Reset
               </Button>
-              <Button type="submit" className="w-full sm:w-auto h-8">
-                <CirclePlus className="mr-2 h-4 w-4" />
-                Submit
+              <Button
+                type="submit"
+                className="w-full sm:w-auto h-8"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <CirclePlus className="mr-2 h-4 w-4" />
+                )}
+                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </div>
           </div>
@@ -108,7 +137,7 @@ export default function CourseEditForm({
               <BasicInformationCard form={form} />
             </div>
             <div className="flex flex-col gap-4 xl:gap-6">
-              <LessonsCardPage lessons={lessons || []} />
+              <LessonsCardPage lessons={lessons || []} isPublic={false} />
               <CourseTypesCard form={form} courseTypes={courseTypes} />
               <CourseFieldsCard form={form} fields={fields} />
             </div>

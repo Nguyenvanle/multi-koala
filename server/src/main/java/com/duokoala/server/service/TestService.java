@@ -70,9 +70,17 @@ public class TestService {
         var lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
         var tests = testRepository.findAllByLesson(lesson);
-        return tests.stream().map(testMapper::toTestResponse).toList();
+        return tests.stream()
+                .filter(test -> !test.isDeleted())
+                .map(this::mapTestToTestResponse).toList();
     }
-//    public Test
+
+    private TestResponse mapTestToTestResponse(Test test) {
+        test.setQuestions(test.getQuestions().stream()
+                .filter(Question::isActive)
+                .toList());
+        return testMapper.toTestResponse(test);
+    }
 
     public void delete(String testId) {
         var test = testRepository.findById(testId)

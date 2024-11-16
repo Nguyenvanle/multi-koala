@@ -10,15 +10,15 @@ export async function getMyReport() {
     throw new Error("No token in cookies");
   }
 
-  const res = await QuizResultService.getAllQuizResult(accessToken);
+   try {
+     const res = await QuizResultService.getAllQuizResult(accessToken);
+     const reports = res.result?.result;
 
-  if (!res.result?.result) {
-    throw new Error(
-      "No result in /quiz-results/my-report:" + JSON.stringify(res)
-    );
-  }
+     return { reports };
+   } catch (error) {
+     console.error("Error fetching reports", error);
+   }
 
-  const reports = res.result.result;
-
-  return { reports };
+   return { reports: [] };
+  
 }

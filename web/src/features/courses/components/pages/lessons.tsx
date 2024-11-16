@@ -6,10 +6,12 @@ import { LessonsResult } from "@/features/lessons/types/lessons-res";
 
 interface LessonsCardPageProps {
   lessons: LessonsResult;
+  isPublic?: boolean;
 }
 
 export const LessonsCardPage: React.FC<LessonsCardPageProps> = ({
   lessons,
+  isPublic = true,
 }) => {
   const { visibleLessons, loadMoreLessons } = useVisibleLessons(lessons);
 
@@ -18,6 +20,7 @@ export const LessonsCardPage: React.FC<LessonsCardPageProps> = ({
       lessons={lessons}
       visibleLessons={visibleLessons}
       onLoadMore={loadMoreLessons}
+      isPublic={isPublic}
     />
   );
 };

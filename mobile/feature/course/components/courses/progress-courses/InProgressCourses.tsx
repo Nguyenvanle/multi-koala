@@ -12,6 +12,7 @@ import * as Progress from "react-native-progress";
 import { Link, router, useGlobalSearchParams } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
+import { useLesson } from "@/feature/lesson/hooks/useLesson";
 
 interface Filter {
   types: string[];

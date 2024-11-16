@@ -21,6 +21,7 @@ export type TestResultBody = {
   totalQuestion: number;
   answeredQuestions: number;
   correctAnswers: number;
+  passed: boolean;
   questions: QuizBodyList;
 };
 

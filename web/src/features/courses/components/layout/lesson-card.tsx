@@ -1,38 +1,30 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { H1, H4 } from "@/components/ui/typography";
-import { CoursesListEmpty } from "@/features/courses/components/molecules";
+import { H4 } from "@/components/ui/typography";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
+import LessonDialogForm from "@/features/lessons/components/molecules/add-dialog";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
-import { BookOpen, PlusCircle } from "lucide-react";
-import Link from "next/link";
+import { BookOpen } from "lucide-react";
 
 interface LessonsCardProps {
   lessons: LessonDetailResult[] | null;
   visibleLessons: number;
   onLoadMore: () => void;
+  isPublic?: boolean;
 }
 
 export const LessonsCard: React.FC<LessonsCardProps> = ({
   lessons,
   visibleLessons,
   onLoadMore,
+  isPublic = true,
 }) => {
   return (
-    <Card className="flex flex-0 flex-col w-full rounded overflow-hidden gap-2">
-      <CardHeader className="flex flex-1 justify-between flex-row pb-0 space-y-0">
+    <Card className="flex flex-0 flex-col w-full rounded overflow-hidden gap-4">
+      <CardHeader className="flex flex-0 justify-between items-center flex-row pb-0 space-y-0">
         <CardTitle>Lessons</CardTitle>
 
-        <Button className="h-8 gap-1" size="sm">
-          <PlusCircle className="w-3.5 h-3.5" />
-          <Link
-            href="/dashboard/courses/add"
-            className="sr-only sm:not-sr-only sm:whitespace-nowrap font-normal"
-          >
-            Add New Lesson
-          </Link>
-        </Button>
+        {!isPublic && <LessonDialogForm />}
       </CardHeader>
       <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (
@@ -42,6 +34,7 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
             lessons={lessons}
             visibleLessons={visibleLessons}
             onLoadMore={onLoadMore}
+            isPublic={isPublic}
           />
         ) : (
           <div className="h-[20vh] content-center">

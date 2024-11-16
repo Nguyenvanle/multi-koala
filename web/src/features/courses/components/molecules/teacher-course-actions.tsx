@@ -6,10 +6,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { Edit, Eye, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
-export const TeacherCourseActions: React.FC<{ courseId: string }> = ({ courseId }) => (
+export const TeacherCourseActions: React.FC<{ courseId: string }> = ({
+  courseId,
+}) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -20,13 +22,15 @@ export const TeacherCourseActions: React.FC<{ courseId: string }> = ({ courseId 
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuItem>
-        <Link href={`/courses/${courseId}`} className="w-full">
-          View
+        <Link href={`/courses/${courseId}`} className="flex w-full">
+          <Eye className="mr-2 h-4 w-4" />
+          <span>View Details</span>
         </Link>
       </DropdownMenuItem>
       <DropdownMenuItem>
-        <Link href={`/dashboard/courses/${courseId}`} className="w-full">
-          Edit
+        <Link href={`/dashboard/courses/${courseId}`} className="flex w-full">
+          <Edit className="mr-2 h-4 w-4" />
+          <span>Edit</span>
         </Link>
       </DropdownMenuItem>
     </DropdownMenuContent>
