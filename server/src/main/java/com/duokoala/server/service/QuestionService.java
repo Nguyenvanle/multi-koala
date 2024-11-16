@@ -79,9 +79,6 @@ public class QuestionService {
         Question question = questionMapper.toQuestion(request);
         question.setTest(testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
-//        Image image = new Image();
-//        image.setImageUrl(request.getImageUrl());
-//        question.setImage(image);
         question.setActive(true);
         question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();

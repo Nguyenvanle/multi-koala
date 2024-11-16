@@ -148,12 +148,20 @@ const UserProfile: React.FC = () => {
       <ScrollView style={styles.content}>
         {/* Ảnh đại diện */}
         <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: user.image?.imageUrl || "https://via.placeholder.com/160",
-            }}
-            style={styles.image}
-          />
+          {user.image ? (
+            <Image
+              source={{
+                uri: user.image?.imageUrl,
+              }}
+              style={styles.image}
+            />
+          ) : (
+            <Image
+              source={require("@/assets/images/koala.png")}
+              style={styles.image}
+            />
+          )}
+
           {isEditing && (
             <TouchableOpacity style={styles.changeImageButton}>
               <Text style={styles.changeImageText}>Change Image</Text>

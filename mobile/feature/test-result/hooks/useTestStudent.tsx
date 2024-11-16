@@ -30,12 +30,6 @@ const useTestStudent = (testId) => {
       setLoadingStudentResult(true);
       setErrorStudentResult(null);
 
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        setErrorStudentResultMessage("No token found. Please log in.");
-        return;
-      }
-
       // Dữ liệu gửi đi đã được cập nhật từ handleSubmit
       const requestData: SubmitRes = {
         answerSubmitList: selectedAnswerList,
@@ -44,8 +38,7 @@ const useTestStudent = (testId) => {
 
       const request = await testStudentService.getResult(
         testIdString, // Thay đổi ở đây
-        requestData,
-        token
+        requestData
       );
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {

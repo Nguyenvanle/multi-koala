@@ -2,29 +2,38 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { text } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
-import useRegisterForm from "../../../hooks/useRegisterForm";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useSignUp from "@/feature/auth/hooks/useSignUp";
 
-const FormSignUp = () => {
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const {
-    loading,
-    error,
-    onSubmit,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    errorMessage,
-    setErrorMessage,
-  } = useRegisterForm();
+interface InputSignUpProps {
+  username: string;
+  setUserName: (username: string) => void;
+  password: string;
+  setPassWord: (password: string) => void;
+  email: string;
+  setEmail: (email: string) => void;
+  firstname: string;
+  setFirstname: (firstname: string) => void;
+  lastname: string;
+  setLastname: (lastname: string) => void;
+  confirm: string;
+  setConfirm: (confirm: string) => void;
+}
 
+const FormSignUp: React.FC<InputSignUpProps> = ({
+  username,
+  setUserName,
+  password,
+  setPassWord,
+  email,
+  setEmail,
+  firstname,
+  setFirstname,
+  lastname,
+  setLastname,
+  confirm,
+  setConfirm,
+}) => {
   useEffect(() => {
     const getEmailFromStorage = async () => {
       try {
@@ -39,7 +48,6 @@ const FormSignUp = () => {
 
     getEmailFromStorage();
   }, []);
-
   return (
     <View
       style={{
@@ -70,9 +78,10 @@ const FormSignUp = () => {
       <TextInput
         style={styles.input}
         placeholder="Username"
+        autoCapitalize="words"
         placeholderTextColor={Colors.grey}
         value={username}
-        onChangeText={setUsername}
+        onChangeText={setUserName}
       />
       <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>First Name</Text>
@@ -80,9 +89,10 @@ const FormSignUp = () => {
       <TextInput
         style={styles.input}
         placeholder="First name"
+        autoCapitalize="words"
         placeholderTextColor={Colors.grey}
-        value={firstName}
-        onChangeText={setFirstName}
+        value={firstname}
+        onChangeText={setFirstname}
       />
       <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>Last Name</Text>
@@ -91,8 +101,9 @@ const FormSignUp = () => {
         style={styles.input}
         placeholder="Last name"
         placeholderTextColor={Colors.grey}
-        value={lastName}
-        onChangeText={setLastName}
+        autoCapitalize="words"
+        value={lastname}
+        onChangeText={setLastname}
       />
       <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
         <Text style={{ ...text.p, fontWeight: "500" }}>Password</Text>
@@ -102,7 +113,7 @@ const FormSignUp = () => {
         placeholder="Password"
         placeholderTextColor={Colors.grey}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={setPassWord}
         secureTextEntry
       />
       <View style={{ alignSelf: "baseline", paddingTop: 10 }}>
@@ -112,8 +123,8 @@ const FormSignUp = () => {
         style={styles.input}
         placeholder="Confirm Password"
         placeholderTextColor={Colors.grey}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
+        value={confirm}
+        onChangeText={setConfirm}
         secureTextEntry
       />
     </View>

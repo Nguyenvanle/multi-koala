@@ -67,29 +67,48 @@ const Account = () => {
             </View>
           ) : errorMessage ? (
             <Text style={{ color: Colors.red }}>{errorMessage}</Text> // Hiển thị thông báo lỗi
-          ) : (
-            user && (
-              <View
+          ) : user && user.image !== null ? (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 16,
+              }}
+            >
+              <Image
                 style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 16,
+                  width: 160,
+                  height: 160,
+                  borderRadius: 80,
+                  marginBottom: 8,
                 }}
-              >
-                <Image
-                  style={{
-                    width: 160,
-                    height: 160,
-                    borderRadius: 80,
-                    marginBottom: 8,
-                  }}
-                  source={{ uri: user.image.imageUrl }}
-                />
-                <Text style={{ ...text.h3, color: Colors.teal_dark }}>
-                  {user.firstname} {user.lastname}
-                </Text>
-              </View>
-            )
+                source={{ uri: user.image.imageUrl }}
+              />
+              <Text style={{ ...text.h3, color: Colors.teal_dark }}>
+                {user.firstname} {user.lastname}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 16,
+              }}
+            >
+              <Image
+                style={{
+                  width: 160,
+                  height: 160,
+                  borderRadius: 80,
+                  marginBottom: 8,
+                }}
+                source={require("@/assets/images/koala.png")}
+              />
+              <Text style={{ ...text.h3, color: Colors.teal_dark }}>
+                {user.firstname} {user.lastname}
+              </Text>
+            </View>
           )}
 
           <View style={{ alignSelf: "baseline", paddingBottom: 8 }}>

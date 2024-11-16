@@ -78,7 +78,7 @@ const NewCourses = () => {
 
   return (
     <View>
-      {user ? (
+      {user && enrolled?.length > 0 ? (
         <View style={{ height: 230 }}>
           <FlatList
             data={Array.isArray(recommend) ? recommend : []} // Ensure recommend is an array
@@ -88,13 +88,13 @@ const NewCourses = () => {
           />
         </View>
       ) : (
-        <View style={{ height: 450, top: -195 }}>
+        <View style={{ height: 450 }}>
           <FlatList
             data={coursesToShow}
             renderItem={renderCourseItem}
             keyExtractor={(item) => item.courseId}
             showsVerticalScrollIndicator={false}
-            style={{ minHeight: 640 }}
+            style={{ minHeight: 300 }}
           />
         </View>
       )}
