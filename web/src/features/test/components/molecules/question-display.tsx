@@ -61,9 +61,7 @@ export function QuestionDisplay({
           <p>{question.questionDescription}</p>
         </div>
         <Label>
-          <CardDescription>
-            Select the correct answer for this question
-          </CardDescription>
+          <CardDescription>Answers</CardDescription>
         </Label>
         <div className="rounded border">
           <RadioGroup

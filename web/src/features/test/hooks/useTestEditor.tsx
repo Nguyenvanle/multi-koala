@@ -45,14 +45,15 @@ export default function useTestEditor(initialTestData: TestBodyType) {
       console.log(res);
 
       if (res.success) {
-        await mutate();
+        const mutateData = await mutate();
+        console.log("mutateData:", mutateData);
 
         setTestData((prevData) => ({
           ...prevData,
-          questions: data?.result?.result.questions!,
+          questions: mutateData?.result?.result.questions || prevData.questions,
         }));
 
-        console.log(testData);
+        console.log("testData:", testData);
 
         // Set newly created question as active and scroll to it
         setActiveQuestionId(res.result?.result?.questionId || null);
@@ -104,9 +105,10 @@ export default function useTestEditor(initialTestData: TestBodyType) {
 
       const uploadData: PutQuestionBodyType = {
         questionDescription: updatedQuestion.questionDescription,
-        answers: updatedQuestion.answers
-          ? updatedQuestion.answers.map((a) => a.answerDescription)
-          : [],
+        // answers: updatedQuestion.answers
+        //   ? updatedQuestion.answers.map((a) => a.answerDescription)
+        //   : [],
+        answers: [],
         correctIndex: updatedQuestion.answers
           ? updatedQuestion.answers.findIndex((a) => a.correct)
           : 0,
@@ -129,11 +131,15 @@ export default function useTestEditor(initialTestData: TestBodyType) {
       const res = await putQuestionV2(questionId, uploadData);
 
       if (res.success) {
+        const mutateData = await mutate();
+
+        console.log("mutateData:", mutateData);
         setTestData((prevData) => ({
           ...prevData,
           questions: prevData.questions.map((q) =>
             q.questionId === questionId ? updatedQuestion : q
           ),
+          ...mutateData?.result?.result,
         }));
         setEditingQuestionId(null);
 
