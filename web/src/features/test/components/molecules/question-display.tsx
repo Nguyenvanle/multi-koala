@@ -57,7 +57,7 @@ export function QuestionDisplay({
         <Label>
           <CardDescription>Question content</CardDescription>
         </Label>
-        <div className="rounded border p-2">
+        <div className="rounded border min-h-10 p-2">
           <p>{question.questionDescription}</p>
         </div>
         <Label>

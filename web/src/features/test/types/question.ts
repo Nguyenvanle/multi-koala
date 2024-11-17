@@ -11,7 +11,7 @@ export const QuestionBody = z.object({
     })
     .nullable(),
   questionDescription: z.string(),
-  answers: z.array(AnswerBody),
+  answers: z.array(AnswerBody).nullable(),
 });
 export type QuestionBodyType = z.infer<typeof QuestionBody>;
 

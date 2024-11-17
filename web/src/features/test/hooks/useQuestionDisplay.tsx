@@ -17,13 +17,13 @@ export default function useQuestionDisplay({
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
 
   useEffect(() => {
-    const correctAnswer = question.answers.find((a) => a.correct);
+    const correctAnswer = question.answers?.find((a) => a.correct);
     setSelectedAnswerId(correctAnswer?.answerId || "");
   }, [question.answers]);
 
   const handleAnswerSelect = (selectedAnswerId: string) => {
     setSelectedAnswerId(selectedAnswerId);
-    question.answers.forEach((answer) => {
+    question.answers?.forEach((answer) => {
       onAnswerEdit(answer.answerId, {
         ...answer,
         correct: answer.answerId === selectedAnswerId,
@@ -36,7 +36,7 @@ export default function useQuestionDisplay({
     updatedAnswer: AnswerBodyType
   ) => {
     if (updatedAnswer.correct && answerId !== selectedAnswerId) {
-      question.answers.forEach((answer) => {
+      question.answers?.forEach((answer) => {
         if (answer.answerId !== answerId) {
           onAnswerEdit(answer.answerId, {
             ...answer,

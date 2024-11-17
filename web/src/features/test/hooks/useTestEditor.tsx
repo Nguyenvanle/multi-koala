@@ -11,6 +11,8 @@ import { TestBodyType } from "@/features/test/types/test-result";
 import { putExam } from "@/features/test/actions/put-exam";
 import { postQuestion } from "@/features/test/actions/post-question";
 import { putQuestionV2 } from "@/features/test/actions/put-question-v2";
+import useSWR from "swr";
+import { examService } from "@/features/test/services/exam";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -25,6 +27,10 @@ export default function useTestEditor(initialTestData: TestBodyType) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
 
+  const { data, mutate } = useSWR("/tests/${testId}", () =>
+    examService.getTestByTestId(initialTestData.testId)
+  );
+
   const handleAddQuestion = async () => {
     const newQuestion: PostQuestionBodyType = {
       questionDescription: "",
@@ -38,10 +44,14 @@ export default function useTestEditor(initialTestData: TestBodyType) {
       console.log(res);
 
       if (res.success) {
+        await mutate();
+
         setTestData((prevData) => ({
           ...prevData,
-          questions: [...prevData.questions, res.result?.result!],
+          questions: data?.result?.result.questions!,
         }));
+
+        console.log(testData);
 
         // Set newly created question as active and scroll to it
         setActiveQuestionId(res.result?.result?.questionId || null);
@@ -159,9 +169,10 @@ export default function useTestEditor(initialTestData: TestBodyType) {
         q.questionId === questionId
           ? {
               ...q,
-              answers: q.answers.map((a) =>
-                a.answerId === answerId ? updatedAnswer : a
-              ),
+              answers:
+                q.answers?.map((a) =>
+                  a.answerId === answerId ? updatedAnswer : a
+                ) || [],
             }
           : q
       ),
@@ -178,7 +189,7 @@ export default function useTestEditor(initialTestData: TestBodyType) {
       ...prevData,
       questions: prevData.questions.map((q) =>
         q.questionId === questionId
-          ? { ...q, answers: [...q.answers, newAnswer] }
+          ? { ...q, answers: [...(q.answers || []), newAnswer] }
           : q
       ),
     }));
@@ -189,7 +200,10 @@ export default function useTestEditor(initialTestData: TestBodyType) {
       ...prevData,
       questions: prevData.questions.map((q) =>
         q.questionId === questionId
-          ? { ...q, answers: q.answers.filter((a) => a.answerId !== answerId) }
+          ? {
+              ...q,
+              answers: q.answers?.filter((a) => a.answerId !== answerId) || [],
+            }
           : q
       ),
     }));
