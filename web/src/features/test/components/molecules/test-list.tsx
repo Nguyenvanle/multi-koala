@@ -22,7 +22,7 @@ export default function TestList({
 
   return (
     <ScrollArea className="w-full" style={{ height: maxHeight }}>
-      <div className="pr-4">
+      <div className="pr-3 -mr-3">
         {tests.map((test) => (
           <TestCard
             key={test.testId}

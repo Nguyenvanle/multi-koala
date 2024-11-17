@@ -32,6 +32,7 @@ import { useParams } from "next/navigation";
 import DeleteDialog from "@/features/courses/components/atoms/delete-dialog";
 import { KeyedMutator, useSWRConfig } from "swr";
 import { useEffect } from "react";
+import StudentList from "@/features/courses/components/organisms/student-list";
 
 const breadcrumbs = [
   {
@@ -135,6 +136,7 @@ export default function CourseEditForm({
                 initialImageUrl={initialData.imageUrl}
               />
               <BasicInformationCard form={form} />
+              <StudentList />
             </div>
             <div className="flex flex-col gap-4 xl:gap-6">
               <LessonsCardPage lessons={lessons || []} isPublic={false} />

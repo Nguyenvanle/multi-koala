@@ -12,7 +12,7 @@ export const FilterStatus: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-start gap-2 ">
+    <div className="hidden flex-col items-start gap-2 ">
       <Label
         htmlFor="approved-courses"
         className="scroll-m-20 text-xl font-semibold tracking-tight pb-2"

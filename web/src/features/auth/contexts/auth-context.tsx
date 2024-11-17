@@ -114,8 +114,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           clearInterval(intervalId); // Dừng việc refresh nếu không thành công
         }
       },
-      15 * 60 * 1000
-    ); // 15 phút
+      45 * 60 * 1000
+    ); // 45 phút
 
     return () => clearInterval(intervalId);
   }, [initializeAuth, refreshAccessTokenInBackground]);

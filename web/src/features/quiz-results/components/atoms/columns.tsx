@@ -16,6 +16,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export const quizColumns: ColumnDef<MyReportBodyType>[] = [
   {
@@ -164,19 +165,16 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(report.studentId)}
-              >
-                Copy student ID
+              <DropdownMenuItem>
+                <Link href={`/dashboard/courses/${report.courseId}`}>
+                  View course details
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(report.courseId)}
               >
                 Copy course ID
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View course details</DropdownMenuItem>
-              <DropdownMenuItem>View report details</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -7,8 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
-import StudentHeader from "@/features/dashboard/components/atoms/students-header";
-import DashboardStudentPage from "@/features/dashboard/components/pages/student";
 import { getMyReport } from "@/features/quiz-results/actions/my-report";
 import { quizColumns } from "@/features/quiz-results/components/atoms/columns";
 import { ReportTable } from "@/features/quiz-results/components/molecules/report-table";
