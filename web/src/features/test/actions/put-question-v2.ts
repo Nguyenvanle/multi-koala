@@ -1,7 +1,9 @@
 "use server";
 
+import { revalidate } from "@/app/dashboard/(teaching)/courses/[courseId]/lessons/[lessonId]/tests/[testId]/edit/page";
 import { questionService } from "@/features/test/services/question";
 import { PutQuestionBodyType } from "@/features/test/types/question";
+import { revalidateTag } from "next/cache";
 
 export const putQuestionV2 = async (
   questionId: string,
@@ -16,6 +18,7 @@ export const putQuestionV2 = async (
     };
   }
 
+  revalidateTag("getTestByTestId");
   return {
     success: true,
     message: "Question updated successfully",

@@ -17,3 +17,8 @@ export const TestRes = BaseResponseSchema.extend({
   result: array(TestBody),
 });
 export type TestResType = z.infer<typeof TestRes>;
+
+export const TestDetailRes = BaseResponseSchema.extend({
+  result: TestBody,
+});
+export type TestDetailResType = z.infer<typeof TestDetailRes>;

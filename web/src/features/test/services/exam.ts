@@ -9,9 +9,20 @@ import {
   QuestionBodyType,
   QuestionResType,
 } from "@/features/test/types/question";
+import {
+  TestBodyType,
+  TestDetailResType,
+  TestResType,
+} from "@/features/test/types/test-result";
 import { apiService } from "@/services/api";
 
 export const examService = {
+  async getTestByTestId(testId: string) {
+    return await apiService.get<TestDetailResType>(`/tests/${testId}`, {
+      next: { tags: ["getTestByTestId"] },
+    });
+  },
+
   async create(lessonId: string, data: ExamAddFormBodyType) {
     return await apiService.post<ExamAddFormResType>(
       `/lessons/${lessonId}/tests`,

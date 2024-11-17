@@ -11,7 +11,7 @@ export async function putExam(testId: string, data: ExamUpdateFormBodyType) {
   if (res.code === 200) {
     console.log("Saving test data:", res);
 
-    revalidateTag("/lessons/${lessonId}/tests");
+    revalidateTag("getTestByTestId");
     return { success: true };
   } else {
     console.error("Fail to save test data:", res);

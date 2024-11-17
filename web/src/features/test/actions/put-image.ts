@@ -8,7 +8,7 @@ export const putImage = async (questionId: string, data: FormData) => {
   if (res.code !== 200) {
     throw new Error(res.message);
   }
-  revalidateTag("/lessons/${lessonId}/tests");
+  revalidateTag("getTestByTestId");
 
   return {
     success: true,

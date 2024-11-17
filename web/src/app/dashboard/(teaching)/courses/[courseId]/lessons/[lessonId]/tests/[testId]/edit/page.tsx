@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { getTests } from "@/features/lessons/actions/get-test";
+import { getTestByTestId, getTests } from "@/features/lessons/actions/get-test";
 import TestEditor from "@/features/test/components/pages/test";
 import { Pencil } from "lucide-react";
 
@@ -8,6 +8,17 @@ export const revalidate = 60;
 async function fetchTests(lessonId: string) {
   const res = await getTests(lessonId);
   return res.tests;
+}
+
+async function fetchTestsByTestId(testId: string) {
+  const res = await getTestByTestId(testId);
+
+  if (!res.success) {
+    console.error(res.message);
+    return;
+  }
+
+  return res.data;
 }
 
 const EmptyState = () => (
@@ -36,13 +47,11 @@ export default async function Page({
     testId: string;
   };
 }) {
-  const data = await fetchTests(params.lessonId);
+  const data = await fetchTestsByTestId(params.testId);
 
-  const initialTestData = data.find((test) => test.testId === params.testId);
-
-  if (!initialTestData) {
+  if (!data) {
     return <EmptyState />;
   }
 
-  return <TestEditor initialTestData={initialTestData} />;
+  return <TestEditor initialTestData={data} />;
 }

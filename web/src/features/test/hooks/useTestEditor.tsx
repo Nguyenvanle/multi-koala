@@ -9,9 +9,7 @@ import {
 } from "@/features/test/types/question";
 import { TestBodyType } from "@/features/test/types/test-result";
 import { putExam } from "@/features/test/actions/put-exam";
-import { examService } from "@/features/test/services/exam";
 import { postQuestion } from "@/features/test/actions/post-question";
-import { putSingleQuestion } from "@/features/test/actions/put-question";
 import { putQuestionV2 } from "@/features/test/actions/put-question-v2";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
