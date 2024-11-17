@@ -14,6 +14,7 @@ import {
   TestDetailResType,
   TestResType,
 } from "@/features/test/types/test-result";
+import { BaseResType } from "@/schemas/base-res";
 import { apiService } from "@/services/api";
 
 export const examService = {

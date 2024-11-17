@@ -13,6 +13,7 @@ import { postQuestion } from "@/features/test/actions/post-question";
 import { putQuestionV2 } from "@/features/test/actions/put-question-v2";
 import useSWR from "swr";
 import { examService } from "@/features/test/services/exam";
+import { deleteQuestion } from "@/features/test/actions/delete-question";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -209,24 +210,46 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     }));
   };
 
-  const handleDeleteQuestion = (questionId: string) => {
-    setTestData((prevData) => ({
-      ...prevData,
-      questions: prevData.questions.filter((q) => q.questionId !== questionId),
-    }));
+  const handleDeleteQuestion = async (questionId: string) => {
+    try {
+      const res = await deleteQuestion(questionId);
 
-    // Update active question if necessary
-    if (activeQuestionId === questionId) {
-      const remainingQuestions = testData.questions.filter(
-        (q) => q.questionId !== questionId
-      );
-      setActiveQuestionId(remainingQuestions[0]?.questionId || null);
+      if (res.success) {
+        setTestData((prevData) => ({
+          ...prevData,
+          questions: prevData.questions.filter(
+            (q) => q.questionId !== questionId
+          ),
+        }));
+
+        // Update active question if necessary
+        if (activeQuestionId === questionId) {
+          const remainingQuestions = testData.questions.filter(
+            (q) => q.questionId !== questionId
+          );
+          setActiveQuestionId(remainingQuestions[0]?.questionId || null);
+        }
+
+        toast({
+          title: "Question deleted",
+          description: "The question has been removed from the test.",
+        });
+      } else {
+        console.error("Error deleting question:", res);
+        toast({
+          title: "Error deleting question",
+          description: "An error occurred while deleting the question.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting question:", error);
+      toast({
+        title: "Error deleting question",
+        description: "An error occurred while deleting the question.",
+        variant: "destructive",
+      });
     }
-
-    toast({
-      title: "Question deleted",
-      description: "The question has been removed from the test.",
-    });
   };
 
   const handleUpdateTestSettings = async (

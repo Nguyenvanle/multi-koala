@@ -3,6 +3,7 @@ import {
   QuestionBodyType,
   QuestionResType,
 } from "@/features/test/types/question";
+import { BaseResType } from "@/schemas/base-res";
 import { apiService } from "@/services/api";
 
 export const questionService = {
@@ -23,5 +24,9 @@ export const questionService = {
     )
       .then((res) => res.json())
       .then((res) => res as QuestionResType);
+  },
+
+  async deleteQuestion(questionId: string) {
+    return await apiService.delete<BaseResType>(`/questions/${questionId}`);
   },
 };
