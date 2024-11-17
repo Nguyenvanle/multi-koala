@@ -4,7 +4,11 @@ import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
-import com.duokoala.server.dto.response.courseResponse.*;
+import com.duokoala.server.dto.response.analysis.courseAnalysisResponse.PerformingCourseResponse;
+import com.duokoala.server.dto.response.analysis.courseAnalysisResponse.StatisticCourseResponse;
+import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
+import com.duokoala.server.dto.response.courseResponse.DiscountAppliedResponse;
 import com.duokoala.server.service.CourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -116,7 +120,6 @@ public class CourseController {
                 .result(courseService.recommendCourses())
                 .build();
     }
-
 
     @GetMapping("/courses/{courseId}/discount-applied")
     ApiResponse<DiscountAppliedResponse> getDiscountApplied(@PathVariable String courseId) {

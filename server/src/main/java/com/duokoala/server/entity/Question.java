@@ -3,14 +3,12 @@ package com.duokoala.server.entity;
 import com.duokoala.server.entity.media.Image;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +21,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.UUID)
     String questionId;
     String questionDescription;
+    LocalDateTime questionUploadedAt;
     @ManyToOne
     @JsonBackReference
     Test test;

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class QuestionService {
         question.setTest(testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
         question.setActive(true);
-        question = questionRepository.save(question);
+        question.setQuestionUploadedAt(LocalDateTime.now());
         List<Answer> answers = new ArrayList<>();
         int indexAnswer = 0;
         for (String answerDescription : request.getAnswers()) {
@@ -100,10 +101,21 @@ public class QuestionService {
     public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-        question.setActive(false);
-        questionRepository.save(question);
-        return create(question.getTest().getTestId(),
-                questionMapper.toQuestionCreateRequest(request));
+        questionMapper.updateQuestion(question, request);
+        List<Answer> answers = question.getAnswers();
+        answers.forEach(answer -> answer.setActive(false));
+        int indexAnswer = 0;
+        for (String answerDescription : request.getAnswers()) {
+            Answer answer = Answer.builder()
+                    .answerDescription(answerDescription)
+                    .question(question)
+                    .isActive(true)
+                    .build();
+            answer.setCorrect(indexAnswer == request.getCorrectIndex());
+            answers.add(answer);
+            indexAnswer++;
+        }
+        return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 
     @Transactional

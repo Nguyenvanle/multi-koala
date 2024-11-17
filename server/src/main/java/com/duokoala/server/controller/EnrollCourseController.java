@@ -1,9 +1,13 @@
 package com.duokoala.server.controller;
 
 import com.duokoala.server.dto.response.ApiResponse;
+import com.duokoala.server.dto.response.analysis.studentAnalysisResponse.StudentReportAnalysisResponse;
+import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
+import com.duokoala.server.service.AnalysisService;
+import com.duokoala.server.service.CourseService;
 import com.duokoala.server.service.EnrollCourseService;
 import com.duokoala.server.service.LessonStudentService;
 import lombok.AccessLevel;
@@ -22,6 +26,8 @@ import java.util.List;
 public class EnrollCourseController {
     EnrollCourseService enrollCourseService;
     LessonStudentService lessonStudentService;
+    CourseService courseService;
+    AnalysisService analysisService;
 
     @PostMapping("/courses/{courseId}/enroll-courses")
     ApiResponse<EnrollCourseResponse> create(@PathVariable String courseId) {
@@ -48,6 +54,21 @@ public class EnrollCourseController {
     ApiResponse<List<MyEnrollCourseResponse>> getMyEnrollCourses() {
         return ApiResponse.<List<MyEnrollCourseResponse>>builder()
                 .result(enrollCourseService.getMyEnrollCourse())
+                .build();
+    }
+
+
+    @GetMapping("/enroll-courses/enroll-courses/my-student-chart")
+    ApiResponse<StudentReportAnalysisResponse> getStudentChart() {
+        return ApiResponse.<StudentReportAnalysisResponse>builder()
+                .result(analysisService.getStudentReportAnalysis())
+                .build();
+    }
+
+    @GetMapping("/enroll-courses/{enrollCourseId}/suggest-courses")
+    ApiResponse<List<CourseResponse>> getSuggestCourses(@PathVariable String enrollCourseId) {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.getSuggestCourses(enrollCourseId))
                 .build();
     }
 
