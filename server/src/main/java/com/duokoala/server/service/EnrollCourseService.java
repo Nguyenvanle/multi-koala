@@ -89,5 +89,4 @@ public class EnrollCourseService {
                         .coursePrice(enrollCourse.getCourse().getCoursePrice())
                         .build()).toList();
     }
-
 }

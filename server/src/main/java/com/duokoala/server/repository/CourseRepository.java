@@ -38,5 +38,4 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     Double sumIncomeCourse(@Param("courseId") String courseId);
 
     List<Course> findAllByUploadedByTeacherAndEnrollCoursesEnrollAtAfter(Teacher teacher, LocalDateTime date);
-
 }

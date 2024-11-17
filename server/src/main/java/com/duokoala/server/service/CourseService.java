@@ -3,6 +3,8 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.courseRequest.CourseApproveRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
 import com.duokoala.server.dto.request.courseRequest.CourseUpdateRequest;
+import com.duokoala.server.dto.response.FieldResponse;
+import com.duokoala.server.dto.response.TypeResponse;
 import com.duokoala.server.dto.response.analysis.courseAnalysisResponse.PerformingCourseResponse;
 import com.duokoala.server.dto.response.analysis.courseAnalysisResponse.StatisticCourseResponse;
 import com.duokoala.server.dto.response.courseResponse.CoursePriceResponse;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.duokoala.server.enums.courseEnums.PerformanceCriteria.calculatePerformanceScore;
 import static com.duokoala.server.enums.courseEnums.PerformanceCriteria.calculateRelevanceTypeFiledScore;
@@ -205,6 +208,36 @@ public class CourseService {
                 .map(this::getPerformingCourse)
                 .sorted((c1, c2) -> Double.compare(calculateScore(c2), calculateScore(c1)))
                 .toList();
+    }
+
+    public List<CourseResponse> getSuggestCourses(String enrollCourseId) {
+        EnrollCourse enrollCourse = enrollCourseRepository.findById(enrollCourseId)
+                .orElseThrow(() -> new AppException(ErrorCode.ENROLL_COURSE_NOT_FOUND));
+//        if (enrollCourse.isSuggest()) throw new AppException(ErrorCode.COURSE_ALREADY_SUGGESTED);
+        if (!enrollCourse.getStudent().equals(authenticationService.getAuthenticatedStudent()))
+            throw new AppException(ErrorCode.STUDENT_NOT_MATCHED);
+        Set<String> enrollCourseFields = enrollCourse
+                .getCourse()
+                .getFields()
+                .stream()
+                .map(Field::getFieldName)
+                .collect(Collectors.toSet());
+
+        Set<String> enrollCourseTypes = enrollCourse
+                .getCourse()
+                .getTypes()
+                .stream()
+                .map(Type::getTypeName)
+                .collect(Collectors.toSet());
+
+        List<CourseResponse> courseResponses = recommendCourses().stream()
+                .filter(course -> course.getTypes().stream().map(TypeResponse::getTypeName).anyMatch(enrollCourseTypes::contains) ||
+                        course.getFields().stream().map(FieldResponse::getFieldName).anyMatch(enrollCourseFields::contains))
+                .limit(3)
+                .toList();
+        enrollCourse.setSuggest(true);
+        enrollCourseRepository.save(enrollCourse);
+        return courseResponses;
     }
 
     public List<CourseResponse> recommendCourses() {

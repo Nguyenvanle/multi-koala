@@ -121,7 +121,6 @@ public class CourseController {
                 .build();
     }
 
-
     @GetMapping("/courses/{courseId}/discount-applied")
     ApiResponse<DiscountAppliedResponse> getDiscountApplied(@PathVariable String courseId) {
         return ApiResponse.<DiscountAppliedResponse>builder()

@@ -20,6 +20,7 @@ public class EnrollCourse {
     LocalDateTime enrollAt;
     LocalDateTime lastUpdate;
     float process;
+    boolean isSuggest;
     @ManyToOne
     Student student;
     @ManyToOne

@@ -27,8 +27,10 @@ public enum ErrorCode {
     CERTIFICATION_ALREADY_APPROVED(409, "Conflict: Certification is already approved", HttpStatus.CONFLICT),
     COURSE_ALREADY_APPROVED(409, "Conflict: Course is already approved", HttpStatus.CONFLICT),
     DISCOUNT_COURSE_ALREADY_APPROVED(409, "Conflict: Discount for Course is already approved", HttpStatus.CONFLICT),
+    COURSE_ALREADY_SUGGESTED(409, "Conflict: Course is already suggested", HttpStatus.CONFLICT),
+    STUDENT_NOT_MATCHED(409, "Conflict: Student does not match", HttpStatus.CONFLICT),
 
-
+    
     REFERENCE_NOT_FOUND(404, "Not found: Reference does not exist", HttpStatus.NOT_FOUND),
     USER_NOT_FOUND(404, "Not found: User does not exist", HttpStatus.NOT_FOUND),
     TEACHER_NOT_FOUND(404, "Not found: Teacher does not exist", HttpStatus.NOT_FOUND),
