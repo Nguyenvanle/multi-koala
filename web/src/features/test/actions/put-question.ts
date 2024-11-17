@@ -102,8 +102,20 @@ function validateQuestionData(question: QuestionBodyType): {
 }
 
 export async function putSingleQuestion(
-  question: QuestionBodyType
+  question: QuestionBodyType | null | undefined
 ): Promise<SingleQuestionResponse> {
+  if (!question) {
+    return {
+      success: false,
+      error: {
+        questionId: "UNKNOWN",
+        errorType: "VALIDATION",
+        error: "Question data is null or undefined",
+        originalData: question,
+      },
+    };
+  }
+
   try {
     // Validate question data before sending
     const validation = validateQuestionData(question);

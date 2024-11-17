@@ -3,6 +3,8 @@ import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import {
   PostQuestionBodyType,
+  PutQuestionBody,
+  PutQuestionBodyType,
   QuestionBodyType,
 } from "@/features/test/types/question";
 import { TestBodyType } from "@/features/test/types/test-result";
@@ -10,6 +12,7 @@ import { putExam } from "@/features/test/actions/put-exam";
 import { examService } from "@/features/test/services/exam";
 import { postQuestion } from "@/features/test/actions/post-question";
 import { putSingleQuestion } from "@/features/test/actions/put-question";
+import { putQuestionV2 } from "@/features/test/actions/put-question-v2";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -88,7 +91,34 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     updatedQuestion: QuestionBodyType
   ) => {
     try {
-      const res = await putSingleQuestion(updatedQuestion);
+      console.log("updatedQuestion:", updatedQuestion);
+
+      const uploadData: PutQuestionBodyType = {
+        questionDescription: updatedQuestion.questionDescription,
+        answers: updatedQuestion.answers
+          ? updatedQuestion.answers.map((a) => a.answerDescription)
+          : [],
+        correctIndex: updatedQuestion.answers
+          ? updatedQuestion.answers.findIndex((a) => a.correct)
+          : 0,
+      };
+
+      console.log("uploadData:", uploadData);
+
+      const validate = PutQuestionBody.safeParse(uploadData);
+
+      if (!validate.success) {
+        console.error("Error updating question:", validate.error);
+        toast({
+          title: "Error updating question",
+          description: "An error occurred while updating the question.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const res = await putQuestionV2(questionId, uploadData);
+
       if (res.success) {
         setTestData((prevData) => ({
           ...prevData,
@@ -103,7 +133,7 @@ export default function useTestEditor(initialTestData: TestBodyType) {
           description: "The question has been updated successfully.",
         });
       } else {
-        console.error("Error updating question:", res);
+        console.error("Res: Error updating question:", res);
         toast({
           title: "Error updating question",
           description: "An error occurred while updating the question.",
@@ -111,7 +141,7 @@ export default function useTestEditor(initialTestData: TestBodyType) {
         });
       }
     } catch (error) {
-      console.error("Error updating question:", error);
+      console.error("Catch: Error updating question:", error);
       toast({
         title: "Error updating question",
         description: "An error occurred while updating the question.",

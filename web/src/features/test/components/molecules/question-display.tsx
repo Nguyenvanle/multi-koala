@@ -71,16 +71,17 @@ export function QuestionDisplay({
             value={selectedAnswerId}
             onValueChange={handleAnswerSelect}
           >
-            {question.answers.map((answer) => (
-              <AnswerDisplay
-                key={answer.answerId}
-                answer={answer}
-                openDialogId={openDialogId}
-                setOpenDialogId={setOpenDialogId}
-                handleAnswerEdit={handleAnswerEdit}
-                onRemoveAnswer={onRemoveAnswer}
-              />
-            ))}
+            {question.answers &&
+              question.answers.map((answer) => (
+                <AnswerDisplay
+                  key={answer.answerId}
+                  answer={answer}
+                  openDialogId={openDialogId}
+                  setOpenDialogId={setOpenDialogId}
+                  handleAnswerEdit={handleAnswerEdit}
+                  onRemoveAnswer={onRemoveAnswer}
+                />
+              ))}
           </RadioGroup>
         </div>
         <Button onClick={onAddAnswer} variant="outline" size="sm">
