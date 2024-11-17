@@ -21,6 +21,7 @@ public interface QuestionMapper {
     @Mapping(target = "answers", ignore = true)
     Question toQuestion(QuestionUpdateRequest request);
 
+    @Mapping(target = "answers", ignore = true)
     QuestionResponse toQuestionResponse(Question question);
 
     AnswerResponse toAnswerResponse(Answer answer);

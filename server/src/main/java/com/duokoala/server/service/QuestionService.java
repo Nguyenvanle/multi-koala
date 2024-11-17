@@ -82,7 +82,6 @@ public class QuestionService {
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND)));
         question.setActive(true);
         question.setQuestionUploadedAt(LocalDateTime.now());
-        question = questionRepository.save(question);
         List<Answer> answers = new ArrayList<>();
         int indexAnswer = 0;
         for (String answerDescription : request.getAnswers()) {
@@ -100,28 +99,22 @@ public class QuestionService {
 
     @Transactional//create new quest and disable old question
     public QuestionResponse update(String questionId, QuestionUpdateRequest request) {
-        Question oldQuestion = questionRepository.findById(questionId)
+        Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-        oldQuestion.setActive(false);
-        questionRepository.save(oldQuestion);
-
-        Question question = questionMapper.toQuestion(request);
-        question.setTest(oldQuestion.getTest());
-        question.setActive(true);
-        question.setQuestionUploadedAt(oldQuestion.getQuestionUploadedAt());
-        question = questionRepository.save(question);
-        List<Answer> answers = new ArrayList<>();
+        questionMapper.updateQuestion(question, request);
+        List<Answer> answers = question.getAnswers();
+        answers.forEach(answer -> answer.setActive(false));
         int indexAnswer = 0;
         for (String answerDescription : request.getAnswers()) {
             Answer answer = Answer.builder()
                     .answerDescription(answerDescription)
                     .question(question)
+                    .isActive(true)
                     .build();
             answer.setCorrect(indexAnswer == request.getCorrectIndex());
             answers.add(answer);
             indexAnswer++;
         }
-        question.setAnswers(answers);
         return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 

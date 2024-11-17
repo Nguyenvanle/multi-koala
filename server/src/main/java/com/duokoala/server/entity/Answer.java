@@ -20,4 +20,6 @@ public class Answer {
     @ManyToOne
     @JsonIgnore
     Question question;
+    @JsonIgnore
+    boolean isActive;
 }

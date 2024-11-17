@@ -3,6 +3,7 @@ package com.duokoala.server.service;
 import com.duokoala.server.dto.request.testRequest.TestCreateRequest;
 import com.duokoala.server.dto.request.testRequest.TestUpdateRequest;
 import com.duokoala.server.dto.response.TestResponse;
+import com.duokoala.server.entity.Answer;
 import com.duokoala.server.entity.Question;
 import com.duokoala.server.entity.Test;
 import com.duokoala.server.enums.courseEnums.Status;
@@ -72,6 +73,14 @@ public class TestService {
         var tests = testRepository.findAllByLesson(lesson);
         return tests.stream()
                 .filter(test -> !test.isDeleted())
+                .peek(test -> test.setQuestions(test.getQuestions().stream()
+                        .filter(Question::isActive)
+                        .peek(question ->
+                                question.setAnswers(question.getAnswers()
+                                        .stream()
+                                        .filter(Answer::isActive)
+                                        .toList()))
+                        .toList()))
                 .map(this::mapTestToTestResponse).toList();
     }
 
