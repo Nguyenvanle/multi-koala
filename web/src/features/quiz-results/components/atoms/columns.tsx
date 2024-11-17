@@ -13,7 +13,7 @@ import { MyReportBodyType } from "@/features/quiz-results/types/my-report";
 import { DataTableColumnHeader } from "@/features/table/components/atoms/column-header";
 import { dateFormatter } from "@/utils/date-formatter";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
@@ -166,14 +166,31 @@ export const quizColumns: ColumnDef<MyReportBodyType>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
-                <Link href={`/dashboard/courses/${report.courseId}`}>
-                  View course details
+                <Link
+                  href={`/dashboard/courses/${report.courseId}`}
+                  className="flex flex-row gap-2 items-center"
+                >
+                  <Eye className="w-4 h-4" />
+                  Course
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(report.courseId)}
-              >
-                Copy course ID
+              <DropdownMenuItem>
+                <Link
+                  href={`/dashboard/courses/${report.courseId}/lessons/${report.lessonId}`}
+                  className="flex flex-row gap-2 items-center"
+                >
+                  <Eye className="w-4 h-4" />
+                  Lesson
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  href={`/dashboard/courses/${report.courseId}/lessons/${report.lessonId}/tests/${report.testId}/edit`}
+                  className="flex flex-row gap-2 items-center"
+                >
+                  <Pencil className="w-4 h-4 " />
+                  Test
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

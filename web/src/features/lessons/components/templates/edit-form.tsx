@@ -12,6 +12,7 @@ import DeleteLessonDialog from "@/features/lessons/components/atoms/delete-dialo
 import DemoField from "@/features/lessons/components/atoms/demo-field";
 import LessonDescriptionField from "@/features/lessons/components/atoms/lesson-description";
 import LessonNameField from "@/features/lessons/components/atoms/name-field";
+import StudentList from "@/features/lessons/components/atoms/student-list";
 import useEditLessonForm from "@/features/lessons/hooks/useEditForm";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import ExamDialogForm from "@/features/test/components/molecules/add-dialog";
@@ -107,6 +108,7 @@ export default function EditLessonForm({
                   <LessonDescriptionField form={form} />
                 </CardContent>
               </Card>
+              <StudentList />
             </div>
 
             <div className="flex flex-col gap-4">
