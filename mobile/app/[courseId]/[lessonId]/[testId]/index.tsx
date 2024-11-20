@@ -22,6 +22,7 @@ import { useDetails } from "@/feature/course/hooks/useDetails";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
 import { ResultBody } from "@/feature/lesson/types/lesson";
 import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
+import SuggestCourse from "@/feature/course/components/courses/suggest-course/suggest-course";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -270,6 +271,7 @@ const Test = () => {
             <Text style={styles.submitButtonText}>Take this test again</Text>
           </TouchableOpacity>
         )}
+        <SuggestCourse enrollCourse={""} />
         <Text
           style={{
             ...styles.resultText,

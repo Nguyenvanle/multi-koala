@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,11 +12,9 @@ import { text } from "@/constants/Styles";
 import { Link, router } from "expo-router";
 import { useEnrolled } from "../../../hooks/useEnrrolled";
 import { EnrolledBody } from "../../../types/course-enrolled";
-import useUser from "@/feature/user/hooks/useUser";
 
-const MyCourses = ({ courseId }: { courseId: string }) => {
-  const { enrolled, errorMessage, loading } = useEnrolled(courseId);
-  const { user, setUser, setErrorMessage } = useUser();
+const MyCourses = () => {
+  const { enrolled, errorMessage, loading } = useEnrolled();
 
   if (loading) {
     return (
@@ -27,7 +24,13 @@ const MyCourses = ({ courseId }: { courseId: string }) => {
     );
   }
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => (
-    <Link href={`/${item.course.courseId}`} asChild>
+    <Link
+      href={{
+        pathname: "/[courseId]/coursedetail",
+        params: { courseId: item.course.courseId },
+      }}
+      asChild
+    >
       <TouchableOpacity style={styles.courseContainer}>
         <Image
           source={{ uri: item.course.image.imageUrl }}

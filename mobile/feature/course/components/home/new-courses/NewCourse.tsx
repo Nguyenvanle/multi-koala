@@ -55,7 +55,7 @@ const NewCourses = () => {
 
   const coursesToShow = getFilteredCourses(course, enrolled, user);
 
-  const renderCourseItem = ({ item }: { item: CourseBody | ResultBody }) => (
+  const renderCourseItem = ({ item }: { item: ResultBody }) => (
     <View style={styles.container}>
       <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>

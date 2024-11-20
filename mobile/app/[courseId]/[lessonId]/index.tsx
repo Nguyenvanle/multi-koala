@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,8 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { router, useGlobalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { text } from "@/constants/Styles";
@@ -18,8 +18,6 @@ import YoutubePlayer from "react-native-youtube-iframe";
 import { Video, ResizeMode } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
-import useUser from "@/feature/user/hooks/useUser";
-import { LessonBody, ResultBody } from "@/feature/lesson/types/lesson";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
 
@@ -27,9 +25,7 @@ const LessonDetails = () => {
   const { courseId, testId, lessonId } = useGlobalSearchParams();
 
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
-
   const testIdString = Array.isArray(testId) ? testId[0] : testId;
 
   const { enrolled } = useEnrolled();
@@ -37,18 +33,13 @@ const LessonDetails = () => {
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
 
-  const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
+  const { lesson, loadingLesson } = useLesson(courseIdString);
 
   const [showAllLessons, setShowAllLessons] = useState(false);
-
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const { testDetails } = useTestDetails(lessonIdString, testIdString);
 
-  const { testDetails, errorMessageTest, loadingTest } = useTestDetails(
-    lessonIdString,
-    testIdString
-  );
-
-  const handleFullScreenChange = async (status: any) => {
+  const handleFullScreenChange = async (status) => {
     setIsFullScreen(status);
     if (status) {
       await ScreenOrientation.lockAsync(
@@ -60,6 +51,19 @@ const LessonDetails = () => {
       );
     }
   };
+
+  useEffect(() => {
+    // Save lessonId to AsyncStorage
+    const saveLessonId = async () => {
+      try {
+        await AsyncStorage.setItem("lessonId", lessonIdString);
+      } catch (error) {
+        console.error("Failed to save the lesson ID to AsyncStorage:", error);
+      }
+    };
+
+    saveLessonId();
+  }, [lessonIdString]); // Run effect when lessonIdString changes
 
   if (loadingLessonDetails) {
     return (
@@ -77,7 +81,6 @@ const LessonDetails = () => {
     return <Text>No lesson detail</Text>;
   }
 
-  // Kiểm tra xem enrolled có phải là một mảng không
   const isEnrolled =
     Array.isArray(enrolled) &&
     enrolled.some(
@@ -114,15 +117,9 @@ const LessonDetails = () => {
     }
   };
 
-  const renderLessonItem = ({
-    item,
-    index,
-  }: {
-    item: ResultBody;
-    index: number;
-  }) => {
-    const isFirstThree = index < 3 || isEnrolled; // Hiển thị tất cả nếu đã đăng ký
-    const isSelected = item.lesson.lessonId === lessonIdString; // Kiểm tra xem bài học này có được chọn không
+  const renderLessonItem = ({ item, index }) => {
+    const isFirstThree = index < 3 || isEnrolled;
+    const isSelected = item.lesson.lessonId === lessonIdString;
     return (
       <TouchableOpacity
         style={[
@@ -155,6 +152,7 @@ const LessonDetails = () => {
       </TouchableOpacity>
     );
   };
+
   const displayedLessons = showAllLessons ? lesson : lesson?.slice(0, 3);
 
   return (
@@ -182,7 +180,6 @@ const LessonDetails = () => {
             </View>
           ) : lesson && lesson.length > 0 ? (
             <>
-              {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
               <TouchableOpacity
                 style={styles.buyButton}
                 onPress={() => {
@@ -286,7 +283,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.grey,
   },
-
   lessonThumbnail: {
     width: 80,
     height: 80,
