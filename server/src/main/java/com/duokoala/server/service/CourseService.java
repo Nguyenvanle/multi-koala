@@ -43,8 +43,7 @@ import static com.duokoala.server.enums.courseEnums.PerformanceCriteria.calculat
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseService {
-    private final RecommendRepository recommendRepository;
-    private final ReviewRepository reviewRepository;
+    ReviewRepository reviewRepository;
     CourseRepository courseRepository;
     CourseMapper courseMapper;
     TypeRepository typeRepository;
@@ -143,7 +142,9 @@ public class CourseService {
         var courses = courseRepository
                 .findAllByUploadedByTeacher
                         (authenticationService.getAuthenticatedTeacher());
-        return courses.stream().map(courseMapper::toCourseResponse).toList();
+        return courses.stream()
+                .sorted(Comparator.comparing(Course::getCourseUploadedAt))
+                .map(courseMapper::toCourseResponse).toList();
     }
 
     public void delete(String courseId) {
