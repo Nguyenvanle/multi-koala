@@ -81,14 +81,4 @@ public class LessonStudentService {
         enrollCourse.setLastUpdate(LocalDateTime.now());
         enrollCourseRepository.save(enrollCourse);
     }
-
-    public void updateStudentEnroll() { //query use only one to insert data
-        List<EnrollCourse> enrollCourses = enrollCourseRepository.findAll();
-        for (EnrollCourse enroll : enrollCourses) {
-            List<LessonStudent> lessonStudents = enroll.getCourse().getLessons().stream()
-                    .map(lesson -> create(lesson, enroll.getStudent()))
-                    .toList();
-            lessonStudentRepository.saveAll(lessonStudents);
-        }
-    }
 }
