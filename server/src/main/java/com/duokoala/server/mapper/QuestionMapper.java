@@ -1,6 +1,7 @@
 package com.duokoala.server.mapper;
 
 
+import com.duokoala.server.dto.request.questionRequest.AnswerRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionCreateRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
 import com.duokoala.server.dto.response.answerResponse.AnswerResponse;
@@ -36,5 +37,5 @@ public interface QuestionMapper {
     @Mapping(target = "answers", ignore = true)
     void updateQuestion(@MappingTarget Question question, QuestionUpdateRequest request);
 
-    QuestionCreateRequest toQuestionCreateRequest(QuestionUpdateRequest questionUpdateRequest);
+    void updateAnswer(@MappingTarget Answer answer, AnswerRequest answerRequest);
 }
