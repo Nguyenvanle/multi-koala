@@ -1,5 +1,6 @@
 package com.duokoala.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +21,7 @@ public class Answer {
     String answerDescription;
     boolean isCorrect;
     @ManyToOne
-    @JsonIgnore
+    @JsonBackReference
     Question question;
     @JsonIgnore
     boolean isActive;

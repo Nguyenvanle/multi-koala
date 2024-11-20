@@ -3,6 +3,7 @@ package com.duokoala.server.entity;
 import com.duokoala.server.entity.media.Image;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,7 @@ public class Question {
     Test test;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     Image image;
+    @JsonManagedReference
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Answer> answers;
     @Builder.Default

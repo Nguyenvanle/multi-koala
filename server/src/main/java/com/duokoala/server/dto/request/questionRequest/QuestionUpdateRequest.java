@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +12,5 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionUpdateRequest {
     String questionDescription;
-//    String imageUrl;
-    List<String> answers;
-    int correctIndex;
+    List<AnswerRequest> answers;
 }

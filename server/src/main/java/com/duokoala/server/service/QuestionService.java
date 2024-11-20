@@ -1,5 +1,6 @@
 package com.duokoala.server.service;
 
+import com.duokoala.server.dto.request.questionRequest.AnswerRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionCreateRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionSubmitRequest;
 import com.duokoala.server.dto.request.questionRequest.QuestionUpdateRequest;
@@ -87,13 +88,15 @@ public class QuestionService {
         for (String answerDescription : request.getAnswers()) {
             Answer answer = Answer.builder()
                     .answerDescription(answerDescription)
+                    .answerUploadedAt(LocalDateTime.now().plusSeconds(indexAnswer))
                     .question(question)
+                    .isActive(true)
                     .build();
             answer.setCorrect(indexAnswer == request.getCorrectIndex());
             answers.add(answer);
             indexAnswer++;
         }
-        question.setAnswers(answers);
+        answerRepository.saveAll(answers);
         return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
 
@@ -102,18 +105,30 @@ public class QuestionService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
         questionMapper.updateQuestion(question, request);
-        List<Answer> answers = question.getAnswers();
-        answers.forEach(answer -> answer.setActive(false));
-        int indexAnswer = 0;
-        for (String answerDescription : request.getAnswers()) {
-            Answer answer = Answer.builder()
-                    .answerDescription(answerDescription)
-                    .question(question)
-                    .isActive(true)
-                    .build();
-            answer.setCorrect(indexAnswer == request.getCorrectIndex());
-            answers.add(answer);
-            indexAnswer++;
+        List<Answer> currentAnswers = question.getAnswers();
+        for (AnswerRequest answer : request.getAnswers()) {
+            if (answer.getAnswerId() == null) {
+                Answer newAnswer = Answer.builder()
+                        .answerDescription(answer.getAnswerDescription())
+                        .isCorrect(answer.isCorrect())
+                        .question(question)
+                        .answerUploadedAt(LocalDateTime.now())
+                        .isActive(true)
+                        .build();
+                answerRepository.save(newAnswer);
+            } else {
+                Answer oldAnswer = answerRepository.findById(answer.getAnswerId())
+                        .orElseThrow(() -> new AppException(ErrorCode.ANSWER_NOT_FOUND));
+                if (!oldAnswer.getQuestion().equals(question))
+                    throw new AppException(ErrorCode.ANSWER_DOES_NOT_BELONG_TO_QUESTION);
+                questionMapper.updateAnswer(oldAnswer, answer);
+            }
+        }
+        for (Answer answer : currentAnswers) {
+            if (request.getAnswers().stream().noneMatch(a -> a.getAnswerId() != null && a.getAnswerId().equals(answer.getAnswerId()))) {
+                answer.setActive(false);
+            }
+            answerRepository.save(answer);
         }
         return questionMapper.toQuestionResponse(questionRepository.save(question));
     }
