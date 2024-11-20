@@ -24,13 +24,7 @@ const MyCourses = () => {
     );
   }
   const renderCourseItem = ({ item }: { item: EnrolledBody }) => (
-    <Link
-      href={{
-        pathname: "/[courseId]/coursedetail",
-        params: { courseId: item.course.courseId },
-      }}
-      asChild
-    >
+    <Link href={`/${item.course.courseId}`} asChild>
       <TouchableOpacity style={styles.courseContainer}>
         <Image
           source={{ uri: item.course.image.imageUrl }}
