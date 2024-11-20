@@ -19,15 +19,18 @@ import {
   calculateTotalStudents,
   enrichDataWithPercentages,
 } from "@/features/dashboard/utils/chart";
-import { CHART_CONFIG, CHART_DATA } from "@/features/dashboard/constants/chart";
+import { CHART_CONFIG } from "@/features/dashboard/constants/chart";
 import {
   CenterLabel,
   PieChartLabel,
   PieTooltip,
 } from "@/features/dashboard/components/atoms";
 import { useMemo } from "react";
+import { StudentChartBodyType } from "@/features/enroll-courses/types/my-student-chart";
+import { ChartDataItem } from "@/features/dashboard/types/chart";
 
 interface VisitorsPieChartProps {
+  studentChartData: StudentChartBodyType;
   title?: string;
   description?: string;
   trendingPercentage?: number;
@@ -35,15 +38,50 @@ interface VisitorsPieChartProps {
 }
 
 const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
+  studentChartData,
   title = "Student Status Analysis",
   description = "October 2024",
   trendingPercentage = 5.2,
   dateRange = "this month",
 }) => {
-  const totalStudents = useMemo(() => calculateTotalStudents(CHART_DATA), []);
+  const processedData = useMemo(
+    (): ChartDataItem[] => [
+      {
+        browser: "new",
+        students: studentChartData.studentStatus[0].numberOfStudents,
+        fill: "var(--color-new)",
+      },
+      {
+        browser: "active",
+        students: studentChartData.studentStatus[1].numberOfStudents,
+        fill: "var(--color-active)",
+      },
+      {
+        browser: "pause",
+        students: studentChartData.studentStatus[2].numberOfStudents,
+        fill: "var(--color-pause)",
+      },
+      {
+        browser: "done",
+        students: studentChartData.studentStatus[3].numberOfStudents,
+        fill: "var(--color-done)",
+      },
+      {
+        browser: "other",
+        students: studentChartData.studentStatus[4].numberOfStudents,
+        fill: "var(--color-other)",
+      },
+    ],
+    [studentChartData.studentStatus]
+  );
+
+  const totalStudents = useMemo(
+    () => calculateTotalStudents(processedData),
+    [processedData]
+  );
   const chartDataWithPercentages = useMemo(
-    () => enrichDataWithPercentages(CHART_DATA, totalStudents),
-    [totalStudents]
+    () => enrichDataWithPercentages(processedData, totalStudents),
+    [processedData, totalStudents]
   );
 
   return (

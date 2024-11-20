@@ -1,21 +1,24 @@
 import { CardInfo } from "@/features/dashboard/components/atoms/card-info";
 import VisitorsPieChart from "@/features/dashboard/components/molecules/student-chart";
+import { StudentChartBodyType } from "@/features/enroll-courses/types/my-student-chart";
 import { TeacherStatisticsBodyType } from "@/features/users/types/teacher-statistic";
 import { Activity, BookOpen, GraduationCap, Users } from "lucide-react";
 
 interface DashboardHeaderProps {
   statistics: TeacherStatisticsBodyType;
   teacherRating: number;
+  studentChartData: StudentChartBodyType;
 }
 
 export function DashboardHeader({
   statistics,
   teacherRating,
+  studentChartData,
 }: DashboardHeaderProps) {
   return (
     <div className="grid grid-cols-3 gap-4 xl:gap-6">
       <div className="col-span-2">
-        <VisitorsPieChart />
+        <VisitorsPieChart studentChartData={studentChartData} />
       </div>
       <div className="flex flex-col gap-4">
         <CardInfo

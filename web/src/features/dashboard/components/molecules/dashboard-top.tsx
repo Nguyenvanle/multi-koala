@@ -62,8 +62,7 @@ export default function DashboardTopPerformingCourses({
 
   useEffect(() => {
     const fetchTopCourses = async () => {
-      const res = await mutate(`get-top-courses`);
-      console.log(res);
+      await mutate(`get-top-courses`);
     };
     fetchTopCourses();
   }, [mutate, months]);

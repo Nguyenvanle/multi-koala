@@ -1,6 +1,6 @@
 "use server";
 
-import { EnrollCourseService } from "@/features/enroll-courses/services/enroll-courses";
+import { enrollCourseService } from "@/features/enroll-courses/services/enroll-courses";
 import { cookies } from "next/headers";
 
 export async function getRecentEnroll() {
@@ -10,7 +10,7 @@ export async function getRecentEnroll() {
     throw new Error("No token in cookies");
   }
 
-  const res = await EnrollCourseService.getAllRecentEnroll(accessToken);
+  const res = await enrollCourseService.getAllRecentEnroll(accessToken);
 
   if (!res.result?.result) {
     throw new Error(
