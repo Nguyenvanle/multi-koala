@@ -18,7 +18,14 @@ export function DashboardHeader({
   return (
     <div className="grid grid-cols-3 gap-4 xl:gap-6">
       <div className="col-span-2">
-        <VisitorsPieChart studentChartData={studentChartData} />
+        <VisitorsPieChart
+          studentChartData={studentChartData}
+          description={new Date(studentChartData.month).toLocaleString(
+            "en-US",
+            { month: "long", year: "numeric" }
+          )}
+          trendingPercentage={studentChartData.trend}
+        />
       </div>
       <div className="flex flex-col gap-4">
         <CardInfo
@@ -28,7 +35,7 @@ export function DashboardHeader({
           href={`/dashboard/courses?sort=sales`}
         />
         <CardInfo
-          title="Active Students"
+          title="Total Students"
           value={`${statistics?.totalStudents ?? 0} students`}
           icon={<Users className="h-4 w-4 text-primary" />}
           href={`/dashboard/students`}

@@ -40,8 +40,8 @@ interface VisitorsPieChartProps {
 const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
   studentChartData,
   title = "Student Status Analysis",
-  description = "October 2024",
-  trendingPercentage = 5.2,
+  description,
+  trendingPercentage,
   dateRange = "this month",
 }) => {
   const processedData = useMemo(
@@ -57,17 +57,17 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
         fill: "var(--color-active)",
       },
       {
-        browser: "pause",
+        browser: "completed lesson",
         students: studentChartData.studentStatus[2].numberOfStudents,
-        fill: "var(--color-pause)",
-      },
-      {
-        browser: "done",
-        students: studentChartData.studentStatus[3].numberOfStudents,
         fill: "var(--color-done)",
       },
       {
-        browser: "other",
+        browser: "completed course",
+        students: studentChartData.studentStatus[3].numberOfStudents,
+        fill: "var(--color-pause)",
+      },
+      {
+        browser: "inactive",
         students: studentChartData.studentStatus[4].numberOfStudents,
         fill: "var(--color-other)",
       },
@@ -90,7 +90,7 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
         <CardTitle className="text-center">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col items-center lg:flex-row gap-6 pb-0 h-full lg:ml-[calc(10vw)]">
+      <CardContent className="flex flex-col items-center lg:flex-row gap-6 pb-0 h-full">
         <ChartContainer
           config={CHART_CONFIG}
           className="flex flex-1 mx-auto aspect-square max-h-[250px] w-full"
@@ -98,7 +98,9 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={
+                <ChartTooltipContent hideLabel className="min-w-[10rem] " />
+              }
             />
             <Pie
               data={chartDataWithPercentages}
@@ -131,7 +133,7 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-2">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by {trendingPercentage}% this month{" "}
+          Trending up by {trendingPercentage?.toFixed(2)}% this month{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
