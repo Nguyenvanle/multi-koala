@@ -94,7 +94,6 @@ public class CourseService {
         var fields = fieldRepository.findAllById(request.getFields());
         course.setFields(new HashSet<>(fields));
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
-//        course.getImage().setImageUrl(request.getImageUrl());
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
 
@@ -115,7 +114,10 @@ public class CourseService {
     }
 
     public List<CourseResponse> getAll() {
-        var courses = courseRepository.findAll();
+        var courses = courseRepository.findAll().stream()
+                .filter(course -> !course.isDeleted())
+                .sorted(Comparator.comparing(Course::getCourseUploadedAt).reversed()) //newest first
+                .toList();
         return courses.stream().map(courseMapper::toCourseResponse).toList();
     }
 
@@ -130,7 +132,10 @@ public class CourseService {
 
     public List<CourseResponse> getAvailableCourses() {
         var courses = courseRepository.findAllByStatus(Status.APPROVED);
-        return courses.stream().map(courseMapper::toCourseResponse).toList();
+        return courses.stream()
+                .filter(course -> !course.isDeleted())
+                .sorted(Comparator.comparing(Course::getCourseUploadedAt).reversed()) // newest first
+                .map(courseMapper::toCourseResponse).toList();
     }
 
     public List<CourseResponse> getListByTeacherId(String teacherId) {
@@ -143,7 +148,8 @@ public class CourseService {
                 .findAllByUploadedByTeacher
                         (authenticationService.getAuthenticatedTeacher());
         return courses.stream()
-                .sorted(Comparator.comparing(Course::getCourseUploadedAt))
+                .filter(course -> !course.isDeleted())
+                .sorted(Comparator.comparing(Course::getCourseUploadedAt).reversed()) // newest first
                 .map(courseMapper::toCourseResponse).toList();
     }
 
