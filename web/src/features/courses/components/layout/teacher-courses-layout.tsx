@@ -24,6 +24,7 @@ interface TeacherCourseTemplateProps {
   currentSort: SortOption | null;
   controls: PaginationControlProps;
   pagination: PaginationProps;
+  coursesLoading: boolean;
 }
 
 const TeacherCourseLayout = ({
@@ -34,6 +35,7 @@ const TeacherCourseLayout = ({
   currentSort,
   controls,
   pagination,
+  coursesLoading,
 }: TeacherCourseTemplateProps) => {
   return (
     <div className="w-full flex flex-col gap-2 xl:gap-4">
@@ -54,6 +56,7 @@ const TeacherCourseLayout = ({
             currentSort={currentSort}
             controls={controls}
             pagination={pagination}
+            coursesLoading={coursesLoading}
           />
         </TabsContent>
 
@@ -64,6 +67,7 @@ const TeacherCourseLayout = ({
             currentSort={currentSort}
             controls={controls}
             pagination={pagination}
+            coursesLoading={coursesLoading}
           />
         </TabsContent>
 
@@ -74,6 +78,7 @@ const TeacherCourseLayout = ({
             currentSort={currentSort}
             controls={controls}
             pagination={pagination}
+            coursesLoading={coursesLoading}
           />
         </TabsContent>
 
@@ -84,6 +89,7 @@ const TeacherCourseLayout = ({
             currentSort={currentSort}
             controls={controls}
             pagination={pagination}
+            coursesLoading={coursesLoading}
           />
         </TabsContent>
         <TabsContent value={COURSE_VERIFY.Values.REJECTED}>
@@ -93,6 +99,7 @@ const TeacherCourseLayout = ({
             currentSort={currentSort}
             controls={controls}
             pagination={pagination}
+            coursesLoading={coursesLoading}
           />
         </TabsContent>
       </Tabs>

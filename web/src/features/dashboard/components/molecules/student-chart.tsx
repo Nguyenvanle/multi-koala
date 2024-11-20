@@ -47,12 +47,12 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
   );
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-center">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col sm:flex-row gap-6 pb-0">
+      <CardContent className="flex flex-col items-center lg:flex-row gap-6 pb-0 h-full lg:ml-[calc(10vw)]">
         <ChartContainer
           config={CHART_CONFIG}
           className="flex flex-1 mx-auto aspect-square max-h-[250px] w-full"
@@ -85,7 +85,7 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
           </PieChart>
         </ChartContainer>
 
-        <div className="flex flex-0 flex-row flex-wrap sm:flex-col gap-4 mr-0 sm:mr-8 xl:mr-16 justify-center">
+        <div className="flex flex-0 flex-row flex-wrap lg:flex-col gap-4 mr-0 sm:mr-8 xl:mr-16 justify-center">
           {chartDataWithPercentages.map((item, index) => (
             <PieTooltip key={index} index={index} item={item} />
           ))}

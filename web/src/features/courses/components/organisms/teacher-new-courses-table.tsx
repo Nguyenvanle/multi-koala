@@ -25,6 +25,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import {
+  EmptyState,
+  LoadingState,
+} from "@/features/courses/components/atoms/empty-state";
 
 export interface TeacherTableProps {
   courses: TeacherMyCoursesBodyType;
@@ -32,6 +36,7 @@ export interface TeacherTableProps {
   currentSort: SortOption | null;
   controls: PaginationControlProps;
   pagination: PaginationProps;
+  coursesLoading: boolean;
 }
 
 export default function TeacherTable({
@@ -40,8 +45,8 @@ export default function TeacherTable({
   currentSort,
   controls,
   pagination,
+  coursesLoading,
 }: TeacherTableProps) {
-  // Tính toán start index cho trang hiện tại
   const startIndex = (pagination.currentPage - 1) * pagination.pageSize;
 
   return (
@@ -67,21 +72,33 @@ export default function TeacherTable({
         </div>
       </CardHeader>
       <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6 min-h-[366px] xl:min-h-[444px]">
-        <Table divClassName="border rounded">
-          <TeacherTableHeader
-            setSortOption={setSortOption}
-            sortOption={currentSort}
-          />
-          <TableBody>
-            {courses.map((course: TeacherMyCourseBodyType, index) => (
-              <TeacherTableRow
-                key={course.courseId}
-                course={course}
-                index={startIndex + index} // +1 vì muốn bắt đầu từ 1 thay vì 0
+        {coursesLoading ? (
+          <div className="flex flex-col justify-center min-h-[366px] xl:min-h-[444px]">
+            <LoadingState />
+          </div>
+        ) : courses.length === 0 ? (
+          <div className="flex flex-col justify-center min-h-[366px] xl:min-h-[444px]">
+            <EmptyState />
+          </div>
+        ) : (
+          <div className="border rounded">
+            <Table>
+              <TeacherTableHeader
+                setSortOption={setSortOption}
+                sortOption={currentSort}
               />
-            ))}
-          </TableBody>
-        </Table>
+              <TableBody>
+                {courses.map((course: TeacherMyCourseBodyType, index) => (
+                  <TeacherTableRow
+                    key={course.courseId}
+                    course={course}
+                    index={startIndex + index}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex flex-col gap-4 md:flex-row justify-between items-center px-4 pb-4 sm:px-6 sm:pb-6">
         <div className="text-sm text-muted-foreground">

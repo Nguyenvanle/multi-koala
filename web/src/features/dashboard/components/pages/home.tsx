@@ -12,12 +12,6 @@ export default function DashboardHomePage() {
     teacherRating,
     topCourses,
     students,
-
-    statisticLoading,
-    ratingLoading,
-    topCoursesLoading,
-    recentEnrollLoading,
-
     search,
     pagination,
     paginationControls,
@@ -27,23 +21,6 @@ export default function DashboardHomePage() {
     months,
     setMonths,
   } = useDashboardHome();
-
-  if (
-    statisticLoading ||
-    topCoursesLoading ||
-    ratingLoading ||
-    recentEnrollLoading
-  )
-    return (
-      <div className="flex flex-col flex-1 gap-4 xl:gap-6">
-        <Skeleton className="h-24" />
-        <div className="grid gap-4 xl:gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          <Skeleton className="h-48" />
-          <Skeleton className="h-48" />
-          <Skeleton className="h-48" />
-        </div>
-      </div>
-    );
 
   return (
     <div className="flex flex-col flex-1 gap-4 xl:gap-6">

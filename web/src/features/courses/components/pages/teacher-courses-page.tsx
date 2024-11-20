@@ -20,15 +20,6 @@ export default function TeacherCoursesPage() {
     initialPage: 1,
   });
 
-  // loading
-  const isLoading = coursesLoading;
-  if (isLoading) {
-    return <TeacherCourseSkeletonTemplate />;
-  }
-  if (!courses) {
-    return <ErrorMessage />;
-  }
-
   // render
   return (
     <TeacherCourseTemplate
@@ -39,6 +30,7 @@ export default function TeacherCoursesPage() {
       currentSort={sortOption}
       controls={paginationControls}
       pagination={pagination}
+      coursesLoading={coursesLoading}
     />
   );
 }
