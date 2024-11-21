@@ -7,13 +7,13 @@ export const postCSVCourse = async (data: FormData) => {
   const accessToken = cookies().get("token")?.value;
 
   if (!accessToken) {
-    throw new Error("No token in cookies");
+    return { success: false, message: "Unauthorized" };
   }
 
   const res = await courseService.createCSVCourse(accessToken, data);
 
   if (!res.success) {
-    throw new Error("Failed to create course from CSV: " + res.message);
+    return { success: false, message: res.message };
   }
 
   return { success: true, message: res.message };

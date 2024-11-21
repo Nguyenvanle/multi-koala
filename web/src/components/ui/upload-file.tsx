@@ -29,6 +29,7 @@ export function InputFile({
 }: InputFileProps) {
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [csvFields, setCsvFields] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
@@ -97,7 +98,24 @@ export function InputFile({
       const res = await postCSVCourse(formData);
 
       if (!res.success) {
-        throw new Error(res.message);
+        const missingFieldsMatch = res.message.match(/\[(.*?)\]/);
+        if (missingFieldsMatch) {
+          const missingFields = missingFieldsMatch[1].split(", ");
+          setCsvFields(missingFields);
+          toast({
+            title: "Error",
+            description: `The CSV file is missing the following required fields: ${missingFields.join(", ")}. Please update the file and try again.`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: res.message,
+            variant: "destructive",
+          });
+        }
+        onSaveError?.();
+        return;
       }
 
       Promise.all([
@@ -118,16 +136,17 @@ export function InputFile({
       }
       setFileName(null);
       setCurrentFile(null);
+      setCsvFields([]);
 
       // Call success callback
       onSaveSuccess?.();
-    } catch (err) {
+    } catch (err: any) {
       setError(
         err instanceof Error ? err.message : "An error occurred during save"
       );
       toast({
         title: "Error",
-        description: "An error occurred during save",
+        description: err.message,
         variant: "destructive",
       });
 
@@ -153,7 +172,17 @@ export function InputFile({
       {fileName && (
         <p className="text-sm text-gray-500 mt-1">Selected file: {fileName}</p>
       )}
-      {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-500 mt-1">
+          {error}. Please check the file and try again.
+        </p>
+      )}
+      {csvFields.length > 0 && (
+        <p className="text-sm text-red-500 mt-1">
+          The CSV file is missing the following required fields:{" "}
+          {csvFields.join(", ")}. Please update the file and try again.
+        </p>
+      )}
       {currentFile && (
         <Button
           onClick={handleSave}

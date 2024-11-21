@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { InputFile } from "@/components/ui/upload-file";
+import { toast } from "@/components/ui/use-toast";
 
 export function DialogCSVCourse({
   mutateCourses,
@@ -36,7 +37,7 @@ export function DialogCSVCourse({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="h-8">
-          Upload .csv
+          Upload .Csv
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -48,7 +49,7 @@ export function DialogCSVCourse({
         </DialogHeader>
 
         <InputFile
-          label="CSV File"
+          label="Upload"
           onFileChange={(file) => {
             // Optionally handle file selection if needed
           }}
