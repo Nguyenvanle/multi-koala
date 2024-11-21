@@ -60,7 +60,7 @@ const NewCourses = () => {
       <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>
           <Image
-            source={{ uri: item.image.imageUrl }}
+            source={{ uri: item?.image?.imageUrl }}
             style={styles.courseImage}
           />
           <View style={styles.containerText}>

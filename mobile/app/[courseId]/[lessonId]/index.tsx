@@ -23,18 +23,13 @@ import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
 
 const LessonDetails = () => {
   const { courseId, testId, lessonId } = useGlobalSearchParams();
-
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const lessonIdString = Array.isArray(lessonId) ? lessonId[0] : lessonId;
   const testIdString = Array.isArray(testId) ? testId[0] : testId;
-
   const { enrolled } = useEnrolled();
-
   const { lessonDetails, errorMessageDetails, loadingLessonDetails } =
     useLessonDetails(lessonIdString);
-
   const { lesson, loadingLesson } = useLesson(courseIdString);
-
   const [showAllLessons, setShowAllLessons] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { testDetails } = useTestDetails(lessonIdString, testIdString);
@@ -52,18 +47,14 @@ const LessonDetails = () => {
     }
   };
 
-  useEffect(() => {
-    // Save lessonId to AsyncStorage
-    const saveLessonId = async () => {
-      try {
-        await AsyncStorage.setItem("lessonId", lessonIdString);
-      } catch (error) {
-        console.error("Failed to save the lesson ID to AsyncStorage:", error);
-      }
-    };
-
-    saveLessonId();
-  }, [lessonIdString]); // Run effect when lessonIdString changes
+  // Save lessonId to AsyncStorage
+  const saveLessonId = async () => {
+    try {
+      await AsyncStorage.setItem("lessonId", lessonIdString);
+    } catch (error) {
+      console.error("Failed to save the lesson ID to AsyncStorage:", error);
+    }
+  };
 
   if (loadingLessonDetails) {
     return (
@@ -88,7 +79,7 @@ const LessonDetails = () => {
     );
 
   const renderVideo = () => {
-    if (!lessonDetails) return null;
+    if (lessonDetails.video.videoUrl === "videoUrl-test-update") return;
     if (
       lessonDetails.video.videoUrl.includes("youtube.com") ||
       lessonDetails.video.videoUrl.includes("youtu.be")
@@ -158,7 +149,11 @@ const LessonDetails = () => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, paddingBottom: 80 }}>
-        {renderVideo()}
+        {lessonDetails?.video?.videoUrl != "videoUrl-test-update" ? (
+          <View style={styles.video}>{renderVideo()}</View>
+        ) : (
+          ""
+        )}
         <View style={styles.content}>
           <Text style={styles.title} numberOfLines={2}>
             {lessonDetails.lessonName}

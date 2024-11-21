@@ -1,6 +1,9 @@
+import { Colors } from "@/constants/Colors";
+import { text } from "@/constants/Styles";
 import { useSuggestCourse } from "@/feature/course/hooks/useSuggestCourse";
 import { CourseBody } from "@/feature/course/types/suggest-course";
-import React, { useEffect } from "react";
+import { Link, router, useGlobalSearchParams } from "expo-router";
+import React from "react";
 import {
   Modal,
   View,
@@ -14,18 +17,26 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
-const SuggestCourse = ({ enrollCourse }) => {
-  const { suggestCourse, loading, error, fetchSuggestCourse } =
-    useSuggestCourse();
+const SuggestCourse = () => {
+  const { courseId } = useGlobalSearchParams();
+  const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
+  const { suggestCourse, loading, error } = useSuggestCourse(courseIdString);
 
   // CourseCard Component
   const CourseCard = ({ item }: { item: CourseBody }) => {
+    // Xác định màu sắc cho courseLevel
+    let courseLevelColor = Colors.black; // Mặc định là màu đen
+    if (item.courseLevel === "BEGINNER") {
+      courseLevelColor = "#0d9488"; // Màu xanh lá
+    } else if (item.courseLevel === "INTERMEDIATE") {
+      courseLevelColor = "#eab308"; // Màu vàng
+    } else if (item.courseLevel === "ADVANCED") {
+      courseLevelColor = "#f97316"; // Màu cam
+    } else if (item.courseLevel === "EXPERT") {
+      courseLevelColor = "#ef4444"; // Màu đỏ
+    }
     return (
-      <TouchableOpacity
-        style={styles.card}
-        // onPress={() => router.push("/")}
-        activeOpacity={0.7}
-      >
+      <Link style={styles.card} href={`/${item.courseId}`}>
         <Image
           source={{ uri: item.image.imageUrl }} // Đảm bảo cung cấp URI hợp lệ cho thumbnail
           style={styles.thumbnail}
@@ -47,21 +58,22 @@ const SuggestCourse = ({ enrollCourse }) => {
           <View style={styles.courseInfo}>
             <View style={styles.infoItem}>
               <Icon name="book-open" size={16} color="#666" />
-              <Text style={styles.infoText}>{item.courseLevel}</Text>
+              <Text style={[styles.infoText, { color: courseLevelColor }]}>
+                {item.courseLevel}
+              </Text>
             </View>
 
             <View style={styles.priceContainer}>
-              <Icon name="tag" size={16} color="#007AFF" />
-              <Text style={styles.priceText}>{item.coursePrice}</Text>
+              <Icon name="tag" size={16} color={Colors.teal_dark} />
+              <Text style={styles.priceText}>{item.coursePrice}$</Text>
             </View>
           </View>
 
           <TouchableOpacity style={styles.viewButton}>
-            <Text style={styles.viewButtonText}>Xem chi tiết</Text>
-            <Icon name="arrow-right" size={16} color="#fff" />
+            <Text style={styles.viewButtonText}>Buy Now</Text>
           </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </Link>
     );
   };
 
@@ -69,14 +81,13 @@ const SuggestCourse = ({ enrollCourse }) => {
     <Modal animationType="slide" transparent={true}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          {loading && <Text>Đang tải khóa học gợi ý...</Text>}
+          {loading && <Text>Loading...</Text>}
           {error && <Text style={{ color: "red" }}>{error}</Text>}
 
           <View style={styles.header}>
-            <Text style={styles.title}>Khóa học tiếp theo cho bạn</Text>
+            <Text style={styles.title}>Next course for you</Text>
             <Text style={styles.subtitle}>
-              Dựa trên khóa học hiện tại của bạn, chúng tôi đề xuất những khóa
-              học sau
+              Based on your current course, we recommend the following courses.
             </Text>
           </View>
 
@@ -86,8 +97,11 @@ const SuggestCourse = ({ enrollCourse }) => {
             keyExtractor={(item) => item.courseId}
           />
 
-          <TouchableOpacity style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Đóng</Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => router.replace("/(home)/home")}
+          >
+            <Text style={styles.closeButtonText}>Skip</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -105,7 +119,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    width: width * 0.9,
+    margin: 10,
     maxHeight: "80%",
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -154,12 +168,12 @@ const styles = StyleSheet.create({
   courseTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: Colors.black,
     marginBottom: 8,
   },
   courseDescription: {
     fontSize: 14,
-    color: "#666",
+    color: Colors.dark_grey,
     marginBottom: 12,
   },
   instructorContainer: {
@@ -176,7 +190,7 @@ const styles = StyleSheet.create({
   instructorName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: Colors.teal_dark,
   },
   courseInfo: {
     flexDirection: "row",
@@ -191,7 +205,6 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 8,
     fontSize: 14,
-    color: "#666",
   },
   priceContainer: {
     flexDirection: "row",
@@ -201,10 +214,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
     fontWeight: "bold",
-    color: "#007AFF",
+    color: Colors.teal_dark,
   },
   viewButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: Colors.teal_dark,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -212,7 +225,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   viewButtonText: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: 16,
     fontWeight: "600",
     marginRight: 8,
@@ -224,8 +237,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeButtonText: {
-    color: "#333",
-    fontSize: 16,
+    ...text.h4,
+    color: Colors.black,
     fontWeight: "600",
   },
 });
