@@ -269,18 +269,55 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     }));
   };
 
-  const handleRemoveAnswer = (questionId: string, answerId: string) => {
-    setTestData((prevData) => ({
-      ...prevData,
-      questions: prevData.questions.map((q) =>
-        q.questionId === questionId
-          ? {
-              ...q,
-              answers: q.answers?.filter((a) => a.answerId !== answerId) || [],
-            }
-          : q
-      ),
-    }));
+  const handleRemoveAnswer = async (questionId: string, answerId: string) => {
+    try {
+      // 1. Tìm question để loại bỏ answer
+      const currentQuestion = testData.questions.find(
+        (question) => question.questionId === questionId
+      );
+
+      if (!currentQuestion) {
+        console.error("Question not found");
+        return;
+      }
+
+      // 2. Loại bỏ answer trước khi update
+      const filteredAnswers =
+        currentQuestion.answers?.filter(
+          (answer) => answer.answerId !== answerId
+        ) || [];
+
+      // 3. Cập nhật state với danh sách answers đã được lọc
+      setTestData((prevData) => ({
+        ...prevData,
+        questions: prevData.questions.map((question) =>
+          question.questionId === questionId
+            ? {
+                ...question,
+                answers: filteredAnswers,
+              }
+            : question
+        ),
+      }));
+
+      // 4. Chuẩn bị dữ liệu upload
+      const uploadData: PutQuestionBodyType = {
+        questionId: currentQuestion.questionId,
+        questionDescription: currentQuestion.questionDescription,
+        answers: filteredAnswers.map((answer) => ({
+          answerId: answer.answerId,
+          answerDescription: answer.answerDescription,
+          correct: answer.correct,
+        })),
+        image: null,
+      };
+
+      // 5. Gọi API update
+      const response = await putQuestionV2(questionId, uploadData);
+      console.log("Question updated successfully:", response);
+    } catch (error) {
+      console.error("Failed to remove answer:", error);
+    }
   };
 
   const handleDeleteQuestion = async (questionId: string) => {
