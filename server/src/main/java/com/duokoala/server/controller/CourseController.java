@@ -135,6 +135,13 @@ public class CourseController {
                 .build();
     }
 
+    @GetMapping("/courses/{courseId}/suggest-courses")
+    ApiResponse<List<CourseResponse>> getSuggestCourses(@PathVariable String courseId) {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.getSuggestCourses(courseId))
+                .build();
+    }
+
     @DeleteMapping("/courses/{courseId}")
     ApiResponse<Void> delete(@PathVariable String courseId) {
         courseService.delete(courseId);
