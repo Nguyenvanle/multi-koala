@@ -18,6 +18,8 @@ public interface CourseRepository extends JpaRepository<Course, String> {
                     "WHERE uploaded_by_teacher_user_id = :teacherId")
     List<Course> getListByTeacherId(@Param("teacherId") String teacherId);
 
+    boolean existsByCourseName(String string);
+
     @Query(nativeQuery = true,
             value = "SELECT MAX(course_price) FROM course")
     Float getMaxPrice();

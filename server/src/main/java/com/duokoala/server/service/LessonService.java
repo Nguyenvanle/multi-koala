@@ -11,6 +11,7 @@ import com.duokoala.server.mapper.LessonMapper;
 import com.duokoala.server.repository.CourseRepository;
 import com.duokoala.server.repository.LessonRepository;
 import com.duokoala.server.service.mediaService.CloudinaryService;
+import com.duokoala.server.util.CsvUtility;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -93,5 +94,19 @@ public class LessonService {
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND));
         lesson.setDeleted(true);
         lessonRepository.save(lesson);
+    }
+
+    @Transactional
+    public List<LessonResponse> saveCsvFile(MultipartFile file, String courseId) {
+        if (!CsvUtility.hasCsvFormat(file))
+            throw new AppException(ErrorCode.INVALID_REQUEST_DATA);
+        try {
+            List<LessonCreateRequest> requestLessonList = CsvUtility.csvToLessonRequestList(file.getInputStream());
+            return requestLessonList.stream()
+                    .map(request -> create(courseId, request))
+                    .toList();
+        } catch (IOException ex) {
+            throw new RuntimeException("Data is not store successfully: " + ex.getMessage());
+        }
     }
 }

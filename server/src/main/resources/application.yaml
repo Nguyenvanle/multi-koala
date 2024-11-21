@@ -26,6 +26,10 @@ spring:
     hibernate:
   #      ddl-auto: update
   #    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
   redis:
     host: redis-15490.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com
     port: 15490
