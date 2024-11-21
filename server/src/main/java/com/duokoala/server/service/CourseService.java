@@ -22,6 +22,7 @@ import com.duokoala.server.exception.ErrorCode;
 import com.duokoala.server.mapper.CourseMapper;
 import com.duokoala.server.repository.*;
 import com.duokoala.server.service.mediaService.CloudinaryService;
+import com.duokoala.server.util.CsvUtility;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -299,5 +300,22 @@ public class CourseService {
                 enrollCourseRepository.findMaxCountEnrollCourseGroupByCourseId(),
                 0,
                 courseRepository.getMaxPrice());
+    }
+
+    @Transactional
+    public List<CourseResponse> saveCsvFile(MultipartFile file) {
+        if (!CsvUtility.hasCsvFormatCourse(file))
+            throw new AppException(ErrorCode.INVALID_REQUEST_DATA);
+        try {
+            List<CourseCreateRequest> requestCourseList = CsvUtility.csvToCourseRequestList(file.getInputStream());
+            return requestCourseList.stream()
+                    .map(course -> {
+                        if (courseRepository.existsByCourseName(course.getCourseName()))
+                            throw new AppException(ErrorCode.CONFLICT_COURSE_NAME);
+                        return create(course);
+                    }).toList();
+        } catch (IOException ex) {
+            throw new RuntimeException("Data is not store successfully: " + ex.getMessage());
+        }
     }
 }
