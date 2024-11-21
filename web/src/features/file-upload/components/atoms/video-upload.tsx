@@ -15,6 +15,7 @@ import { Upload, CheckCircle2, AlertCircle, Trash2 } from "lucide-react";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { postVideoLesson } from "@/features/lessons/actions/post-video-lesson";
 import { showToast } from "@/lib/utils";
+import { VideoPlayer } from "@/features/lessons/components/atoms/video-player";
 
 export default function VideoUploadForm({
   initData,
@@ -140,7 +141,7 @@ export default function VideoUploadForm({
 
         {preview && (
           <div className="mt-4">
-            <video src={preview} controls className="w-full rounded-lg" />
+            <VideoPlayer videoUrl={preview} />
           </div>
         )}
 

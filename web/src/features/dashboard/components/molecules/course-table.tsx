@@ -9,11 +9,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { RecentEnrollBodyType } from "@/features/enroll-courses/types/recent-enroll";
 import { dateFormatter } from "@/utils/date-formatter";
-import {
-  PaginationControlProps,
-  PaginationProps,
-} from "@/features/pagination/types/pagination";
-import PageNavigation from "@/features/pagination/components/page-nav";
 
 interface CourseTableProps {
   courseSales: RecentEnrollBodyType[];

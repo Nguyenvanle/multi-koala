@@ -7,6 +7,18 @@ export const VideoPlayer: React.FC<{ videoUrl: string }> = ({ videoUrl }) => {
   const videoId = extractVideoId(videoUrl);
   const embedUrl = `https://www.youtube.com/embed/${videoId}`;
 
+ if (videoUrl.includes("cloudinary")) {
+   return (
+     <div className="aspect-video w-full rounded">
+       <video
+         src={videoUrl}
+         controls
+         className="w-full h-full rounded hover:shadow-accent hover:shadow-xl transition-shadow duration-300"
+       />
+     </div>
+   );
+ }
+
   return (
     <div className="aspect-video w-full rounded">
       <iframe
