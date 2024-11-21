@@ -2,6 +2,8 @@ import DashboardHomePage from "@/features/dashboard/components/pages/home";
 import { getStudentChart } from "@/features/enroll-courses/actions/get-student-chart";
 import { Suspense } from "react";
 
+export const revalidate = 60 * 1; // 1 minutes
+
 async function getStudentChartData() {
   try {
     const res = await getStudentChart();

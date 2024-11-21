@@ -1,6 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ClipboardX } from "lucide-react";
+import Link from "next/link";
 
 export const EmptyState = () => (
   <CardContent className="flex flex-col  items-center justify-center py-12 ">
@@ -12,6 +14,9 @@ export const EmptyState = () => (
       There is currently no courses data to display. Please check back later or
       create a new courses.
     </p>
+    <Link href="/dashboard/courses/add" passHref>
+      <Button className="h-8 mt-4">Create a New Course</Button>
+    </Link>
   </CardContent>
 );
 

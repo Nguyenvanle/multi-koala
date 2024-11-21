@@ -37,7 +37,7 @@ interface DashboardTopPerformingCoursesProps {
 }
 
 export const EmptyState = () => (
-  <Card className="w-full">
+  <Card className="w-full border-none">
     <CardContent className="flex flex-col items-center justify-center py-12">
       <ClipboardX className="h-16 w-16 text-gray-400 mb-4" />
       <h3 className="text-xl text-center font-semibold text-gray-700 mb-2">
