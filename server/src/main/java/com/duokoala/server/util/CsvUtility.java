@@ -1,6 +1,7 @@
 package com.duokoala.server.util;
 
 import com.duokoala.server.dto.request.courseRequest.CourseCreateRequest;
+import com.duokoala.server.dto.request.lessonRequest.LessonCreateRequest;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -19,7 +20,7 @@ import java.util.Set;
 
 public class CsvUtility {
     public static String TYPE = "text/csv";
-    static String[] HEADERs = {
+    static String[] COURSE_HEADERs = {
             "Course Name",
             "Course Description",
             "Course Price",
@@ -29,9 +30,16 @@ public class CsvUtility {
             "Course Responsibility End At"
     };
 
-    public static boolean hasCsvFormatCourse(MultipartFile file) {
+    static String[] LESSON_HEADERs = {
+            "Lesson Name",
+            "Lesson Description",
+            "Demo"
+    };
+
+    public static boolean hasCsvFormat(MultipartFile file) {
         return TYPE.equals(file.getContentType());
     }
+
 
     public static List<CourseCreateRequest> csvToCourseRequestList(InputStream is) {
         try (BufferedReader bReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
@@ -50,8 +58,40 @@ public class CsvUtility {
                         .courseResponsibilityEndAt(LocalDateTime.parse(csvRecord.get("Course Responsibility End At")))
                         .build();
                 courseList.add(courseRequest);
+                try {
+                    Thread.sleep(10); // Sleep for 10 millisecond
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Thread was interrupted", e);
+                }
             }
             return courseList;
+        } catch (IOException e) {
+            throw new RuntimeException("CSV data is failed to parse: " + e.getMessage());
+        }
+    }
+
+    public static List<LessonCreateRequest> csvToLessonRequestList(InputStream is) {
+        try (BufferedReader bReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+             CSVParser csvParser = new CSVParser(bReader,
+                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
+            List<LessonCreateRequest> lessonList = new ArrayList<>();
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for (CSVRecord csvRecord : csvRecords) {
+                LessonCreateRequest lessonCreateRequest = LessonCreateRequest.builder()
+                        .lessonName(csvRecord.get("Lesson Name"))
+                        .lessonDescription(csvRecord.get("Lesson Description"))
+                        .isDemo(Boolean.parseBoolean(csvRecord.get("Demo")))
+                        .build();
+                lessonList.add(lessonCreateRequest);
+                try {
+                    Thread.sleep(10); // Sleep for 1 millisecond
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Thread was interrupted", e);
+                }
+            }
+            return lessonList;
         } catch (IOException e) {
             throw new RuntimeException("CSV data is failed to parse: " + e.getMessage());
         }

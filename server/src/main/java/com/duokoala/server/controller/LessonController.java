@@ -4,7 +4,6 @@ import com.duokoala.server.dto.request.lessonRequest.LessonCreateRequest;
 import com.duokoala.server.dto.request.lessonRequest.LessonUpdateRequest;
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.LessonResponse;
-import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.service.LessonService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,21 +29,28 @@ public class LessonController {
                 .build();
     }
 
+    @PostMapping("/courses/{courseId}/lessons/csv/upload")
+    ApiResponse<List<LessonResponse>> uploadCsv(@RequestParam("file") MultipartFile file, @PathVariable String courseId) {
+        return ApiResponse.<List<LessonResponse>>builder()
+                .result(lessonService.saveCsvFile(file, courseId))
+                .build();
+    }
+
     @PostMapping("/lessons/{lessonId}/update-image")
     ApiResponse<LessonResponse> uploadImage(
             @PathVariable String lessonId
-            ,@RequestParam("file") MultipartFile file) throws IOException {
+            , @RequestParam("file") MultipartFile file) throws IOException {
         return ApiResponse.<LessonResponse>builder()
-                .result(lessonService.uploadImage(lessonId,file))
+                .result(lessonService.uploadImage(lessonId, file))
                 .build();
     }
 
     @PostMapping("/lessons/{lessonId}/update-video")
     ApiResponse<LessonResponse> uploadVideo(
             @PathVariable String lessonId
-            ,@RequestParam("file") MultipartFile file) throws IOException {
+            , @RequestParam("file") MultipartFile file) throws IOException {
         return ApiResponse.<LessonResponse>builder()
-                .result(lessonService.uploadVideo(lessonId,file))
+                .result(lessonService.uploadVideo(lessonId, file))
                 .build();
     }
 
@@ -61,7 +67,7 @@ public class LessonController {
             @PathVariable String lessonId,
             @RequestBody LessonUpdateRequest request) {
         return ApiResponse.<LessonResponse>builder()
-                .result(lessonService.update(lessonId,request))
+                .result(lessonService.update(lessonId, request))
                 .build();
     }
 

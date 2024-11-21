@@ -304,16 +304,11 @@ public class CourseService {
 
     @Transactional
     public List<CourseResponse> saveCsvFile(MultipartFile file) {
-        if (!CsvUtility.hasCsvFormatCourse(file))
+        if (!CsvUtility.hasCsvFormat(file))
             throw new AppException(ErrorCode.INVALID_REQUEST_DATA);
         try {
             List<CourseCreateRequest> requestCourseList = CsvUtility.csvToCourseRequestList(file.getInputStream());
-            return requestCourseList.stream()
-                    .map(course -> {
-                        if (courseRepository.existsByCourseName(course.getCourseName()))
-                            throw new AppException(ErrorCode.CONFLICT_COURSE_NAME);
-                        return create(course);
-                    }).toList();
+            return requestCourseList.stream().map(this::create).toList();
         } catch (IOException ex) {
             throw new RuntimeException("Data is not store successfully: " + ex.getMessage());
         }

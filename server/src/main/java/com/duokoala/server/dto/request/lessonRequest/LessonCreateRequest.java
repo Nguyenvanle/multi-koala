@@ -11,8 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class LessonCreateRequest {
     String lessonName;
     String lessonDescription;
-//    String imageUrl;
-//    String videoUrl;
-//    int videoDuration;
     boolean isDemo;
 }
