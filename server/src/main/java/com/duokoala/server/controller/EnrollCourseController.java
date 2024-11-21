@@ -9,7 +9,6 @@ import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCours
 import com.duokoala.server.service.AnalysisService;
 import com.duokoala.server.service.CourseService;
 import com.duokoala.server.service.EnrollCourseService;
-import com.duokoala.server.service.LessonStudentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +24,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EnrollCourseController {
     EnrollCourseService enrollCourseService;
-    LessonStudentService lessonStudentService;
     CourseService courseService;
     AnalysisService analysisService;
 
