@@ -14,6 +14,7 @@ import { putQuestionV2 } from "@/features/test/actions/put-question-v2";
 import useSWR from "swr";
 import { examService } from "@/features/test/services/exam";
 import { deleteQuestion } from "@/features/test/actions/delete-question";
+import { updateQuestions } from "@/features/test/utils/save-answer";
 
 export default function useTestEditor(initialTestData: TestBodyType) {
   const [testData, setTestData] = useState<TestBodyType>(initialTestData);
@@ -46,14 +47,11 @@ export default function useTestEditor(initialTestData: TestBodyType) {
 
       if (res.success) {
         const mutateData = await mutate();
-        console.log("mutateData:", mutateData);
 
         setTestData((prevData) => ({
           ...prevData,
           questions: mutateData?.result?.result.questions || prevData.questions,
         }));
-
-        console.log("testData:", testData);
 
         // Set newly created question as active and scroll to it
         setActiveQuestionId(res.result?.result?.questionId || null);
@@ -171,25 +169,25 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     answerId: string | null, // Allow null for new answers
     updatedAnswer: AnswerBodyType
   ) => {
+    if (answerId?.length === 0) {
+      answerId = null;
+    }
+
+    console.log("handleAnswerEdit:", {
+      questionId,
+      answerId,
+      updatedAnswer,
+    });
+
     try {
       // First, update the local state
-      const updatedQuestions = testData.questions.map((q) =>
-        q.questionId === questionId
-          ? {
-              ...q,
-              answers:
-                q.answers?.map((a) =>
-                  // If answerId matches or it's a new answer with null ID
-                  a.answerId === answerId || (answerId === null && !a.answerId)
-                    ? {
-                        ...updatedAnswer,
-                        // If no answerId was provided, keep it null to trigger backend creation
-                        answerId: a.answerId || null,
-                      }
-                    : a
-                ) || [],
-            }
-          : q
+      console.log("Current testData:", testData);
+
+      const updatedQuestions = updateQuestions(
+        testData,
+        questionId,
+        answerId,
+        updatedAnswer
       );
 
       // Find the specific question that was updated

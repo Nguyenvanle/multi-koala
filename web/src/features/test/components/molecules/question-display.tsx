@@ -73,7 +73,7 @@ export function QuestionDisplay({
               question.answers.map((answer) => (
                 <AnswerDisplay
                   key={answer.answerId}
-                  answer={answer}
+                  answer={{ ...answer, answerId: answer.answerId || "" }}
                   openDialogId={openDialogId}
                   setOpenDialogId={setOpenDialogId}
                   handleAnswerEdit={handleAnswerEdit}
