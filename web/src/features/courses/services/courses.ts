@@ -82,7 +82,7 @@ export const courseService = {
   },
 
   createCSVCourse: async (token: string, data: FormData) => {
-    const res = await fetch(`localhost:8080/courses/csv`, {
+    const res = await fetch(`http://localhost:8080/courses/csv/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

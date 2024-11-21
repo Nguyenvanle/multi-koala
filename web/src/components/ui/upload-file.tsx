@@ -3,12 +3,19 @@
 import React, { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { postCSVCourse } from "@/features/courses/actions/post-csv-course";
+import { toast } from "@/components/ui/use-toast";
+import { useSWRConfig } from "swr";
+import { useRouter } from "next/navigation";
 
 interface InputFileProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   onFileChange?: (file: File | null) => void;
   accept?: string;
   maxSize?: number; // Max file size in bytes
+  onSaveSuccess?: () => void;
+  onSaveError?: () => void;
 }
 
 export function InputFile({
@@ -16,11 +23,17 @@ export function InputFile({
   onFileChange,
   accept = ".csv,text/csv,application/vnd.ms-excel,application/csv", // Default to CSV files
   maxSize = 5 * 1024 * 1024, // Default 5MB
+  onSaveSuccess,
+  onSaveError,
   ...props
 }: InputFileProps) {
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const { mutate } = useSWRConfig();
+  const router = useRouter();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -35,6 +48,7 @@ export function InputFile({
       if (!isCsvFile) {
         setError("Only CSV files are allowed.");
         setFileName(null);
+        setCurrentFile(null);
         if (inputRef.current) {
           inputRef.current.value = ""; // Clear the input
         }
@@ -48,6 +62,7 @@ export function InputFile({
           `File is too large. Maximum size is ${maxSize / 1024 / 1024}MB.`
         );
         setFileName(null);
+        setCurrentFile(null);
         if (inputRef.current) {
           inputRef.current.value = ""; // Clear the input
         }
@@ -55,17 +70,76 @@ export function InputFile({
         return;
       }
 
-      // Set file name
+      // Set file name and current file
       setFileName(file.name);
+      setCurrentFile(file);
       onFileChange?.(file);
     } else {
       setFileName(null);
+      setCurrentFile(null);
       onFileChange?.(null);
     }
   };
 
+  const handleSave = async () => {
+    if (!currentFile) {
+      setError("No file selected");
+      onSaveError?.();
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const formData = new FormData();
+      formData.append("file", currentFile);
+      const res = await postCSVCourse(formData);
+
+      if (!res.success) {
+        throw new Error(res.message);
+      }
+
+      Promise.all([
+        await mutate("/api/courses"),
+        await mutate("/api/courses-without-filter"),
+      ]);
+
+      router.refresh();
+
+      toast({
+        title: "Success",
+        description: "File uploaded successfully",
+      });
+
+      // Reset file input
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+      setFileName(null);
+      setCurrentFile(null);
+
+      // Call success callback
+      onSaveSuccess?.();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An error occurred during save"
+      );
+      toast({
+        title: "Error",
+        description: "An error occurred during save",
+        variant: "destructive",
+      });
+
+      // Call error callback
+      onSaveError?.();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
+    <div className="grid w-full items-center gap-1.5">
       <Label htmlFor="file-input">{label}</Label>
       <Input
         ref={inputRef}
@@ -80,6 +154,16 @@ export function InputFile({
         <p className="text-sm text-gray-500 mt-1">Selected file: {fileName}</p>
       )}
       {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+      {currentFile && (
+        <Button
+          onClick={handleSave}
+          disabled={isLoading}
+          className="mt-2"
+          type="submit"
+        >
+          {isLoading ? "Saving..." : "Save File"}
+        </Button>
+      )}
     </div>
   );
 }

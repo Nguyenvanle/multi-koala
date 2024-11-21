@@ -21,6 +21,7 @@ interface TeacherCourseTemplateProps {
   setSearchTerm: Dispatch<SetStateAction<string>>;
   setFilterOptions: Dispatch<SetStateAction<FilterOption[]>>;
   setSortOption: Dispatch<SetStateAction<SortOption | null>>;
+  mutateCourses: () => void;
   currentSort: SortOption | null;
   controls: PaginationControlProps;
   pagination: PaginationProps;
@@ -36,6 +37,7 @@ const TeacherCourseLayout = ({
   controls,
   pagination,
   coursesLoading,
+  mutateCourses,
 }: TeacherCourseTemplateProps) => {
   return (
     <div className="w-full flex flex-col gap-2 xl:gap-4">
@@ -57,6 +59,7 @@ const TeacherCourseLayout = ({
             controls={controls}
             pagination={pagination}
             coursesLoading={coursesLoading}
+            mutateCourses={mutateCourses}
           />
         </TabsContent>
 
@@ -68,6 +71,7 @@ const TeacherCourseLayout = ({
             controls={controls}
             pagination={pagination}
             coursesLoading={coursesLoading}
+            mutateCourses={mutateCourses}
           />
         </TabsContent>
 
@@ -79,6 +83,7 @@ const TeacherCourseLayout = ({
             controls={controls}
             pagination={pagination}
             coursesLoading={coursesLoading}
+            mutateCourses={mutateCourses}
           />
         </TabsContent>
 
@@ -90,6 +95,7 @@ const TeacherCourseLayout = ({
             controls={controls}
             pagination={pagination}
             coursesLoading={coursesLoading}
+            mutateCourses={mutateCourses}
           />
         </TabsContent>
         <TabsContent value={COURSE_VERIFY.Values.REJECTED}>
@@ -100,6 +106,7 @@ const TeacherCourseLayout = ({
             controls={controls}
             pagination={pagination}
             coursesLoading={coursesLoading}
+            mutateCourses={mutateCourses}
           />
         </TabsContent>
       </Tabs>

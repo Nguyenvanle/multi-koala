@@ -29,7 +29,6 @@ import {
   EmptyState,
   LoadingState,
 } from "@/features/courses/components/atoms/empty-state";
-import { InputFile } from "@/components/ui/upload-file";
 import { DialogCSVCourse } from "@/features/courses/components/molecules/csv-form";
 
 export interface TeacherTableProps {
@@ -39,6 +38,7 @@ export interface TeacherTableProps {
   controls: PaginationControlProps;
   pagination: PaginationProps;
   coursesLoading: boolean;
+  mutateCourses: () => void;
 }
 
 export default function TeacherTable({
@@ -48,6 +48,7 @@ export default function TeacherTable({
   controls,
   pagination,
   coursesLoading,
+  mutateCourses,
 }: TeacherTableProps) {
   const startIndex = (pagination.currentPage - 1) * pagination.pageSize;
 
@@ -62,7 +63,7 @@ export default function TeacherTable({
         </div>
 
         <div className="flex flex-row gap-2">
-          <DialogCSVCourse />
+          <DialogCSVCourse mutateCourses={mutateCourses} />
           <Button className="h-8 gap-1" size="sm">
             <PlusCircle className="w-3.5 h-3.5" />
             <Link
