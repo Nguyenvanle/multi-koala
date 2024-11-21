@@ -22,12 +22,23 @@ async function getStudentChartData() {
 }
 
 export default async function Dashboard() {
-  const studentChartData = await getStudentChartData();
+  let studentChartData = null;
+
+  try {
+    studentChartData = await getStudentChartData();
+  } catch (error) {
+    // Xử lý khi không thể lấy dữ liệu
+    console.error("Không thể tải dữ liệu biểu đồ:", error);
+  }
 
   return (
     <div className="flex-1">
-      <Suspense>
-        <DashboardHomePage studentChartData={studentChartData} />
+      <Suspense fallback={<div>Đang tải...</div>}>
+        {studentChartData ? (
+          <DashboardHomePage studentChartData={studentChartData} />
+        ) : (
+          <div>Không có dữ liệu</div>
+        )}
       </Suspense>
     </div>
   );

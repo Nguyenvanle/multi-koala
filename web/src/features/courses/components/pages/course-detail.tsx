@@ -34,6 +34,7 @@ const CourseDetailPage: React.FC = () => {
       lessons={lessons}
       duration={duration}
       isLoading={isLoading}
+      mutate={mutate}
     />
   );
 };

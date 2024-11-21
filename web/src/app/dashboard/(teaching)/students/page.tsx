@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/features/courses/components/atoms/breadcrumb";
-import VisitorsPieChart from "@/features/dashboard/components/molecules/student-chart";
 import { getMyReport } from "@/features/quiz-results/actions/my-report";
 import { quizColumns } from "@/features/quiz-results/components/atoms/columns";
 import { ReportTable } from "@/features/quiz-results/components/molecules/report-table";

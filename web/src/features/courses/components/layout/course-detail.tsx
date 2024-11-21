@@ -15,6 +15,7 @@ interface CourseDetailLayoutProps {
   lessons: any[] | null;
   duration: number | null;
   isLoading: boolean;
+  mutate: () => void;
 }
 
 const CourseDetailLayout: React.FC<CourseDetailLayoutProps> = ({
@@ -22,6 +23,7 @@ const CourseDetailLayout: React.FC<CourseDetailLayoutProps> = ({
   lessons,
   duration,
   isLoading,
+  mutate,
 }) => {
   if (isLoading) {
     return (
@@ -63,7 +65,7 @@ const CourseDetailLayout: React.FC<CourseDetailLayoutProps> = ({
             }
             courseName={course?.courseName ?? "No course name available"}
           />
-          <LessonsCardPage lessons={lessons ?? []} />
+          <LessonsCardPage lessons={lessons ?? []} mutateCourses={mutate} />
         </div>
 
         <DetailCard
