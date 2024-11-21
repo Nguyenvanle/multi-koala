@@ -81,6 +81,23 @@ export const courseService = {
     });
   },
 
+  createCSVCourse: async (token: string, data: FormData) => {
+    const res = await fetch(`localhost:8080/courses/csv`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+    });
+
+    const result: BaseResType = await res.json();
+
+    return {
+      success: result.code === 200,
+      message: result.message,
+    };
+  },
+
   updateCourses: async (
     token: string,
     courseId: string,

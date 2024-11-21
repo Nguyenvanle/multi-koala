@@ -29,6 +29,8 @@ import {
   EmptyState,
   LoadingState,
 } from "@/features/courses/components/atoms/empty-state";
+import { InputFile } from "@/components/ui/upload-file";
+import { DialogCSVCourse } from "@/features/courses/components/molecules/csv-form";
 
 export interface TeacherTableProps {
   courses: TeacherMyCoursesBodyType;
@@ -59,7 +61,8 @@ export default function TeacherTable({
           </CardDescription>
         </div>
 
-        <div className="flex">
+        <div className="flex flex-row gap-2">
+          <DialogCSVCourse />
           <Button className="h-8 gap-1" size="sm">
             <PlusCircle className="w-3.5 h-3.5" />
             <Link
