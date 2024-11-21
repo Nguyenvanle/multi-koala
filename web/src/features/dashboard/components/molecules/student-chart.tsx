@@ -28,6 +28,8 @@ import {
 import { useMemo } from "react";
 import { StudentChartBodyType } from "@/features/enroll-courses/types/my-student-chart";
 import { ChartDataItem } from "@/features/dashboard/types/chart";
+import { EmptyState } from "@/features/courses/components/atoms/empty-state";
+import { cn } from "@/lib/utils";
 
 interface VisitorsPieChartProps {
   studentChartData: StudentChartBodyType;
@@ -90,45 +92,61 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
         <CardTitle className="text-center">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col items-center lg:flex-row gap-6 pb-0 h-full">
-        <ChartContainer
-          config={CHART_CONFIG}
-          className="flex flex-1 mx-auto aspect-square max-h-[250px] w-full"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent hideLabel className="min-w-[10rem] " />
-              }
-            />
-            <Pie
-              data={chartDataWithPercentages}
-              dataKey="students"
-              nameKey="browser"
-              innerRadius={60}
-              strokeWidth={1}
-              label={PieChartLabel}
-            >
-              <Label
-                content={({ viewBox }) =>
-                  viewBox && "cx" in viewBox && "cy" in viewBox ? (
-                    <CenterLabel
-                      title="Students"
-                      totalVisitors={totalStudents}
-                      viewBox={viewBox}
-                    />
-                  ) : null
+      <CardContent
+        className={cn(
+          typeof trendingPercentage === "number"
+            ? "flex flex-col items-center justify-center lg:flex-row gap-6 pb-0 h-full"
+            : "flex flex-col items-center justify-center gap-6 pb-0 h-full"
+        )}
+      >
+        {typeof trendingPercentage === "number" ? (
+          <ChartContainer
+            config={CHART_CONFIG}
+            className="flex flex-1 mx-auto aspect-square max-h-[250px] w-full"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent hideLabel className="min-w-[10rem] " />
                 }
               />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+              <Pie
+                data={chartDataWithPercentages}
+                dataKey="students"
+                nameKey="browser"
+                innerRadius={60}
+                strokeWidth={1}
+                label={PieChartLabel}
+              >
+                <Label
+                  content={({ viewBox }) =>
+                    viewBox && "cx" in viewBox && "cy" in viewBox ? (
+                      <CenterLabel
+                        title="Students"
+                        totalVisitors={totalStudents}
+                        viewBox={viewBox}
+                      />
+                    ) : null
+                  }
+                />
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+        ) : (
+          <div className="flex flex-1 self-stretch justify-center items-center w-full">
+            <EmptyState />
+          </div>
+        )}
 
         <div className="flex flex-0 flex-row flex-wrap lg:flex-col gap-4 mr-0 sm:mr-8 xl:mr-16 justify-center">
-          {chartDataWithPercentages.map((item, index) => (
-            <PieTooltip key={index} index={index} item={item} />
-          ))}
+          {typeof trendingPercentage === "number" ? (
+            chartDataWithPercentages.map((item, index) => (
+              <PieTooltip key={index} index={index} item={item} />
+            ))
+          ) : (
+            <></>
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-2">

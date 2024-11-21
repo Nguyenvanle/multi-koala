@@ -17,6 +17,7 @@ import {
   PaginationProps,
 } from "@/features/pagination/types/pagination";
 import PageNavigation from "@/features/pagination/components/page-nav";
+import { EmptyState } from "@/features/courses/components/atoms/empty-state";
 
 interface DashboardRecentlySoldCoursesProps {
   courseSales: RecentEnrollBodyType[];
@@ -63,10 +64,7 @@ export default function DashboardRecentlySoldCourses({
       </CardHeader>
       <CardContent className="min-h-[436px]">
         {courseSales?.length === 0 || !courseSales ? (
-          <p className="text-sm text-muted-foreground font-medium leading-none">
-            You haven&#39;t sold any courses yet. Please wait to see updated
-            information
-          </p>
+          <EmptyState />
         ) : (
           <CourseTable courseSales={courseSales} />
         )}
