@@ -19,5 +19,4 @@ public class CourseCreateRequest {
     Set<String> types;
     Set<String> fields;
     LocalDateTime courseResponsibilityEndAt;
-//    String imageUrl;
 }

@@ -62,6 +62,13 @@ public class CourseController {
                 .build();
     }
 
+    @PostMapping("courses/csv/upload")
+    ApiResponse<List<CourseResponse>> uploadCsv(@RequestParam("file") MultipartFile file) {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .result(courseService.saveCsvFile(file))
+                .build();
+    }
+
     @PostMapping("/courses/{courseId}/update-image")
     ApiResponse<CourseResponse> uploadImage(
             @PathVariable String courseId
