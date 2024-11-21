@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -54,11 +55,14 @@ public class TestService {
     public TestResponse getAvailableTest(String testId) {
         var test = testRepository.findById(testId)
                 .orElseThrow(() -> new AppException(ErrorCode.TEST_NOT_FOUND));
-        var activeQuestions = test.getQuestions()
-                .stream()
+        test.setQuestions(test.getQuestions().stream()
                 .filter(Question::isActive)
-                .toList();
-        test.setQuestions(activeQuestions);
+                .sorted(Comparator.comparing(Question::getQuestionUploadedAt))
+                .peek(question -> question.setAnswers(question.getAnswers().stream()
+                        .filter(Answer::isActive)
+                        .sorted(Comparator.comparing(Answer::getAnswerUploadedAt))
+                        .toList()))
+                .toList());
         return testMapper.toTestResponse(test);
     }
 
@@ -73,22 +77,16 @@ public class TestService {
         var tests = testRepository.findAllByLesson(lesson);
         return tests.stream()
                 .filter(test -> !test.isDeleted())
+                .sorted(Comparator.comparing(Test::getTestUploadedAt))
                 .peek(test -> test.setQuestions(test.getQuestions().stream()
                         .filter(Question::isActive)
-                        .peek(question ->
-                                question.setAnswers(question.getAnswers()
-                                        .stream()
-                                        .filter(Answer::isActive)
-                                        .toList()))
+                        .sorted(Comparator.comparing(Question::getQuestionUploadedAt))
+                        .peek(question -> question.setAnswers(question.getAnswers().stream()
+                                .filter(Answer::isActive)
+                                .sorted(Comparator.comparing(Answer::getAnswerUploadedAt))
+                                .toList()))
                         .toList()))
-                .map(this::mapTestToTestResponse).toList();
-    }
-
-    private TestResponse mapTestToTestResponse(Test test) {
-        test.setQuestions(test.getQuestions().stream()
-                .filter(Question::isActive)
-                .sorted((q1, q2) -> q2.getQuestionUploadedAt().compareTo(q1.getQuestionUploadedAt())).toList());
-        return testMapper.toTestResponse(test);
+                .map(testMapper::toTestResponse).toList();
     }
 
     public void delete(String testId) {

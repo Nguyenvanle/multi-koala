@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -74,12 +75,17 @@ public class LessonService {
 
     public List<LessonResponse> getAll() {
         var lessons = lessonRepository.findAll();
-        return lessons.stream().map(lessonMapper::toLessonResponse).toList();
+        return lessons.stream().map(lessonMapper::toLessonResponse)
+                .filter(lessonResponse -> !lessonResponse.isDeleted())
+                .toList();
     }
 
     public List<LessonResponse> getListByCourseId(String courseId) {
         var lessons = lessonRepository.getListByCourseId(courseId);
-        return lessons.stream().map(lessonMapper::toLessonResponse).toList();
+        return lessons.stream()
+                .filter(lesson -> !lesson.isDeleted())
+                .sorted(Comparator.comparing(Lesson::getLessonUploadedAt))
+                .map(lessonMapper::toLessonResponse).toList();
     }
 
     public void delete(String lessonId) {
@@ -88,5 +94,4 @@ public class LessonService {
         lesson.setDeleted(true);
         lessonRepository.save(lesson);
     }
-
 }
