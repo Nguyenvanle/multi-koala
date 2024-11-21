@@ -3,8 +3,8 @@ import { toast } from "@/components/ui/use-toast";
 import { AnswerBodyType } from "@/features/test/types/answer";
 import {
   PostQuestionBodyType,
-  PutQuestionBody,
   PutQuestionBodyType,
+  QuestionBody,
   QuestionBodyType,
 } from "@/features/test/types/question";
 import { TestBodyType } from "@/features/test/types/test-result";
@@ -104,19 +104,20 @@ export default function useTestEditor(initialTestData: TestBodyType) {
       console.log("updatedQuestion:", updatedQuestion);
 
       const uploadData: PutQuestionBodyType = {
+        questionId: updatedQuestion.questionId,
         questionDescription: updatedQuestion.questionDescription,
-        // answers: updatedQuestion.answers
-        //   ? updatedQuestion.answers.map((a) => a.answerDescription)
-        //   : [],
-        answers: [],
-        correctIndex: updatedQuestion.answers
-          ? updatedQuestion.answers.findIndex((a) => a.correct)
-          : 0,
+        answers:
+          updatedQuestion.answers?.map((a) => ({
+            answerId: a.answerId,
+            answerDescription: a.answerDescription,
+            correct: a.correct,
+          })) || [],
+        image: null,
       };
 
       console.log("uploadData:", uploadData);
 
-      const validate = PutQuestionBody.safeParse(uploadData);
+      const validate = QuestionBody.safeParse(uploadData);
 
       if (!validate.success) {
         console.error("Error updating question:", validate.error);

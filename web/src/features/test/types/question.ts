@@ -15,13 +15,13 @@ export const QuestionBody = z.object({
 });
 export type QuestionBodyType = z.infer<typeof QuestionBody>;
 
-export const PutQuestionBody = z.object({
+export const PostQuestionBody = z.object({
   questionDescription: z.string(),
   answers: z.array(z.string()),
   correctIndex: z.number(),
 });
-export type PutQuestionBodyType = z.infer<typeof PutQuestionBody>;
-export type PostQuestionBodyType = z.infer<typeof PutQuestionBody>;
+export type PutQuestionBodyType = z.infer<typeof QuestionBody>;
+export type PostQuestionBodyType = z.infer<typeof PostQuestionBody>;
 
 export const QuestionRes = BaseResponseSchema.extend({
   result: QuestionBody,

@@ -1,12 +1,19 @@
 import {
+  PostQuestionBodyType,
   PutQuestionBodyType,
-  QuestionBodyType,
   QuestionResType,
 } from "@/features/test/types/question";
 import { BaseResType } from "@/schemas/base-res";
 import { apiService } from "@/services/api";
 
 export const questionService = {
+  async create(testId: string, data: PostQuestionBodyType) {
+    return await apiService.post<QuestionResType>(
+      `/tests/${testId}/questions`,
+      data
+    );
+  },
+
   async update(questionId: string, data: PutQuestionBodyType) {
     return await apiService.put<QuestionResType>(
       `/questions/${questionId}`,
