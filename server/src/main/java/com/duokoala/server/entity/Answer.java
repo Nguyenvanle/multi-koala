@@ -1,9 +1,12 @@
 package com.duokoala.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,8 +21,10 @@ public class Answer {
     String answerDescription;
     boolean isCorrect;
     @ManyToOne
-    @JsonIgnore
+    @JsonBackReference
     Question question;
     @JsonIgnore
     boolean isActive;
+    @JsonIgnore
+    LocalDateTime answerUploadedAt;
 }

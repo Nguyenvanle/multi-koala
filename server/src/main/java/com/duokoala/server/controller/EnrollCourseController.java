@@ -36,13 +36,6 @@ public class EnrollCourseController {
                 .build();
     }
 
-    @PostMapping("/enroll-courses/update-student-enroll")
-        //use only one time
-    ApiResponse<Void> updateStudentEnroll() {
-        lessonStudentService.updateStudentEnroll();
-        return ApiResponse.<Void>builder().build();
-    }
-
     @GetMapping("/enroll-courses/{enrollCourseId}")
     ApiResponse<EnrollCourseResponse> get(@PathVariable String enrollCourseId) {
         return ApiResponse.<EnrollCourseResponse>builder()

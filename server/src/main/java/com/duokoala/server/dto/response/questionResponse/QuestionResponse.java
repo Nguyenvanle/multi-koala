@@ -2,7 +2,11 @@ package com.duokoala.server.dto.response.questionResponse;
 
 import com.duokoala.server.dto.response.answerResponse.AnswerResponse;
 import com.duokoala.server.dto.response.mediaResponse.ImageResponse;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -11,10 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuestionResponse {
     String questionId;
     ImageResponse image;
     String questionDescription;
-//    TestResponse test;
     List<AnswerResponse> answers;
 }
