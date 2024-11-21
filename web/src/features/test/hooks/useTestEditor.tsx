@@ -166,30 +166,98 @@ export default function useTestEditor(initialTestData: TestBodyType) {
     }
   };
 
-  const handleAnswerEdit = (
+  const handleAnswerEdit = async (
     questionId: string,
-    answerId: string,
+    answerId: string | null, // Allow null for new answers
     updatedAnswer: AnswerBodyType
   ) => {
-    setTestData((prevData) => ({
-      ...prevData,
-      questions: prevData.questions.map((q) =>
+    try {
+      // First, update the local state
+      const updatedQuestions = testData.questions.map((q) =>
         q.questionId === questionId
           ? {
               ...q,
               answers:
                 q.answers?.map((a) =>
-                  a.answerId === answerId ? updatedAnswer : a
+                  // If answerId matches or it's a new answer with null ID
+                  a.answerId === answerId || (answerId === null && !a.answerId)
+                    ? {
+                        ...updatedAnswer,
+                        // If no answerId was provided, keep it null to trigger backend creation
+                        answerId: a.answerId || null,
+                      }
+                    : a
                 ) || [],
             }
           : q
-      ),
-    }));
+      );
+
+      // Find the specific question that was updated
+      const updatedQuestion = updatedQuestions.find(
+        (q) => q.questionId === questionId
+      );
+
+      if (!updatedQuestion) {
+        throw new Error("Question not found");
+      }
+
+      // Prepare the data for API call
+      const uploadData: PutQuestionBodyType = {
+        questionId: updatedQuestion.questionId,
+        questionDescription: updatedQuestion.questionDescription,
+        answers:
+          updatedQuestion.answers?.map((a) => ({
+            answerId: a.answerId, // Keep null for new answers
+            answerDescription: a.answerDescription,
+            correct: a.correct,
+          })) || [],
+        image: null,
+      };
+
+      // Call the API to update the question
+      const res = await putQuestionV2(questionId, uploadData);
+
+      if (res.success) {
+        // Update the state with the server response
+        const mutateData = await mutate();
+
+        setTestData((prevData) => ({
+          ...prevData,
+          questions: mutateData?.result?.result.questions || updatedQuestions,
+        }));
+
+        toast({
+          title: "Answer updated",
+          description: "The answer has been updated successfully.",
+        });
+      } else {
+        // Revert local state if API call fails
+        setTestData((prevData) => ({
+          ...prevData,
+          questions: prevData.questions,
+        }));
+
+        toast({
+          title: "Error updating answer",
+          description:
+            res.message || "An error occurred while updating the answer.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating answer:", error);
+
+      toast({
+        title: "Error updating answer",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleAddAnswer = (questionId: string) => {
     const newAnswer: AnswerBodyType = {
-      answerId: Date.now().toString(),
+      answerId: null,
       answerDescription: "",
       correct: false,
     };

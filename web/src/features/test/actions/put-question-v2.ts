@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidate } from "@/app/dashboard/(teaching)/courses/[courseId]/lessons/[lessonId]/tests/[testId]/edit/page";
 import { questionService } from "@/features/test/services/question";
 import { PutQuestionBodyType } from "@/features/test/types/question";
 import { revalidateTag } from "next/cache";

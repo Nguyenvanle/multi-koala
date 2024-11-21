@@ -24,10 +24,12 @@ export default function useQuestionDisplay({
   const handleAnswerSelect = (selectedAnswerId: string) => {
     setSelectedAnswerId(selectedAnswerId);
     question.answers?.forEach((answer) => {
-      onAnswerEdit(answer.answerId, {
-        ...answer,
-        correct: answer.answerId === selectedAnswerId,
-      });
+      if (answer.answerId) {
+        onAnswerEdit(answer.answerId, {
+          ...answer,
+          correct: answer.answerId === selectedAnswerId,
+        });
+      }
     });
   };
 
@@ -37,7 +39,7 @@ export default function useQuestionDisplay({
   ) => {
     if (updatedAnswer.correct && answerId !== selectedAnswerId) {
       question.answers?.forEach((answer) => {
-        if (answer.answerId !== answerId) {
+        if (answer.answerId) {
           onAnswerEdit(answer.answerId, {
             ...answer,
             correct: false,

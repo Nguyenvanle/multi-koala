@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const AnswerBody = z.object({
-  answerId: z.string(),
+  answerId: z.string().nullable(),
   answerDescription: z.string(),
   correct: z.boolean(),
 });
