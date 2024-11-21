@@ -217,12 +217,15 @@ public class CourseService {
                 .toList();
     }
 
-    public List<CourseResponse> getSuggestCourses(String enrollCourseId) {
-        EnrollCourse enrollCourse = enrollCourseRepository.findById(enrollCourseId)
+    public List<CourseResponse> getSuggestCourses(String courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND));
+
+        EnrollCourse enrollCourse = enrollCourseRepository.findByCourseAndStudent(course,
+                        authenticationService.getAuthenticatedStudent())
                 .orElseThrow(() -> new AppException(ErrorCode.ENROLL_COURSE_NOT_FOUND));
-//        if (enrollCourse.isSuggest()) throw new AppException(ErrorCode.COURSE_ALREADY_SUGGESTED);
-        if (!enrollCourse.getStudent().equals(authenticationService.getAuthenticatedStudent()))
-            throw new AppException(ErrorCode.STUDENT_NOT_MATCHED);
+
+//      if (enrollCourse.isSuggest()) throw new AppException(ErrorCode.COURSE_ALREADY_SUGGESTED);
         Set<String> enrollCourseFields = enrollCourse
                 .getCourse()
                 .getFields()
@@ -238,8 +241,8 @@ public class CourseService {
                 .collect(Collectors.toSet());
 
         List<CourseResponse> courseResponses = recommendCourses().stream()
-                .filter(course -> course.getTypes().stream().map(TypeResponse::getTypeName).anyMatch(enrollCourseTypes::contains) ||
-                        course.getFields().stream().map(FieldResponse::getFieldName).anyMatch(enrollCourseFields::contains))
+                .filter(recommendCourse -> recommendCourse.getTypes().stream().map(TypeResponse::getTypeName).anyMatch(enrollCourseTypes::contains) ||
+                        recommendCourse.getFields().stream().map(FieldResponse::getFieldName).anyMatch(enrollCourseFields::contains))
                 .limit(3)
                 .toList();
         enrollCourse.setSuggest(true);

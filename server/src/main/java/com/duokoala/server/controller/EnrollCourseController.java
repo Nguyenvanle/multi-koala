@@ -2,7 +2,6 @@ package com.duokoala.server.controller;
 
 import com.duokoala.server.dto.response.ApiResponse;
 import com.duokoala.server.dto.response.analysis.studentAnalysisResponse.StudentReportAnalysisResponse;
-import com.duokoala.server.dto.response.courseResponse.CourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.EnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.MyEnrollCourseResponse;
 import com.duokoala.server.dto.response.enrollCourseResponse.RecentlyEnrollCourseResponse;
@@ -55,13 +54,6 @@ public class EnrollCourseController {
     ApiResponse<StudentReportAnalysisResponse> getStudentChart() {
         return ApiResponse.<StudentReportAnalysisResponse>builder()
                 .result(analysisService.getStudentReportAnalysis())
-                .build();
-    }
-
-    @GetMapping("/enroll-courses/{enrollCourseId}/suggest-courses")
-    ApiResponse<List<CourseResponse>> getSuggestCourses(@PathVariable String enrollCourseId) {
-        return ApiResponse.<List<CourseResponse>>builder()
-                .result(courseService.getSuggestCourses(enrollCourseId))
                 .build();
     }
 
