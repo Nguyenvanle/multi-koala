@@ -12,6 +12,7 @@ import {
   LessonResponse,
 } from "@/features/lessons/types/lessons-res";
 import { TestResType } from "@/features/test/types/test-result";
+import { BaseResType } from "@/schemas/base-res";
 import { apiService } from "@/services/api";
 
 export const lessonService = {
@@ -20,6 +21,23 @@ export const lessonService = {
       `/courses/${courseId}/lessons`,
       data
     );
+  },
+
+  createCSVLessons: async (courseId: string, data: FormData) => {
+    const res = await fetch(
+      `http://localhost:8080/courses/${courseId}/lessons/csv/upload`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    const result: BaseResType = await res.json();
+
+    return {
+      success: result.code === 200,
+      message: result.message,
+    };
   },
 
   getAll: async () => {

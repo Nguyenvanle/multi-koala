@@ -41,7 +41,7 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
   studentChartData,
   title = "Student Status Analysis",
   description,
-  trendingPercentage,
+  trendingPercentage = 0,
   dateRange = "this month",
 }) => {
   const processedData = useMemo(
@@ -133,8 +133,13 @@ const VisitorsPieChart: React.FC<VisitorsPieChartProps> = ({
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-2">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by {trendingPercentage?.toFixed(2)}% this month{" "}
-          <TrendingUp className="h-4 w-4" />
+          {typeof trendingPercentage === "number" ? (
+            <span>
+              Trending up by {trendingPercentage.toFixed(2)}% this month
+            </span>
+          ) : (
+            <span>Trending up 0.0% this month</span>
+          )}
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total students for {dateRange}

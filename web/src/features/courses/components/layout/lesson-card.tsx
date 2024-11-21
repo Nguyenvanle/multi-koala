@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { H4 } from "@/components/ui/typography";
 import { LessonList } from "@/features/courses/components/organisms/lesson-list";
 import LessonDialogForm from "@/features/lessons/components/molecules/add-dialog";
+import { DialogCSVLessons } from "@/features/lessons/components/molecules/csv-dialog";
 import { LessonDetailResult } from "@/features/lessons/types/lessons-res";
 import { BookOpen } from "lucide-react";
 
@@ -11,6 +12,7 @@ interface LessonsCardProps {
   visibleLessons: number;
   onLoadMore: () => void;
   isPublic?: boolean;
+  mutateCourses: () => void;
 }
 
 export const LessonsCard: React.FC<LessonsCardProps> = ({
@@ -18,13 +20,19 @@ export const LessonsCard: React.FC<LessonsCardProps> = ({
   visibleLessons,
   onLoadMore,
   isPublic = true,
+  mutateCourses,
 }) => {
   return (
     <Card className="flex flex-0 flex-col w-full rounded overflow-hidden gap-4">
       <CardHeader className="flex flex-0 justify-between items-center flex-row pb-0 space-y-0">
         <CardTitle>Lessons</CardTitle>
 
-        {!isPublic && <LessonDialogForm />}
+        {!isPublic && (
+          <div className="flex flex-row gap-2">
+            <DialogCSVLessons mutateCourses={mutateCourses} />
+            <LessonDialogForm />
+          </div>
+        )}
       </CardHeader>
       <CardFooter className="flex flex-0 flex-col pr-4 relative">
         {!lessons ? (

@@ -10,9 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { InputFile } from "@/features/courses/components/atoms/upload-file";
+import { InputFile } from "@/features/lessons/components/atoms/upload-file";
 
-export function DialogCSVCourse({
+export function DialogCSVLessons({
   mutateCourses,
 }: {
   mutateCourses: () => void;
@@ -20,8 +20,8 @@ export function DialogCSVCourse({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleFileUploadSuccess = async () => {
-    // Close the dialog after successful upload
     await mutateCourses();
+
     setIsOpen(false);
   };
 
@@ -40,9 +40,9 @@ export function DialogCSVCourse({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new courses with csv file</DialogTitle>
+          <DialogTitle>Add new lessons with csv file</DialogTitle>
           <DialogDescription>
-            Upload a .csv file to add new courses to your account.
+            Upload a .csv file to add new lessons to your account.
           </DialogDescription>
         </DialogHeader>
 

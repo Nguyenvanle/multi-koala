@@ -139,7 +139,11 @@ export default function CourseEditForm({
               <StudentList />
             </div>
             <div className="flex flex-col gap-4 xl:gap-6">
-              <LessonsCardPage lessons={lessons || []} isPublic={false} />
+              <LessonsCardPage
+                lessons={lessons || []}
+                isPublic={false}
+                mutateCourses={mutateLessons}
+              />
               <CourseTypesCard form={form} courseTypes={courseTypes} />
               <CourseFieldsCard form={form} fields={fields} />
             </div>

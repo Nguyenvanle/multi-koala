@@ -17,7 +17,7 @@ export const LessonDetailPage: React.FC<LessonDetailPageProps> = ({
 }) => {
   const { courseId } = useParams();
 
-  const { lessons, loading, error } = useLessons(courseId as string);
+  const { lessons, loading, error, mutate } = useLessons(courseId as string);
 
   // Kiểm tra nếu lessons không phải là null trước khi truyền vào useVisibleLessons
   const { visibleLessons, loadMoreLessons } = useVisibleLessons(lessons || []);
@@ -48,6 +48,7 @@ export const LessonDetailPage: React.FC<LessonDetailPageProps> = ({
           visibleLessons={visibleLessons}
           onLoadMore={loadMoreLessons}
           lessons={lessons}
+          mutateCourses={mutate}
         />
 
         <div className="flex gap-6 flex-col xl:col-span-3">

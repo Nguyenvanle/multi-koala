@@ -25,6 +25,7 @@ export function DashboardHeader({
             { month: "long", year: "numeric" }
           )}
           trendingPercentage={studentChartData.trend}
+
         />
       </div>
       <div className="flex flex-col gap-4">
