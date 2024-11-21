@@ -45,7 +45,7 @@ export const TestCard = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <Link
                 href={`${viewDetailHref}/${test.testId}`}
                 className="flex flex-row w-full"
@@ -53,7 +53,7 @@ export const TestCard = ({
                 <Eye className="mr-2 h-4 w-4" />
                 <span>View Details</span>
               </Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuItem>
               <Link
                 href={`${viewDetailHref}/${test.testId}/edit`}
