@@ -37,4 +37,6 @@ public interface EnrollCourseRepository extends JpaRepository<EnrollCourse, Stri
                     "ORDER BY COUNT(*) DESC " +
                     "LIMIT 1")
     int findMaxCountEnrollCourseGroupByCourseId();
+
+    Optional<EnrollCourse> findByCourseAndStudent(Course course, Student authenticatedStudent);
 }
