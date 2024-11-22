@@ -271,7 +271,6 @@ const Test = () => {
             <Text style={styles.submitButtonText}>Take this test again</Text>
           </TouchableOpacity>
         )}
-        <SuggestCourse enrollCourse={""} />
         <Text
           style={{
             ...styles.resultText,
