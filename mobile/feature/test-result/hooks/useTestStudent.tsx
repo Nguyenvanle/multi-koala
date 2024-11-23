@@ -30,22 +30,25 @@ const useTestStudent = (testId) => {
       setLoadingStudentResult(true);
       setErrorStudentResult(null);
 
+      const token = await AsyncStorage.getItem("token");
+      if (!token) return;
+
       // Dữ liệu gửi đi đã được cập nhật từ handleSubmit
       const requestData: SubmitRes = {
         answerSubmitList: selectedAnswerList,
       };
-      console.log(requestData);
+      console.log("student:", requestData);
 
-      const request = await testStudentService.getResult(
+      const res = await testStudentService.getResult(
         testIdString, // Thay đổi ở đây
+        token,
         requestData
       );
-      if (request && request.data) {
-        if (request.data.code === 200 && request.data.result) {
-          setTestStudentResult(request.data.result);
-          console.log(request.data.result);
+      if (res && res.data && res.data.result) {
+        if (res.data.code === 200 && res.data.result) {
+          setTestStudentResult(res.data.result);
         } else {
-          setErrorStudentResult(request.data.message || "An error occurred");
+          setErrorStudentResult(res.data.message || "An error occurred");
         }
       }
     } catch (error) {
