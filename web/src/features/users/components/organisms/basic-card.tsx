@@ -1,4 +1,9 @@
-"use client";
+import UserAvatar from "@/features/users/components/molecules/avatar-card";
+import UserInfo from "@/features/users/components/molecules/info-card";
+import UserRoles from "@/features/users/components/molecules/role-card";
+import { CalendarFold, Mail, MapPinHouse } from "lucide-react";
+import { useAuth } from "@/features/auth/contexts/auth-context";
+("use client");
 
 import {
   Card,
@@ -6,11 +11,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { CalendarFold, Mail, MapPinHouse } from "lucide-react";
-import UserAvatar from "@/features/users/components/molecules/avatar-card";
-import UserRoles from "@/features/users/components/molecules/role-card";
-import UserInfo from "@/features/users/components/molecules/info-card";
-import { useAuth } from "@/features/auth/contexts/auth-context";
 
 export default function BasicCard() {
   const { user } = useAuth();
@@ -19,7 +19,7 @@ export default function BasicCard() {
     <Card className="flex flex-1 flex-col gap-2 sm:flex-0">
       <CardHeader className="items-center">
         <UserAvatar
-          imageUrl={user?.image.imageUrl}
+          imageUrl={user?.image?.imageUrl ?? "/images/smile.png"}
           firstName={user?.firstname}
         />
       </CardHeader>
