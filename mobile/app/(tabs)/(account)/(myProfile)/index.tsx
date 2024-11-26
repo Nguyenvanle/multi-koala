@@ -161,12 +161,6 @@ const UserProfile: React.FC = () => {
               style={styles.image}
             />
           )}
-
-          {isEditing && (
-            <TouchableOpacity style={styles.changeImageButton}>
-              <Text style={styles.changeImageText}>Change Image</Text>
-            </TouchableOpacity>
-          )}
         </View>
         <View style={styles.header}>
           <TouchableOpacity
@@ -184,7 +178,7 @@ const UserProfile: React.FC = () => {
               <Text style={styles.label}>Firstname</Text>
               <TextInput
                 style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user.firstname || ""}
+                value={user?.firstname || ""}
                 onChangeText={(text) => handleInputChange("firstname", text)}
                 editable={isEditing}
               />
@@ -193,7 +187,7 @@ const UserProfile: React.FC = () => {
               <Text style={styles.label}>Lastname</Text>
               <TextInput
                 style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user.lastname || ""}
+                value={user?.lastname || ""}
                 onChangeText={(text) => handleInputChange("lastname", text)}
                 editable={isEditing}
               />
@@ -225,6 +219,7 @@ const UserProfile: React.FC = () => {
                 <TextInput
                   onPress={() => isEditing && setShowDatePicker(true)}
                   style={[{ ...styles.input }]}
+                  editable={false}
                 >
                   <Text style={styles.disabledText}>
                     {formatDate(user.userBirth || "No update yet")}

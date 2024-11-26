@@ -36,7 +36,9 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
 
   useEffect(() => {
     refreshUser(); // Gọi lại hàm refreshUser để cập nhật thông tin người dùng
-    checkCompleted();
+    if (checkCompleted) {
+      checkCompleted();
+    }
   }, [enrolled]); // Nếu enrolled có thay đổi, refreshUser sẽ được gọi
 
   if (userLoading || isRefreshing) {
@@ -54,7 +56,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
     if (enrolled) {
       for (let i = 0; i < enrolled?.length; i++) {
         const latestCourse = enrolled[i];
-        if (latestCourse.process === 1) {
+        if (latestCourse?.process === 1) {
           // Kiểm tra nếu khóa học hiện tại hoàn thành
           // Kiểm tra nếu có khóa học tiếp theo
           setNextCourse(enrolled[i + 1]); // Cập nhật khóa học tiếp theo

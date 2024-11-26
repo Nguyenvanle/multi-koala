@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, Alert } from "react-native";
 import React, { useState } from "react";
 import { Styles, text } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
@@ -6,7 +6,6 @@ import useOtp from "../../../hooks/useOtp";
 
 const ConfirmGmail = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
-
   const {
     otp,
     otpErrorMessage,
@@ -22,9 +21,8 @@ const ConfirmGmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  if (email == "") {
+  if (email === null || "") {
     setErrorMessage("Please enter your Email address.");
-    return;
   }
   return (
     <SafeAreaView style={Styles.container}>
