@@ -1,16 +1,16 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Upload, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useDropzone, FileRejection } from "react-dropzone";
+import React, { useCallback, useEffect, useState } from "react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
+import { FileRejection, useDropzone } from "react-dropzone";
+import { QuestionBodyType } from "@/features/test/types/question";
+import { Trash2, Upload } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { QuestionBodyType } from "@/features/test/types/question";
 
 export default function QuestionImageUpload({
   question,
@@ -25,7 +25,7 @@ export default function QuestionImageUpload({
 
   useEffect(() => {
     if (question.image?.imageUrl) {
-      setPreview(question.image.imageUrl);
+      setPreview(question.image?.imageUrl ?? "/images/smile.png");
     }
   }, [question.image]);
 

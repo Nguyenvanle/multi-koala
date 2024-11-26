@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup } from "@/components/ui/radio-group";
-import { ImageEmptyState } from "@/features/test/components/atoms/image-empty";
-import { AnswerDisplay } from "@/features/test/components/molecules/answer-display";
+import Image from "next/image";
 import useQuestionDisplay from "@/features/test/hooks/useQuestionDisplay";
 import { AnswerBodyType } from "@/features/test/types/answer";
-import { QuestionBodyType } from "@/features/test/types/question";
+import { AnswerDisplay } from "@/features/test/components/molecules/answer-display";
+import { Button } from "@/components/ui/button";
+import { CardDescription } from "@/components/ui/card";
+import { ImageEmptyState } from "@/features/test/components/atoms/image-empty";
+import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
-import Image from "next/image";
+import { QuestionBodyType } from "@/features/test/types/question";
+import { RadioGroup } from "@/components/ui/radio-group";
 
 export function QuestionDisplay({
   question,
@@ -42,7 +42,7 @@ export function QuestionDisplay({
         </Label>
         {question.image ? (
           <Image
-            src={question.image.imageUrl}
+            src={question?.image?.imageUrl ?? "/images/smile.png"}
             alt="Question"
             className="max-w-full h-auto rounded"
             width={700}

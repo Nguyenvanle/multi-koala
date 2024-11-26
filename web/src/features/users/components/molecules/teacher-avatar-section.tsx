@@ -1,7 +1,7 @@
-import { TeacherBodyType } from "@/features/users/schema/teacher";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { TeacherBodyType } from "@/features/users/schema/teacher";
 
 export const TeacherAvatarSection: React.FC<{ teacher: TeacherBodyType }> = ({
   teacher,
@@ -10,7 +10,7 @@ export const TeacherAvatarSection: React.FC<{ teacher: TeacherBodyType }> = ({
     <CardContent className="flex flex-col items-center justify-center p-6 pb-0">
       <Avatar className="w-60 h-60 border">
         <AvatarImage
-          src={teacher.image.imageUrl}
+          src={teacher?.image?.imageUrl ?? "/images/smile.png"}
           alt={`${teacher.firstname} ${teacher.lastname}`}
         />
         <AvatarFallback>

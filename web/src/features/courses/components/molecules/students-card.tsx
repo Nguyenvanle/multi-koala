@@ -1,12 +1,17 @@
+import Link from 'next/link';
+import useStudent from '@/features/courses/hooks/useStudents';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Card,
+  CardFooter,
+  CardHeader,
+  CardTitle
+  } from '@/components/ui/card';
+import { Ellipsis } from 'lucide-react';
+import { useEffect } from 'react';
 "use client";
 
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Ellipsis } from "lucide-react";
-import Link from "next/link";
-import useStudent from "@/features/courses/hooks/useStudents";
-import { useEffect } from "react";
 
 // src/types/student.ts
 export interface Student {
@@ -33,7 +38,7 @@ export default function StudentsCard({ courseId }: { courseId: string }) {
               <Avatar key={student.userId}>
                 <AvatarImage
                   title={student.username}
-                  src={student.image.imageUrl}
+                  src={student.image?.imageUrl ?? "/images/smile.png"}
                   alt={student.username}
                 />
                 <AvatarFallback title={student.username}></AvatarFallback>

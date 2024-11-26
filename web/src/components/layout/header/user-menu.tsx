@@ -1,6 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut, Settings, User } from "lucide-react";
+import { Muted } from "@/components/ui/typography";
+import { useAuth } from "@/features/auth/contexts/auth-context";
 import { useState } from "react";
+
 import {
   Sheet,
   SheetContent,
@@ -10,11 +16,6 @@ import {
   SheetClose,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import Link from "next/link";
-import { LogOut, Settings, User } from "lucide-react";
-import { useAuth } from "@/features/auth/contexts/auth-context";
-import { Muted } from "@/components/ui/typography";
 
 const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +45,7 @@ const UserMenu: React.FC = () => {
         </div>
         <SheetTrigger asChild>
           <Avatar className="cursor-pointer">
-            <AvatarImage src={user?.image.imageUrl || "/images/smile.png"} />
+            <AvatarImage src={user?.image?.imageUrl || "/images/smile.png"} />
           </Avatar>
         </SheetTrigger>
         <SheetContent side="right">
@@ -62,7 +63,7 @@ const UserMenu: React.FC = () => {
             <div className="flex items-center space-x-2">
               <Avatar className="h-14 w-14">
                 <AvatarImage
-                  src={user?.image.imageUrl || "/images/smile.png"}
+                  src={user?.image?.imageUrl || "/images/smile.png"}
                 />
                 <AvatarFallback>{user?.firstname.charAt(0)}</AvatarFallback>
               </Avatar>
