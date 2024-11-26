@@ -10,7 +10,6 @@ import { Styles, text } from "@/constants/Styles";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import HeaderUser from "@/components/molecules/user/HeaderUser";
-import useUser from "@/feature/user/hooks/useUser";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 import MyCourses from "@/feature/course/components/home/my-courses/MyCoures";
 import NewCourses from "@/feature/course/components/home/new-courses/NewCourse";
@@ -19,8 +18,6 @@ import { UserContext } from "@/context/user/userContext";
 const Home = ({ courseId }: { courseId: string }) => {
   const { user } = useContext(UserContext); // Sử dụng UserContext
   const { enrolled, errorMessage, loading } = useEnrolled(courseId);
-  console.log(enrolled);
-
   return (
     <SafeAreaView
       style={{
@@ -52,7 +49,7 @@ const Home = ({ courseId }: { courseId: string }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <MyCourses courseId={courseId} />
+          <MyCourses />
           <View
             style={{
               flexDirection: "row",

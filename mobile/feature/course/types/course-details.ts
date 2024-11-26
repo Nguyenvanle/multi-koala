@@ -25,7 +25,6 @@ export type CourseDetailsBody = {
   };
   discountApprovedRate: number;
   status: string;
-  process: number;
 };
 export type CourseDetailsRes = {
   code: string;

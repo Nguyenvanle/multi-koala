@@ -9,6 +9,9 @@ export type FieldBody = {
 };
 
 export type EnrolledBody = {
+  enrollCourseId: string;
+  enrollAt: Date;
+  process: number;
   course: {
     courseId: string;
     courseName: string;
@@ -28,7 +31,6 @@ export type EnrolledBody = {
     fields: FieldBody[];
     status: string;
   };
-  process: number;
 };
 
 export type EnrolledRes = {

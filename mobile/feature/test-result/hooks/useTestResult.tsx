@@ -29,7 +29,6 @@ const useTestResult = (testId) => {
       const requestData: SubmitRes = {
         answerSubmitList: selectedAnswerList,
       };
-      console.log(requestData);
 
       const request = await testResultService.getResult(
         testIdString, // Sử dụng testIdString ở đây
@@ -38,7 +37,6 @@ const useTestResult = (testId) => {
       if (request && request.data) {
         if (request.data.code === 200 && request.data.result) {
           setTestResult(request.data.result);
-          console.log(request.data.result);
         } else {
           setErrorResult(request.data.message || "An error occurred");
         }

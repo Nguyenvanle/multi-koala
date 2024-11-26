@@ -22,6 +22,7 @@ import { useDetails } from "@/feature/course/hooks/useDetails";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
 import { ResultBody } from "@/feature/lesson/types/lesson";
 import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
+import SuggestCourse from "@/feature/course/components/courses/suggest-course/suggest-course";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -98,7 +99,7 @@ const Test = () => {
           selectedAnswerId: selectedAnswers[question.questionId] || null,
         }));
         // Update the appropriate answer list based on token presence
-        if (hasToken) {
+        if (hasToken === true) {
           setStudentAnswerList(initialList);
         } else {
           setGuestAnswerList(initialList);
@@ -362,8 +363,8 @@ const Test = () => {
     }
   }, [selectedTest?.testId]);
 
-  const displayResult = hasToken ? testStudentResult : testResult;
-  const isLoading = hasToken ? loadingStudentResult : loadingResult;
+  const displayResult = hasToken === true ? testStudentResult : testResult;
+  const isLoading = hasToken === true ? loadingStudentResult : loadingResult;
 
   // Thêm useEffect để theo dõi displayResult
   useEffect(() => {
@@ -382,7 +383,7 @@ const Test = () => {
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
-      if (hasToken) {
+      if (hasToken === true) {
         setStudentAnswerList([]);
         await onStudentSubmit();
       } else {
