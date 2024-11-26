@@ -17,7 +17,7 @@ import { useDetails } from "../../feature/course/hooks/useDetails";
 import { useCourseRating } from "@/feature/course/hooks/useCourseRating";
 import { useCourseDiscount } from "@/feature/discount/hooks/useCourseDiscount";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
-import { LessonBody, ResultBody } from "../../feature/lesson/types/lesson";
+import { ResultBody } from "../../feature/lesson/types/lesson";
 import useUser from "@/feature/user/hooks/useUser";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 
