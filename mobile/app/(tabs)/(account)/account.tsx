@@ -11,7 +11,6 @@ import {
 import React, { useContext } from "react";
 import { Styles, text } from "@/constants/Styles";
 import useUser from "@/feature/user/hooks/useUser";
-import useLogOut from "@/feature/auth/hooks/useLogOut";
 import CircleStyle from "@/components/molecules/front-end/CircleStyle";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
@@ -23,6 +22,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { UserContext } from "@/context/user/userContext";
+import { useLogOut } from "@/feature/auth/hooks/useLogOut";
 
 const Account = () => {
   const { user } = useContext(UserContext); // Sử dụng UserContext
@@ -35,6 +35,7 @@ const Account = () => {
     setErrorMessage,
     refreshUser,
   } = useUser();
+
   const { handleLogout } = useLogOut();
 
   return (

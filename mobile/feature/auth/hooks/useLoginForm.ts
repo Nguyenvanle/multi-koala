@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { router } from "expo-router";
 import { loginServices } from "../services/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginBody, LoginRes } from "../types/login";
+import { UserContext } from "@/context/user/userContext";
 
 const useLoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -10,6 +11,7 @@ const useLoginForm = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { fetchUserData } = useContext(UserContext);
 
   const onSubmit = async () => {
     if (!username || !password) {
@@ -26,6 +28,8 @@ const useLoginForm = () => {
       console.log(response.data.result.token);
       if (data.code === 200 && data.result.token) {
         await AsyncStorage.setItem("token", data.result.token);
+        // Fetch lại user data
+        await fetchUserData();
         router.replace("/(home)/home");
       } else {
         setError(error);
