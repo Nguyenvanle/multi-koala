@@ -27,15 +27,19 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
   const { user } = useContext(UserContext); // Sử dụng UserContext
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
   const { loadingUser: userLoading, isRefreshing, refreshUser } = useUser();
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
   const {
     enrolled,
     errorMessage,
     loading: enrolledLoading,
-  } = useEnrolled(courseIdString);
+  } = useEnrolled(courseIdString, refreshTrigger); // Truyền triggerRefresh
   const [nextCourse, setNextCourse] = useState<EnrolledBody | null>(null);
+  // Thêm state để trigger refresh
 
   useEffect(() => {
     refreshUser(); // Gọi lại hàm refreshUser để cập nhật thông tin người dùng
+    // Kích hoạt refresh
     if (checkCompleted) {
       checkCompleted();
     }
@@ -109,12 +113,12 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
             >
               <Text style={text.h4}>Welcome</Text>
               <Text style={{ ...text.h4, color: Colors.teal_dark }}>
-                {user.firstname} {user.lastname}
+                {user?.firstname} {user?.lastname}
               </Text>
             </View>
-            {user.image ? (
+            {user?.image ? (
               <Image
-                source={{ uri: user.image.imageUrl }}
+                source={{ uri: user?.image?.imageUrl }}
                 style={{
                   width: 75,
                   height: 75,

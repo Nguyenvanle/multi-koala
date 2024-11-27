@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { EnrolledBodyList } from "../types/course-enrolled";
-import { enrolledServices } from "../services/course-enrolled";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { enrolledServices } from "../services/course-enrolled";
 
-export const useEnrolled = (courseId?: string) => {
+export const useEnrolled = (
+  courseId?: string,
+  triggerRefresh?: boolean // Thêm tham số để trigger refresh
+) => {
   const [enrolled, setEnrolled] = useState<EnrolledBodyList>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,7 +39,7 @@ export const useEnrolled = (courseId?: string) => {
     };
 
     getCourse(); // Gọi hàm getCourse
-  }, [courseId]); // Thêm courseId vào dependency array
+  }, [courseId, triggerRefresh]); // Thêm triggerRefresh vào dependency
 
-  return { enrolled, errorMessage, loading }; // Trả về giá trị
+  return { enrolled, errorMessage, loading };
 };

@@ -8,6 +8,10 @@ const HomeLayout = () => {
         name="home"
         options={{ headerShown: false, headerTransparent: true }}
       />
+      <Stack.Screen
+        name="recommend"
+        options={{ headerShown: false, headerTransparent: true }}
+      />
     </Stack>
   );
 };

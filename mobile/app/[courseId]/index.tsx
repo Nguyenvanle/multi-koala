@@ -154,16 +154,18 @@ const CourseDetails = () => {
           {index + 1}.
         </Text>
         <Image
-          source={{ uri: item.lesson.image.imageUrl }}
+          source={{ uri: item?.lesson?.image?.imageUrl }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
           <Text style={styles.lessonTitle} numberOfLines={2}>
-            {item.lesson.lessonName}
+            {item?.lesson?.lessonName}
           </Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.lesson.video.videoDuration / 60)}:
-            {(item.lesson.video.videoDuration % 60).toString().padStart(2, "0")}{" "}
+            {Math.floor(item?.lesson?.video?.videoDuration / 60)}:
+            {(item?.lesson?.video?.videoDuration % 60)
+              .toString()
+              .padStart(2, "0")}{" "}
             mins
           </Text>
         </View>
@@ -180,7 +182,7 @@ const CourseDetails = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, paddingBottom: 80 }}>
         <Image
-          source={{ uri: courseDetails.image.imageUrl }}
+          source={{ uri: courseDetails?.image?.imageUrl }}
           style={styles.image}
         />
         <View style={styles.content}>
@@ -188,8 +190,8 @@ const CourseDetails = () => {
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text style={styles.instructor}>
-              {courseDetails.uploadedByTeacher?.firstname}{" "}
-              {courseDetails.uploadedByTeacher?.lastname}
+              {courseDetails?.uploadedByTeacher?.firstname}{" "}
+              {courseDetails?.uploadedByTeacher?.lastname}
             </Text>
             <CustomRatingBar courseRating={courseRating?.avgcourseRating} />
           </View>
@@ -236,11 +238,11 @@ const CourseDetails = () => {
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {Array.isArray(courseDetails.types) &&
               courseDetails.types.map((type: any) => (
-                <View key={type.typeName} style={styles.typeButton}>
+                <View key={type?.typeName} style={styles.typeButton}>
                   <Text
                     style={{ ...styles.fieldName, color: Colors.teal_dark }}
                   >
-                    {type.typeName}
+                    {type?.typeName}
                   </Text>
                 </View>
               ))}
@@ -250,17 +252,17 @@ const CourseDetails = () => {
           >
             {Array.isArray(courseDetails.fields) &&
               courseDetails.fields.map((field: any) => (
-                <View key={field.fieldName} style={styles.fieldButton}>
-                  <Text style={styles.fieldName}>{field.fieldName}</Text>
+                <View key={field?.fieldName} style={styles.fieldButton}>
+                  <Text style={styles.fieldName}>{field?.fieldName}</Text>
                 </View>
               ))}
           </View>
 
           <Text style={[styles.courseLevel, { color: courseLevelColor }]}>
-            {courseDetails.courseLevel}
+            {courseDetails?.courseLevel}
           </Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
-            <Text style={styles.price}>${finalPrice.toFixed(2)}</Text>
+            <Text style={styles.price}>${finalPrice?.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
               <Text style={styles.originalPrice}>
                 / ${courseDetails.coursePrice.toFixed(2)}

@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 8,
+    paddingHorizontal: 8,
   },
   courseContainer: {
     alignItems: "center",
