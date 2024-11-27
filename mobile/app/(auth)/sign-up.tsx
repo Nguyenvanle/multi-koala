@@ -38,7 +38,7 @@ const SignUp: React.FC = () => {
         <Button
           title={loading ? "Please wait..." : "Continue with Email"}
           style={styles.loginButton}
-          onPress={() => router.push("/(auth)/confirm")}
+          onPress={() => router.push("/(auth)/form")}
           textStyle={{ ...text.h4, color: Colors.white }}
         />
         <SignInRouter />

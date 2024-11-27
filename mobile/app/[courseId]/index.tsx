@@ -20,6 +20,7 @@ import { useLesson } from "@/feature/lesson/hooks/useLesson";
 import { ResultBody } from "../../feature/lesson/types/lesson";
 import useUser from "@/feature/user/hooks/useUser";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
+import { usePostEnroll } from "@/feature/course/hooks/usePostEnroll";
 
 const CourseDetails = () => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -49,6 +50,11 @@ const CourseDetails = () => {
 
   const { discount } = useCourseDiscount(courseIdString);
 
+  const { postEnroll, loadingPostEnroll, errorPostEnroll, fetchPostEnroll } =
+    usePostEnroll();
+
+  const [isEnrolling, setIsEnrolling] = useState(false);
+
   // const {
   //   handleToggleFavourite,
   //   loadingPost,
@@ -56,6 +62,15 @@ const CourseDetails = () => {
   //   isLiked,
   //   postCourse,
   // } = usePostCourse();
+
+  // Thêm useEffect để theo dõi kết quả đăng ký
+  useEffect(() => {
+    if (postEnroll) {
+      setIsEnrolling(true);
+      // Có thể thêm thông báo đăng ký thành công nếu muốn
+      Alert.alert("Success", "You have successfully enrolled in the course");
+    }
+  }, [postEnroll]);
 
   if (loading) {
     return (
@@ -288,20 +303,17 @@ const CourseDetails = () => {
         )}
 
         {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
-        {!isEnrolled && (
+        {!isEnrolling && !isEnrolled && (
           <TouchableOpacity
             style={styles.buyButton}
             onPress={() => {
               if (isLoggedIn) {
-                if (lesson.length > 0) {
-                  // Logic to buy the course
-                } else {
-                  Alert.alert("Notification", "No lessons available to buy");
-                }
+                console.log(courseIdString);
+                fetchPostEnroll(courseIdString);
               } else {
                 Alert.alert(
                   "LogIn Required",
-                  "You need to logIn to buy this course",
+                  "You need to logIn to enroll this course",
                   [
                     {
                       text: "Cancel",
@@ -316,7 +328,11 @@ const CourseDetails = () => {
               }
             }}
           >
-            <Text style={styles.buyButtonText}>Buy Now</Text>
+            {loadingPostEnroll ? (
+              <Text style={styles.buyButtonText}>Enroll Now</Text>
+            ) : (
+              <ActivityIndicator color={Colors.white} />
+            )}
           </TouchableOpacity>
         )}
       </View>

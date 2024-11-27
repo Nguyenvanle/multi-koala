@@ -1,34 +1,44 @@
-import { useEffect, useState } from "react";
-import { EnrollBody } from "../types/post-enroll";
-import { postEnrollCourseServices } from "../services/post-enroll";
+import { useState } from "react";
+import { PostEnrolled } from "../types/post-enroll";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { postEnrollCourseServices } from "../services/post-enroll";
 
-export const usePostEnroll = (courseId: string) => {
-  const [postEnroll, setPostEnroll] = useState<EnrollBody>();
+export const usePostEnroll = () => {
+  const [postEnroll, setPostEnroll] = useState<PostEnrolled>();
   const [loadingPostEnroll, setLoadingPostEnroll] = useState<boolean>(true);
   const [errorPostEnroll, setErrorPostEnroll] = useState<string | null>(null);
 
-  const fetchPostEnroll = async () => {
+  const fetchPostEnroll = async (courseId: string) => {
     try {
       setLoadingPostEnroll(true);
-      // Thay thế URL này bằng URL thực của API của bạn
       const token = await AsyncStorage.getItem("token");
+
       if (!token) {
         setErrorPostEnroll("No token found. Please log in.");
         return;
       }
 
-      const postEnroll = await postEnrollCourseServices.postEnroll(
+      console.log("Attempting to enroll with:", { courseId, token });
+
+      const postEnrolled = await postEnrollCourseServices.postEnrolled(
         token,
         courseId
       );
-      if (postEnroll && postEnroll.data && postEnroll.data.result) {
-        setPostEnroll(postEnroll.data.result);
+
+      if (postEnrolled?.data) {
+        console.log("Enrollment Data:", postEnrolled.data);
+        setPostEnroll(postEnrolled.data);
       } else {
-        setErrorPostEnroll("Post Course failed.");
+        console.error("No data in response");
+        setErrorPostEnroll("Failed to enroll in course");
       }
     } catch (err: any) {
-      setErrorPostEnroll(err); // Lấy thông báo lỗi từ Axios
+      console.error("Enrollment Error:", err);
+      setErrorPostEnroll(
+        err.response?.data?.message ||
+          err.message ||
+          "An unexpected error occurred"
+      );
     } finally {
       setLoadingPostEnroll(false);
     }

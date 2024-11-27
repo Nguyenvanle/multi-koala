@@ -1,15 +1,23 @@
 import API_CONFIG from "@/types/config";
-import { EnrollRes } from "../types/post-enroll";
+import { PostEnrolled } from "../types/post-enroll";
 
 export const postEnrollCourseServices = {
-  postEnroll: async (token: string, courseId: string) => {
-    return await API_CONFIG.post<EnrollRes>(
-      `/courses/${courseId}/enroll-courses`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  postEnrolled: async (token: string, courseId: string) => {
+    try {
+      const response = await API_CONFIG.post<PostEnrolled>(
+        `/courses/${courseId}/enroll-courses`,
+        {}, // Empty body if no additional data needed
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error("Enrollment Service Error:", error);
+      throw error;
+    }
   },
 };
