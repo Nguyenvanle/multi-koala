@@ -83,7 +83,7 @@ const Account = () => {
                   borderRadius: 80,
                   marginBottom: 8,
                 }}
-                source={{ uri: user.image.imageUrl }}
+                source={{ uri: user?.image?.imageUrl }}
               />
               <Text style={{ ...text.h3, color: Colors.teal_dark }}>
                 {user.firstname} {user.lastname}

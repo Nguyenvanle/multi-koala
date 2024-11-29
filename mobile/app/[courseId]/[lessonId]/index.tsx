@@ -79,14 +79,14 @@ const LessonDetails = () => {
     );
 
   const renderVideo = () => {
-    if (lessonDetails.video.videoUrl === "videoUrl-test-update") return;
+    if (lessonDetails?.video?.videoUrl === "videoUrl-test-update") return;
     if (
-      lessonDetails.video.videoUrl.includes("youtube.com") ||
-      lessonDetails.video.videoUrl.includes("youtu.be")
+      lessonDetails?.video?.videoUrl.includes("youtube.com") ||
+      lessonDetails?.video?.videoUrl.includes("youtu.be")
     ) {
       const videoId =
-        lessonDetails.video.videoUrl.split("v=")[1]?.split("&")[0] ||
-        lessonDetails.video.videoUrl.split("/").pop();
+        lessonDetails?.video?.videoUrl.split("v=")[1]?.split("&")[0] ||
+        lessonDetails?.video?.videoUrl.split("/").pop();
       return (
         <YoutubePlayer
           height={230}
@@ -97,7 +97,7 @@ const LessonDetails = () => {
     } else {
       return (
         <Video
-          source={{ uri: lessonDetails.video.videoUrl }}
+          source={{ uri: lessonDetails?.video?.videoUrl }}
           style={styles.video}
           useNativeControls
           videoStyle={{ borderRadius: 10 }}
@@ -129,14 +129,16 @@ const LessonDetails = () => {
           {index + 1}.{" "}
         </Text>
         <Image
-          source={{ uri: item.lesson.image.imageUrl }}
+          source={{ uri: item?.lesson?.image?.imageUrl }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
           <Text style={styles.lessonTitle}>{item.lesson.lessonName}</Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.lesson.video.videoDuration / 60)}:
-            {(item.lesson.video.videoDuration % 60).toString().padStart(2, "0")}{" "}
+            {Math.floor(item?.lesson?.video?.videoDuration / 60)}:
+            {(item?.lesson?.video?.videoDuration % 60)
+              .toString()
+              .padStart(2, "0")}{" "}
             mins
           </Text>
         </View>
@@ -159,8 +161,8 @@ const LessonDetails = () => {
             {lessonDetails.lessonName}
           </Text>
           <Text style={styles.duration}>
-            {Math.floor(lessonDetails.video.videoDuration / 60)}:
-            {(lessonDetails.video.videoDuration % 60)
+            {Math.floor(lessonDetails?.video?.videoDuration / 60)}:
+            {(lessonDetails?.video?.videoDuration % 60)
               .toString()
               .padStart(2, "0")}{" "}
             mins

@@ -45,12 +45,12 @@ const NewCourses = () => {
       ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
       : [];
 
-    const filteredCourses = courses.filter((item) => {
+    const filteredCourses = courses?.filter((item) => {
       return !enrolledCourseIds.includes(item.courseId);
     });
 
     const numberOfCoursesToShow = user ? 10 : 5;
-    return filteredCourses.slice(0, numberOfCoursesToShow);
+    return filteredCourses?.slice(0, numberOfCoursesToShow);
   };
 
   const coursesToShow = getFilteredCourses(course, enrolled, user);
