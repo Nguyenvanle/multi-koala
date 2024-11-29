@@ -21,6 +21,8 @@ import { ResultBody } from "../../feature/lesson/types/lesson";
 import useUser from "@/feature/user/hooks/useUser";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 import { usePostEnroll } from "@/feature/course/hooks/usePostEnroll";
+import { useLessonGuest } from "@/feature/lesson/hooks/useLessonGuest";
+import { LessonBody } from "@/feature/lesson/types/lesson-guest";
 
 const CourseDetails = () => {
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -55,6 +57,9 @@ const CourseDetails = () => {
 
   const [isEnrolling, setIsEnrolling] = useState(false);
   console.log(courseIdString);
+
+  const { lessonGuest, errorMessageGuest, loadingLessonGuest } =
+    useLessonGuest(courseIdString);
 
   // const {
   //   handleToggleFavourite,
@@ -178,9 +183,52 @@ const CourseDetails = () => {
     );
   };
 
-  const isLoggedIn = !!user;
-  const displayedLessons = showAllLessons ? lesson : lesson?.slice(0, 3);
+  const renderGuestItem = ({
+    item,
+    index,
+  }: {
+    item: LessonBody;
+    index: number;
+  }) => {
+    const isClickable = index < 3 || isEnrolled; // Cho phép truy cập vào chi tiết bài học nếu đã đăng ký hoặc là bài học đầu tiên
 
+    return (
+      <TouchableOpacity
+        style={[styles.lessonItem, !isClickable && { opacity: 0.5 }]}
+        onPress={() => {
+          if (isClickable) {
+            router.push(`/${courseIdString}/${item.lessonId}`);
+          }
+        }}
+      >
+        <Text style={{ ...text.large, marginRight: 8, fontWeight: "400" }}>
+          {index + 1}.
+        </Text>
+        <Image
+          source={{
+            uri:
+              item?.image?.imageUrl ||
+              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+          }}
+          style={styles.lessonThumbnail}
+        />
+        <View style={styles.lessonInfo}>
+          <Text style={styles.lessonTitle} numberOfLines={2}>
+            {item?.lessonName}
+          </Text>
+          <Text style={styles.lessonDuration}>
+            {Math.floor(item?.video?.videoDuration / 60)}:
+            {(item?.video?.videoDuration % 60).toString().padStart(2, "0")} mins
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const isLoggedIn = !!user;
+  const displayedLessons = lesson;
+  const displayedDemo = lessonGuest?.filter((guest) => guest.demo === true);
+  console.log(displayedDemo);
   const lessonCount = lesson ? lesson?.length : 0;
 
   return (
@@ -288,7 +336,7 @@ const CourseDetails = () => {
           <View style={{ paddingTop: 16, justifyContent: "center" }}>
             <ActivityIndicator color={Colors.teal_dark} />
           </View>
-        ) : lesson && lesson.length > 0 ? (
+        ) : isEnrolled === true ? (
           <>
             <FlatList
               data={displayedLessons}
@@ -296,7 +344,16 @@ const CourseDetails = () => {
               keyExtractor={(item) => item.lesson.lessonId}
               scrollEnabled={false}
             />
-            {lesson && lesson.length > 3 && (
+          </>
+        ) : (
+          <>
+            <FlatList
+              data={displayedDemo}
+              renderItem={renderGuestItem}
+              keyExtractor={(item) => item.lessonId}
+              scrollEnabled={false}
+            />
+            {lessonGuest && lessonGuest.length > 3 && (
               <TouchableOpacity
                 style={styles.showMoreButton}
                 onPress={() => setShowAllLessons(!showAllLessons)}
@@ -307,10 +364,6 @@ const CourseDetails = () => {
               </TouchableOpacity>
             )}
           </>
-        ) : (
-          <Text style={{ ...text.p, color: Colors.teal_dark }}>
-            No lessons available
-          </Text>
         )}
 
         {/* Hiển thị nút Buy Now nếu khóa học chưa được đăng ký */}
