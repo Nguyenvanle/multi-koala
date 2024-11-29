@@ -300,6 +300,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 16,
+    width: "100%",
   },
   courseTitle: {
     fontSize: 18,
