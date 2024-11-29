@@ -1,7 +1,10 @@
 import { Colors } from "@/constants/Colors";
 import { text } from "@/constants/Styles";
 import { useSuggestCourse } from "@/feature/course/hooks/useSuggestCourse";
-import { CourseBody } from "@/feature/course/types/suggest-course";
+import {
+  CourseBody,
+  CourseBodyList,
+} from "@/feature/course/types/suggest-course";
 import { Link, router, useGlobalSearchParams } from "expo-router";
 import React from "react";
 import {
@@ -14,14 +17,18 @@ import {
   Platform,
   Image,
   FlatList,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
-const SuggestCourse = () => {
+type SuggestCourseProps = {
+  data: CourseBodyList; // Định nghĩa prop data
+};
+
+const SuggestCourse: React.FC<SuggestCourseProps> = ({ data }) => {
   const { courseId } = useGlobalSearchParams();
   const courseIdString = Array.isArray(courseId) ? courseId[0] : courseId;
-  const { suggestCourse, loading, error } = useSuggestCourse(courseIdString);
-
+  const { suggestCourse, loading, error, getSuggest } = useSuggestCourse();
   // CourseCard Component
   const CourseCard = ({ item }: { item: CourseBody }) => {
     // Xác định màu sắc cho courseLevel
@@ -35,56 +42,12 @@ const SuggestCourse = () => {
     } else if (item.courseLevel === "EXPERT") {
       courseLevelColor = "#ef4444"; // Màu đỏ
     }
-    return (
-      <Link style={styles.card} href={`/${item.courseId}`}>
-        <Image
-          source={{
-            uri:
-              item.image.imageUrl ||
-              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
-          }} // Đảm bảo cung cấp URI hợp lệ cho thumbnail
-          style={styles.thumbnail}
-          resizeMode="cover"
-        />
-        <View style={styles.cardContent}>
-          <Text style={styles.courseTitle}>{item.courseName}</Text>
-          <Text style={styles.courseDescription}>{item.courseDescription}</Text>
-
-          <View style={styles.instructorContainer}>
-            <View style={styles.instructorInfo}>
-              <Text style={styles.instructorName}>
-                {item.uploadedByTeacher.firstname}{" "}
-                {item.uploadedByTeacher.lastname}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.courseInfo}>
-            <View style={styles.infoItem}>
-              <Icon name="book-open" size={16} color="#666" />
-              <Text style={[styles.infoText, { color: courseLevelColor }]}>
-                {item.courseLevel}
-              </Text>
-            </View>
-
-            <View style={styles.priceContainer}>
-              <Icon name="tag" size={16} color={Colors.teal_dark} />
-              <Text style={styles.priceText}>{item.coursePrice}$</Text>
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.viewButton}>
-            <Text style={styles.viewButtonText}>Enroll Now</Text>
-          </TouchableOpacity>
-        </View>
-      </Link>
-    );
   };
 
   return (
     <Modal animationType="slide" transparent={true}>
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+        <ScrollView style={styles.modalContent}>
           {loading && <Text>Loading...</Text>}
           {error && <Text style={{ color: "red" }}>{error}</Text>}
 
@@ -94,12 +57,49 @@ const SuggestCourse = () => {
               Based on your current course, we recommend the following courses.
             </Text>
           </View>
+          {}
+          {data.map((course) => (
+            <Link style={styles.card} href={`/${course.courseId}`}>
+              <Image
+                source={{
+                  uri: course?.image?.imageUrl,
+                }} // Đảm bảo cung cấp URI hợp lệ cho thumbnail
+                style={styles.thumbnail}
+                resizeMode="cover"
+              />
+              <View style={styles.cardContent}>
+                <Text style={styles.courseTitle}>{course.courseName}</Text>
+                <Text style={styles.courseDescription}>
+                  {course.courseDescription}
+                </Text>
 
-          <FlatList
-            data={suggestCourse}
-            renderItem={({ item }) => <CourseCard item={item} />}
-            keyExtractor={(item) => item.courseId}
-          />
+                <View style={styles.instructorContainer}>
+                  <View style={styles.instructorInfo}>
+                    <Text style={styles.instructorName}>
+                      {course.uploadedByTeacher.firstname}{" "}
+                      {course.uploadedByTeacher.lastname}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.courseInfo}>
+                  <View style={styles.infoItem}>
+                    <Icon name="book-open" size={16} color="#666" />
+                    <Text style={[styles.infoText]}>{course.courseLevel}</Text>
+                  </View>
+
+                  <View style={styles.priceContainer}>
+                    <Icon name="tag" size={16} color={Colors.teal_dark} />
+                    <Text style={styles.priceText}>{course.coursePrice}$</Text>
+                  </View>
+                </View>
+
+                <TouchableOpacity style={styles.viewButton}>
+                  <Text style={styles.viewButtonText}>Enroll Now</Text>
+                </TouchableOpacity>
+              </View>
+            </Link>
+          ))}
 
           <TouchableOpacity
             style={styles.closeButton}
@@ -107,7 +107,7 @@ const SuggestCourse = () => {
           >
             <Text style={styles.closeButtonText}>Skip</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </Modal>
   );
@@ -123,11 +123,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    margin: 10,
-    maxHeight: "80%",
+    margin: 16,
+    maxHeight: "70%",
     backgroundColor: "#fff",
     borderRadius: 12,
-    padding: 20,
+    padding: 24,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 16,
+    width: "100%",
   },
   courseTitle: {
     fontSize: 18,
@@ -239,6 +240,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 6,
     alignItems: "center",
+    marginBottom: 48,
   },
   closeButtonText: {
     ...text.h4,

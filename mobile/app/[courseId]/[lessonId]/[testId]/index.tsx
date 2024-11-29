@@ -25,6 +25,7 @@ import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
 import SuggestCourse from "@/feature/course/components/courses/suggest-course/suggest-course";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 import { useSuggestEnroll } from "@/feature/course/hooks/useSuggestEnrolled";
+import { useSuggestCourse } from "@/feature/course/hooks/useSuggestCourse";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -83,7 +84,9 @@ const Test = () => {
   const [testHistory, setTestHistory] = useState({});
   const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { suggestEnroll, errorMessageSE, loadingSE } = useSuggestEnroll();
+  const { suggestCourse, error, getSuggest } = useSuggestCourse();
+  const [showSuggest, setShowSuggest] = useState(false);
+
   // Check for token on component mount
   useEffect(() => {
     const checkToken = async () => {
@@ -404,10 +407,17 @@ const Test = () => {
       // Xóa câu trả lời tạm thời
       await AsyncStorage.removeItem("selectedAnswers");
       setShowResult(true);
+
+      getSuggest(courseIdString);
     } catch (error) {
       console.error("Error submitting answers:", error);
       setIsSubmitting(false);
     }
+  };
+
+  const handleGetSuggestions = async () => {
+    await getSuggest(courseIdString);
+    setShowSuggest(true); // Hiển thị trang SuggestCourse
   };
 
   // Function để lưu lịch sử làm bài vào AsyncStorage
@@ -439,11 +449,6 @@ const Test = () => {
       console.error("Error saving test history:", error);
     }
   };
-  // Duyệt qua từng khóa học trong danh sách
-  enrolled.forEach((enrolled) => {
-    if (enrolled.process < 1.0) {
-    }
-  });
 
   // Function để lấy lịch sử làm bài
   const loadTestHistory = async (testId) => {
@@ -659,7 +664,7 @@ const Test = () => {
                   keyExtractor={(item) => item?.questionId?.toString()}
                   scrollEnabled={false}
                 />
-                {showResult && displayResult && (
+                {showResult && displayResult && !showSuggest && (
                   <View style={styles.resultContainer}>
                     <Text
                       style={
@@ -701,8 +706,8 @@ const Test = () => {
                         {score}
                       </Text>
                     </Text>
-
                     {/* Display result message */}
+                    <SuggestCourse data={suggestCourse} />
                   </View>
                 )}
                 {!showResult && (

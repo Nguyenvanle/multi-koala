@@ -54,6 +54,7 @@ const CourseDetails = () => {
     usePostEnroll();
 
   const [isEnrolling, setIsEnrolling] = useState(false);
+  console.log(courseIdString);
 
   // const {
   //   handleToggleFavourite,
