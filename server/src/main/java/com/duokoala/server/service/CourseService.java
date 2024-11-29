@@ -225,7 +225,7 @@ public class CourseService {
         EnrollCourse enrollCourse = enrollCourseRepository.findByCourseAndStudent(course,
                         authenticationService.getAuthenticatedStudent())
                 .orElseThrow(() -> new AppException(ErrorCode.ENROLL_COURSE_NOT_FOUND));
-
+        if (enrollCourse.getProcess() < 1.0f) throw new AppException(ErrorCode.COURSE_NOT_COMPLETED);
 //      if (enrollCourse.isSuggest()) throw new AppException(ErrorCode.COURSE_ALREADY_SUGGESTED);
         Set<String> enrollCourseFields = enrollCourse
                 .getCourse()

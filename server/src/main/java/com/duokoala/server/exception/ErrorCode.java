@@ -30,7 +30,6 @@ public enum ErrorCode {
     COURSE_ALREADY_SUGGESTED(409, "Conflict: Course is already suggested", HttpStatus.CONFLICT),
     STUDENT_NOT_MATCHED(409, "Conflict: Student does not match", HttpStatus.CONFLICT),
     CONFLICT_COURSE_NAME(409, "Conflict: Course's name already exists", HttpStatus.CONFLICT),
-
     REFERENCE_NOT_FOUND(404, "Not found: Reference does not exist", HttpStatus.NOT_FOUND),
     USER_NOT_FOUND(404, "Not found: User does not exist", HttpStatus.NOT_FOUND),
     TEACHER_NOT_FOUND(404, "Not found: Teacher does not exist", HttpStatus.NOT_FOUND),
@@ -66,6 +65,7 @@ public enum ErrorCode {
     INVALID_REQUEST_DATA(400, "Bad request: Invalid request data", HttpStatus.BAD_REQUEST),
     INVALID_DATE_FORMAT(400, "Invalid date format: Failed to parse date. Expected format is yyyy-MM-dd.", HttpStatus.BAD_REQUEST),
     INVALID_ARGUMENT(400, "Invalid argument provided", HttpStatus.BAD_REQUEST),
+    COURSE_NOT_COMPLETED(400, "Bad Request: The course is not yet completed", HttpStatus.BAD_REQUEST),
     INVALID_ANSWER_FORMAT(400, "Invalid format: Answers must be a Set of Strings", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(403, "Forbidden: Access denied", HttpStatus.FORBIDDEN),
     INVALID_PASSWORD(401, "Invalid password: Password is incorrect", HttpStatus.UNAUTHORIZED),
