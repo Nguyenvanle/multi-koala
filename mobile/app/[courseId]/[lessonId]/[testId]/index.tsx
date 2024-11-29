@@ -23,6 +23,8 @@ import { useLesson } from "@/feature/lesson/hooks/useLesson";
 import { ResultBody } from "@/feature/lesson/types/lesson";
 import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
 import SuggestCourse from "@/feature/course/components/courses/suggest-course/suggest-course";
+import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
+import { useSuggestEnroll } from "@/feature/course/hooks/useSuggestEnrolled";
 
 const Test = () => {
   const { courseId, lessonId, testId } = useGlobalSearchParams();
@@ -81,7 +83,7 @@ const Test = () => {
   const [testHistory, setTestHistory] = useState({});
   const { lesson, errorMessage, loadingLesson } = useLesson(courseIdString);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { suggestEnroll, errorMessageSE, loadingSE } = useSuggestEnroll();
   // Check for token on component mount
   useEffect(() => {
     const checkToken = async () => {
@@ -437,6 +439,11 @@ const Test = () => {
       console.error("Error saving test history:", error);
     }
   };
+  // Duyệt qua từng khóa học trong danh sách
+  enrolled.forEach((enrolled) => {
+    if (enrolled.process < 1.0) {
+    }
+  });
 
   // Function để lấy lịch sử làm bài
   const loadTestHistory = async (testId) => {
