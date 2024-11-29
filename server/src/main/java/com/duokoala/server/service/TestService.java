@@ -32,7 +32,7 @@ public class TestService {
     public TestResponse create(String lessonId, TestCreateRequest request) {
         Test test = testMapper.toTest(request);
         test.setTestUploadedAt(LocalDateTime.now());
-        test.setStatus(Status.IN_EDITING);
+        test.setStatus(Status.APPROVED);
         test.setLesson(lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_FOUND)));
         return testMapper.toTestResponse(testRepository.save(test));

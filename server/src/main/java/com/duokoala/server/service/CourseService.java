@@ -81,7 +81,7 @@ public class CourseService {
         course.setCourseLevel(Level.fromString(request.getCourseLevel()));
         course.setUploadedByTeacher(
                 authenticationService.getAuthenticatedTeacher());
-        course.setStatus(Status.IN_EDITING);
+        course.setStatus(Status.APPROVED);
         course.setDeleted(false);
         return courseMapper.toCourseResponse(courseRepository.save(course));
     }
