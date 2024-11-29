@@ -70,7 +70,7 @@ const SuggestCourse = () => {
           </View>
 
           <TouchableOpacity style={styles.viewButton}>
-            <Text style={styles.viewButtonText}>Buy Now</Text>
+            <Text style={styles.viewButtonText}>Enroll Now</Text>
           </TouchableOpacity>
         </View>
       </Link>

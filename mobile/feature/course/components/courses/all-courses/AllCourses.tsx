@@ -177,7 +177,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({
                 color: Colors.white,
               }}
             >
-              Buy Now
+              Enroll Now
             </Text>
           </TouchableOpacity>
         ) : (
