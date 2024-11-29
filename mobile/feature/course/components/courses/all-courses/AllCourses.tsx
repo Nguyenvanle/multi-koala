@@ -155,7 +155,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({
               } else {
                 Alert.alert(
                   "LogIn Required",
-                  "You need to LogIn to buy this course.",
+                  "You need to LogIn to enroll this course.",
                   [
                     {
                       text: "Cancel",
