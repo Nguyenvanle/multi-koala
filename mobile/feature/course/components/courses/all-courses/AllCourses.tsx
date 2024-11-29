@@ -46,7 +46,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({
 
   // Lọc danh sách khóa học đã đăng ký
   const enrolledCourseIds = Array.isArray(enrolled)
-    ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
+    ? enrolled.map((enrolledCourse) => enrolledCourse?.course?.courseId)
     : [];
 
   const filteredCourses = course.filter((item: CourseBody) => {
@@ -60,13 +60,13 @@ const AllCourses: React.FC<AllCoursesProps> = ({
     const matchesType =
       filter.types.length === 0 ||
       filter.types.every((type) =>
-        item.types.some((courseType) => courseType.typeName === type)
+        item.types.some((courseType) => courseType?.typeName === type)
       );
 
     const matchesField =
       filter.fields.length === 0 ||
       filter.fields.every((field) =>
-        item.fields.some((itemField) => itemField.fieldName === field)
+        item.fields.some((itemField) => itemField?.fieldName === field)
       );
 
     return matchesSearch && matchesType && matchesField; // Đã bỏ qua notEnrolled
@@ -87,7 +87,11 @@ const AllCourses: React.FC<AllCoursesProps> = ({
               }}
             >
               <Image
-                source={{ uri: item.image.imageUrl }}
+                source={{
+                  uri:
+                    item?.image?.imageUrl ||
+                    "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+                }}
                 style={{
                   width: 350,
                   height: 200,
@@ -118,7 +122,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({
                       fontWeight: "400",
                     }}
                   >
-                    {item.courseName}
+                    {item?.courseName}
                   </Text>
                 </View>
                 <View style={{ marginVertical: 5, paddingTop: 0 }}>
@@ -129,8 +133,8 @@ const AllCourses: React.FC<AllCoursesProps> = ({
                       color: Colors.teal_dark,
                     }}
                   >
-                    {item.uploadedByTeacher.firstname}{" "}
-                    {item.uploadedByTeacher.lastname}
+                    {item?.uploadedByTeacher?.firstname}{" "}
+                    {item?.uploadedByTeacher?.lastname}
                   </Text>
                 </View>
               </View>

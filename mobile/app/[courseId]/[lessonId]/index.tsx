@@ -129,7 +129,11 @@ const LessonDetails = () => {
           {index + 1}.{" "}
         </Text>
         <Image
-          source={{ uri: item?.lesson?.image?.imageUrl }}
+          source={{
+            uri:
+              item?.lesson?.image?.imageUrl ||
+              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+          }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>

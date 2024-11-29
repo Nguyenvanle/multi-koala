@@ -38,7 +38,11 @@ const SuggestCourse = () => {
     return (
       <Link style={styles.card} href={`/${item.courseId}`}>
         <Image
-          source={{ uri: item.image.imageUrl }} // Đảm bảo cung cấp URI hợp lệ cho thumbnail
+          source={{
+            uri:
+              item.image.imageUrl ||
+              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+          }} // Đảm bảo cung cấp URI hợp lệ cho thumbnail
           style={styles.thumbnail}
           resizeMode="cover"
         />
