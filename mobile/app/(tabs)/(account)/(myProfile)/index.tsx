@@ -148,10 +148,10 @@ const UserProfile: React.FC = () => {
       <ScrollView style={styles.content}>
         {/* Ảnh đại diện */}
         <View style={styles.imageContainer}>
-          {user.image ? (
+          {user?.image ? (
             <Image
               source={{
-                uri: user.image?.imageUrl,
+                uri: user?.image?.imageUrl,
               }}
               style={styles.image}
             />
@@ -178,7 +178,7 @@ const UserProfile: React.FC = () => {
               <Text style={styles.label}>Firstname</Text>
               <TextInput
                 style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user?.firstname || ""}
+                value={user?.firstname}
                 onChangeText={(text) => handleInputChange("firstname", text)}
                 editable={isEditing}
               />
@@ -187,7 +187,7 @@ const UserProfile: React.FC = () => {
               <Text style={styles.label}>Lastname</Text>
               <TextInput
                 style={[styles.input, !isEditing && styles.disabledInput]}
-                value={user?.lastname || ""}
+                value={user?.lastname}
                 onChangeText={(text) => handleInputChange("lastname", text)}
                 editable={isEditing}
               />
@@ -206,7 +206,7 @@ const UserProfile: React.FC = () => {
                   styles.disabledInput,
                   isEditing && styles.disabledInputNone,
                 ]} // Áp dụng styles.disabledInput luôn
-                value={user.roles[0].roleName || ""}
+                value={user?.roles[0]?.roleName}
                 onChangeText={null} // Không xử lý thay đổi văn bản
                 editable={false} // Không cho phép chỉnh sửa
                 selectTextOnFocus={false} // Không cho phép chọn văn bản
@@ -222,14 +222,14 @@ const UserProfile: React.FC = () => {
                   editable={false}
                 >
                   <Text style={styles.disabledText}>
-                    {formatDate(user.userBirth || "No update yet")}
+                    {formatDate(user?.userBirth)}
                   </Text>
                 </TextInput>
               ) : (
                 <View style={{ alignSelf: "baseline" }}>
                   <DateTimePicker
                     style={styles.dateTimePickerWrapper}
-                    value={new Date(user.userBirth)}
+                    value={new Date(user?.userBirth)}
                     mode="date"
                     display="default"
                     onChange={handleDateChange}
@@ -250,7 +250,7 @@ const UserProfile: React.FC = () => {
                 styles.disabledInput,
                 isEditing && styles.disabledInputNone,
               ]}
-              value={user.email || ""}
+              value={user?.email}
               onChangeText={null}
               editable={false}
               selectTextOnFocus={false}
@@ -262,7 +262,7 @@ const UserProfile: React.FC = () => {
             <Text style={styles.label}>Hometown</Text>
             <TextInput
               style={[styles.input, !isEditing && styles.disabledInput]}
-              value={user.userHometown || ""}
+              value={user?.userHometown}
               onChangeText={(text) => handleInputChange("userHometown", text)}
               editable={isEditing}
               numberOfLines={2}
@@ -274,7 +274,7 @@ const UserProfile: React.FC = () => {
             <Text style={styles.label}>Description</Text>
             <TextInput
               style={[styles.input, !isEditing && styles.disabledInput]}
-              value={user.userBio || ""}
+              value={user?.userBio}
               onChangeText={(text) => handleInputChange("userBio", text)}
               editable={isEditing}
               multiline

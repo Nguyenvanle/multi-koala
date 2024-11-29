@@ -113,7 +113,7 @@ const CourseDetails = () => {
   const isEnrolled =
     Array.isArray(enrolled) &&
     enrolled.some(
-      (enrolledCourse) => enrolledCourse.course.courseId === courseIdString
+      (enrolledCourse) => enrolledCourse?.course?.courseId === courseIdString
     );
 
   const priceDiscount = courseDetails.coursePrice;
@@ -154,7 +154,11 @@ const CourseDetails = () => {
           {index + 1}.
         </Text>
         <Image
-          source={{ uri: item?.lesson?.image?.imageUrl }}
+          source={{
+            uri:
+              item?.lesson?.image?.imageUrl ||
+              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+          }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
@@ -176,13 +180,17 @@ const CourseDetails = () => {
   const isLoggedIn = !!user;
   const displayedLessons = showAllLessons ? lesson : lesson?.slice(0, 3);
 
-  const lessonCount = lesson ? lesson.length : 0;
+  const lessonCount = lesson ? lesson?.length : 0;
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, paddingBottom: 80 }}>
         <Image
-          source={{ uri: courseDetails?.image?.imageUrl }}
+          source={{
+            uri:
+              courseDetails?.image?.imageUrl ||
+              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+          }}
           style={styles.image}
         />
         <View style={styles.content}>
@@ -203,7 +211,7 @@ const CourseDetails = () => {
             }}
           >
             <Text style={styles.title} numberOfLines={3}>
-              {courseDetails.courseName}
+              {courseDetails?.courseName}
             </Text>
             {/* <TouchableOpacity onPress={handleToggleFavourite}>
               <AntDesign
@@ -224,14 +232,14 @@ const CourseDetails = () => {
           <Text style={styles.courseTime}>
             Course started:{" "}
             <Text style={{ ...text.p, color: Colors.super_teal_dark }}>
-              {new Date(courseDetails.courseUploadedAt).toLocaleDateString()}
+              {new Date(courseDetails?.courseUploadedAt).toLocaleDateString()}
             </Text>
           </Text>
           <Text style={styles.courseTime}>
             Course ended:{" "}
             <Text style={{ ...text.p, color: Colors.red }}>
               {new Date(
-                courseDetails.courseResponsibilityEndAt
+                courseDetails?.courseResponsibilityEndAt
               ).toLocaleDateString()}
             </Text>
           </Text>
@@ -265,13 +273,13 @@ const CourseDetails = () => {
             <Text style={styles.price}>${finalPrice?.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
               <Text style={styles.originalPrice}>
-                / ${courseDetails.coursePrice.toFixed(2)}
+                / ${courseDetails?.coursePrice.toFixed(2)}
               </Text>
             )}
           </View>
           <Text style={styles.sectionTitle}>About This Course</Text>
           <Text style={styles.description}>
-            {courseDetails.courseDescription}
+            {courseDetails?.courseDescription}
           </Text>
         </View>
 

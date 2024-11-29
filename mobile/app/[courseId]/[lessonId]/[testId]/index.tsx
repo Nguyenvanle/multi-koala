@@ -511,7 +511,11 @@ const Test = () => {
           </Text>
           {item?.image !== null && (
             <Image
-              source={{ uri: item?.image?.imageUrl }}
+              source={{
+                uri:
+                  item?.image?.imageUrl ||
+                  "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+              }}
               style={{
                 borderWidth: 1,
                 borderColor: Colors.grey,
@@ -629,7 +633,7 @@ const Test = () => {
             onPress={() => handleTestSelection(test)}
           >
             <Text style={{ ...text.p, color: Colors.white, fontWeight: "600" }}>
-              {test.testDescription}
+              {test?.testDescription}
             </Text>
           </TouchableOpacity>
         ))}
@@ -645,7 +649,7 @@ const Test = () => {
                 <FlatList
                   data={selectedTest.questions}
                   renderItem={renderQuestionItem}
-                  keyExtractor={(item) => item.questionId.toString()}
+                  keyExtractor={(item) => item?.questionId?.toString()}
                   scrollEnabled={false}
                 />
                 {showResult && displayResult && (
@@ -762,8 +766,8 @@ const styles = StyleSheet.create({
   },
   resultText: {
     ...text.h4,
-    color: Colors.blue,
-    fontWeight: "400",
+    color: Colors.black,
+    fontWeight: "300",
   },
   highlightText: {
     fontWeight: "bold",

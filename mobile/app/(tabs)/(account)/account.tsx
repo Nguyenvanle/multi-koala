@@ -68,7 +68,7 @@ const Account = () => {
             </View>
           ) : errorMessage ? (
             <Text style={{ color: Colors.red }}>{errorMessage}</Text> // Hiển thị thông báo lỗi
-          ) : user && user.image !== null ? (
+          ) : user && user?.image !== null ? (
             <View
               style={{
                 justifyContent: "center",
@@ -83,10 +83,14 @@ const Account = () => {
                   borderRadius: 80,
                   marginBottom: 8,
                 }}
-                source={{ uri: user.image.imageUrl }}
+                source={{
+                  uri:
+                    user?.image?.imageUrl ||
+                    "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+                }}
               />
               <Text style={{ ...text.h3, color: Colors.teal_dark }}>
-                {user.firstname} {user.lastname}
+                {user?.firstname} {user?.lastname}
               </Text>
             </View>
           ) : (
@@ -107,7 +111,7 @@ const Account = () => {
                 source={require("@/assets/images/koala.png")}
               />
               <Text style={{ ...text.h3, color: Colors.teal_dark }}>
-                {user.firstname} {user.lastname}
+                {user?.firstname} {user?.lastname}
               </Text>
             </View>
           )}

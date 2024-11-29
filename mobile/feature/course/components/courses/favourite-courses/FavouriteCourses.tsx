@@ -44,7 +44,11 @@ const InProgressCourses = () => {
               }}
             >
               <Image
-                source={{ uri: item.course.image.imageUrl }}
+                source={{
+                  uri:
+                    item.course.image.imageUrl ||
+                    "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+                }}
                 style={{
                   width: 350,
                   height: 200,

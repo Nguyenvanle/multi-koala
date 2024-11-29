@@ -45,12 +45,12 @@ const NewCourses = () => {
       ? enrolled.map((enrolledCourse) => enrolledCourse.course.courseId)
       : [];
 
-    const filteredCourses = courses.filter((item) => {
+    const filteredCourses = courses?.filter((item) => {
       return !enrolledCourseIds.includes(item.courseId);
     });
 
     const numberOfCoursesToShow = user ? 10 : 5;
-    return filteredCourses.slice(0, numberOfCoursesToShow);
+    return filteredCourses?.slice(0, numberOfCoursesToShow);
   };
 
   const coursesToShow = getFilteredCourses(course, enrolled, user);
@@ -60,7 +60,11 @@ const NewCourses = () => {
       <Link href={`/${item.courseId}`} asChild>
         <TouchableOpacity style={styles.courseContainer}>
           <Image
-            source={{ uri: item?.image?.imageUrl }}
+            source={{
+              uri:
+                item?.image?.imageUrl ||
+                "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+            }}
             style={styles.courseImage}
           />
           <View style={styles.containerText}>
@@ -79,7 +83,7 @@ const NewCourses = () => {
   return (
     <View>
       {user && enrolled?.length > 0 ? (
-        <View style={{ height: 230, paddingTop: 8 }}>
+        <View style={{ height: 270, paddingTop: 8, top: 100 }}>
           <FlatList
             data={Array.isArray(recommend) ? recommend : []} // Ensure recommend is an array
             renderItem={renderCourseItem}
@@ -88,7 +92,7 @@ const NewCourses = () => {
           />
         </View>
       ) : (
-        <View style={{ height: 450 }}>
+        <View style={{ height: 600 }}>
           <FlatList
             data={coursesToShow}
             renderItem={renderCourseItem}

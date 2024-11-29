@@ -189,7 +189,7 @@ const CourseList = (): React.JSX.Element => {
           </View>
         </View>
       ) : (
-        <View style={styles.contentContainer}>
+        <View style={styles.contentedContainer}>
           {data[selectedIndex].component}
         </View>
       )}
@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     width: 365,
     height: 45,
     padding: 8,
+    top: 120,
     paddingHorizontal: 16,
     backgroundColor: Colors.white,
     borderWidth: 1,
@@ -218,15 +219,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 365,
     height: 60,
+    top: 120,
     padding: 8,
     backgroundColor: Colors.white,
     borderRadius: 50,
     shadowOpacity: 0.05,
     marginTop: 16,
   },
-  contentContainer: {
+  contentedContainer: {
     height: 455,
     alignItems: "center",
+  },
+  contentContainer: {
+    height: 490,
+    alignItems: "center",
+    top: 110,
   },
   defaultText: {
     ...text.p,

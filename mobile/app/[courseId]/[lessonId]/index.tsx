@@ -79,14 +79,14 @@ const LessonDetails = () => {
     );
 
   const renderVideo = () => {
-    if (lessonDetails.video.videoUrl === "videoUrl-test-update") return;
+    if (lessonDetails?.video?.videoUrl === "videoUrl-test-update") return;
     if (
-      lessonDetails.video.videoUrl.includes("youtube.com") ||
-      lessonDetails.video.videoUrl.includes("youtu.be")
+      lessonDetails?.video?.videoUrl.includes("youtube.com") ||
+      lessonDetails?.video?.videoUrl.includes("youtu.be")
     ) {
       const videoId =
-        lessonDetails.video.videoUrl.split("v=")[1]?.split("&")[0] ||
-        lessonDetails.video.videoUrl.split("/").pop();
+        lessonDetails?.video?.videoUrl.split("v=")[1]?.split("&")[0] ||
+        lessonDetails?.video?.videoUrl.split("/").pop();
       return (
         <YoutubePlayer
           height={230}
@@ -97,7 +97,7 @@ const LessonDetails = () => {
     } else {
       return (
         <Video
-          source={{ uri: lessonDetails.video.videoUrl }}
+          source={{ uri: lessonDetails?.video?.videoUrl }}
           style={styles.video}
           useNativeControls
           videoStyle={{ borderRadius: 10 }}
@@ -110,7 +110,7 @@ const LessonDetails = () => {
 
   const renderLessonItem = ({ item, index }) => {
     const isFirstThree = index < 3 || isEnrolled;
-    const isSelected = item.lesson.lessonId === lessonIdString;
+    const isSelected = item?.lesson?.lessonId === lessonIdString;
     return (
       <TouchableOpacity
         style={[
@@ -120,7 +120,7 @@ const LessonDetails = () => {
         ]}
         onPress={() => {
           if (isFirstThree) {
-            router.replace(`/${courseIdString}/${item.lesson.lessonId}`);
+            router.replace(`/${courseIdString}/${item?.lesson?.lessonId}`);
           }
         }}
         disabled={isSelected}
@@ -129,14 +129,20 @@ const LessonDetails = () => {
           {index + 1}.{" "}
         </Text>
         <Image
-          source={{ uri: item.lesson.image.imageUrl }}
+          source={{
+            uri:
+              item?.lesson?.image?.imageUrl ||
+              "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+          }}
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
-          <Text style={styles.lessonTitle}>{item.lesson.lessonName}</Text>
+          <Text style={styles.lessonTitle}>{item?.lesson?.lessonName}</Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item.lesson.video.videoDuration / 60)}:
-            {(item.lesson.video.videoDuration % 60).toString().padStart(2, "0")}{" "}
+            {Math.floor(item?.lesson?.video?.videoDuration / 60)}:
+            {(item?.lesson?.video?.videoDuration % 60)
+              .toString()
+              .padStart(2, "0")}{" "}
             mins
           </Text>
         </View>
@@ -156,18 +162,18 @@ const LessonDetails = () => {
         )}
         <View style={styles.content}>
           <Text style={styles.title} numberOfLines={2}>
-            {lessonDetails.lessonName}
+            {lessonDetails?.lessonName}
           </Text>
           <Text style={styles.duration}>
-            {Math.floor(lessonDetails.video.videoDuration / 60)}:
-            {(lessonDetails.video.videoDuration % 60)
+            {Math.floor(lessonDetails?.video?.videoDuration / 60)}:
+            {(lessonDetails?.video?.videoDuration % 60)
               .toString()
               .padStart(2, "0")}{" "}
             mins
           </Text>
           <Text style={styles.sectionTitle}>About This Lesson</Text>
           <Text style={styles.description}>
-            {lessonDetails.lessonDescription}
+            {lessonDetails?.lessonDescription}
           </Text>
           {loadingLesson ? (
             <View style={{ paddingTop: 16, justifyContent: "center" }}>

@@ -88,13 +88,13 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
       style={{
         alignItems: "center",
         justifyContent: "center",
-        height: 240,
+        height: 100,
         padding: 16,
       }}
     >
       <CircleStyle />
       {user ? (
-        <View style={{ flexDirection: "column" }}>
+        <View style={{ flexDirection: "column", top: 40 }}>
           <View
             style={{
               justifyContent: "space-between",
@@ -118,7 +118,11 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
             </View>
             {user?.image ? (
               <Image
-                source={{ uri: user?.image?.imageUrl }}
+                source={{
+                  uri:
+                    user?.image?.imageUrl ||
+                    "https://img.freepik.com/free-vector/faqs-concept-illustration_114360-5215.jpg?t=st=1732892833~exp=1732896433~hmac=f12b1f3fbbb20b6e374e81fb1d3283827dcf73904ef5d6c29434936df1b0432b&w=826",
+                }}
                 style={{
                   width: 75,
                   height: 75,
@@ -184,7 +188,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                           style={{ ...text.p, color: Colors.background }}
                           numberOfLines={1}
                         >
-                          {nextCourse.course.courseName}
+                          {nextCourse?.course?.courseName}
                         </Text>
                       </View>
                       <Text
@@ -194,7 +198,9 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                           paddingTop: 2,
                         }}
                       >
-                        {nextCourse.process * 100}%
+                        {(nextCourse.process * 100) % 1 === 0
+                          ? `${(nextCourse.process * 100).toFixed(0)}%`
+                          : `${(nextCourse.process * 100).toFixed(4)}%`}
                       </Text>
                     </View>
                     <View
@@ -229,7 +235,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
               justifyContent: "flex-end",
               alignItems: "center",
               flexDirection: "row",
-              top: -160,
+              top: -10,
             }}
           >
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -276,7 +282,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    height: 240,
     padding: 16,
   },
   loadingContainer: {
