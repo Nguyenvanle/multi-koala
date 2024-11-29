@@ -46,6 +46,7 @@ const MyCourses = () => {
       {enrolled ? (
         <FlatList
           horizontal={true}
+          showsHorizontalScrollIndicator={false}
           data={enrolled}
           renderItem={renderCourseItem}
           keyExtractor={(item, index) => item.course.courseId}

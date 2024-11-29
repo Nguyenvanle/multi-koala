@@ -30,13 +30,13 @@ const RecommendCourse = () => {
     return (
       <Link style={styles.card} href={`/${item.courseId}`}>
         <Image
-          source={{ uri: item.image?.imageUrl }}
+          source={{ uri: item?.image?.imageUrl }}
           style={styles.thumbnail}
           resizeMode="cover"
         />
         <View style={styles.cardContent}>
           <Text style={styles.courseTitle} numberOfLines={2}>
-            {item.courseName}
+            {item?.courseName}
           </Text>
           <TouchableOpacity style={styles.viewButton}>
             <Text style={styles.viewButtonText}>Enroll Now</Text>

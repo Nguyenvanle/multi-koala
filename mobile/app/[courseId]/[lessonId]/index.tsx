@@ -110,7 +110,7 @@ const LessonDetails = () => {
 
   const renderLessonItem = ({ item, index }) => {
     const isFirstThree = index < 3 || isEnrolled;
-    const isSelected = item.lesson.lessonId === lessonIdString;
+    const isSelected = item?.lesson?.lessonId === lessonIdString;
     return (
       <TouchableOpacity
         style={[
@@ -120,7 +120,7 @@ const LessonDetails = () => {
         ]}
         onPress={() => {
           if (isFirstThree) {
-            router.replace(`/${courseIdString}/${item.lesson.lessonId}`);
+            router.replace(`/${courseIdString}/${item?.lesson?.lessonId}`);
           }
         }}
         disabled={isSelected}
@@ -133,7 +133,7 @@ const LessonDetails = () => {
           style={styles.lessonThumbnail}
         />
         <View style={styles.lessonInfo}>
-          <Text style={styles.lessonTitle}>{item.lesson.lessonName}</Text>
+          <Text style={styles.lessonTitle}>{item?.lesson?.lessonName}</Text>
           <Text style={styles.lessonDuration}>
             {Math.floor(item?.lesson?.video?.videoDuration / 60)}:
             {(item?.lesson?.video?.videoDuration % 60)
@@ -158,7 +158,7 @@ const LessonDetails = () => {
         )}
         <View style={styles.content}>
           <Text style={styles.title} numberOfLines={2}>
-            {lessonDetails.lessonName}
+            {lessonDetails?.lessonName}
           </Text>
           <Text style={styles.duration}>
             {Math.floor(lessonDetails?.video?.videoDuration / 60)}:
@@ -169,7 +169,7 @@ const LessonDetails = () => {
           </Text>
           <Text style={styles.sectionTitle}>About This Lesson</Text>
           <Text style={styles.description}>
-            {lessonDetails.lessonDescription}
+            {lessonDetails?.lessonDescription}
           </Text>
           {loadingLesson ? (
             <View style={{ paddingTop: 16, justifyContent: "center" }}>

@@ -88,13 +88,13 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
       style={{
         alignItems: "center",
         justifyContent: "center",
-        height: 240,
+        height: 100,
         padding: 16,
       }}
     >
       <CircleStyle />
       {user ? (
-        <View style={{ flexDirection: "column" }}>
+        <View style={{ flexDirection: "column", top: 40 }}>
           <View
             style={{
               justifyContent: "space-between",
@@ -184,7 +184,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                           style={{ ...text.p, color: Colors.background }}
                           numberOfLines={1}
                         >
-                          {nextCourse.course.courseName}
+                          {nextCourse?.course?.courseName}
                         </Text>
                       </View>
                       <Text
@@ -194,7 +194,9 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                           paddingTop: 2,
                         }}
                       >
-                        {nextCourse.process * 100}%
+                        {(nextCourse.process * 100) % 1 === 0
+                          ? `${(nextCourse.process * 100).toFixed(0)}%`
+                          : `${(nextCourse.process * 100).toFixed(4)}%`}
                       </Text>
                     </View>
                     <View
@@ -229,7 +231,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
               justifyContent: "flex-end",
               alignItems: "center",
               flexDirection: "row",
-              top: -160,
+              top: -10,
             }}
           >
             <View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -276,7 +278,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    height: 240,
     padding: 16,
   },
   loadingContainer: {

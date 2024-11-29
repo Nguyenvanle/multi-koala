@@ -234,7 +234,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({
           />
         </View>
       ) : (
-        <View style={{ height: 700, top: -150 }}>
+        <View style={{ height: 700, top: -10 }}>
           <FlatList
             showsVerticalScrollIndicator={false}
             data={course}

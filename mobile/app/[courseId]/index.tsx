@@ -113,7 +113,7 @@ const CourseDetails = () => {
   const isEnrolled =
     Array.isArray(enrolled) &&
     enrolled.some(
-      (enrolledCourse) => enrolledCourse.course.courseId === courseIdString
+      (enrolledCourse) => enrolledCourse?.course?.courseId === courseIdString
     );
 
   const priceDiscount = courseDetails.coursePrice;
@@ -176,7 +176,7 @@ const CourseDetails = () => {
   const isLoggedIn = !!user;
   const displayedLessons = showAllLessons ? lesson : lesson?.slice(0, 3);
 
-  const lessonCount = lesson ? lesson.length : 0;
+  const lessonCount = lesson ? lesson?.length : 0;
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -203,7 +203,7 @@ const CourseDetails = () => {
             }}
           >
             <Text style={styles.title} numberOfLines={3}>
-              {courseDetails.courseName}
+              {courseDetails?.courseName}
             </Text>
             {/* <TouchableOpacity onPress={handleToggleFavourite}>
               <AntDesign
@@ -224,14 +224,14 @@ const CourseDetails = () => {
           <Text style={styles.courseTime}>
             Course started:{" "}
             <Text style={{ ...text.p, color: Colors.super_teal_dark }}>
-              {new Date(courseDetails.courseUploadedAt).toLocaleDateString()}
+              {new Date(courseDetails?.courseUploadedAt).toLocaleDateString()}
             </Text>
           </Text>
           <Text style={styles.courseTime}>
             Course ended:{" "}
             <Text style={{ ...text.p, color: Colors.red }}>
               {new Date(
-                courseDetails.courseResponsibilityEndAt
+                courseDetails?.courseResponsibilityEndAt
               ).toLocaleDateString()}
             </Text>
           </Text>
@@ -265,13 +265,13 @@ const CourseDetails = () => {
             <Text style={styles.price}>${finalPrice?.toFixed(2)}</Text>
             {shouldShowOriginalPrice && (
               <Text style={styles.originalPrice}>
-                / ${courseDetails.coursePrice.toFixed(2)}
+                / ${courseDetails?.coursePrice.toFixed(2)}
               </Text>
             )}
           </View>
           <Text style={styles.sectionTitle}>About This Course</Text>
           <Text style={styles.description}>
-            {courseDetails.courseDescription}
+            {courseDetails?.courseDescription}
           </Text>
         </View>
 

@@ -53,19 +53,21 @@ const Home = ({ courseId }: { courseId: string }) => {
         onPress={() => setShowRecommendModal(false)} // Close modal when course is selected
       >
         <Image
-          source={{ uri: item.image?.imageUrl }}
+          source={{ uri: item?.image?.imageUrl }}
           style={styles.thumbnail}
           resizeMode="cover"
         />
         <View style={styles.cardContent}>
-          <Text style={styles.courseTitle}>{item.courseName}</Text>
-          <Text style={styles.courseDescription}>{item.courseDescription}</Text>
+          <Text style={styles.courseTitle}>{item?.courseName}</Text>
+          <Text style={styles.courseDescription}>
+            {item?.courseDescription}
+          </Text>
 
           <View style={styles.instructorContainer}>
             <View style={styles.instructorInfo}>
               <Text style={styles.instructorName}>
-                {item.uploadedByTeacher.firstname}{" "}
-                {item.uploadedByTeacher.lastname}
+                {item?.uploadedByTeacher?.firstname}{" "}
+                {item?.uploadedByTeacher?.lastname}
               </Text>
             </View>
           </View>
@@ -74,13 +76,13 @@ const Home = ({ courseId }: { courseId: string }) => {
             <View style={styles.infoItem}>
               <Icon name="book-open" size={16} color="#666" />
               <Text style={[styles.infoText, { color: courseLevelColor }]}>
-                {item.courseLevel}
+                {item?.courseLevel}
               </Text>
             </View>
 
             <View style={styles.priceContainer}>
               <Icon name="tag" size={16} color={Colors.teal_dark} />
-              <Text style={styles.priceText}>{item.coursePrice}$</Text>
+              <Text style={styles.priceText}>{item?.coursePrice}$</Text>
             </View>
           </View>
 
@@ -174,7 +176,7 @@ const Home = ({ courseId }: { courseId: string }) => {
           <HeaderUser courseId={courseId} />
 
           <View>
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", top: 120 }}>
               <View style={styles.sectionHeader}>
                 <Text style={{ ...text.h4, fontWeight: "500" }}>
                   My Courses
@@ -191,7 +193,7 @@ const Home = ({ courseId }: { courseId: string }) => {
               </View>
               <MyCourses />
             </View>
-            <View style={styles.sectionHeader}>
+            <View style={{ ...styles.sectionHeader, top: 100 }}>
               <Text style={{ ...text.h4, fontWeight: "500" }}>
                 Recommend Courses
               </Text>

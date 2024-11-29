@@ -122,7 +122,9 @@ const InProgressCourses: React.FC<InProgressCoursesProps> = ({
                       color: Colors.teal_dark,
                     }}
                   >
-                    {((item.process || 0) * 100).toFixed(1)}%
+                    {((item.process || 0) * 100) % 1 === 0
+                      ? `${((item.process || 0) * 100).toFixed(0)}%`
+                      : `${((item.process || 0) * 100).toFixed(2)}%`}
                   </Text>
                 </View>
                 <View

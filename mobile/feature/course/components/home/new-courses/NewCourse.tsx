@@ -79,7 +79,7 @@ const NewCourses = () => {
   return (
     <View>
       {user && enrolled?.length > 0 ? (
-        <View style={{ height: 230, paddingTop: 8 }}>
+        <View style={{ height: 270, paddingTop: 8, top: 100 }}>
           <FlatList
             data={Array.isArray(recommend) ? recommend : []} // Ensure recommend is an array
             renderItem={renderCourseItem}
@@ -88,7 +88,7 @@ const NewCourses = () => {
           />
         </View>
       ) : (
-        <View style={{ height: 450 }}>
+        <View style={{ height: 600 }}>
           <FlatList
             data={coursesToShow}
             renderItem={renderCourseItem}

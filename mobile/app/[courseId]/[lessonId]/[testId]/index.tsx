@@ -629,7 +629,7 @@ const Test = () => {
             onPress={() => handleTestSelection(test)}
           >
             <Text style={{ ...text.p, color: Colors.white, fontWeight: "600" }}>
-              {test.testDescription}
+              {test?.testDescription}
             </Text>
           </TouchableOpacity>
         ))}
@@ -645,7 +645,7 @@ const Test = () => {
                 <FlatList
                   data={selectedTest.questions}
                   renderItem={renderQuestionItem}
-                  keyExtractor={(item) => item.questionId.toString()}
+                  keyExtractor={(item) => item?.questionId?.toString()}
                   scrollEnabled={false}
                 />
                 {showResult && displayResult && (
@@ -762,8 +762,8 @@ const styles = StyleSheet.create({
   },
   resultText: {
     ...text.h4,
-    color: Colors.blue,
-    fontWeight: "400",
+    color: Colors.black,
+    fontWeight: "300",
   },
   highlightText: {
     fontWeight: "bold",

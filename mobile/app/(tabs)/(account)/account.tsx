@@ -86,7 +86,7 @@ const Account = () => {
                 source={{ uri: user?.image?.imageUrl }}
               />
               <Text style={{ ...text.h3, color: Colors.teal_dark }}>
-                {user.firstname} {user.lastname}
+                {user?.firstname} {user?.lastname}
               </Text>
             </View>
           ) : (
@@ -107,7 +107,7 @@ const Account = () => {
                 source={require("@/assets/images/koala.png")}
               />
               <Text style={{ ...text.h3, color: Colors.teal_dark }}>
-                {user.firstname} {user.lastname}
+                {user?.firstname} {user?.lastname}
               </Text>
             </View>
           )}
