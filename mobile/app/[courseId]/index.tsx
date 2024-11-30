@@ -217,8 +217,14 @@ const CourseDetails = () => {
             {item?.lessonName}
           </Text>
           <Text style={styles.lessonDuration}>
-            {Math.floor(item?.video?.videoDuration / 60)}:
-            {(item?.video?.videoDuration % 60).toString().padStart(2, "0")} mins
+            {Math.floor(
+              item?.video?.videoDuration ? item?.video?.videoDuration / 60 : 0
+            )}
+            :
+            {(item?.video?.videoDuration ? item?.video?.videoDuration % 60 : 0)
+              .toString()
+              .padStart(2, "0")}{" "}
+            mins
           </Text>
         </View>
       </TouchableOpacity>

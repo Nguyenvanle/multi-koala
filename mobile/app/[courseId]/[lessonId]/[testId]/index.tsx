@@ -22,7 +22,6 @@ import { useDetails } from "@/feature/course/hooks/useDetails";
 import { useLesson } from "@/feature/lesson/hooks/useLesson";
 import { ResultBody } from "@/feature/lesson/types/lesson";
 import { useTestDetails } from "@/feature/test/hooks/useTestDetails";
-import SuggestCourse from "@/feature/course/components/courses/suggest-course/suggest-course";
 import { useEnrolled } from "@/feature/course/hooks/useEnrrolled";
 import { useSuggestEnroll } from "@/feature/course/hooks/useSuggestEnrolled";
 import { useSuggestCourse } from "@/feature/course/hooks/useSuggestCourse";
@@ -407,18 +406,16 @@ const Test = () => {
       // Xóa câu trả lời tạm thời
       await AsyncStorage.removeItem("selectedAnswers");
       setShowResult(true);
-
-      getSuggest(courseIdString);
     } catch (error) {
       console.error("Error submitting answers:", error);
       setIsSubmitting(false);
     }
   };
 
-  const handleGetSuggestions = async () => {
-    await getSuggest(courseIdString);
-    setShowSuggest(true); // Hiển thị trang SuggestCourse
-  };
+  // const handleGetSuggestions = async () => {
+  //   await getSuggest(courseIdString);
+  //   setShowSuggest(true); // Hiển thị trang SuggestCourse
+  // };
 
   // Function để lưu lịch sử làm bài vào AsyncStorage
   const saveTestHistory = async (testId, answers, score, date) => {
@@ -707,7 +704,6 @@ const Test = () => {
                       </Text>
                     </Text>
                     {/* Display result message */}
-                    <SuggestCourse data={suggestCourse} />
                   </View>
                 )}
                 {!showResult && (

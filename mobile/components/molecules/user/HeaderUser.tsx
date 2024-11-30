@@ -179,8 +179,9 @@ const HeaderUser: React.FC<HeaderUserProps> = ({ courseId }) => {
                       <View
                         style={{
                           overflow: "hidden",
-                          alignItems: "center",
+                          alignItems: "baseline",
                           width: 150,
+
                           marginRight: 90,
                         }}
                       >
