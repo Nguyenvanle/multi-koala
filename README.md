@@ -90,9 +90,7 @@ npm run dev
 ```bash
 cd ../mobile
 npm install
-npx react-native run-android
-# hoặc
-npx react-native run-ios
+npx expo start
 ```
 
 ## Cấu Trúc Thư Mục
