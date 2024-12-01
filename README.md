@@ -1,8 +1,16 @@
-# Ứng Dụng Mua Bán Khóa Học Trực Tuyến
+# Ứng Dụng Chia Sẻ Khóa Học Trực Tuyến
 
 ## Giới Thiệu
 
-Ứng dụng Mua Bán Khóa Học Trực Tuyến là một nền tảng toàn diện kết nối giáo viên và học viên trong môi trường học tập trực tuyến. Dự án được phát triển với mục tiêu cung cấp trải nghiệm học tập linh hoạt, thuận tiện cho cả giáo viên và học viên.
+Ứng dụng Chia Sẻ Khóa Học Trực Tuyến là một nền tảng toàn diện kết nối giáo viên và học viên trong môi trường học tập trực tuyến. Dự án được phát triển với mục tiêu cung cấp trải nghiệm học tập linh hoạt, thuận tiện cho cả giáo viên và học viên.
+
+![alt text](system-design.png)
+
+## Thành Viên
+
+1. Nguyễn Văn Lẹ - lelacquoi@gmail.com
+2. Lê Dương Anh Tú - leduonganhtu0102@gmail.com
+3. Nguyễn Lê Tiến Đạt - tiendat29082003@gmail.com
 
 ## Tính Năng Chính
 
@@ -90,12 +98,12 @@ npx react-native run-ios
 ## Cấu Trúc Thư Mục
 
 ```
-online-course-marketplace/
+multi-koala/
 │
-├── server/             # Mã nguồn Spring Boot
+├── server/     # Mã nguồn Spring Boot
 ├── web/        # Mã nguồn NextJS
-├── mobile/              # Mã nguồn React Native
-├── docs/                # Tài liệu dự án
+├── mobile/     # Mã nguồn React Native
+├── docs/       # Tài liệu dự án
 └── README.md
 ```
 
